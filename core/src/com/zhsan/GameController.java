@@ -1,5 +1,6 @@
 package com.zhsan;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.zhsan.start.StartScreen;
 
 /**
@@ -19,13 +20,13 @@ public class GameController {
         this.state = state;
     }
 
-    public void render() {
+    public void render(SpriteBatch batch) {
         switch (state) {
             case START:
                 if (startScreen == null) {
                     startScreen = new StartScreen();
                 }
-                startScreen.render();
+                startScreen.render(batch);
                 break;
         }
     }
