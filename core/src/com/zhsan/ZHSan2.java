@@ -12,10 +12,6 @@ import java.io.File;
 
 public class ZHSan2 extends ApplicationAdapter {
 
-    public static final String FILE_ROOT = "ZHSAN2";
-
-    public static final String RESOURCES = FILE_ROOT + File.separator + "Resources" + File.separator;
-
     private GameController controller;
 
 	@Override

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.zhsan.ZHSan2;
+import com.zhsan.common.Paths;
 
 import java.io.File;
 
@@ -18,7 +18,7 @@ public class StartScreen {
 
     public StartScreen() {
         batch = new SpriteBatch();
-        txStart = new Texture(Gdx.files.external(ZHSan2.RESOURCES + "Start" + File.separator + "Start.jpg"));
+        txStart = new Texture(Gdx.files.external(Paths.RESOURCES + "Start" + File.separator + "Start.jpg"));
     }
 
     public void render() {
@@ -29,7 +29,8 @@ public class StartScreen {
     }
 
     public void dispose() {
-
+        txStart.dispose();
+        batch.dispose();
     }
 
 }
