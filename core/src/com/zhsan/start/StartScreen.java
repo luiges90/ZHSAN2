@@ -16,7 +16,6 @@ public class StartScreen {
     private Texture txStart;
 
     public StartScreen() {
-
         txStart = new Texture(Gdx.files.external(Paths.RESOURCES + "Start" + File.separator + "Start.jpg"));
     }
 

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.zhsan.resources.GlobalStrings;
 
 import java.io.File;
 
@@ -30,6 +31,8 @@ public class ZHSan2 extends ApplicationAdapter {
 
         camera = new OrthographicCamera(800, 600);
         viewport = new ScreenViewport(camera);
+
+        Gdx.graphics.setTitle(GlobalStrings.getString("title"));
     }
 
     @Override
