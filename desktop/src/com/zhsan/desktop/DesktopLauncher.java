@@ -9,7 +9,7 @@ public class DesktopLauncher {
         System.setProperty("user.home", ".");
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = "中華三國志";
+        config.title = "";
         config.useGL30 = false;
         config.width = 800;
         config.height = 600;
