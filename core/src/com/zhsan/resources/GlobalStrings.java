@@ -3,6 +3,7 @@ package com.zhsan.resources;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
+import com.zhsan.common.exception.XmlException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
@@ -41,7 +42,7 @@ public class GlobalStrings {
                 strings.put(attributes.item(i).getNodeName(), attributes.item(i).getNodeValue());
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new XmlException(Paths.RESOURCES + "GlobalStrings.xml", e);
         }
     }
 

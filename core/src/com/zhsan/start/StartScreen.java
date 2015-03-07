@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.zhsan.MainGameScreen;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
+import com.zhsan.common.exception.XmlException;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -53,7 +54,7 @@ public class StartScreen implements MainGameScreen {
             credit = Utility.readRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
             exit = Utility.readRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new XmlException(RES_PATH + "Start.xml", e);
         }
 
         newGameScreen = new NewGameScreen();

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.zhsan.common.exception.XmlException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -44,7 +45,7 @@ public class Fonts {
                         n.getAttributes().getNamedItem("file").getNodeValue());
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new XmlException(Paths.FONTS + "Fonts.xml", e);
         }
     }
 
