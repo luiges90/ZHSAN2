@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zhsan.common.Fonts;
@@ -27,55 +30,44 @@ public class ZHSan2 extends ApplicationAdapter {
 
     private State state = State.START;
 
+    private Stage startStage;
     private StartScreen startScreen;
-
-    private SpriteBatch batch;
-
-    private Camera camera;
-    private Viewport viewport;
 
 	@Override
 	public void create () {
         Fonts.init();
 
-        batch = new SpriteBatch();
-
-        camera = new OrthographicCamera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        viewport = new ScreenViewport(camera);
-
         Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
 
+        startStage = new Stage(new ScreenViewport());
+
         startScreen = new StartScreen();
-        Gdx.input.setInputProcessor(startScreen.getInputProcessor());
+        startStage.addActor(startScreen);
+
+        Gdx.input.setInputProcessor(startStage);
     }
 
     @Override
 	public void render () {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // This cryptic line clears the screen.
-
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-
-        switch (state) {
-            case START:
-                startScreen.render(batch);
-                break;
-        }
-
-        batch.end();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        startStage.act();
+        startStage.draw();
 	}
 
     @Override
     public void resize(int width, int height) {
-        viewport.update(width, height);
+        startStage.getViewport().update(width, height, true);
+
+        MoveToAction move = new MoveToAction();
+        move.setPosition(Gdx.graphics.getWidth() / 2 - startScreen.getWidth() / 2,
+                Gdx.graphics.getHeight() / 2 - startScreen.getHeight() / 2);
+        move.setDuration(0);
+        startStage.addAction(move);
     }
 
     @Override
     public void dispose() {
-        startScreen.dispose();
-
-        batch.dispose();
-
+        startStage.dispose();
         Fonts.dispose();
     }
 

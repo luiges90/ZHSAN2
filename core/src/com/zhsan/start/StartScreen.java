@@ -5,8 +5,15 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
@@ -20,7 +27,7 @@ import java.io.File;
 /**
  * Created by Peter on 6/3/2015.
  */
-public class StartScreen {
+public class StartScreen extends Actor {
 
     private static enum State {
         MAIN, NEW
@@ -34,11 +41,7 @@ public class StartScreen {
 
     private Rectangle start, load, setting, credit, exit;
 
-    private NewGameScreen newGameScreen;
-
-    public StartScreen() {
-        txStart = new Texture(Gdx.files.external(RES_PATH + "Start.jpg"));
-
+    private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "Start.xml");
 
         Document dom;
@@ -48,40 +51,46 @@ public class StartScreen {
             dom = db.parse(f.read());
 
             start = Utility.readRectangleFromXml(dom.getElementsByTagName("StartButton").item(0));
+            start.y = txStart.getHeight() - start.y - start.height;
+
             load = Utility.readRectangleFromXml(dom.getElementsByTagName("LoadButton").item(0));
+            load.y = txStart.getHeight() - load.y - load.height;
+
             setting = Utility.readRectangleFromXml(dom.getElementsByTagName("SettingButton").item(0));
+            setting.y = txStart.getHeight() - setting.y - setting.height;
+
             credit = Utility.readRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
+            credit.y = txStart.getHeight() - credit.y - credit.height;
+
             exit = Utility.readRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
+            exit.y = txStart.getHeight() - exit.y - exit.height;
         } catch (Exception e) {
             throw new XmlException(RES_PATH + "Start.xml", e);
         }
-
-        newGameScreen = new NewGameScreen();
     }
 
-    private Point screenToImage(int x, int y) {
-        int winWidth = Gdx.graphics.getWidth();
-        int winHeight = Gdx.graphics.getHeight();
-        return new Point(x - (winWidth / 2 - txStart.getWidth() / 2),
-                y - (winHeight / 2 - txStart.getHeight() / 2));
+    public StartScreen() {
+        txStart = new Texture(Gdx.files.external(RES_PATH + "Start.jpg"));
+        loadXml();
+
+        this.setBounds(0, 0, txStart.getWidth(), txStart.getHeight());
+        this.addListener(new InputListener(){
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                handleTouchDown(x, y);
+                return true;
+            }
+        });
     }
 
-    public void render(SpriteBatch batch) {
+    public void draw(Batch batch, float parentAlpha) {
         switch (state) {
             case MAIN:
-                batch.draw(txStart, -txStart.getWidth() / 2, -txStart.getHeight() / 2);
+                batch.draw(txStart, 0, 0);
                 break;
             case NEW:
-                newGameScreen.render(batch);
+                // newGameScreen.render(batch);
                 break;
         }
-
-    }
-
-    public void dispose() {
-        newGameScreen.dispose();
-
-        txStart.dispose();
     }
 
     private void openStart() {
@@ -104,35 +113,18 @@ public class StartScreen {
         Gdx.app.exit();
     }
 
-    private void handleTouchDown(int x, int y) {
-        Point imgPt = screenToImage(x, y);
-        if (start.contains(imgPt.x, imgPt.y)) {
+    private void handleTouchDown(float x, float y) {
+        if (start.contains(x, y)) {
             openStart();
-        } else if (load.contains(imgPt.x, imgPt.y)) {
+        } else if (load.contains(x, y)) {
             openLoad();
-        } else if (setting.contains(imgPt.x, imgPt.y)) {
+        } else if (setting.contains(x, y)) {
             openSettings();
-        } else if (credit.contains(imgPt.x, imgPt.y)) {
+        } else if (credit.contains(x, y)) {
             openCredits();
-        } else if (exit.contains(imgPt.x, imgPt.y)) {
+        } else if (exit.contains(x, y)) {
             exit();
         }
     }
 
-    public InputProcessor getInputProcessor() {
-        return new InputAdapter(){
-            @Override
-            public boolean touchDown(int x, int y, int pointer, int button) {
-                switch (state) {
-                    case MAIN:
-                        handleTouchDown(x, y);
-                        break;
-                    case NEW:
-                        newGameScreen.handleTouchDown(x, y);
-                        break;
-                }
-                return true;
-            }
-        };
-    }
 }
