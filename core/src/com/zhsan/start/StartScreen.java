@@ -7,7 +7,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.zhsan.MainGameScreen;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
@@ -21,7 +20,7 @@ import java.io.File;
 /**
  * Created by Peter on 6/3/2015.
  */
-public class StartScreen implements MainGameScreen {
+public class StartScreen {
 
     private static enum State {
         MAIN, NEW
@@ -120,7 +119,6 @@ public class StartScreen implements MainGameScreen {
         }
     }
 
-    @Override
     public InputProcessor getInputProcessor() {
         return new InputAdapter(){
             @Override
