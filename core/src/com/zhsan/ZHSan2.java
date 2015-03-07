@@ -13,6 +13,10 @@ import com.zhsan.start.StartScreen;
 
 public class ZHSan2 extends ApplicationAdapter {
 
+    public static enum GameState {
+        START,
+    }
+
     public static final int DEFAULT_WIDTH = 1024;
     public static final int DEFAULT_HEIGHT = 600;
 
