@@ -12,12 +12,16 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zhsan.resources.GlobalStrings;
+import com.zhsan.start.StartScreen;
 
 import java.io.File;
 
 public class ZHSan2 extends ApplicationAdapter {
 
-    private GameController controller;
+    private GameState state = GameState.START;
+
+    private StartScreen startScreen = null;
+
     private SpriteBatch batch;
 
     private Camera camera;
@@ -25,8 +29,6 @@ public class ZHSan2 extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		controller = new GameController();
-
         batch = new SpriteBatch();
 
         camera = new OrthographicCamera(800, 600);
@@ -41,7 +43,16 @@ public class ZHSan2 extends ApplicationAdapter {
 
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-		controller.render(batch);
+
+        switch (state) {
+            case START:
+                if (startScreen == null) {
+                    startScreen = new StartScreen();
+                }
+                startScreen.render(batch);
+                break;
+        }
+
         batch.end();
 	}
 
@@ -53,7 +64,10 @@ public class ZHSan2 extends ApplicationAdapter {
     @Override
     public void dispose() {
         batch.dispose();
-        controller.dispose();
+
+        if (startScreen != null) {
+            startScreen.dispose();
+        }
     }
 
 }
