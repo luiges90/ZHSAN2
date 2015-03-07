@@ -20,6 +20,7 @@ import java.util.Map;
 public class Fonts {
 
     public static final String SYSTEM = "System";
+    public static final int SIZE = 32;
 
     public static enum Style {
         REGULAR, BOLD

@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -15,6 +16,7 @@ import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
 import com.zhsan.gamecomponents.common.StateTexture;
+import com.zhsan.gamecomponents.common.TextBackgroundElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -57,10 +59,9 @@ public class GameFrame extends WidgetGroup {
 
     private Edge leftEdge, rightEdge, topEdge, bottomEdge;
     private Texture background;
-
+    private TextBackgroundElement titleElement;
     private int okWidth, okHeight, cancelWidth, cancelHeight;
     private StateTexture okTexture, cancelTexture;
-
     private Sound okSound, cancelSound;
     private Texture topLeft, topRight, bottomLeft, bottomRight;
 
@@ -83,6 +84,8 @@ public class GameFrame extends WidgetGroup {
             fh = Gdx.files.external(dataPath +
                     dom.getElementsByTagName("BackGround").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
             background = new Texture(fh);
+
+            titleElement = TextBackgroundElement.fromXml(dataPath, dom.getElementsByTagName("Title").item(0));
 
             Node ok = dom.getElementsByTagName("OKButton").item(0);
             Node cancel = dom.getElementsByTagName("CancelButton").item(0);
@@ -130,11 +133,15 @@ public class GameFrame extends WidgetGroup {
 
     public void draw(Batch batch, float parentAlpha) {
         float top = getHeight() - topEdge.image.getHeight();
+        float topWidth = getWidth() - topLeft.getWidth() - topRight.getWidth();
         batch.draw(topLeft, 0, top, topLeft.getWidth(), topEdge.width);
-        batch.draw(topEdge.image, topLeft.getWidth(), top, getWidth() - topLeft.getWidth() - topRight.getWidth(), topEdge.width);
+        batch.draw(topEdge.image, topLeft.getWidth(), top, topWidth, topEdge.width);
         batch.draw(topRight, getWidth() - topRight.getWidth(), top, topRight.getWidth(), topEdge.width);
 
-        // Fonts.get().draw(batch, title, getWidth() / 2, getHeight());
+        titleElement.applyColorSize();
+        BitmapFont.TextBounds bounds = titleElement.getFont().getWrappedBounds(title, topWidth);
+        titleElement.getFont().drawWrapped(batch, title, topLeft.getWidth(), getHeight() - (topEdge.width / 2 - bounds.height / 2),
+                topWidth, titleElement.getAlign());
     }
 
     public void dispose() {
