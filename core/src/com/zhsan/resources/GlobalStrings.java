@@ -18,6 +18,8 @@ import java.util.Map;
  */
 public class GlobalStrings {
 
+    public static final String TITLE = "title";
+
     private GlobalStrings() {}
 
     private static Map<String, String> strings = null;

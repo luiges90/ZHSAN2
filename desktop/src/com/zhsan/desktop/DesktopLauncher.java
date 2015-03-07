@@ -11,8 +11,8 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.title = "";
         config.useGL30 = false;
-        config.width = 800;
-        config.height = 600;
+        config.width = ZHSan2.DEFAULT_WIDTH;
+        config.height = ZHSan2.DEFAULT_HEIGHT;
 		new LwjglApplication(new ZHSan2(), config);
 	}
 }
