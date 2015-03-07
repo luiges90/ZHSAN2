@@ -13,7 +13,7 @@ public class NewGameScreen {
     }
 
     void render(SpriteBatch batch) {
-        Fonts.disu.draw(batch, "grh光ig舌h5321234567890山田iw溫老", -200, 0);
+        Fonts.get().draw(batch, "grh光ig舌h5321234567890山田iw溫老", -200, 0);
     }
 
     void dispose(){
