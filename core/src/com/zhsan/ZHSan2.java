@@ -2,27 +2,32 @@ package com.zhsan;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.zhsan.common.Fonts;
 import com.zhsan.resources.GlobalStrings;
 import com.zhsan.start.StartScreen;
 
+import java.io.IOException;
+import java.io.Writer;
+
 public class ZHSan2 extends ApplicationAdapter {
 
-    public static enum GameState {
+    private static enum State {
         START,
     }
 
     public static final int DEFAULT_WIDTH = 1024;
     public static final int DEFAULT_HEIGHT = 600;
 
-    private GameState state = GameState.START;
+    private State state = State.START;
 
-    private StartScreen startScreen = null;
+    private StartScreen startScreen;
 
     private SpriteBatch batch;
 
@@ -31,12 +36,17 @@ public class ZHSan2 extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+        Fonts.init();
+
         batch = new SpriteBatch();
 
         camera = new OrthographicCamera(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         viewport = new ScreenViewport(camera);
 
         Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
+
+        startScreen = new StartScreen();
+        Gdx.input.setInputProcessor(startScreen.getInputProcessor());
     }
 
     @Override
@@ -48,10 +58,6 @@ public class ZHSan2 extends ApplicationAdapter {
 
         switch (state) {
             case START:
-                if (startScreen == null) {
-                    startScreen = new StartScreen();
-                    Gdx.input.setInputProcessor(startScreen.getInputProcessor());
-                }
                 startScreen.render(batch);
                 break;
         }
@@ -66,11 +72,11 @@ public class ZHSan2 extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        startScreen.dispose();
+
         batch.dispose();
 
-        if (startScreen != null) {
-            startScreen.dispose();
-        }
+        Fonts.dispose();
     }
 
 }

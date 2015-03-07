@@ -22,11 +22,19 @@ import java.io.File;
  */
 public class StartScreen implements MainGameScreen {
 
+    private static enum State {
+        MAIN, NEW
+    }
+
     private static final String RES_PATH = Paths.RESOURCES + "Start" + File.separator;
+
+    private State state = State.MAIN;
 
     private Texture txStart;
 
     private Rectangle start, load, setting, credit, exit;
+
+    private NewGameScreen newGameScreen;
 
     public StartScreen() {
         txStart = new Texture(Gdx.files.external(RES_PATH + "Start.jpg"));
@@ -47,6 +55,8 @@ public class StartScreen implements MainGameScreen {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        newGameScreen = new NewGameScreen();
     }
 
     private Point screenToImage(int x, int y) {
@@ -57,15 +67,25 @@ public class StartScreen implements MainGameScreen {
     }
 
     public void render(SpriteBatch batch) {
-        batch.draw(txStart, -txStart.getWidth() / 2, -txStart.getHeight() / 2);
+        switch (state) {
+            case MAIN:
+                batch.draw(txStart, -txStart.getWidth() / 2, -txStart.getHeight() / 2);
+                break;
+            case NEW:
+                newGameScreen.render(batch);
+                break;
+        }
+
     }
 
     public void dispose() {
+        newGameScreen.dispose();
+
         txStart.dispose();
     }
 
     private void openStart() {
-
+        state = State.NEW;
     }
 
     private void openLoad() {
@@ -84,22 +104,33 @@ public class StartScreen implements MainGameScreen {
         Gdx.app.exit();
     }
 
+    private void handleTouchDown(int x, int y) {
+        Point imgPt = screenToImage(x, y);
+        if (start.contains(imgPt.x, imgPt.y)) {
+            openStart();
+        } else if (load.contains(imgPt.x, imgPt.y)) {
+            openLoad();
+        } else if (setting.contains(imgPt.x, imgPt.y)) {
+            openSettings();
+        } else if (credit.contains(imgPt.x, imgPt.y)) {
+            openCredits();
+        } else if (exit.contains(imgPt.x, imgPt.y)) {
+            exit();
+        }
+    }
+
     @Override
     public InputProcessor getInputProcessor() {
         return new InputAdapter(){
             @Override
             public boolean touchDown(int x, int y, int pointer, int button) {
-                Point imgPt = screenToImage(x, y);
-                if (start.contains(imgPt.x, imgPt.y)) {
-                    openStart();
-                } else if (load.contains(imgPt.x, imgPt.y)) {
-                    openLoad();
-                } else if (setting.contains(imgPt.x, imgPt.y)) {
-                    openSettings();
-                } else if (credit.contains(imgPt.x, imgPt.y)) {
-                    openCredits();
-                } else if (exit.contains(imgPt.x, imgPt.y)) {
-                    exit();
+                switch (state) {
+                    case MAIN:
+                        handleTouchDown(x, y);
+                        break;
+                    case NEW:
+                        newGameScreen.handleTouchDown(x, y);
+                        break;
                 }
                 return true;
             }
