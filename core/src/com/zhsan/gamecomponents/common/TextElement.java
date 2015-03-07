@@ -1,5 +1,6 @@
 package com.zhsan.gamecomponents.common;
 
+import com.badlogic.gdx.graphics.Color;
 import com.zhsan.common.Fonts;
 
 /**
@@ -14,14 +15,18 @@ public class TextElement {
     private final String fontName;
     private final int fontSize;
     private final Fonts.Style fontStyle;
-    private final int fontColor;
+    private final Color fontColor;
     private final Alignment align;
 
     public TextElement(String fontName, int fontSize, Fonts.Style fontStyle, int fontColor, Alignment align) {
         this.fontName = fontName;
         this.fontSize = fontSize;
         this.fontStyle = fontStyle;
-        this.fontColor = fontColor;
+
+        Color temp = new Color();
+        Color.argb8888ToColor(temp, fontColor);
+        this.fontColor = temp;
+
         this.align = align;
     }
 
@@ -37,7 +42,7 @@ public class TextElement {
         return fontStyle;
     }
 
-    public int getFontColor() {
+    public Color getFontColor() {
         return fontColor;
     }
 
