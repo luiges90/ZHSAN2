@@ -13,20 +13,16 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
         System.setProperty("user.home", ".");
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler(){
+        Thread.setDefaultUncaughtExceptionHandler((thread, exception) -> {
+            System.err.println("Uncaught exception on thread: " + thread.getName());
+            exception.printStackTrace(System.err);
 
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                System.err.println("Uncaught exception on thread: " + t.getName());
-                e.printStackTrace(System.err);
+            String date = new SimpleDateFormat("yyyy-MM-dd HHmmss").format(Calendar.getInstance().getTime());
+            try (PrintWriter w = new PrintWriter(new FileWriter("Crash_" + date + ".log"))) {
+                w.println("Uncaught exception on thread: " + thread.getName());
+                exception.printStackTrace(w);
+            } catch (Exception e2) {
 
-                String date = new SimpleDateFormat("yyyy-MM-dd HHmmss").format(Calendar.getInstance().getTime());
-                try (PrintWriter w = new PrintWriter(new FileWriter("Crash_" + date + ".log"))) {
-                    w.println("Uncaught exception on thread: " + t.getName());
-                    e.printStackTrace(w);
-                } catch (Exception e2) {
-
-                }
             }
         });
 
