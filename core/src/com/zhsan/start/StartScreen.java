@@ -7,7 +7,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
-import com.zhsan.AcceptInput;
+import com.zhsan.MainGameScreen;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import org.w3c.dom.Document;
@@ -20,7 +20,7 @@ import java.io.File;
 /**
  * Created by Peter on 6/3/2015.
  */
-public class StartScreen implements AcceptInput {
+public class StartScreen implements MainGameScreen {
 
     private static final String RES_PATH = Paths.RESOURCES + "Start" + File.separator;
 
