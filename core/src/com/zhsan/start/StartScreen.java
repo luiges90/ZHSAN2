@@ -8,6 +8,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
@@ -20,13 +23,15 @@ import java.io.File;
 /**
  * Created by Peter on 6/3/2015.
  */
-public class StartScreen extends Actor {
+public class StartScreen extends WidgetGroup {
 
     private static final String RES_PATH = Paths.RESOURCES + "Start" + File.separator;
 
     private Texture txStart;
 
     private Rectangle start, load, setting, credit, exit;
+
+    private NewGameScreen newGameScreen;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "Start.xml");
@@ -71,10 +76,18 @@ public class StartScreen extends Actor {
 
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(txStart, 0, 0);
+        drawChildren(batch, parentAlpha);
     }
 
     private void openStart() {
-
+        if (newGameScreen == null) {
+            newGameScreen = new NewGameScreen();
+            newGameScreen.setWidth(txStart.getWidth());
+            newGameScreen.setHeight(txStart.getHeight());
+            this.addActor(newGameScreen);
+        } else {
+            newGameScreen.setVisible(true);
+        }
     }
 
     private void openLoad() {
@@ -105,6 +118,11 @@ public class StartScreen extends Actor {
         } else if (exit.contains(x, y)) {
             exit();
         }
+    }
+
+    public void dispose() {
+        newGameScreen.dispose();
+        txStart.dispose();
     }
 
 }

@@ -25,6 +25,7 @@ public class ZHSan2 extends ApplicationAdapter {
     public static final int DEFAULT_HEIGHT = 600;
 
     private Stage startStage;
+
     private StartScreen startScreen;
 
 	@Override
@@ -61,7 +62,10 @@ public class ZHSan2 extends ApplicationAdapter {
 
     @Override
     public void dispose() {
+        startScreen.dispose();
+
         startStage.dispose();
+
         Fonts.dispose();
     }
 

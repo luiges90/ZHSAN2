@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import java.util.Map;
 public class GlobalStrings {
 
     public static final String TITLE = "title";
+    public static final String NEW_GAME = "newGame";
 
     private GlobalStrings() {}
 

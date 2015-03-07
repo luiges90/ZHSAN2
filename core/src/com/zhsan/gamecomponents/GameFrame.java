@@ -6,8 +6,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.Fonts;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
@@ -22,7 +25,7 @@ import java.io.File;
 /**
  * Created by Peter on 7/3/2015.
  */
-public class GameFrame {
+public class GameFrame extends WidgetGroup {
 
     public static final String RES_PATH = Paths.COMPONENTS + "GameFrame" + File.separator;
 
@@ -48,7 +51,6 @@ public class GameFrame {
         }
     }
 
-    private int x, y, width, height;
     private String title;
 
     private OnClick listener;
@@ -119,19 +121,20 @@ public class GameFrame {
         }
     }
 
-    public GameFrame(int x, int y, int width, int height, String title, OnClick listener) {
+    public GameFrame(String title, OnClick listener) {
         loadXml();
 
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
         this.title = title;
         this.listener = listener;
     }
 
-    public void render(SpriteBatch batch) {
+    public void draw(Batch batch, float parentAlpha) {
+        float top = getHeight() - topEdge.image.getHeight();
+        batch.draw(topLeft, 0, top, topLeft.getWidth(), topEdge.width);
+        batch.draw(topEdge.image, topLeft.getWidth(), top, getWidth() - topLeft.getWidth() - topRight.getWidth(), topEdge.width);
+        batch.draw(topRight, getWidth() - topRight.getWidth(), top, topRight.getWidth(), topEdge.width);
 
+        // Fonts.get().draw(batch, title, getWidth() / 2, getHeight());
     }
 
     public void dispose() {
@@ -148,15 +151,6 @@ public class GameFrame {
         topRight.dispose();
         bottomLeft.dispose();
         bottomRight.dispose();
-    }
-
-    public InputProcessor getInputProcessor() {
-        return new InputAdapter(){
-            @Override
-            public boolean touchDown(int x, int y, int pointer, int button) {
-                return true;
-            }
-        };
     }
 
 }
