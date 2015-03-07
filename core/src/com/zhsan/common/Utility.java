@@ -1,6 +1,7 @@
 package com.zhsan.common;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import org.w3c.dom.Node;
 
 /**
@@ -17,4 +18,5 @@ public class Utility {
         rect.setHeight(Integer.parseInt(node.getAttributes().getNamedItem("Height").getNodeValue()));
         return rect;
     }
+
 }
