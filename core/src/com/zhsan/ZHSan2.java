@@ -21,14 +21,8 @@ import java.io.Writer;
 
 public class ZHSan2 extends ApplicationAdapter {
 
-    private static enum State {
-        START,
-    }
-
     public static final int DEFAULT_WIDTH = 1024;
     public static final int DEFAULT_HEIGHT = 600;
-
-    private State state = State.START;
 
     private Stage startStage;
     private StartScreen startScreen;
