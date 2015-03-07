@@ -35,8 +35,6 @@ public class StartScreen extends Actor {
 
     private static final String RES_PATH = Paths.RESOURCES + "Start" + File.separator;
 
-    private State state = State.MAIN;
-
     private Texture txStart;
 
     private Rectangle start, load, setting, credit, exit;
@@ -83,18 +81,11 @@ public class StartScreen extends Actor {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        switch (state) {
-            case MAIN:
-                batch.draw(txStart, 0, 0);
-                break;
-            case NEW:
-                // newGameScreen.render(batch);
-                break;
-        }
+        batch.draw(txStart, 0, 0);
     }
 
     private void openStart() {
-        state = State.NEW;
+
     }
 
     private void openLoad() {
