@@ -120,7 +120,9 @@ public class StartScreen extends WidgetGroup {
     }
 
     public void dispose() {
-        newGameFrame.dispose();
+        if (newGameFrame != null) {
+            newGameFrame.dispose();
+        }
         txStart.dispose();
     }
 

@@ -6,12 +6,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gameobject.GameScenario;
+import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.resources.GlobalStrings;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Peter on 8/3/2015.
@@ -58,7 +62,13 @@ public class NewGameFrame extends GameFrame {
         float scenarioPaneHeight = (getHeight() - margins * 3) / 2;
         float scenarioPaneWidth = (getWidth() - margins * 3) / 2;
 
+        List<GameSurvey> surveys = GameScenario.loadAllGameSurveys();
+
         Table scenarioList = new Table();
+        for (GameSurvey i : surveys) {
+            scenarioList.add(i.title);
+        }
+
         scenarioPane = new ScrollPane(scenarioList);
         scenarioPane.setX(margins);
         scenarioPane.setY(getHeight() - margins - scenarioPaneHeight);
