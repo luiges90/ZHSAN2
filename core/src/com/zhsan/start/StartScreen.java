@@ -5,18 +5,14 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
-import com.zhsan.common.exception.XmlException;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.GameFrame;
 import com.zhsan.gamecomponents.NewGameFrame;
-import com.zhsan.resources.GlobalStrings;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -60,7 +56,7 @@ public class StartScreen extends WidgetGroup {
             exit = Utility.readRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
             exit.y = txStart.getHeight() - exit.y - exit.height;
         } catch (Exception e) {
-            throw new XmlException(RES_PATH + "Start.xml", e);
+            throw new FileReadException(RES_PATH + "Start.xml", e);
         }
     }
 

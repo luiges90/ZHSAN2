@@ -7,13 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
-import com.zhsan.common.exception.XmlException;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.TextElement;
 import org.w3c.dom.Document;
@@ -124,7 +122,7 @@ public class GameFrame extends WidgetGroup {
                     dom.getElementsByTagName("BottomRight").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
             bottomRight = new Texture(fh);
         } catch (Exception e) {
-            throw new XmlException(RES_PATH + "GameFrameData.xml", e);
+            throw new FileReadException(RES_PATH + "GameFrameData.xml", e);
         }
     }
 

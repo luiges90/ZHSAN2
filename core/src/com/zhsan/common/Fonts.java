@@ -3,7 +3,7 @@ package com.zhsan.common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.zhsan.common.exception.XmlException;
+import com.zhsan.common.exception.FileReadException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -51,7 +51,7 @@ public class Fonts {
                 fonts.put(n.getAttributes().getNamedItem("name").getNodeValue(), styles);
             }
         } catch (Exception e) {
-            throw new XmlException(Paths.FONTS + "Fonts.xml", e);
+            throw new FileReadException(Paths.FONTS + "Fonts.xml", e);
         }
     }
 

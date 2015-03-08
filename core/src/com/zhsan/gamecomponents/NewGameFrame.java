@@ -2,12 +2,10 @@ package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.zhsan.common.exception.XmlException;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.resources.GlobalStrings;
 import org.w3c.dom.Document;
 
@@ -38,7 +36,7 @@ public class NewGameFrame extends GameFrame {
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
         } catch (Exception e) {
-            throw new XmlException(RES_PATH + "NewGameFrameData.xml", e);
+            throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
     }
 
