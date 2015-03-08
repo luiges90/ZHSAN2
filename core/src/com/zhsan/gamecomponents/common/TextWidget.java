@@ -62,6 +62,15 @@ public class TextWidget extends Widget {
         this.text = text;
     }
 
+    /**
+     * Compute minimum height to show the text completely
+     * @param width
+     */
+    public float computeNeededHeight(float width) {
+        BitmapFont.TextBounds bounds = setting.font.getWrappedBounds(text, width);
+        return bounds.height;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);

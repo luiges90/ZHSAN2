@@ -68,7 +68,9 @@ public class NewGameFrame extends GameFrame {
 
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
-            scenarioList.add(new TextWidget(scenarioElement, i.title)).left().top().expandX().fillX();
+            TextWidget widget = new TextWidget(scenarioElement, i.title);
+            scenarioList.add(widget).size(scenarioPaneWidth, widget.computeNeededHeight(scenarioPaneWidth))
+                .padTop(4).padBottom(4);
             scenarioList.row();
         }
         scenarioList.setX(getLeftBound());
@@ -76,7 +78,7 @@ public class NewGameFrame extends GameFrame {
         scenarioList.setWidth(scenarioPaneWidth);
         scenarioList.setHeight(scenarioPaneHeight);
         scenarioList.top().left();
-        scenarioList.debugAll();
+        // scenarioList.debugAll();
 
 //        scenarioPane = new ScrollPane(scenarioList);
 //        scenarioPane.setX(margins);
