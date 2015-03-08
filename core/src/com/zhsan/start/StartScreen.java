@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
+import com.zhsan.gamecomponents.GameFrame;
+import com.zhsan.resources.GlobalStrings;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,7 +33,7 @@ public class StartScreen extends WidgetGroup {
 
     private Rectangle start, load, setting, credit, exit;
 
-    private NewGameScreen newGameScreen;
+    private GameFrame newGameFrame;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "Start.xml");
@@ -80,13 +82,23 @@ public class StartScreen extends WidgetGroup {
     }
 
     private void openStart() {
-        if (newGameScreen == null) {
-            newGameScreen = new NewGameScreen();
-            newGameScreen.setWidth(txStart.getWidth());
-            newGameScreen.setHeight(txStart.getHeight());
-            this.addActor(newGameScreen);
+        if (newGameFrame == null) {
+            newGameFrame = new GameFrame(GlobalStrings.getString(GlobalStrings.NEW_GAME), new GameFrame.OnClick() {
+                @Override
+                public void onOkClicked() {
+
+                }
+
+                @Override
+                public void onCancelClicked() {
+
+                }
+            });
+            newGameFrame.setWidth(txStart.getWidth());
+            newGameFrame.setHeight(txStart.getHeight());
+            this.addActor(newGameFrame);
         } else {
-            newGameScreen.setVisible(true);
+            newGameFrame.setVisible(true);
         }
     }
 
@@ -121,7 +133,7 @@ public class StartScreen extends WidgetGroup {
     }
 
     public void dispose() {
-        newGameScreen.dispose();
+        newGameFrame.dispose();
         txStart.dispose();
     }
 

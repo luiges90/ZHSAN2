@@ -213,12 +213,12 @@ public class GameFrame extends WidgetGroup {
         if (ok.contains(x, y)) {
             okTexture.setState(StateTexture.State.NORMAL);
             buttonListener.onOkClicked();
-            // this.setVisible(false);
+            this.setVisible(false);
         }
         if (cancel.contains(x, y)) {
             cancelTexture.setState(StateTexture.State.NORMAL);
             buttonListener.onCancelClicked();
-            // this.setVisible(false);
+            this.setVisible(false);
         }
     }
 
