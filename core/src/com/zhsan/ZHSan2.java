@@ -65,8 +65,6 @@ public class ZHSan2 extends ApplicationAdapter {
         startScreen.dispose();
 
         startStage.dispose();
-
-        Fonts.dispose();
     }
 
 }

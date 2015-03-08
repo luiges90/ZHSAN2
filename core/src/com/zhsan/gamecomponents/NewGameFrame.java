@@ -2,13 +2,10 @@ package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.zhsan.common.exception.FileReadException;
-import com.zhsan.gamecomponents.common.TextElement;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.GameSurvey;
@@ -29,7 +26,7 @@ public class NewGameFrame extends GameFrame {
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private int margins;
-    private TextElement scenarioElement, scenarioDescriptionStyle, factionStyle;
+    private TextWidget scenarioElement, scenarioDescriptionStyle, factionStyle;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -43,7 +40,7 @@ public class NewGameFrame extends GameFrame {
 
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
-            scenarioElement = TextElement.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
+            scenarioElement = TextWidget.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -71,7 +68,7 @@ public class NewGameFrame extends GameFrame {
 
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
-            scenarioList.add(new TextWidget(scenarioElement, i.title));
+            // scenarioList.add(new TextWidget(scenarioElement, i.title));
             scenarioList.row();
         }
         scenarioList.setWidth(scenarioPaneWidth);

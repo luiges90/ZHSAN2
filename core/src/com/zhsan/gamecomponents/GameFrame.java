@@ -5,7 +5,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -13,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
-import com.zhsan.gamecomponents.common.TextElement;
+import com.zhsan.gamecomponents.common.TextWidget;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -56,7 +55,7 @@ public class GameFrame extends WidgetGroup {
 
     private Edge leftEdge, rightEdge, topEdge, bottomEdge;
     private Texture background;
-    private TextElement titleElement;
+    private TextWidget titleElement;
     private int okWidth, okHeight, cancelWidth, cancelHeight, okRight, okBottom, cancelRight, cancelBottom;
     private Rectangle ok, cancel;
     private StateTexture okTexture, cancelTexture;
@@ -83,7 +82,8 @@ public class GameFrame extends WidgetGroup {
                     dom.getElementsByTagName("BackGround").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
             background = new Texture(fh);
 
-            titleElement = TextElement.fromXml(dom.getElementsByTagName("Title").item(0));
+            titleElement = TextWidget.fromXml(dom.getElementsByTagName("Title").item(0));
+            addActor(titleElement);
 
             Node okNode = dom.getElementsByTagName("OKButton").item(0);
             Node cancelNode = dom.getElementsByTagName("CancelButton").item(0);
@@ -132,7 +132,7 @@ public class GameFrame extends WidgetGroup {
         this.title = title;
         this.buttonListener = buttonListener;
 
-        this.addListener(new InputListener(){
+        this.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 handleMouseMove(x, y);
@@ -164,6 +164,27 @@ public class GameFrame extends WidgetGroup {
         return getWidth() - rightEdge.width;
     }
 
+    private void updateTitleSize() {
+        titleElement.setText(title);
+        titleElement.setX(getLeftBound());
+        titleElement.setY(getTopBound());
+        titleElement.setWidth(getRightBound() - getLeftBound());
+        titleElement.setHeight(getHeight() - getTopBound());
+        titleElement.invalidateHierarchy();
+    }
+
+    @Override
+    public void setWidth(float width) {
+        super.setWidth(width);
+        updateTitleSize();
+    }
+
+    @Override
+    public void setHeight(float height) {
+        super.setHeight(height);
+        updateTitleSize();
+    }
+
     public void draw(Batch batch, float parentAlpha) {
         // edges
         float top = getTopBound();
@@ -184,12 +205,6 @@ public class GameFrame extends WidgetGroup {
 
         // background
         batch.draw(background, left, bottom, right - left, top - bottom);
-
-        // title
-        titleElement.applyColorSize();
-        BitmapFont.TextBounds bounds = titleElement.getFont().getWrappedBounds(title, right - left);
-        titleElement.getFont().drawWrapped(batch, title, topLeft.getWidth(), getHeight() - (topEdge.width / 2 - bounds.height / 2),
-                right - left, titleElement.getAlign());
 
         // ok button
         if (ok == null) {
