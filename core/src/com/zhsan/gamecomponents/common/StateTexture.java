@@ -19,6 +19,7 @@ public class StateTexture {
     }
 
     private final Texture normal, selected, pressed, disabled;
+    private State state = State.NORMAL;
 
     public StateTexture(Texture normal, Texture selected, Texture pressed, Texture disabled) {
         this.normal = normal;
@@ -27,7 +28,11 @@ public class StateTexture {
         this.disabled = disabled;
     }
 
-    public Texture get(State state) {
+    public void setState(State s) {
+        this.state = s;
+    }
+
+    public Texture get() {
         switch (state) {
             case NORMAL:
                 return normal;

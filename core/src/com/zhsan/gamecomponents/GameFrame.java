@@ -1,22 +1,21 @@
 package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.zhsan.common.Fonts;
 import com.zhsan.common.Paths;
-import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
 import com.zhsan.gamecomponents.common.StateTexture;
-import com.zhsan.gamecomponents.common.TextBackgroundElement;
+import com.zhsan.gamecomponents.common.TextElement;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -55,12 +54,13 @@ public class GameFrame extends WidgetGroup {
 
     private String title;
 
-    private OnClick listener;
+    private OnClick buttonListener;
 
     private Edge leftEdge, rightEdge, topEdge, bottomEdge;
     private Texture background;
-    private TextBackgroundElement titleElement;
-    private int okWidth, okHeight, cancelWidth, cancelHeight;
+    private TextElement titleElement;
+    private int okWidth, okHeight, cancelWidth, cancelHeight, okRight, okBottom, cancelRight, cancelBottom;
+    private Rectangle ok, cancel;
     private StateTexture okTexture, cancelTexture;
     private Sound okSound, cancelSound;
     private Texture topLeft, topRight, bottomLeft, bottomRight;
@@ -85,17 +85,21 @@ public class GameFrame extends WidgetGroup {
                     dom.getElementsByTagName("BackGround").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
             background = new Texture(fh);
 
-            titleElement = TextBackgroundElement.fromXml(dataPath, dom.getElementsByTagName("Title").item(0));
+            titleElement = TextElement.fromXml(dom.getElementsByTagName("Title").item(0));
 
-            Node ok = dom.getElementsByTagName("OKButton").item(0);
-            Node cancel = dom.getElementsByTagName("CancelButton").item(0);
-            okWidth = Integer.parseInt(ok.getAttributes().getNamedItem("Width").getNodeValue());
-            okHeight = Integer.parseInt(ok.getAttributes().getNamedItem("Height").getNodeValue());
-            cancelWidth = Integer.parseInt(cancel.getAttributes().getNamedItem("Width").getNodeValue());
-            cancelHeight = Integer.parseInt(cancel.getAttributes().getNamedItem("Height").getNodeValue());
+            Node okNode = dom.getElementsByTagName("OKButton").item(0);
+            Node cancelNode = dom.getElementsByTagName("CancelButton").item(0);
+            okWidth = Integer.parseInt(okNode.getAttributes().getNamedItem("Width").getNodeValue());
+            okHeight = Integer.parseInt(okNode.getAttributes().getNamedItem("Height").getNodeValue());
+            okRight = Integer.parseInt(okNode.getAttributes().getNamedItem("MarginRight").getNodeValue());
+            okBottom = Integer.parseInt(okNode.getAttributes().getNamedItem("MarginBottom").getNodeValue());
+            cancelWidth = Integer.parseInt(cancelNode.getAttributes().getNamedItem("Width").getNodeValue());
+            cancelHeight = Integer.parseInt(cancelNode.getAttributes().getNamedItem("Height").getNodeValue());
+            cancelRight = Integer.parseInt(cancelNode.getAttributes().getNamedItem("MarginRight").getNodeValue());
+            cancelBottom = Integer.parseInt(cancelNode.getAttributes().getNamedItem("MarginBottom").getNodeValue());
 
-            okTexture = StateTexture.fromXml(dataPath, ok);
-            cancelTexture = StateTexture.fromXml(dataPath, cancel);
+            okTexture = StateTexture.fromXml(dataPath, okNode);
+            cancelTexture = StateTexture.fromXml(dataPath, cancelNode);
 
             Node sound = dom.getElementsByTagName("SoundFile").item(0);
             fh = Gdx.files.external(dataPath + sound.getAttributes().getNamedItem("OK").getNodeValue());
@@ -124,24 +128,98 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    public GameFrame(String title, OnClick listener) {
+    public GameFrame(String title, OnClick buttonListener) {
         loadXml();
 
         this.title = title;
-        this.listener = listener;
+        this.buttonListener = buttonListener;
+
+        this.addListener(new InputListener(){
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                handleMouseMove(x, y);
+                return true;
+            }
+
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                handleTouchDown(x, y);
+                return true;
+            }
+        });
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        float top = getHeight() - topEdge.image.getHeight();
-        float topWidth = getWidth() - topLeft.getWidth() - topRight.getWidth();
-        batch.draw(topLeft, 0, top, topLeft.getWidth(), topEdge.width);
-        batch.draw(topEdge.image, topLeft.getWidth(), top, topWidth, topEdge.width);
-        batch.draw(topRight, getWidth() - topRight.getWidth(), top, topRight.getWidth(), topEdge.width);
+        // edges
+        float top = getHeight() - topEdge.width;
+        float bottom = bottomEdge.width;
+        float left = leftEdge.width;
+        float right = getWidth() - rightEdge.width;
 
+        batch.draw(topEdge.image, left, top, right - left, getHeight() - top);
+        batch.draw(bottomEdge.image, left, 0, right - left, bottom);
+        batch.draw(leftEdge.image, 0, bottom, left, top - bottom);
+        batch.draw(rightEdge.image, right, bottom, getWidth() - right, top - bottom);
+
+        // corners
+        batch.draw(topLeft, 0, top, left, getHeight() - top);
+        batch.draw(topRight, right, top, getWidth() - right, getHeight() - top);
+        batch.draw(bottomLeft, 0, 0, left, bottom);
+        batch.draw(bottomRight, right, 0, getWidth() - right, bottom);
+
+        // background
+        batch.draw(background, left, bottom, right - left, top - bottom);
+
+        // title
         titleElement.applyColorSize();
-        BitmapFont.TextBounds bounds = titleElement.getFont().getWrappedBounds(title, topWidth);
+        BitmapFont.TextBounds bounds = titleElement.getFont().getWrappedBounds(title, right - left);
         titleElement.getFont().drawWrapped(batch, title, topLeft.getWidth(), getHeight() - (topEdge.width / 2 - bounds.height / 2),
-                topWidth, titleElement.getAlign());
+                right - left, titleElement.getAlign());
+
+        // ok button
+        if (ok == null) {
+            ok = new Rectangle();
+        }
+        ok.setWidth(okWidth);
+        ok.setHeight(okHeight);
+        ok.setX(getWidth() - okRight - okWidth);
+        ok.setY(okBottom);
+        batch.draw(okTexture.get(), ok.x, ok.y, ok.width, ok.height);
+
+        // cancel button
+        if (cancel == null) {
+            cancel = new Rectangle();
+        }
+        cancel.setWidth(cancelWidth);
+        cancel.setHeight(cancelHeight);
+        cancel.setX(getWidth() - cancelRight - cancelWidth);
+        cancel.setY(cancelBottom);
+        batch.draw(cancelTexture.get(), cancel.x, cancel.y, cancel.width, cancel.height);
+    }
+
+    private void handleMouseMove(float x, float y) {
+        if (ok.contains(x, y)) {
+            okTexture.setState(StateTexture.State.SELECTED);
+        } else {
+            okTexture.setState(StateTexture.State.NORMAL);
+        }
+        if (cancel.contains(x, y)) {
+            cancelTexture.setState(StateTexture.State.SELECTED);
+        } else {
+            cancelTexture.setState(StateTexture.State.NORMAL);
+        }
+    }
+
+    private void handleTouchDown(float x, float y) {
+        if (ok.contains(x, y)) {
+            okTexture.setState(StateTexture.State.NORMAL);
+            buttonListener.onOkClicked();
+            // this.setVisible(false);
+        }
+        if (cancel.contains(x, y)) {
+            cancelTexture.setState(StateTexture.State.NORMAL);
+            buttonListener.onCancelClicked();
+            // this.setVisible(false);
+        }
     }
 
     public void dispose() {
