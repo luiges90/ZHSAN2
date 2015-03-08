@@ -210,6 +210,9 @@ public class GameFrame extends WidgetGroup {
         cancel.setX(getWidth() - cancelRight - cancelWidth);
         cancel.setY(cancelBottom);
         batch.draw(cancelTexture.get(), cancel.x, cancel.y, cancel.width, cancel.height);
+
+        // content
+        drawChildren(batch, parentAlpha);
     }
 
     private void handleMouseMove(float x, float y) {

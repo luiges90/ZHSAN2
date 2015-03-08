@@ -19,7 +19,6 @@ import java.util.Map;
  */
 public class Fonts {
 
-    public static final String SYSTEM = "System";
     public static final int SIZE = 32;
 
     public static enum Style {
@@ -70,10 +69,6 @@ public class Fonts {
     public static void init() {
         loadFontDefinition();
         loadFonts();
-    }
-
-    public static BitmapFont get(){
-        return get(SYSTEM, Style.REGULAR);
     }
 
     public static BitmapFont get(String name, Style style) {

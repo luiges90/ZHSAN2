@@ -15,7 +15,7 @@ public class GameScenario {
 
     public static final String PATH = "GameData" + File.separator + "Scenarios" + File.separator;
 
-    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
 
     public static List<GameSurvey> loadAllGameSurveys() {
         List<GameSurvey> result = new ArrayList<>();

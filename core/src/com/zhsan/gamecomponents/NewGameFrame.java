@@ -2,10 +2,14 @@ package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.TextElement;
+import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.resources.GlobalStrings;
@@ -14,7 +18,6 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,7 @@ public class NewGameFrame extends GameFrame {
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private int margins;
+    private TextElement scenarioElement, scenarioDescriptionStyle, factionStyle;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -39,6 +43,7 @@ public class NewGameFrame extends GameFrame {
 
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
+            scenarioElement = TextElement.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -66,19 +71,23 @@ public class NewGameFrame extends GameFrame {
 
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
-            scenarioList.add(i.title);
+            scenarioList.add(new TextWidget(scenarioElement, i.title));
+            scenarioList.row();
         }
+        scenarioList.setWidth(scenarioPaneWidth);
+        scenarioList.setHeight(100);
 
-        scenarioPane = new ScrollPane(scenarioList);
-        scenarioPane.setX(margins);
-        scenarioPane.setY(getHeight() - margins - scenarioPaneHeight);
-        scenarioPane.setWidth(scenarioPaneWidth);
-        scenarioPane.setHeight(scenarioPaneHeight);
+//        scenarioPane = new ScrollPane(scenarioList);
+//        scenarioPane.setX(margins);
+//        scenarioPane.setY(getHeight() - margins - scenarioPaneHeight);
+//        scenarioPane.setWidth(scenarioPaneWidth);
+//        scenarioPane.setHeight(scenarioPaneHeight);
+
+        addActor(scenarioList);
     }
 
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        this.drawChildren(batch, parentAlpha);
     }
 
 }
