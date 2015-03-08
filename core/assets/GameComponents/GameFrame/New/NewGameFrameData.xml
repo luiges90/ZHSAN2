@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
 	<Margins value="16"/>
+	<ListPaddings value="4"/>
 	<ScenarioList FontName="方正隶变_GBK"
          FontSize="14"
          FontStyle="Bold"
          FontColor="4294967295"
-         Align="Left">
-	</ScenarioList>
+         Align="Left" />
 </Root>

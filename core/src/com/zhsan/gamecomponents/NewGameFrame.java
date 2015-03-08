@@ -24,8 +24,10 @@ public class NewGameFrame extends GameFrame {
 
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
 
-    private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private int margins;
+    private int listPaddings;
+
+    private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private TextWidget.Setting scenarioElement, scenarioDescriptionStyle, factionStyle;
 
     private void loadXml() {
@@ -39,6 +41,8 @@ public class NewGameFrame extends GameFrame {
             dom = db.parse(f.read());
 
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
+                    .getNamedItem("value").getNodeValue());
+            listPaddings = Integer.parseInt(dom.getElementsByTagName("ListPaddings").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
             scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
         } catch (Exception e) {
@@ -70,7 +74,7 @@ public class NewGameFrame extends GameFrame {
         for (GameSurvey i : surveys) {
             TextWidget widget = new TextWidget(scenarioElement, i.title);
             scenarioList.add(widget).size(scenarioPaneWidth, widget.computeNeededHeight(scenarioPaneWidth))
-                .padTop(4).padBottom(4);
+                .padTop(listPaddings).padBottom(listPaddings);
             scenarioList.row();
         }
         scenarioList.setX(getLeftBound());
