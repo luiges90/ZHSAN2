@@ -150,12 +150,28 @@ public class GameFrame extends WidgetGroup {
         });
     }
 
+    protected final float getTopBound() {
+        return getHeight() - topEdge.width;
+    }
+
+    protected final float getBottomBound() {
+        return bottomEdge.width;
+    }
+
+    protected final float getLeftBound() {
+        return leftEdge.width;
+    }
+
+    protected final float getRightBound() {
+        return getWidth() - rightEdge.width;
+    }
+
     public void draw(Batch batch, float parentAlpha) {
         // edges
-        float top = getHeight() - topEdge.width;
-        float bottom = bottomEdge.width;
-        float left = leftEdge.width;
-        float right = getWidth() - rightEdge.width;
+        float top = getTopBound();
+        float bottom = getBottomBound();
+        float left = getLeftBound();
+        float right = getRightBound();
 
         batch.draw(topEdge.image, left, top, right - left, getHeight() - top);
         batch.draw(bottomEdge.image, left, 0, right - left, bottom);

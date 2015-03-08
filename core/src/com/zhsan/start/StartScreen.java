@@ -15,6 +15,7 @@ import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.XmlException;
 import com.zhsan.gamecomponents.GameFrame;
+import com.zhsan.gamecomponents.NewGameFrame;
 import com.zhsan.resources.GlobalStrings;
 import org.w3c.dom.Document;
 
@@ -83,17 +84,7 @@ public class StartScreen extends WidgetGroup {
 
     private void openStart() {
         if (newGameFrame == null) {
-            newGameFrame = new GameFrame(GlobalStrings.getString(GlobalStrings.NEW_GAME), new GameFrame.OnClick() {
-                @Override
-                public void onOkClicked() {
-
-                }
-
-                @Override
-                public void onCancelClicked() {
-
-                }
-            });
+            newGameFrame = new NewGameFrame();
             newGameFrame.setWidth(txStart.getWidth());
             newGameFrame.setHeight(txStart.getHeight());
             this.addActor(newGameFrame);
