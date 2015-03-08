@@ -49,13 +49,11 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    private String title;
-
     private OnClick buttonListener;
 
     private Edge leftEdge, rightEdge, topEdge, bottomEdge;
     private Texture background;
-    private TextWidget titleElement;
+    private TextWidget titleWidget;
     private int okWidth, okHeight, cancelWidth, cancelHeight, okRight, okBottom, cancelRight, cancelBottom;
     private Rectangle ok, cancel;
     private StateTexture okTexture, cancelTexture;
@@ -82,8 +80,8 @@ public class GameFrame extends WidgetGroup {
                     dom.getElementsByTagName("BackGround").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
             background = new Texture(fh);
 
-            titleElement = TextWidget.fromXml(dom.getElementsByTagName("Title").item(0));
-            addActor(titleElement);
+            titleWidget = new TextWidget(TextWidget.Setting.fromXml(dom.getElementsByTagName("Title").item(0)));
+            addActor(titleWidget);
 
             Node okNode = dom.getElementsByTagName("OKButton").item(0);
             Node cancelNode = dom.getElementsByTagName("CancelButton").item(0);
@@ -129,7 +127,8 @@ public class GameFrame extends WidgetGroup {
     public GameFrame(String title, OnClick buttonListener) {
         loadXml();
 
-        this.title = title;
+        titleWidget.setText(title);
+
         this.buttonListener = buttonListener;
 
         this.addListener(new InputListener() {
@@ -165,12 +164,11 @@ public class GameFrame extends WidgetGroup {
     }
 
     private void updateTitleSize() {
-        titleElement.setText(title);
-        titleElement.setX(getLeftBound());
-        titleElement.setY(getTopBound());
-        titleElement.setWidth(getRightBound() - getLeftBound());
-        titleElement.setHeight(getHeight() - getTopBound());
-        titleElement.invalidateHierarchy();
+        titleWidget.setX(getLeftBound());
+        titleWidget.setY(getTopBound());
+        titleWidget.setWidth(getRightBound() - getLeftBound());
+        titleWidget.setHeight(getHeight() - getTopBound());
+        titleWidget.invalidateHierarchy();
     }
 
     @Override

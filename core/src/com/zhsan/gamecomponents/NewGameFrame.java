@@ -26,7 +26,7 @@ public class NewGameFrame extends GameFrame {
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private int margins;
-    private TextWidget scenarioElement, scenarioDescriptionStyle, factionStyle;
+    private TextWidget.Setting scenarioElement, scenarioDescriptionStyle, factionStyle;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -40,7 +40,7 @@ public class NewGameFrame extends GameFrame {
 
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
-            scenarioElement = TextWidget.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
+            scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -66,13 +66,13 @@ public class NewGameFrame extends GameFrame {
 
         List<GameSurvey> surveys = GameScenario.loadAllGameSurveys();
 
-        Table scenarioList = new Table();
-        for (GameSurvey i : surveys) {
-            // scenarioList.add(new TextWidget(scenarioElement, i.title));
-            scenarioList.row();
-        }
-        scenarioList.setWidth(scenarioPaneWidth);
-        scenarioList.setHeight(100);
+//        Table scenarioList = new Table();
+//        for (GameSurvey i : surveys) {
+//            scenarioList.add(new TextWidget(scenarioElement));
+//            scenarioList.row();
+//        }
+//        scenarioList.setWidth(scenarioPaneWidth);
+//        scenarioList.setHeight(100);
 
 //        scenarioPane = new ScrollPane(scenarioList);
 //        scenarioPane.setX(margins);
@@ -80,11 +80,7 @@ public class NewGameFrame extends GameFrame {
 //        scenarioPane.setWidth(scenarioPaneWidth);
 //        scenarioPane.setHeight(scenarioPaneHeight);
 
-        addActor(scenarioList);
-    }
-
-    public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
+//        addActor(scenarioList);
     }
 
 }
