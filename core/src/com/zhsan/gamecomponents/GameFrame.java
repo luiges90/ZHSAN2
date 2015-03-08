@@ -138,12 +138,14 @@ public class GameFrame extends WidgetGroup {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {
                 handleMouseMove(x, y);
-                return true;
+                event.stop();
+                return false;
             }
 
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 handleTouchDown(x, y);
-                return true;
+                event.stop();
+                return false;
             }
         });
     }
