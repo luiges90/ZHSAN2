@@ -50,7 +50,12 @@ public class TextWidget extends Widget {
     private String text;
 
     public TextWidget(Setting setting) {
+        this(setting, "");
+    }
+
+    public TextWidget(Setting setting, String text) {
         this.setting = setting;
+        this.text = text;
     }
 
     public void setText(String text) {
