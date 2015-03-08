@@ -46,8 +46,8 @@ public class NewGameFrame extends GameFrame {
         }
     }
 
-    public NewGameFrame() {
-        super(GlobalStrings.getString(GlobalStrings.NEW_GAME), new GameFrame.OnClick() {
+    public NewGameFrame(float width, float height) {
+        super(width, height, GlobalStrings.getString(GlobalStrings.NEW_GAME), new GameFrame.OnClick() {
             @Override
             public void onOkClicked() {
 
@@ -61,18 +61,22 @@ public class NewGameFrame extends GameFrame {
 
         loadXml();
 
-        float scenarioPaneHeight = (getHeight() - margins * 3) / 2;
-        float scenarioPaneWidth = (getWidth() - margins * 3) / 2;
+        float scenarioPaneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
+        float scenarioPaneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
         List<GameSurvey> surveys = GameScenario.loadAllGameSurveys();
 
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
-            scenarioList.add(new TextWidget(scenarioElement, i.title));
+            scenarioList.add(new TextWidget(scenarioElement, i.title)).left().top().expandX().fillX();
             scenarioList.row();
         }
-        scenarioList.setWidth(200);
-        scenarioList.setHeight(200);
+        scenarioList.setX(getLeftBound());
+        scenarioList.setY(getTopBound() - scenarioPaneHeight);
+        scenarioList.setWidth(scenarioPaneWidth);
+        scenarioList.setHeight(scenarioPaneHeight);
+        scenarioList.top().left();
+        scenarioList.debugAll();
 
 //        scenarioPane = new ScrollPane(scenarioList);
 //        scenarioPane.setX(margins);

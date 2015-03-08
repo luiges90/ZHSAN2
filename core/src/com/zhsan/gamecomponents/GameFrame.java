@@ -124,10 +124,17 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    public GameFrame(String title, OnClick buttonListener) {
+    public GameFrame(float width, float height, String title, OnClick buttonListener) {
         loadXml();
 
+        this.setWidth(width);
+        this.setHeight(height);
+
         titleWidget.setText(title);
+        titleWidget.setX(getLeftBound());
+        titleWidget.setY(getTopBound());
+        titleWidget.setWidth(getRightBound() - getLeftBound());
+        titleWidget.setHeight(getHeight() - getTopBound());
 
         this.buttonListener = buttonListener;
 
@@ -147,6 +154,16 @@ public class GameFrame extends WidgetGroup {
         });
     }
 
+    @Override
+    public final void setWidth(float width) {
+        super.setWidth(width);
+    }
+
+    @Override
+    public final void setHeight(float height) {
+        super.setHeight(height);
+    }
+
     protected final float getTopBound() {
         return getHeight() - topEdge.width;
     }
@@ -161,26 +178,6 @@ public class GameFrame extends WidgetGroup {
 
     protected final float getRightBound() {
         return getWidth() - rightEdge.width;
-    }
-
-    private void updateTitleSize() {
-        titleWidget.setX(getLeftBound());
-        titleWidget.setY(getTopBound());
-        titleWidget.setWidth(getRightBound() - getLeftBound());
-        titleWidget.setHeight(getHeight() - getTopBound());
-        titleWidget.invalidateHierarchy();
-    }
-
-    @Override
-    public void setWidth(float width) {
-        super.setWidth(width);
-        updateTitleSize();
-    }
-
-    @Override
-    public void setHeight(float height) {
-        super.setHeight(height);
-        updateTitleSize();
     }
 
     public void draw(Batch batch, float parentAlpha) {

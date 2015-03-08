@@ -67,7 +67,14 @@ public class TextWidget extends Widget {
         super.draw(batch, parentAlpha);
 
         BitmapFont.TextBounds bounds = setting.font.getWrappedBounds(text, getWidth());
-        setting.font.drawWrapped(batch, text, getX(), getY() + getHeight() / 2 + bounds.height / 2,
-                getWidth(), setting.align);
+
+        float y;
+        if (getHeight() == 0) {
+            y = getY() - bounds.height;
+        } else {
+            y = getY() + getHeight() / 2 + bounds.height / 2;
+        }
+
+        setting.font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
     }
 }

@@ -80,9 +80,7 @@ public class StartScreen extends WidgetGroup {
 
     private void openStart() {
         if (newGameFrame == null) {
-            newGameFrame = new NewGameFrame();
-            newGameFrame.setWidth(txStart.getWidth());
-            newGameFrame.setHeight(txStart.getHeight());
+            newGameFrame = new NewGameFrame(txStart.getWidth(), txStart.getHeight());
             this.addActor(newGameFrame);
         } else {
             newGameFrame.setVisible(true);
