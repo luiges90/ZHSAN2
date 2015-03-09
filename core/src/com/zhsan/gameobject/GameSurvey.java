@@ -24,15 +24,13 @@ public final class GameSurvey {
     public final LocalDateTime saveDate;
     public final String message;
     public final String description;
-    public final Point initialPosition;
 
-    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, String description, Point initialPosition) {
+    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, String description) {
         this.title = title;
         this.startDate = startDate;
         this.saveDate = saveDate;
         this.message = message;
         this.description = description;
-        this.initialPosition = initialPosition;
     }
 
     public static final GameSurvey fromCSV(String path) {
@@ -52,8 +50,7 @@ public final class GameSurvey {
                         Integer.parseInt(line[3])));
                 b.setSaveDate(LocalDateTime.parse(line[4], GameScenario.DATE_TIME_FORMAT));
                 b.setMessage(line[5]);
-                b.setInitialPosition(Point.fromCSV(line[6]));
-                b.setDescription(line[7]);
+                b.setDescription(line[6]);
 
                 return b.build();
             }
@@ -71,7 +68,6 @@ public final class GameSurvey {
         private LocalDateTime saveDate;
         private String message;
         private String description;
-        private Point initialPosition;
 
         public String getTitle() {
             return title;
@@ -118,17 +114,8 @@ public final class GameSurvey {
             return this;
         }
 
-        public Point getInitialPosition() {
-            return initialPosition;
-        }
-
-        public Builder setInitialPosition(Point initialPosition) {
-            this.initialPosition = initialPosition;
-            return this;
-        }
-
         public GameSurvey build() {
-            return new GameSurvey(title, startDate, saveDate, message, description, initialPosition);
+            return new GameSurvey(title, startDate, saveDate, message, description);
         }
 
     }
