@@ -1,5 +1,6 @@
 package com.zhsan.common;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.w3c.dom.Node;
@@ -17,6 +18,12 @@ public class Utility {
         rect.setWidth(Integer.parseInt(node.getAttributes().getNamedItem("Width").getNodeValue()));
         rect.setHeight(Integer.parseInt(node.getAttributes().getNamedItem("Height").getNodeValue()));
         return rect;
+    }
+
+    public static Color readColorFromXml(int colorCode) {
+        Color temp = new Color();
+        Color.argb8888ToColor(temp, colorCode);
+        return temp;
     }
 
 }

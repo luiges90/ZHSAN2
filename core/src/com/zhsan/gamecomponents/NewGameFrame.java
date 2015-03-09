@@ -2,9 +2,17 @@ package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.GameScenario;
@@ -26,6 +34,7 @@ public class NewGameFrame extends GameFrame {
 
     private int margins;
     private int listPaddings;
+    private Color listSelectedColor;
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private TextWidget.Setting scenarioElement, scenarioDescriptionStyle, factionStyle;
@@ -42,8 +51,12 @@ public class NewGameFrame extends GameFrame {
 
             margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
                     .getNamedItem("value").getNodeValue());
-            listPaddings = Integer.parseInt(dom.getElementsByTagName("ListPaddings").item(0).getAttributes()
-                    .getNamedItem("value").getNodeValue());
+            listPaddings = Integer.parseInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
+                    .getNamedItem("padding").getNodeValue());
+            listSelectedColor = Utility.readColorFromXml(
+                    Integer.parseUnsignedInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
+                    .getNamedItem("selectedColor").getNodeValue())
+            );
             scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
@@ -73,8 +86,8 @@ public class NewGameFrame extends GameFrame {
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
             TextWidget widget = new TextWidget(scenarioElement, i.title);
-            scenarioList.add(widget).size(scenarioPaneWidth, widget.computeNeededHeight(scenarioPaneWidth))
-                .padTop(listPaddings).padBottom(listPaddings);
+            widget.setTouchable(Touchable.enabled);
+            scenarioList.add(widget).size(scenarioPaneWidth, widget.computeNeededHeight(scenarioPaneWidth) + listPaddings);
             scenarioList.row();
         }
         scenarioList.setX(getLeftBound());

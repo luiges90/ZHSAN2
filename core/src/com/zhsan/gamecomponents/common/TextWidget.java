@@ -3,8 +3,11 @@ package com.zhsan.gamecomponents.common;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.zhsan.common.Fonts;
+import com.zhsan.common.Utility;
 import org.w3c.dom.Node;
 
 /**
@@ -19,9 +22,7 @@ public class TextWidget extends Widget {
         private Setting(String fontName, int fontSize, Fonts.Style fontStyle, int fontColor, BitmapFont.HAlignment align) {
             this.font = new BitmapFont(Fonts.get(fontName, fontStyle));
 
-            Color temp = new Color();
-            Color.argb8888ToColor(temp, fontColor);
-            font.setColor(temp);
+            font.setColor(Utility.readColorFromXml(fontColor));
             font.setScale((float) fontSize / Fonts.SIZE);
 
             this.align = align;
@@ -86,4 +87,6 @@ public class TextWidget extends Widget {
 
         setting.font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
     }
+
+    // TODO dispose bitmapfont and shapeRenderer
 }
