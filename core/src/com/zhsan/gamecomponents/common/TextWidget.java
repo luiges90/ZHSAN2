@@ -54,6 +54,7 @@ public class TextWidget extends Widget implements Disposable {
     private BitmapFont font;
 
     private String text;
+    private ShapeRenderer shapeRenderer;
 
     public TextWidget(Setting setting) {
         this(setting, "");
@@ -66,6 +67,8 @@ public class TextWidget extends Widget implements Disposable {
         font = new BitmapFont(Fonts.get(setting.fontName, setting.fontStyle));
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
+
+        this.shapeRenderer = new ShapeRenderer();
     }
 
     public void setText(String text) {
@@ -95,6 +98,16 @@ public class TextWidget extends Widget implements Disposable {
         }
 
         font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
+
+        batch.end();
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+        shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(1, 1, 0, 1);
+        shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
+        shapeRenderer.end();
+        batch.begin();
     }
 
     public void dispose() {
