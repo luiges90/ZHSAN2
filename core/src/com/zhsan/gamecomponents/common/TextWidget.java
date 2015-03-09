@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
 import com.zhsan.common.Utility;
 import org.w3c.dom.Node;
@@ -13,18 +14,20 @@ import org.w3c.dom.Node;
 /**
  * Created by Peter on 7/3/2015.
  */
-public class TextWidget extends Widget {
+public class TextWidget extends Widget implements Disposable {
 
     public static final class Setting {
-        public final BitmapFont font;
+        private String fontName;
+        private int fontSize;
+        private Fonts.Style fontStyle;
+        private Color fontColor;
         public final BitmapFont.HAlignment align;
 
         private Setting(String fontName, int fontSize, Fonts.Style fontStyle, int fontColor, BitmapFont.HAlignment align) {
-            this.font = new BitmapFont(Fonts.get(fontName, fontStyle));
-
-            font.setColor(Utility.readColorFromXml(fontColor));
-            font.setScale((float) fontSize / Fonts.SIZE);
-
+            this.fontName = fontName;
+            this.fontSize = fontSize;
+            this.fontStyle = fontStyle;
+            this.fontColor = Utility.readColorFromXml(fontColor);
             this.align = align;
         }
 
@@ -48,6 +51,8 @@ public class TextWidget extends Widget {
     }
 
     private Setting setting;
+    private BitmapFont font;
+
     private String text;
 
     public TextWidget(Setting setting) {
@@ -57,6 +62,10 @@ public class TextWidget extends Widget {
     public TextWidget(Setting setting, String text) {
         this.setting = setting;
         this.text = text;
+
+        font = new BitmapFont(Fonts.get(setting.fontName, setting.fontStyle));
+        font.setColor(setting.fontColor);
+        font.setScale((float) setting.fontSize / Fonts.SIZE);
     }
 
     public void setText(String text) {
@@ -68,7 +77,7 @@ public class TextWidget extends Widget {
      * @param width
      */
     public float computeNeededHeight(float width) {
-        BitmapFont.TextBounds bounds = setting.font.getWrappedBounds(text, width);
+        BitmapFont.TextBounds bounds = font.getWrappedBounds(text, width);
         return bounds.height;
     }
 
@@ -76,7 +85,7 @@ public class TextWidget extends Widget {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        BitmapFont.TextBounds bounds = setting.font.getWrappedBounds(text, getWidth());
+        BitmapFont.TextBounds bounds = font.getWrappedBounds(text, getWidth());
 
         float y;
         if (getHeight() == 0) {
@@ -85,8 +94,10 @@ public class TextWidget extends Widget {
             y = getY() + getHeight() / 2 + bounds.height / 2;
         }
 
-        setting.font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
+        font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
     }
 
-    // TODO dispose bitmapfont and shapeRenderer
+    public void dispose() {
+        font.dispose();
+    }
 }

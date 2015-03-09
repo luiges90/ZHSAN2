@@ -6,9 +6,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
@@ -252,6 +254,7 @@ public class GameFrame extends WidgetGroup {
     }
 
     public void dispose() {
+        disposeAllChildren(this);
         leftEdge.dispose();
         rightEdge.dispose();
         topEdge.dispose();
@@ -265,6 +268,16 @@ public class GameFrame extends WidgetGroup {
         topRight.dispose();
         bottomLeft.dispose();
         bottomRight.dispose();
+    }
+
+    private void disposeAllChildren(WidgetGroup root) {
+        for (Actor i : root.getChildren()) {
+            if (i instanceof Disposable) {
+                ((Disposable) i).dispose();
+            } else if (i instanceof WidgetGroup) {
+                disposeAllChildren((WidgetGroup) i);
+            }
+        }
     }
 
 }
