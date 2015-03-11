@@ -28,7 +28,7 @@ public class Fonts {
     private Fonts() {}
 
     private static Map<String, EnumMap<Style, String>> fonts = new HashMap<>();
-    private static Map<String, FileHandle> fontFiles = new HashMap<>();
+    private static Map<String, BitmapFont> fontFiles = new HashMap<>();
 
     private static void loadFontDefinition() {
         FileHandle f = Gdx.files.external(Paths.FONTS + "Fonts.xml");
@@ -59,7 +59,7 @@ public class Fonts {
             if (!fontFiles.containsKey(name)) {
                 styles.forEach((style, file) -> {
                     FileHandle f = Gdx.files.external(Paths.FONTS + file);
-                    fontFiles.put(file, f);
+                    fontFiles.put(file, new BitmapFont(f));
                 });
             }
         });
@@ -70,7 +70,7 @@ public class Fonts {
         loadFonts();
     }
 
-    public static FileHandle get(String name, Style style) {
+    public static BitmapFont get(String name, Style style) {
         return fontFiles.get(fonts.get(name).get(style));
     }
 

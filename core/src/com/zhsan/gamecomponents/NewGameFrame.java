@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -41,7 +42,6 @@ public class NewGameFrame extends GameFrame {
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
-        String dataPath = RES_PATH + File.separator + "Data" + File.separator;
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -58,6 +58,7 @@ public class NewGameFrame extends GameFrame {
                     .getNamedItem("selectedColor").getNodeValue())
             );
             scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
+            scenarioDescriptionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioDescription").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -78,8 +79,13 @@ public class NewGameFrame extends GameFrame {
 
         loadXml();
 
-        float scenarioPaneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
-        float scenarioPaneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
+        initScenarioListPane();
+        // initScenarioDescriptionPane();
+    }
+
+    private void initScenarioListPane() {
+        float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
+        float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
         List<GameSurvey> surveys = GameScenario.loadAllGameSurveys();
 
@@ -87,23 +93,52 @@ public class NewGameFrame extends GameFrame {
         for (GameSurvey i : surveys) {
             TextWidget widget = new TextWidget(scenarioElement, i.title);
             widget.setTouchable(Touchable.enabled);
-            scenarioList.add(widget).size(scenarioPaneWidth, widget.computeNeededHeight(scenarioPaneWidth) + listPaddings);
+            widget.setSelectedOutlineColor(listSelectedColor);
+            scenarioList.add(widget).size(paneWidth, widget.computeNeededHeight(paneWidth) + listPaddings);
             scenarioList.row();
-        }
-        scenarioList.setX(getLeftBound());
-        scenarioList.setY(getTopBound() - scenarioPaneHeight);
-        scenarioList.setWidth(scenarioPaneWidth);
-        scenarioList.setHeight(scenarioPaneHeight);
-        scenarioList.top().left();
-        // scenarioList.debugAll();
 
-//        scenarioPane = new ScrollPane(scenarioList);
-//        scenarioPane.setX(margins);
-//        scenarioPane.setY(getHeight() - margins - scenarioPaneHeight);
-//        scenarioPane.setWidth(scenarioPaneWidth);
-//        scenarioPane.setHeight(scenarioPaneHeight);
+            widget.addListener(new ScenarioTextInputListener(widget));
+        }
+        scenarioList.top().left();
+        scenarioList.setX(getLeftBound());
+        scenarioList.setY(getTopBound() - paneHeight);
+        scenarioList.setWidth(paneWidth);
+        scenarioList.setHeight(paneHeight);
 
         addActor(scenarioList);
+
+    }
+
+    private void initScenarioDescriptionPane() {
+        float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
+        float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
+
+        TextWidget scenDescPane = new TextWidget(scenarioDescriptionStyle);
+        scenDescPane.setX(getLeftBound());
+        scenDescPane.setY(getBottomBound());
+        scenDescPane.setWidth(paneWidth);
+        scenDescPane.setHeight(paneHeight);
+
+        addActor(scenDescPane);
+    }
+
+    private class ScenarioTextInputListener extends InputListener {
+
+        private TextWidget widget;
+
+        public ScenarioTextInputListener(TextWidget widget) {
+            this.widget = widget;
+        }
+
+        @Override
+        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+            widget.setSelected(true);
+        }
+
+        @Override
+        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+            widget.setSelected(false);
+        }
     }
 
 }

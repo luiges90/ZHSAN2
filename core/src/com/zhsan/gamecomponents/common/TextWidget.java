@@ -56,6 +56,9 @@ public class TextWidget extends Widget implements Disposable {
     private String text;
     private ShapeRenderer shapeRenderer;
 
+    private boolean selected = false;
+    private Color selectedOutlineColor;
+
     public TextWidget(Setting setting) {
         this(setting, "");
     }
@@ -64,15 +67,27 @@ public class TextWidget extends Widget implements Disposable {
         this.setting = setting;
         this.text = text;
 
-        font = new BitmapFont(Fonts.get(setting.fontName, setting.fontStyle));
+        font = Fonts.get(setting.fontName, setting.fontStyle);
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
 
         this.shapeRenderer = new ShapeRenderer();
     }
 
+    public String getText() {
+        return text;
+    }
+
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Color getSelectedOutlineColor() {
+        return selectedOutlineColor;
+    }
+
+    public void setSelectedOutlineColor(Color selectedOutlineColor) {
+        this.selectedOutlineColor = selectedOutlineColor;
     }
 
     /**
@@ -99,18 +114,27 @@ public class TextWidget extends Widget implements Disposable {
 
         font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
 
-        batch.end();
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-        shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(1, 1, 0, 1);
-        shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
-        shapeRenderer.end();
-        batch.begin();
+        if (selected) {
+            batch.end();
+            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+            shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setColor(selectedOutlineColor);
+            shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
+            shapeRenderer.end();
+            batch.begin();
+        }
     }
 
     public void dispose() {
         font.dispose();
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
