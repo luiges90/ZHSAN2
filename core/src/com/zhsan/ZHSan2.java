@@ -21,8 +21,8 @@ import java.io.Writer;
 
 public class ZHSan2 extends ApplicationAdapter {
 
-    public static final int DEFAULT_WIDTH = 1024;
-    public static final int DEFAULT_HEIGHT = 600;
+    public static final int DEFAULT_WIDTH = 794;
+    public static final int DEFAULT_HEIGHT = 594;
 
     private Stage startStage;
 
@@ -34,9 +34,10 @@ public class ZHSan2 extends ApplicationAdapter {
 
         Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
 
-        startStage = new Stage(new ScreenViewport());
-
         startScreen = new StartScreen();
+
+        Viewport viewport = new ScreenViewport();
+        startStage = new Stage(viewport);
         startStage.addActor(startScreen);
 
         Gdx.input.setInputProcessor(startStage);
@@ -52,12 +53,6 @@ public class ZHSan2 extends ApplicationAdapter {
     @Override
     public void resize(int width, int height) {
         startStage.getViewport().update(width, height, true);
-
-        MoveToAction move = new MoveToAction();
-        move.setPosition(Gdx.graphics.getWidth() / 2 - startScreen.getWidth() / 2,
-                Gdx.graphics.getHeight() / 2 - startScreen.getHeight() / 2);
-        move.setDuration(0);
-        startStage.addAction(move);
     }
 
     @Override
