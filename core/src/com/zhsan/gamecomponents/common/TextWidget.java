@@ -54,8 +54,8 @@ public class TextWidget extends Widget implements Disposable {
     private BitmapFont font;
 
     private String text;
-    private ShapeRenderer shapeRenderer;
 
+    private ShapeRenderer shapeRenderer;
     private boolean selected = false;
     private Color selectedOutlineColor;
 
@@ -101,7 +101,7 @@ public class TextWidget extends Widget implements Disposable {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
+        validate();
 
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, getWidth());
 

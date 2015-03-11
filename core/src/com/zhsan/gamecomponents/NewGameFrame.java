@@ -100,13 +100,18 @@ public class NewGameFrame extends GameFrame {
             widget.addListener(new ScenarioTextInputListener(widget));
         }
         scenarioList.top().left();
-        scenarioList.setX(getLeftBound());
-        scenarioList.setY(getTopBound() - paneHeight);
-        scenarioList.setWidth(paneWidth);
-        scenarioList.setHeight(paneHeight);
 
-        addActor(scenarioList);
+        scenarioPane = new ScrollPane(scenarioList);
+        scenarioPane.setFadeScrollBars(false);
 
+        Table scenarioPaneContainer = new Table();
+        scenarioPaneContainer.setX(getLeftBound());
+        scenarioPaneContainer.setY(getTopBound() - paneHeight);
+        scenarioPaneContainer.setWidth(paneWidth);
+        scenarioPaneContainer.setHeight(paneHeight);
+        scenarioPaneContainer.add(scenarioPane).fill().expand();
+
+        addActor(scenarioPaneContainer);
     }
 
     private void initScenarioDescriptionPane() {
