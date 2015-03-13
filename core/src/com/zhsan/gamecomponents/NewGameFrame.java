@@ -85,10 +85,10 @@ public class NewGameFrame extends GameFrame {
         loadXml();
 
         initScenarioListPane();
-        // initScenarioDescriptionPane();
+        initScenarioDescriptionPane();
     }
 
-    private Table setupScrollpane(float paneWidth, float paneHeight, ScrollPane target) {
+    private Table setupScrollpane(float x, float y, float paneWidth, float paneHeight, ScrollPane target) {
         ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
         scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(new TextureRegion(scrollButton));
 
@@ -97,8 +97,8 @@ public class NewGameFrame extends GameFrame {
         target.setScrollingDisabled(true, false);
 
         Table scenarioPaneContainer = new Table();
-        scenarioPaneContainer.setX(getLeftBound());
-        scenarioPaneContainer.setY(getTopBound() - paneHeight);
+        scenarioPaneContainer.setX(x);
+        scenarioPaneContainer.setY(y);
         scenarioPaneContainer.setWidth(paneWidth);
         scenarioPaneContainer.setHeight(paneHeight);
         scenarioPaneContainer.add(target).fill().expand();
@@ -125,7 +125,7 @@ public class NewGameFrame extends GameFrame {
         scenarioList.top().left();
 
         scenarioPane = new ScrollPane(scenarioList);
-        Table scenarioPaneContainer = setupScrollpane(paneWidth, paneHeight, scenarioPane);
+        Table scenarioPaneContainer = setupScrollpane(getLeftBound(), getTopBound() - paneHeight, paneWidth, paneHeight, scenarioPane);
 
         addActor(scenarioPaneContainer);
     }
@@ -134,14 +134,11 @@ public class NewGameFrame extends GameFrame {
         float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
-        TextWidget scenDescPane = new TextWidget(scenarioDescriptionStyle);
-        scenDescPane.setX(getLeftBound());
-        scenDescPane.setY(getBottomBound());
+        TextWidget scenDescPane = new TextWidget(scenarioDescriptionStyle, TextWidget.VAlignment.TOP, "");
         scenDescPane.setWidth(paneWidth);
-        scenDescPane.setHeight(paneHeight);
 
         scenarioDescriptionPane = new ScrollPane(scenDescPane);
-        Table scenarioDescriptionPaneContainer = setupScrollpane(paneWidth, paneHeight, scenarioDescriptionPane);
+        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound(), getBottomBound(), paneWidth, paneHeight, scenarioDescriptionPane);
 
         addActor(scenarioDescriptionPaneContainer);
     }
@@ -162,6 +159,12 @@ public class NewGameFrame extends GameFrame {
         @Override
         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
             widget.setSelected(false);
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().description);
+            return false;
         }
     }
 

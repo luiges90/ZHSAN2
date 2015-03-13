@@ -15,6 +15,10 @@ import org.w3c.dom.Node;
  */
 public class TextWidget<ExtraType> extends Widget implements Disposable {
 
+    public static enum VAlignment {
+        TOP, CENTER
+    }
+
     public static final class Setting {
         private String fontName;
         private int fontSize;
@@ -53,6 +57,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     private BitmapFont font;
 
     private String text;
+    private VAlignment valign = VAlignment.CENTER;
 
     private ShapeRenderer shapeRenderer;
     private boolean selected = false;
@@ -65,7 +70,12 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     }
 
     public TextWidget(Setting setting, String text) {
+        this(setting, VAlignment.CENTER, text);
+    }
+
+    public TextWidget(Setting setting, VAlignment valign, String text) {
         this.setting = setting;
+        this.valign = valign;
         this.text = text;
 
         font = Fonts.get(setting.fontName, setting.fontStyle);
@@ -115,8 +125,8 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, getWidth());
 
         float y;
-        if (getHeight() == 0) {
-            y = getY() - bounds.height;
+        if (getHeight() == 0 || valign == VAlignment.TOP) {
+            y = getY() + getHeight() - bounds.height;
         } else {
             y = getY() + getHeight() / 2 + bounds.height / 2;
         }
