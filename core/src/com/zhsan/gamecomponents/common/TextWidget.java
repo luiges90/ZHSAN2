@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
@@ -14,7 +13,7 @@ import org.w3c.dom.Node;
 /**
  * Created by Peter on 7/3/2015.
  */
-public class TextWidget extends Widget implements Disposable {
+public class TextWidget<ExtraType> extends Widget implements Disposable {
 
     public static final class Setting {
         private String fontName;
@@ -59,6 +58,8 @@ public class TextWidget extends Widget implements Disposable {
     private boolean selected = false;
     private Color selectedOutlineColor;
 
+    private ExtraType extra;
+
     public TextWidget(Setting setting) {
         this(setting, "");
     }
@@ -88,6 +89,14 @@ public class TextWidget extends Widget implements Disposable {
 
     public void setSelectedOutlineColor(Color selectedOutlineColor) {
         this.selectedOutlineColor = selectedOutlineColor;
+    }
+
+    public ExtraType getExtra() {
+        return extra;
+    }
+
+    public void setExtra(ExtraType extra) {
+        this.extra = extra;
     }
 
     /**

@@ -3,16 +3,15 @@ package com.zhsan.gamecomponents;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.TextWidget;
@@ -32,6 +31,7 @@ import java.util.List;
 public class NewGameFrame extends GameFrame {
 
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
+    public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
 
     private int margins;
     private int listPaddings;
@@ -39,6 +39,8 @@ public class NewGameFrame extends GameFrame {
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
     private TextWidget.Setting scenarioElement, scenarioDescriptionStyle, factionStyle;
+
+    private Texture scrollButton;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -55,8 +57,11 @@ public class NewGameFrame extends GameFrame {
                     .getNamedItem("padding").getNodeValue());
             listSelectedColor = Utility.readColorFromXml(
                     Integer.parseUnsignedInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
-                    .getNamedItem("selectedColor").getNodeValue())
+                            .getNamedItem("selectedColor").getNodeValue())
             );
+            scrollButton = new Texture(Gdx.files.external(DATA_PATH + dom.getElementsByTagName("Scroll")
+                    .item(0).getAttributes().getNamedItem( "fileName").getNodeValue()));
+
             scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
             scenarioDescriptionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioDescription").item(0));
         } catch (Exception e) {
@@ -83,6 +88,23 @@ public class NewGameFrame extends GameFrame {
         // initScenarioDescriptionPane();
     }
 
+    private Table setupScrollpane(float paneWidth, float paneHeight, ScrollPane target) {
+        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
+        scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(new TextureRegion(scrollButton));
+
+        target.setStyle(scrollPaneStyle);
+        target.setFadeScrollBars(false);
+        target.setScrollingDisabled(true, false);
+
+        Table scenarioPaneContainer = new Table();
+        scenarioPaneContainer.setX(getLeftBound());
+        scenarioPaneContainer.setY(getTopBound() - paneHeight);
+        scenarioPaneContainer.setWidth(paneWidth);
+        scenarioPaneContainer.setHeight(paneHeight);
+        scenarioPaneContainer.add(target).fill().expand();
+        return scenarioPaneContainer;
+    }
+
     private void initScenarioListPane() {
         float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
@@ -91,9 +113,10 @@ public class NewGameFrame extends GameFrame {
 
         Table scenarioList = new Table();
         for (GameSurvey i : surveys) {
-            TextWidget widget = new TextWidget(scenarioElement, i.title);
+            TextWidget<GameSurvey> widget = new TextWidget<>(scenarioElement, i.title);
             widget.setTouchable(Touchable.enabled);
             widget.setSelectedOutlineColor(listSelectedColor);
+            widget.setExtra(i);
             scenarioList.add(widget).size(paneWidth, widget.computeNeededHeight(paneWidth) + listPaddings);
             scenarioList.row();
 
@@ -102,14 +125,7 @@ public class NewGameFrame extends GameFrame {
         scenarioList.top().left();
 
         scenarioPane = new ScrollPane(scenarioList);
-        scenarioPane.setFadeScrollBars(false);
-
-        Table scenarioPaneContainer = new Table();
-        scenarioPaneContainer.setX(getLeftBound());
-        scenarioPaneContainer.setY(getTopBound() - paneHeight);
-        scenarioPaneContainer.setWidth(paneWidth);
-        scenarioPaneContainer.setHeight(paneHeight);
-        scenarioPaneContainer.add(scenarioPane).fill().expand();
+        Table scenarioPaneContainer = setupScrollpane(paneWidth, paneHeight, scenarioPane);
 
         addActor(scenarioPaneContainer);
     }
@@ -124,14 +140,17 @@ public class NewGameFrame extends GameFrame {
         scenDescPane.setWidth(paneWidth);
         scenDescPane.setHeight(paneHeight);
 
-        addActor(scenDescPane);
+        scenarioDescriptionPane = new ScrollPane(scenDescPane);
+        Table scenarioDescriptionPaneContainer = setupScrollpane(paneWidth, paneHeight, scenarioDescriptionPane);
+
+        addActor(scenarioDescriptionPaneContainer);
     }
 
     private class ScenarioTextInputListener extends InputListener {
 
-        private TextWidget widget;
+        private TextWidget<GameSurvey> widget;
 
-        public ScenarioTextInputListener(TextWidget widget) {
+        public ScenarioTextInputListener(TextWidget<GameSurvey> widget) {
             this.widget = widget;
         }
 
