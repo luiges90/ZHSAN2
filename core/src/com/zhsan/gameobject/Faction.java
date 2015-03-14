@@ -44,7 +44,7 @@ public class Faction {
     public static final List<Faction> fromCSV(String path, @Nullable GameScenario scen) {
         List<Faction> result = new ArrayList<>();
 
-        FileHandle f = Gdx.files.external(path + File.separator + "GameSurvey.csv");
+        FileHandle f = Gdx.files.external(path + File.separator + "Faction.csv");
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;

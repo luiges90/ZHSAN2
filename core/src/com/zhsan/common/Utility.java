@@ -32,8 +32,8 @@ public class Utility {
     public static List<Integer> integerListFromXml(String s) {
         String[] split = s.split("\\s");
         List<Integer> result = new ArrayList<>();
-        for (int i = 0; i < s.length(); ++i) {
-            result.add(Integer.parseInt(split[i]));
+        for (String i : split) {
+            result.add(Integer.parseInt(i));
         }
         return result;
     }
