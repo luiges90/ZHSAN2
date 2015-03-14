@@ -128,7 +128,8 @@ public class NewGameFrame extends GameFrame {
         scenarioList.top().left();
 
         scenarioPane = new ScrollPane(scenarioList);
-        Table scenarioPaneContainer = setupScrollpane(getLeftBound(), getTopBound() - paneHeight, paneWidth, paneHeight, scenarioPane);
+        Table scenarioPaneContainer = setupScrollpane(getLeftBound() + margins, getTopBound() - margins - paneHeight,
+                paneWidth, paneHeight, scenarioPane);
 
         addActor(scenarioPaneContainer);
     }
@@ -141,12 +142,16 @@ public class NewGameFrame extends GameFrame {
         scenDescPane.setWidth(paneWidth);
 
         scenarioDescriptionPane = new ScrollPane(scenDescPane);
-        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound(), getBottomBound(), paneWidth, paneHeight, scenarioDescriptionPane);
+        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound() + margins, getBottomBound() + margins,
+                paneWidth, paneHeight, scenarioDescriptionPane);
 
         addActor(scenarioDescriptionPaneContainer);
     }
 
     private void initFactionPane() {
+        float paneHeight = (getTopBound() - getBottomBound() - margins * 2);
+        float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
+
 
     }
 
