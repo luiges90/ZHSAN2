@@ -4,13 +4,18 @@
 	<Lists padding="8" selectedColor="4294967295"/>
 	<Scroll fileName="ScrollButton.jpg" />
 	<ScenarioList FontName="方正隶变_GBK"
-         FontSize="14"
-         FontStyle="Regular"
-         FontColor="4294967295"
-         Align="Left" />
+        FontSize="14"
+        FontStyle="Regular"
+        FontColor="4294967295"
+        Align="Left" />
     <ScenarioDescription FontName="方正隶变_GBK"
-         FontSize="14"
-         FontStyle="Regular"
-         FontColor="4294967295"
-         Align="Left" />
+        FontSize="14"
+        FontStyle="Regular"
+        FontColor="4294967295"
+        Align="Left" />
+	<FactionList FontName="方正隶变_GBK"
+        FontSize="14"
+        FontStyle="Regular"
+        FontColor="4294967295"
+        Align="Left" />
 </Root>

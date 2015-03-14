@@ -15,9 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.resources.GlobalStrings;
+import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -38,7 +40,7 @@ public class NewGameFrame extends GameFrame {
     private Color listSelectedColor;
 
     private ScrollPane scenarioPane, scenarioDescriptionPane, factionPane;
-    private TextWidget.Setting scenarioElement, scenarioDescriptionStyle, factionStyle;
+    private TextWidget.Setting scenarioStyle, scenarioDescriptionStyle, factionStyle;
 
     private Texture scrollButton;
 
@@ -62,8 +64,9 @@ public class NewGameFrame extends GameFrame {
             scrollButton = new Texture(Gdx.files.external(DATA_PATH + dom.getElementsByTagName("Scroll")
                     .item(0).getAttributes().getNamedItem( "fileName").getNodeValue()));
 
-            scenarioElement = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
+            scenarioStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
             scenarioDescriptionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioDescription").item(0));
+            factionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("FactionList").item(0));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -109,11 +112,11 @@ public class NewGameFrame extends GameFrame {
         float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
-        List<GameSurvey> surveys = GameScenario.loadAllGameSurveys();
+        List<Pair<String, GameSurvey>> surveys = GameScenario.loadAllGameSurveys();
 
         Table scenarioList = new Table();
-        for (GameSurvey i : surveys) {
-            TextWidget<GameSurvey> widget = new TextWidget<>(scenarioElement, i.title);
+        for (Pair<String, GameSurvey> i : surveys) {
+            TextWidget<Pair<String, GameSurvey>> widget = new TextWidget<>(scenarioStyle, i.getRight().title);
             widget.setTouchable(Touchable.enabled);
             widget.setSelectedOutlineColor(listSelectedColor);
             widget.setExtra(i);
@@ -143,11 +146,15 @@ public class NewGameFrame extends GameFrame {
         addActor(scenarioDescriptionPaneContainer);
     }
 
+    private void initFactionPane() {
+
+    }
+
     private class ScenarioTextInputListener extends InputListener {
 
-        private TextWidget<GameSurvey> widget;
+        private TextWidget<Pair<String, GameSurvey>> widget;
 
-        public ScenarioTextInputListener(TextWidget<GameSurvey> widget) {
+        public ScenarioTextInputListener(TextWidget<Pair<String, GameSurvey>> widget) {
             this.widget = widget;
         }
 
@@ -163,7 +170,11 @@ public class NewGameFrame extends GameFrame {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().description);
+            ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().description);
+
+            List<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);
+
+
             return false;
         }
     }

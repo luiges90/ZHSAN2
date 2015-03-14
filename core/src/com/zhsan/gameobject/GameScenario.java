@@ -2,6 +2,8 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
@@ -17,17 +19,32 @@ public class GameScenario {
 
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
 
-    public static List<GameSurvey> loadAllGameSurveys() {
-        List<GameSurvey> result = new ArrayList<>();
+    private GameSurvey gameSurvey;
+    private List<Faction> factions;
+
+    public static List<Pair<String, GameSurvey>> loadAllGameSurveys() {
+        List<Pair<String, GameSurvey>> result = new ArrayList<>();
 
         FileHandle[] scenarios = Gdx.files.external(PATH).list();
         for (FileHandle f : scenarios) {
             if (f.isDirectory()) {
-                result.add(GameSurvey.fromCSV(f.path()));
+                result.add(new ImmutablePair<>(f.path(), GameSurvey.fromCSV(f.path())));
             }
         }
 
         return result;
     }
 
+    public GameScenario(String fileName) {
+        gameSurvey = loadGameSurvey(fileName);
+        factions = loadAllFactions(fileName);
+    }
+
+    public GameSurvey loadGameSurvey(String fileName) {
+        return GameSurvey.fromCSV(fileName);
+    }
+
+    public List<Faction> loadAllFactions(String fileName) {
+        return Faction.fromCSV(fileName, this);
+    }
 }

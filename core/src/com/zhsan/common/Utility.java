@@ -5,11 +5,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.w3c.dom.Node;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Peter on 7/3/2015.
  */
 public class Utility {
-    private Utility() {};
+    private Utility() {}
 
     public static Rectangle readRectangleFromXml(Node node) {
         Rectangle rect = new Rectangle();
@@ -24,6 +27,15 @@ public class Utility {
         Color temp = new Color();
         Color.argb8888ToColor(temp, colorCode);
         return temp;
+    }
+
+    public static List<Integer> integerListFromXml(String s) {
+        String[] split = s.split("\\s");
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < s.length(); ++i) {
+            result.add(Integer.parseInt(split[i]));
+        }
+        return result;
     }
 
 }
