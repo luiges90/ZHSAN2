@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
@@ -97,7 +98,8 @@ public class NewGameFrame extends GameFrame {
 
         target.setStyle(scrollPaneStyle);
         target.setFadeScrollBars(false);
-        target.setScrollingDisabled(true, false);
+        target.setOverscroll(false, false);
+        target.setFlickScroll(false);
 
         Table scenarioPaneContainer = new Table();
         scenarioPaneContainer.setX(x);
@@ -114,18 +116,18 @@ public class NewGameFrame extends GameFrame {
 
         List<Pair<String, GameSurvey>> surveys = GameScenario.loadAllGameSurveys();
 
-        Table scenarioList = new Table();
+        VerticalGroup scenarioList = new VerticalGroup();
         for (Pair<String, GameSurvey> i : surveys) {
             TextWidget<Pair<String, GameSurvey>> widget = new TextWidget<>(scenarioStyle, i.getRight().title);
             widget.setTouchable(Touchable.enabled);
             widget.setSelectedOutlineColor(listSelectedColor);
             widget.setExtra(i);
-            scenarioList.add(widget).size(paneWidth, widget.computeNeededHeight(paneWidth) + listPaddings);
-            scenarioList.row();
+            widget.setWidth(paneWidth);
+            widget.setPadding(listPaddings);
+            scenarioList.addActor(widget);
 
             widget.addListener(new ScenarioTextInputListener(widget));
         }
-        scenarioList.top().left();
 
         scenarioPane = new ScrollPane(scenarioList);
         Table scenarioPaneContainer = setupScrollpane(getLeftBound() + margins, getTopBound() - margins - paneHeight,

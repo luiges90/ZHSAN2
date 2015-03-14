@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
@@ -55,6 +56,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
 
     private Setting setting;
     private BitmapFont font;
+    private int padding = 0;
 
     private String text;
     private VAlignment valign = VAlignment.CENTER;
@@ -93,6 +95,14 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         this.text = text;
     }
 
+    public int getPadding() {
+        return padding;
+    }
+
+    public void setPadding(int padding) {
+        this.padding = padding;
+    }
+
     public Color getSelectedOutlineColor() {
         return selectedOutlineColor;
     }
@@ -116,6 +126,16 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     public float computeNeededHeight(float width) {
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, width);
         return bounds.height;
+    }
+
+    @Override
+    public float getPrefWidth() {
+        return getWidth();
+    }
+
+    @Override
+    public float getPrefHeight() {
+        return computeNeededHeight(getWidth()) + padding;
     }
 
     @Override
