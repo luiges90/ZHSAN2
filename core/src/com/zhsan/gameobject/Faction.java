@@ -81,4 +81,47 @@ public class Faction {
         }
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getTechniquePoint() {
+        return techniquePoint;
+    }
+
+    public int getTechniquePointReservedForTechnique() {
+        return techniquePointReservedForTechnique;
+    }
+
+    public int getTechniquePointReservedForFacility() {
+        return techniquePointReservedForFacility;
+    }
+
+    public int getReputation() {
+        return reputation;
+    }
+
+    public List<Integer> getPreferredUpgradeTechniqueKinds() {
+        return new ArrayList<>(preferredUpgradeTechniqueKinds);
+    }
+
+    public boolean isAutoRefuseReleaseCaptive() {
+        return autoRefuseReleaseCaptive;
+    }
+
+    public int getEmperorMerit() {
+        return emperorMerit;
+    }
+
+    public boolean isAlien() {
+        return alien;
+    }
+
+    public boolean isPlayerSelectable() {
+        return playerSelectable;
+    }
 }

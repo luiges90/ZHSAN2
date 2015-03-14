@@ -90,6 +90,7 @@ public class NewGameFrame extends GameFrame {
 
         initScenarioListPane();
         initScenarioDescriptionPane();
+        initFactionPane();
     }
 
     private Table setupScrollpane(float x, float y, float paneWidth, float paneHeight, ScrollPane target) {
@@ -154,7 +155,13 @@ public class NewGameFrame extends GameFrame {
         float paneHeight = (getTopBound() - getBottomBound() - margins * 2);
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
+        VerticalGroup factionList = new VerticalGroup();
 
+        factionPane = new ScrollPane(factionList);
+        Table factionPaneContainer = setupScrollpane(getRightBound() - margins - paneWidth, getBottomBound() + margins,
+                paneWidth, paneHeight, factionPane);
+
+        addActor(factionPaneContainer);
     }
 
     private class ScenarioTextInputListener extends InputListener {
@@ -181,6 +188,18 @@ public class NewGameFrame extends GameFrame {
 
             List<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);
 
+            VerticalGroup group = (VerticalGroup) factionPane.getWidget();
+            for (Faction i : factions) {
+                TextWidget<Faction> widget = new TextWidget<>(factionStyle, i.getName());
+                widget.setTouchable(Touchable.enabled);
+                widget.setSelectedOutlineColor(listSelectedColor);
+                widget.setExtra(i);
+                widget.setWidth(factionPane.getWidth());
+                widget.setPadding(listPaddings);
+                group.addActor(widget);
+
+                // widget.addListener(new ScenarioTextInputListener(widget));
+            }
 
             return false;
         }
