@@ -173,7 +173,7 @@ public class NewGameFrame extends GameFrame {
 
         @Override
         public void onCancelClicked() {
-
+            // no extra work, just close it
         }
     }
 
