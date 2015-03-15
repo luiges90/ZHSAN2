@@ -15,6 +15,8 @@ import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.TextWidget;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -126,7 +128,7 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    public GameFrame(float width, float height, String title, OnClick buttonListener) {
+    public GameFrame(float width, float height, String title, @Nullable OnClick buttonListener) {
         loadXml();
 
         this.setWidth(width);
@@ -138,8 +140,13 @@ public class GameFrame extends WidgetGroup {
         titleWidget.setWidth(getRightBound() - getLeftBound());
         titleWidget.setHeight(getHeight() - getTopBound());
 
-        this.buttonListener = buttonListener;
+        if (buttonListener != null) {
+            this.addOnClickListener(buttonListener);
+        }
+    }
 
+    public final void addOnClickListener(@NotNull OnClick buttonListener) {
+        this.buttonListener = buttonListener;
         this.addListener(new InputListener() {
             @Override
             public boolean mouseMoved(InputEvent event, float x, float y) {

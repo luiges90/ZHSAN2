@@ -83,23 +83,15 @@ public class NewGameFrame extends GameFrame {
     }
 
     public NewGameFrame(float width, float height) {
-        super(width, height, GlobalStrings.getString(GlobalStrings.NEW_GAME), new GameFrame.OnClick() {
-            @Override
-            public void onOkClicked() {
-
-            }
-
-            @Override
-            public void onCancelClicked() {
-
-            }
-        });
+        super(width, height, GlobalStrings.getString(GlobalStrings.NEW_GAME), null);
 
         loadXml();
 
         initScenarioListPane();
         initScenarioDescriptionPane();
         initFactionPane();
+
+        super.addOnClickListener(new ButtonListener());
     }
 
     private Table setupScrollpane(float x, float y, float paneWidth, float paneHeight, ScrollPane target) {
@@ -171,6 +163,18 @@ public class NewGameFrame extends GameFrame {
                 paneWidth, paneHeight, factionPane);
 
         addActor(factionPaneContainer);
+    }
+
+    private class ButtonListener implements OnClick {
+        @Override
+        public void onOkClicked() {
+
+        }
+
+        @Override
+        public void onCancelClicked() {
+
+        }
     }
 
     private class ScenarioTextInputListener extends InputListener {
