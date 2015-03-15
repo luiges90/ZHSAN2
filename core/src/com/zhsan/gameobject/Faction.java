@@ -54,23 +54,31 @@ public class Faction {
 
                 Faction t = new Faction();
                 t.id = Integer.parseInt(line[0]);
-                // t.color = line[1];
-                t.name = line[2];
-                t.techniquePoint = Integer.parseInt(line[3]);
-                t.techniquePointReservedForTechnique = Integer.parseInt(line[4]);
-                t.techniquePointReservedForFacility = Integer.parseInt(line[5]);
-                t.reputation = Integer.parseInt(line[6]);
-                // t.basicMilitaryKinds = line[7];
-                // t.upgradingTechnique = line[8];
-                // t.upgradeTechniqueRemainingTime = line[9];
-                // t.techniques = line[10];
-                t.preferredUpgradeTechniqueKinds = Utility.integerListFromXml(line[11]);
-                // t.planTechnique = line[12];
-                t.autoRefuseReleaseCaptive = Boolean.parseBoolean(line[13]);
-                t.emperorMerit = Integer.parseInt(line[14]);
-                // t.emperorRank = line[15];
-                t.alien = Boolean.parseBoolean(line[16]);
-                t.playerSelectable = Boolean.parseBoolean(line[17]);
+                // t.king = line[1];
+                // t.color = line[2];
+                t.name = line[3];
+                // t.capital = line[4];
+                t.techniquePoint = Integer.parseInt(line[5]);
+                t.techniquePointReservedForTechnique = Integer.parseInt(line[6]);
+                t.techniquePointReservedForFacility = Integer.parseInt(line[7]);
+                t.reputation = Integer.parseInt(line[8]);
+                // t.sections = line[9];
+                // t.informations = line[10];
+                // t.architectures = line[11];
+                // t.troops = line[12];
+                // t.routeways = line[13];
+                // t.legions = line[14];
+                // t.basicMilitaryKinds = line[15];
+                // t.upgradingTechnique = line[16];
+                // t.upgradeTechniqueRemainingTime = line[17];
+                // t.techniques = line[18];
+                t.preferredUpgradeTechniqueKinds = Utility.integerListFromXml(line[19]);
+                // t.planTechnique = line[20];
+                t.autoRefuseReleaseCaptive = Boolean.parseBoolean(line[21]);
+                t.emperorMerit = Integer.parseInt(line[22]);
+                // t.emperorRank = line[23];
+                t.alien = Boolean.parseBoolean(line[24]);
+                t.playerSelectable = Boolean.parseBoolean(line[25]);
 
                 result.add(t);
             }

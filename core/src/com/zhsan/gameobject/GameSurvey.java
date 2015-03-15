@@ -24,12 +24,14 @@ public final class GameSurvey {
     public final LocalDateTime saveDate;
     public final String message;
     public final String description;
+    public final Point initialPosition;
 
-    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, String description) {
+    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description) {
         this.title = title;
         this.startDate = startDate;
         this.saveDate = saveDate;
         this.message = message;
+        this.initialPosition = initialPosition;
         this.description = description;
     }
 
@@ -50,7 +52,8 @@ public final class GameSurvey {
                         Integer.parseInt(line[3])));
                 b.setSaveDate(LocalDateTime.parse(line[4], GameScenario.DATE_TIME_FORMAT));
                 b.setMessage(line[5]);
-                b.setDescription(line[6]);
+                b.setInitialPosition(Point.fromCSV(line[6]));
+                b.setDescription(line[7]);
 
                 return b.build();
             }
@@ -68,6 +71,7 @@ public final class GameSurvey {
         private LocalDateTime saveDate;
         private String message;
         private String description;
+        private Point initialPosition;
 
         public String getTitle() {
             return title;
@@ -114,8 +118,16 @@ public final class GameSurvey {
             return this;
         }
 
+        public Point getInitialPosition() {
+            return initialPosition;
+        }
+
+        public void setInitialPosition(Point initialPosition) {
+            this.initialPosition = initialPosition;
+        }
+
         public GameSurvey build() {
-            return new GameSurvey(title, startDate, saveDate, message, description);
+            return new GameSurvey(title, startDate, saveDate, message, initialPosition, description);
         }
 
     }
