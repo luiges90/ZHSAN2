@@ -174,6 +174,10 @@ public class GameFrame extends WidgetGroup {
         return bottomEdge.width;
     }
 
+    protected final float getBottomActiveBound() {
+        return getBottomBound() + okHeight;
+    }
+
     protected final float getLeftBound() {
         return leftEdge.width;
     }

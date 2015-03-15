@@ -121,7 +121,7 @@ public class NewGameFrame extends GameFrame {
     }
 
     private void initScenarioListPane() {
-        float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
+        float paneHeight = (getTopBound() - getBottomActiveBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
         List<Pair<String, GameSurvey>> surveys = GameScenario.loadAllGameSurveys();
@@ -147,27 +147,27 @@ public class NewGameFrame extends GameFrame {
     }
 
     private void initScenarioDescriptionPane() {
-        float paneHeight = (getTopBound() - getBottomBound() - margins * 3) / 2;
+        float paneHeight = (getTopBound() - getBottomActiveBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
         TextWidget scenDescPane = new TextWidget(scenarioDescriptionStyle, TextWidget.VAlignment.TOP, "");
         scenDescPane.setWidth(paneWidth);
 
         scenarioDescriptionPane = new ScrollPane(scenDescPane);
-        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound() + margins, getBottomBound() + margins,
+        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound() + margins, getBottomActiveBound() + margins,
                 paneWidth, paneHeight, scenarioDescriptionPane);
 
         addActor(scenarioDescriptionPaneContainer);
     }
 
     private void initFactionPane() {
-        float paneHeight = (getTopBound() - getBottomBound() - margins * 2);
+        float paneHeight = (getTopBound() - getBottomActiveBound() - margins * 2);
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
         VerticalGroup factionList = new VerticalGroup();
 
         factionPane = new ScrollPane(factionList);
-        Table factionPaneContainer = setupScrollpane(getRightBound() - margins - paneWidth, getBottomBound() + margins,
+        Table factionPaneContainer = setupScrollpane(getRightBound() - margins - paneWidth, getBottomActiveBound() + margins,
                 paneWidth, paneHeight, factionPane);
 
         addActor(factionPaneContainer);
