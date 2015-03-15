@@ -18,4 +18,5 @@
         FontStyle="Regular"
         FontColor="4294967295"
         Align="Left" />
+	<FactionListCheckBox Unchecked="RoundCheckBox.png" Checked="RoundCheckBoxSelected.png" />
 </Root>

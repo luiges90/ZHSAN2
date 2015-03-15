@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.CheckboxWidget;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameScenario;
@@ -22,6 +23,7 @@ import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.resources.GlobalStrings;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,6 +46,7 @@ public class NewGameFrame extends GameFrame {
     private TextWidget.Setting scenarioStyle, scenarioDescriptionStyle, factionStyle;
 
     private Texture scrollButton;
+    private Texture checkbox, checkboxChecked;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -68,6 +71,12 @@ public class NewGameFrame extends GameFrame {
             scenarioStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
             scenarioDescriptionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioDescription").item(0));
             factionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("FactionList").item(0));
+
+            Node checkboxNode = dom.getElementsByTagName("FactionListCheckBox").item(0);
+            checkbox = new Texture(Gdx.files.external(DATA_PATH +
+                            checkboxNode.getAttributes().getNamedItem("Unchecked").getNodeValue()));
+            checkboxChecked = new Texture(Gdx.files.external(DATA_PATH +
+                    checkboxNode.getAttributes().getNamedItem("Checked").getNodeValue()));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }
@@ -190,15 +199,13 @@ public class NewGameFrame extends GameFrame {
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             for (Faction i : factions) {
-                TextWidget<Faction> widget = new TextWidget<>(factionStyle, i.getName());
+                CheckboxWidget<Faction> widget = new CheckboxWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
                 widget.setTouchable(Touchable.enabled);
                 widget.setSelectedOutlineColor(listSelectedColor);
                 widget.setExtra(i);
                 widget.setWidth(factionPane.getWidth());
                 widget.setPadding(listPaddings);
                 group.addActor(widget);
-
-                // widget.addListener(new ScenarioTextInputListener(widget));
             }
 
             return false;

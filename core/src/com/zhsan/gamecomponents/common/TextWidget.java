@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
@@ -138,20 +137,26 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         return computeNeededHeight(getWidth()) + padding;
     }
 
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        validate();
+    protected float getTextX() {
+        return getX();
+    }
 
+    protected float getTextY() {
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, getWidth());
-
         float y;
         if (getHeight() == 0 || valign == VAlignment.TOP) {
             y = getY() + getHeight() - bounds.height;
         } else {
             y = getY() + getHeight() / 2 + bounds.height / 2;
         }
+        return y;
+    }
 
-        font.drawWrapped(batch, text, getX(), y, getWidth(), setting.align);
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        validate();
+
+        font.drawWrapped(batch, text, getTextX(), getTextY(), getWidth(), setting.align);
 
         if (selected) {
             batch.end();
