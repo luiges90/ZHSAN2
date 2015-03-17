@@ -9,9 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
@@ -28,12 +26,17 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Peter on 8/3/2015.
  */
 public class NewGameFrame extends GameFrame {
+
+    public interface OnScenarioChosenListener {
+        public void onScenarioChosen(String scenPath, List<Integer> factionIds);
+    }
 
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -47,6 +50,9 @@ public class NewGameFrame extends GameFrame {
 
     private Texture scrollButton;
     private Texture checkbox, checkboxChecked;
+
+    private OnScenarioChosenListener listener;
+    private String chosenScenarioPath;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -82,7 +88,7 @@ public class NewGameFrame extends GameFrame {
         }
     }
 
-    public NewGameFrame(float width, float height) {
+    public NewGameFrame(float width, float height, OnScenarioChosenListener listener) {
         super(width, height, GlobalStrings.getString(GlobalStrings.NEW_GAME), null);
 
         loadXml();
@@ -90,6 +96,8 @@ public class NewGameFrame extends GameFrame {
         initScenarioListPane();
         initScenarioDescriptionPane();
         initFactionPane();
+
+        this.listener = listener;
 
         super.addOnClickListener(new ButtonListener());
     }
@@ -168,7 +176,15 @@ public class NewGameFrame extends GameFrame {
     private class ButtonListener implements OnClick {
         @Override
         public void onOkClicked() {
-
+            List<Integer> chosenFactions = new ArrayList<>();
+            WidgetGroup factionPaneWidgets = (WidgetGroup) factionPane.getWidget();
+            for (Actor w : factionPaneWidgets.getChildren()) {
+                CheckboxWidget<Faction> cb = (CheckboxWidget<Faction>) w;
+                if (cb.isChecked()) {
+                    chosenFactions.add(cb.getExtra().getId());
+                }
+            }
+            listener.onScenarioChosen(chosenScenarioPath, chosenFactions);
         }
 
         @Override
@@ -197,6 +213,8 @@ public class NewGameFrame extends GameFrame {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            chosenScenarioPath = widget.getExtra().getLeft();
+
             ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().description);
 
             List<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);

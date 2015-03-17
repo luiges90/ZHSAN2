@@ -18,6 +18,7 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.List;
 
 /**
  * Created by Peter on 6/3/2015.
@@ -31,6 +32,7 @@ public class StartScreen extends WidgetGroup {
     private Rectangle start, load, setting, credit, exit;
 
     private GameFrame newGameFrame;
+    private NewGameFrame.OnScenarioChosenListener listener;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "Start.xml");
@@ -60,9 +62,11 @@ public class StartScreen extends WidgetGroup {
         }
     }
 
-    public StartScreen() {
+    public StartScreen(NewGameFrame.OnScenarioChosenListener listener) {
         txStart = new Texture(Gdx.files.external(RES_PATH + "Start.jpg"));
         loadXml();
+
+        this.listener = listener;
 
         this.setBounds(0, 0, txStart.getWidth(), txStart.getHeight());
         this.addListener(new InputListener(){
@@ -80,7 +84,7 @@ public class StartScreen extends WidgetGroup {
 
     private void openStart() {
         if (newGameFrame == null) {
-            newGameFrame = new NewGameFrame(txStart.getWidth(), txStart.getHeight());
+            newGameFrame = new NewGameFrame(txStart.getWidth(), txStart.getHeight(), listener);
             this.addActor(newGameFrame);
         } else {
             newGameFrame.setVisible(true);

@@ -13,11 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zhsan.common.Fonts;
+import com.zhsan.gamecomponents.NewGameFrame;
+import com.zhsan.gameobject.GameScenario;
 import com.zhsan.resources.GlobalStrings;
 import com.zhsan.start.StartScreen;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.List;
 
 public class ZHSan2 extends ApplicationAdapter {
 
@@ -34,7 +37,7 @@ public class ZHSan2 extends ApplicationAdapter {
 
         Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
 
-        startScreen = new StartScreen();
+        startScreen = new StartScreen(new OnNewScenarioSelected());
 
         Viewport viewport = new ScreenViewport();
         startStage = new Stage(viewport);
@@ -43,11 +46,27 @@ public class ZHSan2 extends ApplicationAdapter {
         Gdx.input.setInputProcessor(startStage);
     }
 
+    private class OnNewScenarioSelected implements NewGameFrame.OnScenarioChosenListener {
+
+        @Override
+        public void onScenarioChosen(String scenPath, List<Integer> factionIds) {
+            startScreen.dispose();
+            startStage.dispose();
+            startScreen = null;
+            startStage = null;
+
+            GameScenario scen = new GameScenario(scenPath);
+        }
+    }
+
     @Override
 	public void render () {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        startStage.act();
-        startStage.draw();
+        
+        if (startStage != null) {
+            startStage.act();
+            startStage.draw();
+        }
 	}
 
     @Override
@@ -57,9 +76,13 @@ public class ZHSan2 extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        startScreen.dispose();
+        if (startScreen != null) {
+            startScreen.dispose();
+        }
 
-        startStage.dispose();
+        if (startStage != null) {
+            startStage.dispose();
+        }
     }
 
 }
