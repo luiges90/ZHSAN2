@@ -7,6 +7,7 @@ import com.opencsv.CSVReader;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -85,7 +86,7 @@ public class Faction {
 
             return result;
         } catch (IOException e) {
-            throw new FileReadException(path + File.separator + "GameSurvey.csv", e);
+            throw new FileReadException(path + File.separator + "Faction.csv", e);
         }
     }
 
@@ -97,39 +98,4 @@ public class Faction {
         return name;
     }
 
-    public int getTechniquePoint() {
-        return techniquePoint;
-    }
-
-    public int getTechniquePointReservedForTechnique() {
-        return techniquePointReservedForTechnique;
-    }
-
-    public int getTechniquePointReservedForFacility() {
-        return techniquePointReservedForFacility;
-    }
-
-    public int getReputation() {
-        return reputation;
-    }
-
-    public List<Integer> getPreferredUpgradeTechniqueKinds() {
-        return new ArrayList<>(preferredUpgradeTechniqueKinds);
-    }
-
-    public boolean isAutoRefuseReleaseCaptive() {
-        return autoRefuseReleaseCaptive;
-    }
-
-    public int getEmperorMerit() {
-        return emperorMerit;
-    }
-
-    public boolean isAlien() {
-        return alien;
-    }
-
-    public boolean isPlayerSelectable() {
-        return playerSelectable;
-    }
 }

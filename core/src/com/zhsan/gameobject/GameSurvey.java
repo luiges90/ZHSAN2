@@ -70,7 +70,7 @@ public final class GameSurvey {
         throw new FileReadException(path + File.separator + "GameSurvey.csv", new EmptyFileException());
     }
 
-    public static class GameSurveyBuilder {
+    private static class GameSurveyBuilder {
         private String title;
         private LocalDate startDate;
         private LocalDateTime saveDate;

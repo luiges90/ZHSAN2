@@ -21,6 +21,8 @@ public class GameScenario {
 
     private GameSurvey gameSurvey;
     private List<Faction> factions;
+    private GameObjectList<TerrainDetail> terrainDetails;
+    private GameMap gameMap;
 
     public static List<Pair<String, GameSurvey>> loadAllGameSurveys() {
         List<Pair<String, GameSurvey>> result = new ArrayList<>();
@@ -37,7 +39,13 @@ public class GameScenario {
 
     public GameScenario(String fileName) {
         gameSurvey = GameSurvey.fromCSV(fileName);
+        terrainDetails = TerrainDetail.fromCSV(fileName, this);
+        gameMap = GameMap.fromCSV(fileName, this);
         factions =  Faction.fromCSV(fileName, this);
+    }
+
+    public GameObjectList<TerrainDetail> getTerrainDetails() {
+        return terrainDetails;
     }
 
 }

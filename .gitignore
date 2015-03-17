@@ -65,3 +65,6 @@ build/
 
 tools
 *.log
+
+## images too big to maintain on git
+core/assets/Resources/Map/
