@@ -221,7 +221,7 @@ public class NewGameFrame extends GameFrame {
             GameObjectList<Faction> factions = Faction.fromCSVQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().version);
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
-            for (Faction i : factions) {
+            for (Faction i : factions.getListOrderedById()) {
                 CheckboxWidget<Faction> widget = new CheckboxWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
                 widget.setTouchable(Touchable.enabled);
                 widget.setSelectedOutlineColor(listSelectedColor);
