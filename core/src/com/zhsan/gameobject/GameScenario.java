@@ -20,7 +20,6 @@ public class GameScenario {
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
 
     private GameSurvey gameSurvey;
-    private GameObjectList<Faction> factions;
     private GameObjectList<TerrainDetail> terrainDetails;
     private GameMap gameMap;
 
@@ -41,7 +40,6 @@ public class GameScenario {
         gameSurvey = GameSurvey.fromCSV(fileName);
         terrainDetails = TerrainDetail.fromCSV(fileName, this);
         gameMap = GameMap.fromCSV(fileName, this);
-        factions =  Faction.fromCSV(fileName, this);
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {

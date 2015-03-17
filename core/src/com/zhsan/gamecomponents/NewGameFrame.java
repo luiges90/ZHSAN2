@@ -218,7 +218,7 @@ public class NewGameFrame extends GameFrame {
 
             ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().description);
 
-            GameObjectList<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);
+            GameObjectList<Faction> factions = Faction.fromCSVQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().version);
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             for (Faction i : factions) {
