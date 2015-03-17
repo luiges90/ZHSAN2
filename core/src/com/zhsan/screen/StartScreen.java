@@ -1,4 +1,4 @@
-package com.zhsan.start;
+package com.zhsan.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -18,7 +18,6 @@ import org.w3c.dom.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.List;
 
 /**
  * Created by Peter on 6/3/2015.
