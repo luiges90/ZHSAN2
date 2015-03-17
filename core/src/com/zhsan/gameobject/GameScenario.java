@@ -20,7 +20,7 @@ public class GameScenario {
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
 
     private GameSurvey gameSurvey;
-    private List<Faction> factions;
+    private GameObjectList<Faction> factions;
     private GameObjectList<TerrainDetail> terrainDetails;
     private GameMap gameMap;
 

@@ -16,6 +16,7 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.CheckboxWidget;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.Faction;
+import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.resources.GlobalStrings;
@@ -217,7 +218,7 @@ public class NewGameFrame extends GameFrame {
 
             ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().description);
 
-            List<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);
+            GameObjectList<Faction> factions = Faction.fromCSV(widget.getExtra().getLeft(), null);
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             for (Faction i : factions) {

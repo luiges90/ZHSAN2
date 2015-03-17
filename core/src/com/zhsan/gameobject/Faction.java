@@ -21,9 +21,8 @@ import java.util.List;
 /**
  * Created by Peter on 14/3/2015.
  */
-public class Faction {
+public class Faction extends GameObject {
 
-    private int id;
     // private Color color;
     private String name;
     private int techniquePoint;
@@ -42,8 +41,12 @@ public class Faction {
     private boolean alien;
     private boolean playerSelectable;
 
-    public static final List<Faction> fromCSV(String path, @Nullable GameScenario scen) {
-        List<Faction> result = new ArrayList<>();
+    private Faction(int id) {
+        super(id);
+    }
+
+    public static final GameObjectList<Faction> fromCSV(String path, @Nullable GameScenario scen) {
+        GameObjectList<Faction> result = new GameObjectList<>();
 
         FileHandle f = Gdx.files.external(path + File.separator + "Faction.csv");
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
@@ -53,8 +56,7 @@ public class Faction {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Faction t = new Faction();
-                t.id = Integer.parseInt(line[0]);
+                Faction t = new Faction(Integer.parseInt(line[0]));
                 // t.king = line[1];
                 // t.color = line[2];
                 t.name = line[3];
