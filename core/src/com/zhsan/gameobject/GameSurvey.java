@@ -3,7 +3,6 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
-import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
@@ -25,14 +24,16 @@ public final class GameSurvey {
     public final String message;
     public final String description;
     public final Point initialPosition;
+    public final int version;
 
-    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description) {
+    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description, int version) {
         this.title = title;
         this.startDate = startDate;
         this.saveDate = saveDate;
         this.message = message;
         this.initialPosition = initialPosition;
         this.description = description;
+        this.version = version;
     }
 
     public static final GameSurvey fromCSV(String path) {
@@ -44,7 +45,7 @@ public final class GameSurvey {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Builder b = new Builder();
+                GameSurveyBuilder b = new GameSurveyBuilder();
                 b.setTitle(line[0]);
                 b.setStartDate(LocalDate.of(
                         Integer.parseInt(line[1]),
@@ -54,8 +55,13 @@ public final class GameSurvey {
                 b.setMessage(line[5]);
                 b.setInitialPosition(Point.fromCSV(line[6]));
                 b.setDescription(line[7]);
+                if (line.length >= 9) {
+                    b.setVersion(Integer.parseInt(line[8]));
+                } else {
+                    b.setVersion(1);
+                }
 
-                return b.build();
+                return b.createGameSurvey();
             }
         } catch (IOException e) {
             throw new FileReadException(path + File.separator + "GameSurvey.csv", e);
@@ -64,71 +70,52 @@ public final class GameSurvey {
         throw new FileReadException(path + File.separator + "GameSurvey.csv", new EmptyFileException());
     }
 
-    public static final class Builder {
-
+    public static class GameSurveyBuilder {
         private String title;
         private LocalDate startDate;
         private LocalDateTime saveDate;
         private String message;
-        private String description;
         private Point initialPosition;
+        private String description;
+        private int version;
 
-        public String getTitle() {
-            return title;
-        }
-
-        public Builder setTitle(String title) {
+        public GameSurveyBuilder setTitle(String title) {
             this.title = title;
             return this;
         }
 
-        public LocalDate getStartDate() {
-            return startDate;
-        }
-
-        public Builder setStartDate(LocalDate startDate) {
+        public GameSurveyBuilder setStartDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public LocalDateTime getSaveDate() {
-            return saveDate;
-        }
-
-        public Builder setSaveDate(LocalDateTime saveDate) {
+        public GameSurveyBuilder setSaveDate(LocalDateTime saveDate) {
             this.saveDate = saveDate;
             return this;
         }
 
-        public String getMessage() {
-            return message;
-        }
-
-        public Builder setMessage(String message) {
+        public GameSurveyBuilder setMessage(String message) {
             this.message = message;
             return this;
         }
 
-        public String getDescription() {
-            return description;
+        public GameSurveyBuilder setInitialPosition(Point initialPosition) {
+            this.initialPosition = initialPosition;
+            return this;
         }
 
-        public Builder setDescription(String description) {
+        public GameSurveyBuilder setDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public Point getInitialPosition() {
-            return initialPosition;
+        public GameSurveyBuilder setVersion(int version) {
+            this.version = version;
+            return this;
         }
 
-        public void setInitialPosition(Point initialPosition) {
-            this.initialPosition = initialPosition;
+        public GameSurvey createGameSurvey() {
+            return new GameSurvey(title, startDate, saveDate, message, initialPosition, description, version);
         }
-
-        public GameSurvey build() {
-            return new GameSurvey(title, startDate, saveDate, message, initialPosition, description);
-        }
-
     }
 }

@@ -36,15 +36,8 @@ public class GameScenario {
     }
 
     public GameScenario(String fileName) {
-        gameSurvey = loadGameSurvey(fileName);
-        factions = loadAllFactions(fileName);
+        gameSurvey = GameSurvey.fromCSV(fileName);
+        factions =  Faction.fromCSV(fileName, this);
     }
 
-    public GameSurvey loadGameSurvey(String fileName) {
-        return GameSurvey.fromCSV(fileName);
-    }
-
-    public List<Faction> loadAllFactions(String fileName) {
-        return Faction.fromCSV(fileName, this);
-    }
 }
