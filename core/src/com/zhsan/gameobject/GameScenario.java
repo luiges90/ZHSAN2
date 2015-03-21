@@ -46,4 +46,11 @@ public class GameScenario {
         return terrainDetails;
     }
 
+    public GameMap getGameMap() {
+        return gameMap;
+    }
+
+    public GameSurvey getGameSurvey() {
+        return gameSurvey;
+    }
 }

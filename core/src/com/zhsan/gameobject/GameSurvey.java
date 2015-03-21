@@ -23,7 +23,7 @@ public final class GameSurvey {
     public final LocalDateTime saveDate;
     public final String message;
     public final String description;
-    public final Point initialPosition;
+    public final Point cameraPosition;
     public final int version;
 
     private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description, int version) {
@@ -31,7 +31,7 @@ public final class GameSurvey {
         this.startDate = startDate;
         this.saveDate = saveDate;
         this.message = message;
-        this.initialPosition = initialPosition;
+        this.cameraPosition = initialPosition;
         this.description = description;
         this.version = version;
     }

@@ -2,32 +2,37 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.opencsv.CSVReader;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.MapLayer;
+import com.zhsan.resources.GlobalStrings;
+import jdk.nashorn.internal.objects.Global;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Peter on 17/3/2015.
  */
 public class GameMap {
 
-    public final int zoom;
-    public final int width;
-    public final int height;
-    public final String fileName;
-    public final int imageCount;
-    public final int tileInEachImage;
-    public final TerrainDetail[][] mapData;
+    private int zoom;
+    private int width;
+    private int height;
+    private String fileName;
+    private int imageCount;
+    private int tileInEachImage;
+    private TerrainDetail[][] mapData;
 
-    private GameMap(int zoom, int width, int height, String fileName, int imageCount, int tileInEachImage, TerrainDetail[][] mapData) {
+    public GameMap(int zoom, int width, int height, String fileName, int imageCount, int tileInEachImage, TerrainDetail[][] mapData) {
         this.zoom = zoom;
         this.width = width;
         this.height = height;
@@ -73,6 +78,40 @@ public class GameMap {
         }
 
         throw new FileReadException(path + File.separator + "Map.csv", new EmptyFileException());
+    }
+
+    public int getZoom() {
+        return zoom;
+    }
+
+    public void addZoom(int zoom) {
+        this.zoom = MathUtils.clamp(this.zoom + zoom,
+                Integer.parseInt(GlobalStrings.getString(GlobalStrings.MAP_ZOOM_MIN)),
+                Integer.parseInt(GlobalStrings.getString(GlobalStrings.MAP_ZOOM_MAX)));
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getImageCount() {
+        return imageCount;
+    }
+
+    public int getTileInEachImage() {
+        return tileInEachImage;
+    }
+
+    public TerrainDetail[][] getMapData() {
+        return mapData;
     }
 
     private static class GameMapBuilder {

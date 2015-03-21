@@ -80,7 +80,12 @@ public class ZHSan2 extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        startStage.getViewport().update(width, height, true);
+        if (startStage != null) {
+            startStage.getViewport().update(width, height, true);
+        }
+        if (gameStage != null) {
+            gameStage.getViewport().update(width, height, true);
+        }
     }
 
     @Override

@@ -20,6 +20,8 @@ public class GlobalStrings {
 
     public static final String TITLE = "title";
     public static final String NEW_GAME = "newGame";
+    public static final String MAP_ZOOM_MIN = "MapZoomMin";
+    public static final String MAP_ZOOM_MAX = "MapZoomMax";
 
     private GlobalStrings() {}
 
