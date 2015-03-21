@@ -84,10 +84,8 @@ public class GameMap {
         return zoom;
     }
 
-    public void addZoom(int zoom) {
-        this.zoom = MathUtils.clamp(this.zoom + zoom,
-                Integer.parseInt(GlobalStrings.getString(GlobalStrings.MAP_ZOOM_MIN)),
-                Integer.parseInt(GlobalStrings.getString(GlobalStrings.MAP_ZOOM_MAX)));
+    public void setZoom(int zoom) {
+        this.zoom = zoom;
     }
 
     public int getWidth() {

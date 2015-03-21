@@ -132,7 +132,7 @@ public class NewGameFrame extends GameFrame {
 
         VerticalGroup scenarioList = new VerticalGroup();
         for (Pair<String, GameSurvey> i : surveys) {
-            TextWidget<Pair<String, GameSurvey>> widget = new TextWidget<>(scenarioStyle, i.getRight().title);
+            TextWidget<Pair<String, GameSurvey>> widget = new TextWidget<>(scenarioStyle, i.getRight().getTitle());
             widget.setTouchable(Touchable.enabled);
             widget.setSelectedOutlineColor(listSelectedColor);
             widget.setExtra(i);
@@ -219,9 +219,9 @@ public class NewGameFrame extends GameFrame {
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             chosenScenarioPath = widget.getExtra().getLeft();
 
-            ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().description);
+            ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().getDescription());
 
-            GameObjectList<Faction> factions = Faction.fromCSVQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().version);
+            GameObjectList<Faction> factions = Faction.fromCSVQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().getVersion());
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             for (Faction i : factions.getListOrderedById()) {

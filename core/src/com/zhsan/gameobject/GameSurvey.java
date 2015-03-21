@@ -18,13 +18,13 @@ import java.time.LocalDateTime;
  */
 public final class GameSurvey {
 
-    public final String title;
-    public final LocalDate startDate;
-    public final LocalDateTime saveDate;
-    public final String message;
-    public final String description;
-    public final Point cameraPosition;
-    public final int version;
+    private String title;
+    private LocalDate startDate;
+    private LocalDateTime saveDate;
+    private String message;
+    private String description;
+    private Point cameraPosition;
+    private int version;
 
     private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description, int version) {
         this.title = title;
@@ -68,6 +68,38 @@ public final class GameSurvey {
         }
 
         throw new FileReadException(path + File.separator + "GameSurvey.csv", new EmptyFileException());
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getSaveDate() {
+        return saveDate;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Point getCameraPosition() {
+        return cameraPosition;
+    }
+
+    public void setCameraPosition(Point cameraPosition) {
+        this.cameraPosition = cameraPosition;
+    }
+
+    public int getVersion() {
+        return version;
     }
 
     private static class GameSurveyBuilder {

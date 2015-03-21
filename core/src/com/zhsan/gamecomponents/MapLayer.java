@@ -1,20 +1,23 @@
 package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
+import org.w3c.dom.Document;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +27,36 @@ import java.util.Map;
  */
 public class MapLayer extends WidgetGroup {
 
-    public static final String IMAGE_PATH = Paths.RESOURCES + "Map" + File.separator;
+    public static final String DATA_PATH = Paths.RESOURCES + "Map" + File.separator;
+
+    private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
 
     private Map<String, Texture> mapTiles = new HashMap<>();
 
     private GameScreen screen;
 
+    private void loadXml() {
+        FileHandle f = Gdx.files.external(DATA_PATH + "MapSetting.xml");
+
+        Document dom;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            dom = db.parse(f.read());
+
+            mapZoomMin = Integer.parseInt(dom.getAttributes().getNamedItem("mapZoomMin").getNodeValue());
+            mapZoomMax = Integer.parseInt(dom.getAttributes().getNamedItem("mapZoomMax").getNodeValue());
+            mapMouseScrollFactor = Integer.parseInt(dom.getAttributes().getNamedItem("mapMouseScrollFactor").getNodeValue());
+            mapScrollBoundary = Integer.parseInt(dom.getAttributes().getNamedItem("mapScrollBoundary").getNodeValue());
+        } catch (Exception e) {
+            throw new FileReadException(DATA_PATH + "NewGameFrameData.xml", e);
+        }
+    }
+
     public MapLayer(GameScreen screen) {
         this.screen = screen;
+
+        loadXml();
 
         this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -43,7 +68,7 @@ public class MapLayer extends WidgetGroup {
         if (mapTiles.containsKey(fileName)) {
             return mapTiles.get(fileName);
         }
-        Texture t = new Texture(Gdx.files.external(IMAGE_PATH + mapName + File.separator + fileName + ".jpg"));
+        Texture t = new Texture(Gdx.files.external(DATA_PATH + mapName + File.separator + fileName + ".jpg"));
         mapTiles.put(fileName, t);
         return t;
     }
@@ -74,11 +99,11 @@ public class MapLayer extends WidgetGroup {
         this.drawChildren(batch, parentAlpha);
 
         GameMap map = screen.getScenario().getGameMap();
-        Point center = screen.getScenario().getGameSurvey().cameraPosition;
+        Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
 
         int imageSize = map.getZoom() * map.getTileInEachImage();
 
-        for (Map.Entry<Point, String> e : getTerrainPicturesShown(map, center).entrySet()) {
+        for (Map.Entry<Point, String> e : getTerrainPicturesShown(map, mapCenter).entrySet()) {
             Texture texture = getMapTile(map.getFileName(), e.getValue());
             batch.draw(texture, e.getKey().x * imageSize, e.getKey().y * imageSize, imageSize, imageSize);
         }
@@ -92,7 +117,9 @@ public class MapLayer extends WidgetGroup {
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            screen.getScenario().getGameMap().addZoom(amount * 5);
+            int newZoom = screen.getScenario().getGameMap().getZoom();
+            newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
+            screen.getScenario().getGameMap().setZoom(newZoom);
             return true;
         }
     }
