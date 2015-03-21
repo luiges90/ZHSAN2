@@ -235,7 +235,7 @@ public class GameFrame extends WidgetGroup {
         batch.draw(cancelTexture.get(), cancel.x, cancel.y, cancel.width, cancel.height);
 
         // content
-        drawChildren(batch, parentAlpha);
+        super.draw(batch, parentAlpha);
     }
 
     private void handleMouseMove(float x, float y) {
