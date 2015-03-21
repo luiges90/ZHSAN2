@@ -15,6 +15,8 @@ import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,12 +46,14 @@ public class MapLayer extends WidgetGroup {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            mapZoomMin = Integer.parseInt(dom.getAttributes().getNamedItem("mapZoomMin").getNodeValue());
-            mapZoomMax = Integer.parseInt(dom.getAttributes().getNamedItem("mapZoomMax").getNodeValue());
-            mapMouseScrollFactor = Integer.parseInt(dom.getAttributes().getNamedItem("mapMouseScrollFactor").getNodeValue());
-            mapScrollBoundary = Integer.parseInt(dom.getAttributes().getNamedItem("mapScrollBoundary").getNodeValue());
+            NodeList list = dom.getElementsByTagName("MapSetting");
+            NamedNodeMap attributes = list.item(0).getAttributes();
+            mapZoomMin = Integer.parseInt(attributes.getNamedItem("mapZoomMin").getNodeValue());
+            mapZoomMax = Integer.parseInt(attributes.getNamedItem("mapZoomMax").getNodeValue());
+            mapMouseScrollFactor = Integer.parseInt(attributes.getNamedItem("mapMouseScrollFactor").getNodeValue());
+            mapScrollBoundary = Integer.parseInt(attributes.getNamedItem("mapScrollBoundary").getNodeValue());
         } catch (Exception e) {
-            throw new FileReadException(DATA_PATH + "NewGameFrameData.xml", e);
+            throw new FileReadException(DATA_PATH + "MapSetting.xml", e);
         }
     }
 
