@@ -36,6 +36,7 @@ public class MapLayer extends WidgetGroup {
     private Map<String, Texture> mapTiles = new HashMap<>();
 
     private GameScreen screen;
+    private Point cameraPosition;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(DATA_PATH + "MapSetting.xml");
@@ -62,6 +63,9 @@ public class MapLayer extends WidgetGroup {
 
         loadXml();
 
+        Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
+        this.cameraPosition = new Point(mapCenter.x * mapZoomMax, mapCenter.y * mapZoomMax);
+
         this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         this.addListener(new InputEventListener());
@@ -77,16 +81,16 @@ public class MapLayer extends WidgetGroup {
         return t;
     }
 
-    private Map<Point, String> getTerrainPicturesShown(GameMap map, Point center) {
+    private Map<Point, String> getTerrainPicturesShown(GameMap map) {
         float noTilesX = MathUtils.ceil(screen.getWidth() / map.getZoom());
         float noTilesY = MathUtils.ceil(screen.getHeight() / map.getZoom());
         float noImagesX = MathUtils.ceil(noTilesX / map.getTileInEachImage());
         float noImagesY = MathUtils.ceil(noTilesY / map.getTileInEachImage());
 
-        int xLo = (int) (center.x / map.getImageCount() - noImagesX / 2 - 1);
-        int xHi = (int) (center.x / map.getImageCount() + noImagesX / 2 + 1);
-        int yLo = (int) (center.y / map.getImageCount() - noImagesY / 2 - 1);
-        int yHi = (int) (center.y / map.getImageCount() + noImagesY / 2 + 1);
+        int xLo = (int) ((float) cameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() - noImagesX / 2 - 1);
+        int xHi = (int) ((float) cameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() + noImagesX / 2 + 1);
+        int yLo = (int) ((float) cameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() - noImagesY / 2 - 1);
+        int yHi = (int) ((float) cameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() + noImagesY / 2 + 1);
 
         Map<Point, String> results = new HashMap<>();
 
@@ -103,13 +107,14 @@ public class MapLayer extends WidgetGroup {
         this.drawChildren(batch, parentAlpha);
 
         GameMap map = screen.getScenario().getGameMap();
-        Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
 
         int imageSize = map.getZoom() * map.getTileInEachImage();
+        int offsetX = imageSize - (int) (getWidth() / 2) % imageSize;
+        int offsetY = imageSize - (int) (getHeight() / 2) % imageSize;
 
-        for (Map.Entry<Point, String> e : getTerrainPicturesShown(map, mapCenter).entrySet()) {
+        for (Map.Entry<Point, String> e : getTerrainPicturesShown(map).entrySet()) {
             Texture texture = getMapTile(map.getFileName(), e.getValue());
-            batch.draw(texture, e.getKey().x * imageSize, e.getKey().y * imageSize, imageSize, imageSize);
+            batch.draw(texture, e.getKey().x * imageSize - offsetX, e.getKey().y * imageSize - offsetY, imageSize, imageSize);
         }
     }
 
