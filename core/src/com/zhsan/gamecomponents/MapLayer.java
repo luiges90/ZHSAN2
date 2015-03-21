@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -29,6 +30,13 @@ import java.util.Map;
  */
 public class MapLayer extends WidgetGroup {
 
+    private enum MoveStateX {
+        IDLE, LEFT, RIGHT
+    }
+    private enum MoveStateY {
+        IDLE, TOP, BOTTOM
+    }
+
     public static final String DATA_PATH = Paths.RESOURCES + "Map" + File.separator;
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
@@ -36,7 +44,9 @@ public class MapLayer extends WidgetGroup {
     private Map<String, Texture> mapTiles = new HashMap<>();
 
     private GameScreen screen;
-    private Point cameraPosition;
+    private Vector2 mapCameraPosition;
+    private MoveStateX moveStateX = MoveStateX.IDLE;
+    private MoveStateY moveStateY = MoveStateY.IDLE;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(DATA_PATH + "MapSetting.xml");
@@ -64,7 +74,7 @@ public class MapLayer extends WidgetGroup {
         loadXml();
 
         Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
-        this.cameraPosition = new Point(mapCenter.x * mapZoomMax, mapCenter.y * mapZoomMax);
+        this.mapCameraPosition = new Vector2(mapCenter.x * mapZoomMax, mapCenter.y * mapZoomMax);
 
         this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
@@ -87,10 +97,11 @@ public class MapLayer extends WidgetGroup {
         float noImagesX = MathUtils.ceil(noTilesX / map.getTileInEachImage());
         float noImagesY = MathUtils.ceil(noTilesY / map.getTileInEachImage());
 
-        int xLo = (int) ((float) cameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() - noImagesX / 2 - 1);
-        int xHi = (int) ((float) cameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() + noImagesX / 2 + 1);
-        int yLo = (int) ((float) cameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() - noImagesY / 2 - 1);
-        int yHi = (int) ((float) cameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() + noImagesY / 2 + 1);
+        // FIXME map may jump when scrolling
+        int xLo = (int) (mapCameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() - noImagesX / 2 - 1);
+        int xHi = (int) (mapCameraPosition.x / mapZoomMax * map.getImageCount() / map.getWidth() + noImagesX / 2 + 1);
+        int yLo = (int) (mapCameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() - noImagesY / 2 - 1);
+        int yHi = (int) (mapCameraPosition.y / mapZoomMax * map.getImageCount() / map.getHeight() + noImagesY / 2 + 1);
 
         Map<Point, String> results = new HashMap<>();
 
@@ -103,14 +114,33 @@ public class MapLayer extends WidgetGroup {
         return results;
     }
 
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        if (moveStateX == MoveStateX.LEFT) {
+            mapCameraPosition.add(-mapMouseScrollFactor, 0);
+        } else if (moveStateX == MoveStateX.RIGHT) {
+            mapCameraPosition.add(mapMouseScrollFactor, 0);
+        }
+
+        if (moveStateY == MoveStateY.BOTTOM) {
+            mapCameraPosition.add(0, -mapMouseScrollFactor);
+        } else if (moveStateY == MoveStateY.TOP) {
+            mapCameraPosition.add(0, mapMouseScrollFactor);
+        }
+    }
+
     public void draw(Batch batch, float parentAlpha) {
-        this.drawChildren(batch, parentAlpha);
+        super.drawChildren(batch, parentAlpha);
 
         GameMap map = screen.getScenario().getGameMap();
 
         int imageSize = map.getZoom() * map.getTileInEachImage();
-        int offsetX = imageSize - (int) (getWidth() / 2) % imageSize;
-        int offsetY = imageSize - (int) (getHeight() / 2) % imageSize;
+        int offsetX = imageSize - (int) (getWidth() / 2) % imageSize +
+                (int) (mapCameraPosition.x * map.getZoom() / mapZoomMax) % imageSize;
+        int offsetY = imageSize - (int) (getHeight() / 2) % imageSize +
+                (int) (mapCameraPosition.y * map.getZoom() / mapZoomMax) % imageSize;
 
         for (Map.Entry<Point, String> e : getTerrainPicturesShown(map).entrySet()) {
             Texture texture = getMapTile(map.getFileName(), e.getValue());
@@ -125,9 +155,27 @@ public class MapLayer extends WidgetGroup {
     private class InputEventListener extends InputListener {
 
         @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            moveStateX = MoveStateX.IDLE;
+            moveStateY = MoveStateY.IDLE;
+
+            if (x < mapScrollBoundary) {
+                moveStateX = MoveStateX.LEFT;
+            } else if (x > getWidth() - mapScrollBoundary) {
+                moveStateX = MoveStateX.RIGHT;
+            }
+            if (y < mapScrollBoundary) {
+                moveStateY = MoveStateY.BOTTOM;
+            } else if (y > getHeight() - mapScrollBoundary) {
+                moveStateY = MoveStateY.TOP;
+            }
+            return true;
+        }
+
+        @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
             int newZoom = screen.getScenario().getGameMap().getZoom();
-            newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
+            newZoom = MathUtils.clamp(newZoom + -amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
             screen.getScenario().getGameMap().setZoom(newZoom);
             return true;
         }
