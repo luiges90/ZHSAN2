@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.CheckboxWidget;
+import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObjectList;
@@ -111,6 +112,8 @@ public class NewGameFrame extends GameFrame {
         target.setFadeScrollBars(false);
         target.setOverscroll(false, false);
         target.setFlickScroll(false);
+
+        target.addListener(new GetScrollFocusWhenEntered(target));
 
         Table scenarioPaneContainer = new Table();
         scenarioPaneContainer.setX(x);

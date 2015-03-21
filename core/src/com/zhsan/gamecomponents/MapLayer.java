@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
+import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 
@@ -35,6 +36,7 @@ public class MapLayer extends WidgetGroup {
         this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         this.addListener(new InputEventListener());
+        this.addListener(new GetScrollFocusWhenEntered(this));
     }
 
     private Texture getMapTile(String mapName, String fileName) {
@@ -87,16 +89,6 @@ public class MapLayer extends WidgetGroup {
     }
 
     private class InputEventListener extends InputListener {
-
-        @Override
-        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-            getStage().setScrollFocus(MapLayer.this);
-        }
-
-        @Override
-        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-            getStage().setScrollFocus(null);
-        }
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
