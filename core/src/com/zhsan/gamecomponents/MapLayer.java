@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,6 +14,7 @@ import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.GetKeyFocusWhenEntered;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
@@ -37,6 +39,9 @@ public class MapLayer extends WidgetGroup {
     private enum MoveStateY {
         IDLE, TOP, BOTTOM
     }
+    private enum ZoomState {
+        IDLE, IN, OUT
+    }
 
     public static final String DATA_PATH = Paths.RESOURCES + "Map" + File.separator;
 
@@ -49,6 +54,7 @@ public class MapLayer extends WidgetGroup {
     private Vector2 mapCameraPosition;
     private MoveStateX moveStateX = MoveStateX.IDLE;
     private MoveStateY moveStateY = MoveStateY.IDLE;
+    private ZoomState zoomState = ZoomState.IDLE;
 
     private Texture grid;
 
@@ -88,6 +94,7 @@ public class MapLayer extends WidgetGroup {
 
         this.addListener(new InputEventListener());
         this.addListener(new GetScrollFocusWhenEntered(this));
+        this.addListener(new GetKeyFocusWhenEntered(this));
     }
 
     public void resize(int width, int height) {
@@ -103,24 +110,54 @@ public class MapLayer extends WidgetGroup {
         return t;
     }
 
+    private void moveLeft() {
+        mapCameraPosition.add(-mapScrollFactor * GlobalVariables.scrollSpeed /
+                screen.getScenario().getGameMap().getZoom(), 0);
+    }
+
+    private void moveRight() {
+        mapCameraPosition.add(mapScrollFactor * GlobalVariables.scrollSpeed /
+                screen.getScenario().getGameMap().getZoom(), 0);
+    }
+
+    private void moveDown() {
+        mapCameraPosition.add(0, -mapScrollFactor * GlobalVariables.scrollSpeed /
+                screen.getScenario().getGameMap().getZoom());
+    }
+
+    private void moveUp() {
+        mapCameraPosition.add(0, mapScrollFactor * GlobalVariables.scrollSpeed /
+                screen.getScenario().getGameMap().getZoom());
+    }
+
+    private void adjustZoom(int amount) {
+        int newZoom = screen.getScenario().getGameMap().getZoom();
+        newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
+        screen.getScenario().getGameMap().setZoom(newZoom);
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
 
         GameMap map = screen.getScenario().getGameMap();
 
-        float scroll = mapScrollFactor * GlobalVariables.scrollSpeed;
-
         if (moveStateX == MoveStateX.LEFT) {
-            mapCameraPosition.add(-scroll / map.getZoom(), 0);
+            moveLeft();
         } else if (moveStateX == MoveStateX.RIGHT) {
-            mapCameraPosition.add(scroll / map.getZoom(), 0);
+            moveRight();
         }
 
         if (moveStateY == MoveStateY.BOTTOM) {
-            mapCameraPosition.add(0, -scroll / map.getZoom());
+            moveDown();
         } else if (moveStateY == MoveStateY.TOP) {
-            mapCameraPosition.add(0, scroll / map.getZoom());
+            moveUp();
+        }
+
+        if (zoomState == ZoomState.IN) {
+            adjustZoom(1);
+        } else if (zoomState == ZoomState.OUT) {
+            adjustZoom(-1);
         }
 
         mapCameraPosition.x = Math.max(getWidth() / 2, mapCameraPosition.x);
@@ -190,6 +227,46 @@ public class MapLayer extends WidgetGroup {
     private class InputEventListener extends InputListener {
 
         @Override
+        public boolean keyDown(InputEvent event, int keycode) {
+            if (keycode == Input.Keys.MINUS) {
+                zoomState = ZoomState.OUT;
+            } else if (keycode == Input.Keys.EQUALS) {
+                zoomState = ZoomState.IN;
+            } else if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
+                moveStateY = MoveStateY.TOP;
+            } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
+                moveStateX = MoveStateX.LEFT;
+            } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
+                moveStateY = MoveStateY.BOTTOM;
+            } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
+                moveStateX = MoveStateX.RIGHT;
+            } else if (keycode == Input.Keys.Q) {
+                GlobalVariables.showGrid = !GlobalVariables.showGrid;
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean keyUp(InputEvent event, int keycode) {
+            if (keycode == Input.Keys.MINUS) {
+                zoomState = ZoomState.IDLE;
+            } else if (keycode == Input.Keys.EQUALS) {
+                zoomState = ZoomState.IDLE;
+            } else if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
+                moveStateY = MoveStateY.IDLE;
+            } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
+                moveStateX = MoveStateX.IDLE;
+            } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
+                moveStateY = MoveStateY.IDLE;
+            } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
+                moveStateX = MoveStateX.IDLE;
+            }
+
+            return true;
+        }
+
+        @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
             moveStateX = MoveStateX.IDLE;
             moveStateY = MoveStateY.IDLE;
@@ -209,9 +286,7 @@ public class MapLayer extends WidgetGroup {
 
         @Override
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
-            int newZoom = screen.getScenario().getGameMap().getZoom();
-            newZoom = MathUtils.clamp(newZoom + -amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
-            screen.getScenario().getGameMap().setZoom(newZoom);
+            adjustZoom(-amount);
             return true;
         }
     }
