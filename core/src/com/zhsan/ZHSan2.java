@@ -85,6 +85,7 @@ public class ZHSan2 extends ApplicationAdapter {
         }
         if (gameStage != null) {
             gameStage.getViewport().update(width, height, true);
+            gameScreen.resize(width, height);
         }
     }
 

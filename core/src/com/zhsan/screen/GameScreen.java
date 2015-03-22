@@ -29,6 +29,10 @@ public class GameScreen extends WidgetGroup {
         return scen;
     }
 
+    public void resize(int width, int height) {
+        mapLayer.resize(width, height);
+    }
+
     public void draw(Batch batch, float parentAlpha) {
         this.drawChildren(batch, parentAlpha);
     }
