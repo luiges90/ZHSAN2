@@ -117,6 +117,12 @@ public class MapLayer extends WidgetGroup {
             mapCameraPosition.add(0, mapScrollFactor / map.getZoom());
         }
 
+        mapCameraPosition.x = Math.max(getWidth() / 2, mapCameraPosition.x);
+        mapCameraPosition.x = Math.min(map.getWidth() * mapZoomMax - getWidth() / 2, mapCameraPosition.x);
+
+        mapCameraPosition.y = Math.max(getHeight() / 2, mapCameraPosition.y);
+        mapCameraPosition.y = Math.min(map.getHeight() * mapZoomMax - getHeight() / 2, mapCameraPosition.y);
+
         screen.getScenario().getGameSurvey().setCameraPosition(
                 new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
         );
@@ -150,6 +156,8 @@ public class MapLayer extends WidgetGroup {
 
         for (int y = yLo; y <= yHi; ++y) {
             for (int x = xLo; x <= xHi; ++x) {
+                if (x < 0 || x >= map.getImageCount()) continue;
+                if (y < 0 || y >= map.getImageCount()) continue;
                 Texture texture = getMapTile(map.getFileName(), Integer.toString((map.getImageCount() - 1 - y) * map.getImageCount() + x));
                 batch.draw(texture, (x - xLo) * imageSize - offsetX, (y - yLo) * imageSize - offsetY, imageSize, imageSize);
             }
