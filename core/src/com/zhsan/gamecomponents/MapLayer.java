@@ -116,6 +116,10 @@ public class MapLayer extends WidgetGroup {
         } else if (moveStateY == MoveStateY.TOP) {
             mapCameraPosition.add(0, mapScrollFactor / map.getZoom());
         }
+
+        screen.getScenario().getGameSurvey().setCameraPosition(
+                new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
+        );
     }
 
     public void draw(Batch batch, float parentAlpha) {
