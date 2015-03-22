@@ -2,6 +2,7 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.zhsan.common.Paths;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class GameScenario {
 
-    public static final String PATH = "GameData" + File.separator + "Scenarios" + File.separator;
+    public static final String PATH = Paths.DATA + "Scenarios" + File.separator;
 
     public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
 

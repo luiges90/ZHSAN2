@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.zhsan.common.Fonts;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.gamecomponents.NewGameFrame;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.resources.GlobalStrings;
@@ -29,6 +30,7 @@ public class ZHSan2 extends ApplicationAdapter {
 	@Override
 	public void create () {
         Fonts.init();
+        GlobalVariables.load();
 
         Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
 

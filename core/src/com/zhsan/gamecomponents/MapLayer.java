@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
@@ -105,16 +106,18 @@ public class MapLayer extends WidgetGroup {
 
         GameMap map = screen.getScenario().getGameMap();
 
+        float scroll = mapScrollFactor * GlobalVariables.scrollSpeed;
+
         if (moveStateX == MoveStateX.LEFT) {
-            mapCameraPosition.add(-mapScrollFactor / map.getZoom(), 0);
+            mapCameraPosition.add(-scroll / map.getZoom(), 0);
         } else if (moveStateX == MoveStateX.RIGHT) {
-            mapCameraPosition.add(mapScrollFactor / map.getZoom(), 0);
+            mapCameraPosition.add(scroll / map.getZoom(), 0);
         }
 
         if (moveStateY == MoveStateY.BOTTOM) {
-            mapCameraPosition.add(0, -mapScrollFactor / map.getZoom());
+            mapCameraPosition.add(0, -scroll / map.getZoom());
         } else if (moveStateY == MoveStateY.TOP) {
-            mapCameraPosition.add(0, mapScrollFactor / map.getZoom());
+            mapCameraPosition.add(0, scroll / map.getZoom());
         }
 
         mapCameraPosition.x = Math.max(getWidth() / 2, mapCameraPosition.x);
