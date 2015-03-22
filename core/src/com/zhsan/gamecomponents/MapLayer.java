@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -51,6 +50,8 @@ public class MapLayer extends WidgetGroup {
     private MoveStateX moveStateX = MoveStateX.IDLE;
     private MoveStateY moveStateY = MoveStateY.IDLE;
 
+    private Texture grid;
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(DATA_PATH + "MapSetting.xml");
 
@@ -76,6 +77,8 @@ public class MapLayer extends WidgetGroup {
         this.screen = screen;
 
         loadXml();
+
+        grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
 
         GameMap map = screen.getScenario().getGameMap();
         Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
@@ -156,13 +159,26 @@ public class MapLayer extends WidgetGroup {
         int offsetX = (int) (startPointFromCameraX - this.getWidth() / 2);
         int offsetY = (int) (startPointFromCameraY - this.getHeight() / 2);
 
-
         for (int y = yLo; y <= yHi; ++y) {
             for (int x = xLo; x <= xHi; ++x) {
                 if (x < 0 || x >= map.getImageCount()) continue;
                 if (y < 0 || y >= map.getImageCount()) continue;
+
+                int px = (x - xLo) * imageSize - offsetX;
+                int py = (y - yLo) * imageSize - offsetY;
+
+                // map
                 Texture texture = getMapTile(map.getFileName(), Integer.toString((map.getImageCount() - 1 - y) * map.getImageCount() + x));
-                batch.draw(texture, (x - xLo) * imageSize - offsetX, (y - yLo) * imageSize - offsetY, imageSize, imageSize);
+                batch.draw(texture, px, py, imageSize, imageSize);
+
+                // grid
+                if (GlobalVariables.showGrid) {
+                    for (int i = 0; i < map.getTileInEachImage(); ++i) {
+                        for (int j = 0; j < map.getTileInEachImage(); ++j) {
+                            batch.draw(grid, px + j * zoom, py + i * zoom, zoom, zoom);
+                        }
+                    }
+                }
             }
         }
     }

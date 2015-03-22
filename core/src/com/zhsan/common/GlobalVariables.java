@@ -21,6 +21,7 @@ public class GlobalVariables {
     private GlobalVariables() {}
 
     public static float scrollSpeed;
+    public static boolean showGrid;
 
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
@@ -35,6 +36,7 @@ public class GlobalVariables {
             NodeList list = dom.getElementsByTagName("GlobalVariables");
             NamedNodeMap attributes = list.item(0).getAttributes();
             scrollSpeed = Float.parseFloat(attributes.getNamedItem("scrollSpeed").getNodeValue());
+            showGrid = Boolean.parseBoolean(attributes.getNamedItem("showGrid").getNodeValue());
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }
