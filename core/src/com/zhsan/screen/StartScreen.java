@@ -78,7 +78,7 @@ public class StartScreen extends WidgetGroup {
 
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(txStart, 0, 0);
-        drawChildren(batch, parentAlpha);
+        super.draw(batch, parentAlpha);
     }
 
     private void openStart() {

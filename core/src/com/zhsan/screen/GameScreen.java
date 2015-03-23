@@ -36,7 +36,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        this.drawChildren(batch, parentAlpha);
+        super.draw(batch, parentAlpha);
     }
 
     public void dispose() {

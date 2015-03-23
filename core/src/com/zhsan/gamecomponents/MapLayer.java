@@ -173,7 +173,7 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        super.drawChildren(batch, parentAlpha);
+        super.draw(batch, parentAlpha);
 
         GameMap map = screen.getScenario().getGameMap();
         int zoom = map.getZoom();
