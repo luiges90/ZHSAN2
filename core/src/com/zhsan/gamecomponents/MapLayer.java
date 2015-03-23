@@ -242,8 +242,8 @@ public class MapLayer extends WidgetGroup {
             }
         }
 
-        int px = (int) (mousePosition.x + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
-        int py = map.getHeight() + 1 - ((int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
+        int px = (int) (mousePosition.x + getX() + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
+        int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
 
         TerrainDetail terrain = screen.getScenario().getGameMap().getTerrainAt(px, py);
         if (terrain != null) {
