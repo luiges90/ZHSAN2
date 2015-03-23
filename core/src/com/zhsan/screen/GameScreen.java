@@ -24,11 +24,9 @@ public class GameScreen extends WidgetGroup {
         this.scen = scen;
 
         toolBar = new ToolBar(this, Gdx.graphics.getWidth());
-        toolBar.setPosition(0, 0);
-        toolBar.setWidth(Gdx.graphics.getWidth());
 
-        mapLayer = new MapLayer(this, Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() - toolBar.getHeight()));
-        mapLayer.setPosition(0, toolBar.getHeight());
+        mapLayer = new MapLayer(this, 0, (int) toolBar.getHeight(),
+                Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() - toolBar.getHeight()));
         this.addActor(mapLayer);
 
         this.addActor(toolBar);

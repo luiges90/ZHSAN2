@@ -79,7 +79,8 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         this.valign = valign;
         this.text = text;
 
-        font = Fonts.get(setting.fontName, setting.fontStyle);
+        BitmapFont ref = Fonts.get(setting.fontName, setting.fontStyle);
+        font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
 
@@ -144,7 +145,9 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     protected float getTextY() {
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, getWidth());
         float y;
-        if (getHeight() == 0 || valign == VAlignment.TOP) {
+        if (getHeight() == 0) {
+            y = getY() + bounds.height;
+        } else if (valign == VAlignment.TOP) {
             y = getY() + getHeight() - bounds.height;
         } else {
             y = getY() + getHeight() / 2 + bounds.height / 2;
