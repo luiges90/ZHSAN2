@@ -20,6 +20,7 @@ import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -43,7 +44,8 @@ public class MapLayer extends WidgetGroup {
         IDLE, IN, OUT
     }
 
-    public static final String DATA_PATH = Paths.RESOURCES + "Map" + File.separator;
+    public static final String RES_PATH = Paths.RESOURCES + "Map" + File.separator;
+    public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
     private float mapScrollFactor;
@@ -59,7 +61,7 @@ public class MapLayer extends WidgetGroup {
     private Texture grid;
 
     private void loadXml() {
-        FileHandle f = Gdx.files.external(DATA_PATH + "MapSetting.xml");
+        FileHandle f = Gdx.files.external(RES_PATH + "MapLayerData.xml");
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -67,15 +69,16 @@ public class MapLayer extends WidgetGroup {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            NodeList list = dom.getElementsByTagName("MapSetting");
-            NamedNodeMap attributes = list.item(0).getAttributes();
-            mapZoomMin = Integer.parseInt(attributes.getNamedItem("mapZoomMin").getNodeValue());
-            mapZoomMax = Integer.parseInt(attributes.getNamedItem("mapZoomMax").getNodeValue());
-            mapMouseScrollFactor = Integer.parseInt(attributes.getNamedItem("mapMouseScrollFactor").getNodeValue());
-            mapScrollBoundary = Integer.parseInt(attributes.getNamedItem("mapScrollBoundary").getNodeValue());
-            mapScrollFactor = Float.parseFloat(attributes.getNamedItem("mapScrollFactor").getNodeValue());
+            Node zoom = dom.getElementsByTagName("MapZoom").item(0);
+            mapZoomMin = Integer.parseInt(zoom.getAttributes().getNamedItem("Min").getNodeValue());
+            mapZoomMax = Integer.parseInt(zoom.getAttributes().getNamedItem("Max").getNodeValue());
+
+            Node scroll = dom.getElementsByTagName("MapScroll").item(0);
+            mapMouseScrollFactor = Integer.parseInt(scroll.getAttributes().getNamedItem("MouseFactor").getNodeValue());
+            mapScrollBoundary = Integer.parseInt(scroll.getAttributes().getNamedItem("Boundary").getNodeValue());
+            mapScrollFactor = Float.parseFloat(scroll.getAttributes().getNamedItem("Factor").getNodeValue());
         } catch (Exception e) {
-            throw new FileReadException(DATA_PATH + "MapSetting.xml", e);
+            throw new FileReadException(RES_PATH + "MapLayerData.xml", e);
         }
     }
 
@@ -106,7 +109,7 @@ public class MapLayer extends WidgetGroup {
         if (mapTiles.containsKey(fileName)) {
             return mapTiles.get(fileName);
         }
-        Texture t = new Texture(Gdx.files.external(DATA_PATH + mapName + File.separator + fileName + ".jpg"));
+        Texture t = new Texture(Gdx.files.external(RES_PATH + mapName + File.separator + fileName + ".jpg"));
         mapTiles.put(fileName, t);
         return t;
     }
