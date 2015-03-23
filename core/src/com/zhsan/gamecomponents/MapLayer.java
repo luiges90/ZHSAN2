@@ -90,15 +90,15 @@ public class MapLayer extends WidgetGroup {
         Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
         this.mapCameraPosition = new Vector2(mapCenter.x * mapZoomMax, (map.getHeight() - 1 - mapCenter.y) * mapZoomMax);
 
-        this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 
         this.addListener(new InputEventListener());
         this.addListener(new GetScrollFocusWhenEntered(this));
         this.addListener(new GetKeyFocusWhenEntered(this));
     }
 
-    public void resize(int width, int height) {
-        this.setBounds(0, 0, width, height);
+    public void resize() {
+        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     private Texture getMapTile(String mapName, String fileName) {

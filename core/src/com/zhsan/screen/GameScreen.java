@@ -22,6 +22,7 @@ public class GameScreen extends WidgetGroup {
         this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         mapLayer = new MapLayer(this);
+        mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         this.addActor(mapLayer);
     }
 
@@ -30,7 +31,8 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        mapLayer.resize(width, height);
+        mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        mapLayer.resize();
     }
 
     public void draw(Batch batch, float parentAlpha) {
