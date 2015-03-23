@@ -47,7 +47,7 @@ public class GameMap {
         String[] split = line.split("\\s");
         for (int i = 0; i < result.length; ++i) {
             for (int j = 0; j < result[i].length; ++j) {
-                result[i][j] = scen.getTerrainDetails().get(Integer.parseInt(split[i * result.length + j]));
+                result[j][i] = scen.getTerrainDetails().get(Integer.parseInt(split[i * result.length + j]));
             }
         }
         return result;
