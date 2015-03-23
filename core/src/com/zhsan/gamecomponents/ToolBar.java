@@ -55,18 +55,13 @@ public class ToolBar extends WidgetGroup {
         }
     }
 
-    public ToolBar(GameScreen screen) {
+    public ToolBar(GameScreen screen, int width) {
         this.screen = screen;
+        this.setWidth(width);
 
         loadXml();
 
-        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
         this.addListener(new InputEventListener());
-    }
-
-    public void resize() {
-        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     @Override

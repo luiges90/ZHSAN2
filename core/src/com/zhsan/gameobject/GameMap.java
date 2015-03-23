@@ -80,6 +80,10 @@ public class GameMap {
         throw new FileReadException(path + File.separator + "Map.csv", new EmptyFileException());
     }
 
+    /**
+     * Zoom is defined as the size of each tile in the displayed map
+     * @return
+     */
     public int getZoom() {
         return zoom;
     }

@@ -10,13 +10,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.Fonts;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.GetKeyFocusWhenEntered;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
+import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gameobject.GameMap;
+import com.zhsan.gameobject.TerrainDetail;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -58,6 +61,11 @@ public class MapLayer extends WidgetGroup {
     private MoveStateY moveStateY = MoveStateY.IDLE;
     private ZoomState zoomState = ZoomState.IDLE;
 
+    private TextWidget<Void> mapInfo;
+    private int mapInfoMargin;
+    private String mapInfoFormat;
+    private Vector2 mousePosition = new Vector2();
+
     private Texture grid;
 
     private void loadXml() {
@@ -77,15 +85,29 @@ public class MapLayer extends WidgetGroup {
             mapMouseScrollFactor = Integer.parseInt(scroll.getAttributes().getNamedItem("MouseFactor").getNodeValue());
             mapScrollBoundary = Integer.parseInt(scroll.getAttributes().getNamedItem("Boundary").getNodeValue());
             mapScrollFactor = Float.parseFloat(scroll.getAttributes().getNamedItem("Factor").getNodeValue());
+
+            Node info = dom.getElementsByTagName("MapInfo").item(0);
+            mapInfo = new TextWidget<>(TextWidget.Setting.fromXml(info));
+            this.addActor(mapInfo);
+            mapInfoMargin = Integer.parseInt(info.getAttributes().getNamedItem("BottomMargin").getNodeValue());
+            mapInfoFormat = info.getAttributes().getNamedItem("TextFormat").getNodeValue();
+
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "MapLayerData.xml", e);
         }
     }
 
-    public MapLayer(GameScreen screen) {
+    public MapLayer(GameScreen screen, int width, int height) {
         this.screen = screen;
 
+        this.setWidth(width);
+        this.setHeight(height);
+
         loadXml();
+
+        mapInfo.setX(0);
+        mapInfo.setY(mapInfoMargin);
+        mapInfo.setWidth(width);
 
         grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
 
@@ -93,15 +115,13 @@ public class MapLayer extends WidgetGroup {
         Point mapCenter = screen.getScenario().getGameSurvey().getCameraPosition();
         this.mapCameraPosition = new Vector2(mapCenter.x * mapZoomMax, (map.getHeight() - 1 - mapCenter.y) * mapZoomMax);
 
-        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
-
         this.addListener(new InputEventListener());
         this.addListener(new GetScrollFocusWhenEntered(this));
         this.addListener(new GetKeyFocusWhenEntered(this));
     }
 
     public void resize() {
-        this.setBounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        mapInfo.setWidth(this.getWidth());
     }
 
     private Texture getMapTile(String mapName, String fileName) {
@@ -176,8 +196,6 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
         GameMap map = screen.getScenario().getGameMap();
         int zoom = map.getZoom();
 
@@ -222,6 +240,15 @@ public class MapLayer extends WidgetGroup {
                 }
             }
         }
+
+        int px = (int) (mousePosition.x + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
+        int py = (int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage();
+
+        String terrain = screen.getScenario().getGameMap().getMapData()[px][py].name;
+        String text = String.format(mapInfoFormat, terrain, px, py);
+        mapInfo.setText(text);
+
+        super.draw(batch, parentAlpha);
     }
 
     public void dispose() {
@@ -272,6 +299,9 @@ public class MapLayer extends WidgetGroup {
 
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
+            mousePosition.set(x, y);
+
+            // decide scroll
             moveStateX = MoveStateX.IDLE;
             moveStateY = MoveStateY.IDLE;
 

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.Fonts;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.ToolBar;
 import com.zhsan.gameobject.GameScenario;
@@ -22,15 +23,12 @@ public class GameScreen extends WidgetGroup {
     public GameScreen(GameScenario scen) {
         this.scen = scen;
 
-        this.setBounds(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        toolBar = new ToolBar(this);
+        toolBar = new ToolBar(this, Gdx.graphics.getWidth());
         toolBar.setPosition(0, 0);
         toolBar.setWidth(Gdx.graphics.getWidth());
 
-        mapLayer = new MapLayer(this);
+        mapLayer = new MapLayer(this, Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() - toolBar.getHeight()));
         mapLayer.setPosition(0, toolBar.getHeight());
-        mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - toolBar.getHeight());
         this.addActor(mapLayer);
 
         this.addActor(toolBar);
@@ -42,7 +40,6 @@ public class GameScreen extends WidgetGroup {
 
     public void resize(int width, int height) {
         toolBar.setWidth(width);
-        toolBar.resize();
 
         mapLayer.setSize(width, height - toolBar.getHeight());
         mapLayer.resize();
