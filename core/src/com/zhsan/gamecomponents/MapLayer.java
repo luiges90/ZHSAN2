@@ -242,11 +242,15 @@ public class MapLayer extends WidgetGroup {
         }
 
         int px = (int) (mousePosition.x + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
-        int py = map.getHeight() - ((int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
+        int py = map.getHeight() - 1 - ((int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
 
-        String terrain = screen.getScenario().getGameMap().getMapData()[px][py].name;
-        String text = String.format(mapInfoFormat, terrain, px, py);
-        mapInfo.setText(text);
+        TerrainDetail terrain = screen.getScenario().getGameMap().getTerrainAt(px, py);
+        if (terrain != null) {
+            String text = String.format(mapInfoFormat, terrain.name, px, py);
+            mapInfo.setText(text);
+        } else {
+            mapInfo.setText("");
+        }
 
         super.draw(batch, parentAlpha);
     }

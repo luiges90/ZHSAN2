@@ -112,8 +112,12 @@ public class GameMap {
         return tileInEachImage;
     }
 
-    public TerrainDetail[][] getMapData() {
-        return mapData;
+    public TerrainDetail getTerrainAt(int x, int y) {
+        if (x >= 0 && x < this.getWidth() && y >= 0 && y < this.getHeight()) {
+            return mapData[x][y];
+        } else {
+            return null;
+        }
     }
 
     private static class GameMapBuilder {
