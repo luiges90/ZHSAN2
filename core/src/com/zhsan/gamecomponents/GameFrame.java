@@ -29,7 +29,7 @@ import java.io.File;
  */
 public class GameFrame extends WidgetGroup {
 
-    public static final String RES_PATH = Paths.COMPONENTS + "GameFrame" + File.separator;
+    public static final String RES_PATH = Paths.RESOURCES + "GameFrame" + File.separator;
 
     public interface OnClick {
         public void onOkClicked();

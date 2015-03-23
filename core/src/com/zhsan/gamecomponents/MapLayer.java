@@ -102,6 +102,7 @@ public class MapLayer extends WidgetGroup {
     }
 
     private Texture getMapTile(String mapName, String fileName) {
+		// TODO async load tile images
         if (mapTiles.containsKey(fileName)) {
             return mapTiles.get(fileName);
         }
