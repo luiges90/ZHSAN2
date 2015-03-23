@@ -100,13 +100,14 @@ public class MapLayer extends WidgetGroup {
     public MapLayer(GameScreen screen, int x, int y, int width, int height) {
         this.screen = screen;
 
+        this.setPosition(x, y);
         this.setWidth(width);
         this.setHeight(height);
 
         loadXml();
 
-        mapInfo.setX(x);
-        mapInfo.setY(y + mapInfoMargin);
+        mapInfo.setX(0);
+        mapInfo.setY(mapInfoMargin);
         mapInfo.setWidth(width);
 
         grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
@@ -242,7 +243,7 @@ public class MapLayer extends WidgetGroup {
         }
 
         int px = (int) (mousePosition.x + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
-        int py = map.getHeight() - 1 - ((int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
+        int py = map.getHeight() + 1 - ((int) (mousePosition.y + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
 
         TerrainDetail terrain = screen.getScenario().getGameMap().getTerrainAt(px, py);
         if (terrain != null) {
