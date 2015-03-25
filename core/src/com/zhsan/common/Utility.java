@@ -15,7 +15,7 @@ import java.util.List;
 public class Utility {
     private Utility() {}
 
-    public static Rectangle readRectangleFromXml(Node node) {
+    public static Rectangle loadRectangleFromXml(Node node) {
         Rectangle rect = new Rectangle();
         rect.setX(Integer.parseInt(node.getAttributes().getNamedItem("X").getNodeValue()));
         rect.setY(Integer.parseInt(node.getAttributes().getNamedItem("Y").getNodeValue()));
@@ -24,13 +24,13 @@ public class Utility {
         return rect;
     }
 
-    public static Color readColorFromXml(int colorCode) {
+    public static Color loadColorFromXml(int colorCode) {
         Color temp = new Color();
         Color.argb8888ToColor(temp, colorCode);
         return temp;
     }
 
-    public static List<Integer> integerListFromXml(String s) {
+    public static List<Integer> loadIntegerListFromXml(String s) {
         String[] split = s.split("\\s");
         List<Integer> result = new ArrayList<>();
         for (String i : split) {

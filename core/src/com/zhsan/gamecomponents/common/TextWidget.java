@@ -30,7 +30,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
             this.fontName = fontName;
             this.fontSize = fontSize;
             this.fontStyle = fontStyle;
-            this.fontColor = Utility.readColorFromXml(fontColor);
+            this.fontColor = Utility.loadColorFromXml(fontColor);
             this.align = align;
         }
 

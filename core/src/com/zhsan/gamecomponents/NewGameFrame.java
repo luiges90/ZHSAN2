@@ -69,7 +69,7 @@ public class NewGameFrame extends GameFrame {
                     .getNamedItem("value").getNodeValue());
             listPaddings = Integer.parseInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
                     .getNamedItem("padding").getNodeValue());
-            listSelectedColor = Utility.readColorFromXml(
+            listSelectedColor = Utility.loadColorFromXml(
                     Integer.parseUnsignedInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
                             .getNamedItem("selectedColor").getNodeValue())
             );

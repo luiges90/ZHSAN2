@@ -42,19 +42,19 @@ public class StartScreen extends WidgetGroup {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            start = Utility.readRectangleFromXml(dom.getElementsByTagName("StartButton").item(0));
+            start = Utility.loadRectangleFromXml(dom.getElementsByTagName("StartButton").item(0));
             start.y = txStart.getHeight() - start.y - start.height;
 
-            load = Utility.readRectangleFromXml(dom.getElementsByTagName("LoadButton").item(0));
+            load = Utility.loadRectangleFromXml(dom.getElementsByTagName("LoadButton").item(0));
             load.y = txStart.getHeight() - load.y - load.height;
 
-            setting = Utility.readRectangleFromXml(dom.getElementsByTagName("SettingButton").item(0));
+            setting = Utility.loadRectangleFromXml(dom.getElementsByTagName("SettingButton").item(0));
             setting.y = txStart.getHeight() - setting.y - setting.height;
 
-            credit = Utility.readRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
+            credit = Utility.loadRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
             credit.y = txStart.getHeight() - credit.y - credit.height;
 
-            exit = Utility.readRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
+            exit = Utility.loadRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
             exit.y = txStart.getHeight() - exit.y - exit.height;
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "Start.xml", e);
