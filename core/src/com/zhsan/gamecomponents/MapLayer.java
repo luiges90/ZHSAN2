@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.zhsan.common.Fonts;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
@@ -19,13 +17,12 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.GetKeyFocusWhenEntered;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.gameobject.TerrainDetail;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -104,7 +101,7 @@ public class MapLayer extends WidgetGroup {
         this.screen = screen;
 
         // add toolbar
-        toolBar = new ToolBar(screen, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        toolBar = new ToolBar(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         this.setPosition(0, 0);
         this.setWidth(Gdx.graphics.getWidth());
@@ -131,7 +128,8 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        toolBar.setWidth(width);
+        toolBar.setSize(width, height);
+        toolBar.resize(width, height);
 
         this.setSize(width, height - toolBar.getToolbarHeight());
         mapInfo.setWidth(this.getWidth());

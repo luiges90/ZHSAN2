@@ -1,13 +1,8 @@
 package com.zhsan.screen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
-import com.zhsan.common.Fonts;
 import com.zhsan.gamecomponents.MapLayer;
-import com.zhsan.gamecomponents.ToolBar;
 import com.zhsan.gameobject.GameScenario;
 
 /**

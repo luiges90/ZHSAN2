@@ -1,6 +1,7 @@
 package com.zhsan.common;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.w3c.dom.Node;
@@ -36,6 +37,32 @@ public class Utility {
             result.add(Integer.parseInt(i));
         }
         return result;
+    }
+
+    public static BitmapFont.HAlignment loadHAlignmentFromXML(Node node) {
+        String alignStr = node.getAttributes().getNamedItem("Align").getNodeValue();
+        BitmapFont.HAlignment align;
+        if (alignStr.trim().equalsIgnoreCase("Middle")) {
+            align = BitmapFont.HAlignment.CENTER;
+        } else {
+            align = BitmapFont.HAlignment.valueOf(alignStr.trim().toUpperCase());
+        }
+        return align;
+    }
+
+    public static Rectangle adjustRectangleByHAlignment(Rectangle in, BitmapFont.HAlignment align, float containerWidth) {
+        Rectangle out = new Rectangle(in);
+        switch (align) {
+            case LEFT:
+                break;
+            case RIGHT:
+                out.x = containerWidth - out.width - out.x;
+                break;
+            case CENTER:
+                out.x = containerWidth / 2 - out.width / 2 + out.x;
+                break;
+        }
+        return out;
     }
 
 }

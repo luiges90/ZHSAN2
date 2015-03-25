@@ -39,15 +39,10 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
             int fontSize = Integer.parseInt(node.getAttributes().getNamedItem("FontSize").getNodeValue());
             String fontStyleStr = node.getAttributes().getNamedItem("FontStyle").getNodeValue();
             int fontColor = Integer.parseUnsignedInt(node.getAttributes().getNamedItem("FontColor").getNodeValue());
-            String alignStr = node.getAttributes().getNamedItem("Align").getNodeValue();
 
             Fonts.Style fontStyle = Fonts.Style.valueOf(fontStyleStr.trim().toUpperCase());
-            BitmapFont.HAlignment align;
-            if (alignStr.trim().equalsIgnoreCase("Middle")) {
-                align = BitmapFont.HAlignment.CENTER;
-            } else {
-                align = BitmapFont.HAlignment.valueOf(alignStr.trim().toUpperCase());
-            }
+
+            BitmapFont.HAlignment align = Utility.loadHAlignmentFromXML(node);
 
             return new Setting(fontName, fontSize, fontStyle, fontColor, align);
         }
