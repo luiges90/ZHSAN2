@@ -34,7 +34,9 @@ public class ToolBar extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private GameScreen screen;
+
     private Texture background;
+    private int backgroundHeight;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "ToolBarData.xml");
@@ -46,7 +48,8 @@ public class ToolBar extends WidgetGroup {
             dom = db.parse(f.read());
 
             Node bg = dom.getElementsByTagName("Background").item(0);
-            this.setHeight(Integer.parseInt(bg.getAttributes().getNamedItem("Height").getNodeValue()));
+
+            backgroundHeight = Integer.parseInt(bg.getAttributes().getNamedItem("Height").getNodeValue());
             background = new Texture(Gdx.files.external(DATA_PATH +
                     bg.getAttributes().getNamedItem("FileName").getNodeValue()));
 
@@ -55,20 +58,25 @@ public class ToolBar extends WidgetGroup {
         }
     }
 
-    public ToolBar(GameScreen screen, int width) {
+    public ToolBar(GameScreen screen, int width, int height) {
         this.screen = screen;
         this.setWidth(width);
+        this.setHeight(height);
 
         loadXml();
 
         this.addListener(new InputEventListener());
     }
 
+    public int getToolbarHeight() {
+        return backgroundHeight;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(background, 0, 0, getWidth(), getHeight());
+        batch.draw(background, 0, 0, getWidth(), backgroundHeight);
     }
 
     public void dispose() {
@@ -76,6 +84,11 @@ public class ToolBar extends WidgetGroup {
     }
 
     private class InputEventListener extends InputListener {
+
+        @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            return false;
+        }
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

@@ -17,19 +17,13 @@ public class GameScreen extends WidgetGroup {
 
     private GameScenario scen;
 
-    private ToolBar toolBar;
     private MapLayer mapLayer;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
 
-        toolBar = new ToolBar(this, Gdx.graphics.getWidth());
-
-        mapLayer = new MapLayer(this, 0, (int) toolBar.getHeight(),
-                Gdx.graphics.getWidth(), (int) (Gdx.graphics.getHeight() - toolBar.getHeight()));
+        mapLayer = new MapLayer(this);
         this.addActor(mapLayer);
-
-        this.addActor(toolBar);
     }
 
     public GameScenario getScenario() {
@@ -37,10 +31,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        toolBar.setWidth(width);
-
-        mapLayer.setSize(width, height - toolBar.getHeight());
-        mapLayer.resize();
+        mapLayer.resize(width, height);
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -48,7 +39,6 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void dispose() {
-        toolBar.dispose();
         mapLayer.dispose();
     }
 

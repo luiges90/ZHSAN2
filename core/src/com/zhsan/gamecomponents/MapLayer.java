@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -68,6 +69,8 @@ public class MapLayer extends WidgetGroup {
 
     private Texture grid;
 
+    private ToolBar toolBar;
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "MapLayerData.xml");
 
@@ -97,18 +100,24 @@ public class MapLayer extends WidgetGroup {
         }
     }
 
-    public MapLayer(GameScreen screen, int x, int y, int width, int height) {
+    public MapLayer(GameScreen screen) {
         this.screen = screen;
 
-        this.setPosition(x, y);
-        this.setWidth(width);
-        this.setHeight(height);
+        // add toolbar
+        toolBar = new ToolBar(screen, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        this.setPosition(0, 0);
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(Gdx.graphics.getHeight() - toolBar.getToolbarHeight());
+
+        this.addActor(toolBar);
+
+        // init myself
         loadXml();
 
         mapInfo.setX(0);
         mapInfo.setY(mapInfoMargin);
-        mapInfo.setWidth(width);
+        mapInfo.setWidth(Gdx.graphics.getWidth());
 
         grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
 
@@ -121,7 +130,10 @@ public class MapLayer extends WidgetGroup {
         this.addListener(new GetKeyFocusWhenEntered(this));
     }
 
-    public void resize() {
+    public void resize(int width, int height) {
+        toolBar.setWidth(width);
+
+        this.setSize(width, height - toolBar.getToolbarHeight());
         mapInfo.setWidth(this.getWidth());
     }
 
@@ -257,6 +269,7 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void dispose() {
+        toolBar.dispose();
         mapTiles.values().forEach(Texture::dispose);
     }
 
@@ -315,7 +328,7 @@ public class MapLayer extends WidgetGroup {
             } else if (x > getWidth() - mapScrollBoundary) {
                 moveStateX = MoveStateX.RIGHT;
             }
-            if (y < mapScrollBoundary) {
+            if (toolBar.getToolbarHeight() < y && y < toolBar.getToolbarHeight() + mapScrollBoundary) {
                 moveStateY = MoveStateY.BOTTOM;
             } else if (y > getHeight() - mapScrollBoundary) {
                 moveStateY = MoveStateY.TOP;
