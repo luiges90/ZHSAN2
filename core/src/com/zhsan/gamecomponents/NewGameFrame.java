@@ -102,6 +102,7 @@ public class NewGameFrame extends GameFrame {
         this.listener = listener;
 
         super.addOnClickListener(new ButtonListener());
+        super.setOkEnabled(false);
     }
 
     private Table setupScrollpane(float x, float y, float paneWidth, float paneHeight, ScrollPane target) {
@@ -233,6 +234,8 @@ public class NewGameFrame extends GameFrame {
                 widget.setPadding(listPaddings);
                 group.addActor(widget);
             }
+
+            NewGameFrame.this.setOkEnabled(true);
 
             return false;
         }

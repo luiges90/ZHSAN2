@@ -63,6 +63,7 @@ public class GameFrame extends WidgetGroup {
     private StateTexture okTexture, cancelTexture;
     private Sound okSound, cancelSound;
     private Texture topLeft, topRight, bottomLeft, bottomRight;
+    private boolean okEnabled, cancelEnabled;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "GameFrameData.xml");
@@ -134,6 +135,9 @@ public class GameFrame extends WidgetGroup {
         this.setWidth(width);
         this.setHeight(height);
 
+        this.setOkEnabled(true);
+        this.setCancelEnabled(true);
+
         titleWidget.setText(title);
         titleWidget.setX(getLeftBound());
         titleWidget.setY(getTopBound());
@@ -193,6 +197,24 @@ public class GameFrame extends WidgetGroup {
         return getWidth() - rightEdge.width;
     }
 
+    protected final boolean isOkEnabled() {
+        return okEnabled;
+    }
+
+    protected final void setOkEnabled(boolean okEnabled) {
+        this.okEnabled = okEnabled;
+        okTexture.setState(okEnabled ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
+    }
+
+    protected final boolean isCancelEnabled() {
+        return cancelEnabled;
+    }
+
+    protected final void setCancelEnabled(boolean cancelEnabled) {
+        this.cancelEnabled = cancelEnabled;
+        cancelTexture.setState(cancelEnabled ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
+    }
+
     public void draw(Batch batch, float parentAlpha) {
         // edges
         float top = getTopBound();
@@ -239,26 +261,26 @@ public class GameFrame extends WidgetGroup {
     }
 
     private void handleMouseMove(float x, float y) {
-        if (ok.contains(x, y)) {
+        if (ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.SELECTED);
         } else {
-            okTexture.setState(StateTexture.State.NORMAL);
+            okTexture.setState(isOkEnabled() ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
         }
-        if (cancel.contains(x, y)) {
+        if (cancel.contains(x, y) && isCancelEnabled()) {
             cancelTexture.setState(StateTexture.State.SELECTED);
         } else {
-            cancelTexture.setState(StateTexture.State.NORMAL);
+            cancelTexture.setState(isCancelEnabled() ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
         }
     }
 
     private void handleTouchDown(float x, float y) {
-        if (ok.contains(x, y)) {
+        if (ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.NORMAL);
             okSound.play();
             buttonListener.onOkClicked();
             this.setVisible(false);
         }
-        if (cancel.contains(x, y)) {
+        if (cancel.contains(x, y) && isCancelEnabled()) {
             cancelTexture.setState(StateTexture.State.NORMAL);
             cancelSound.play();
             buttonListener.onCancelClicked();
