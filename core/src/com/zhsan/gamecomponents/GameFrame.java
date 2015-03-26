@@ -254,11 +254,13 @@ public class GameFrame extends WidgetGroup {
     private void handleTouchDown(float x, float y) {
         if (ok.contains(x, y)) {
             okTexture.setState(StateTexture.State.NORMAL);
+            okSound.play();
             buttonListener.onOkClicked();
             this.setVisible(false);
         }
         if (cancel.contains(x, y)) {
             cancelTexture.setState(StateTexture.State.NORMAL);
+            cancelSound.play();
             buttonListener.onCancelClicked();
             this.setVisible(false);
         }

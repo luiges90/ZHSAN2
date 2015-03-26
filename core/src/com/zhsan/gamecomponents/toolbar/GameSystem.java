@@ -75,7 +75,7 @@ public class GameSystem extends WidgetGroup {
         button.dispose();
         buttonSelected.dispose();
     }
-    
+
     private class Listener extends InputListener {
 
         @Override
