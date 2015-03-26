@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -33,6 +34,8 @@ public class ToolBar extends WidgetGroup {
     private GameSystem gameSystem;
     private Rectangle gameSystemPos;
     private BitmapFont.HAlignment gameSystemAlign;
+
+    private GameScreen screen;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "ToolBarData.xml");
@@ -57,16 +60,17 @@ public class ToolBar extends WidgetGroup {
         }
     }
 
-    public ToolBar(int width, int height) {
-        this.setWidth(width);
-        this.setHeight(height);
+    public ToolBar(GameScreen screen) {
+        this.screen = screen;
+
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(Gdx.graphics.getHeight());
 
         loadXml();
 
-        gameSystem = new GameSystem(Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, width));
+        gameSystem = new GameSystem(screen, Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign,
+                this.getWidth()));
         this.addActor(gameSystem);
-
-        this.addListener(new InputEventListener());
     }
 
     public int getToolbarHeight() {
@@ -92,11 +96,4 @@ public class ToolBar extends WidgetGroup {
         gameSystem.dispose();
     }
 
-    private class InputEventListener extends InputListener {
-
-        @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            return super.touchDown(event, x, y, pointer, button);
-        }
-    }
 }

@@ -101,7 +101,7 @@ public class MapLayer extends WidgetGroup {
         this.screen = screen;
 
         // add toolbar
-        toolBar = new ToolBar(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        toolBar = new ToolBar(screen);
 
         this.setPosition(0, 0);
         this.setWidth(Gdx.graphics.getWidth());

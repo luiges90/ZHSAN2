@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -24,6 +25,9 @@ public class GameSystem extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private Texture button, buttonSelected;
+    private Rectangle buttonPosition;
+
+    private GameScreen screen;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "GameSystemData.xml");
@@ -45,9 +49,12 @@ public class GameSystem extends WidgetGroup {
         }
     }
 
-    public GameSystem(Rectangle p) {
-        this.setPosition(p.x, p.y);
-        this.setSize(p.width, p.height);
+    public GameSystem(GameScreen screen, Rectangle buttonPosition) {
+        this.buttonPosition = buttonPosition;
+        this.screen = screen;
+
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(Gdx.graphics.getHeight());
 
         loadXml();
     }
@@ -56,7 +63,7 @@ public class GameSystem extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(button, getX(), getY());
+        batch.draw(button, buttonPosition.getX(), buttonPosition.getY());
     }
 
     public void dispose() {
