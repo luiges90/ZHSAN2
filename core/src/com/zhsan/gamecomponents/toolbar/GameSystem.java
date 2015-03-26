@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.screen.GameScreen;
@@ -26,6 +28,7 @@ public class GameSystem extends WidgetGroup {
 
     private Texture button, buttonSelected;
     private Rectangle buttonPosition;
+    private boolean isMouseOnButton;
 
     private GameScreen screen;
 
@@ -57,18 +60,29 @@ public class GameSystem extends WidgetGroup {
         this.setHeight(Gdx.graphics.getHeight());
 
         loadXml();
+
+        this.addListener(new Listener());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(button, buttonPosition.getX(), buttonPosition.getY());
+        batch.draw(isMouseOnButton ? buttonSelected : button, buttonPosition.getX(), buttonPosition.getY());
     }
 
     public void dispose() {
         button.dispose();
         buttonSelected.dispose();
+    }
+    
+    private class Listener extends InputListener {
+
+        @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            isMouseOnButton = buttonPosition.contains(x, y);
+            return isMouseOnButton;
+        }
     }
 
 }
