@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
@@ -160,7 +161,7 @@ public class GameFrame extends WidgetGroup {
             }
 
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                handleTouchDown(x, y);
+                handleTouchDown(button, x, y);
                 event.stop();
                 return false;
             }
@@ -273,14 +274,14 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    private void handleTouchDown(float x, float y) {
+    private void handleTouchDown(int button, float x, float y) {
         if (ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.NORMAL);
             okSound.play();
             buttonListener.onOkClicked();
             this.setVisible(false);
         }
-        if (cancel.contains(x, y) && isCancelEnabled()) {
+        if ((cancel.contains(x, y) || button == Input.Buttons.RIGHT) && isCancelEnabled()) {
             cancelTexture.setState(StateTexture.State.NORMAL);
             cancelSound.play();
             buttonListener.onCancelClicked();
