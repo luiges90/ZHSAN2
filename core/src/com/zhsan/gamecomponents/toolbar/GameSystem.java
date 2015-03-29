@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.ContextMenu;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -31,6 +32,7 @@ public class GameSystem extends WidgetGroup {
     private boolean isMouseOnButton;
 
     private GameScreen screen;
+    private ContextMenu menu;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "GameSystemData.xml");
@@ -61,6 +63,8 @@ public class GameSystem extends WidgetGroup {
 
         loadXml();
 
+        this.menu = new ContextMenu(screen, ContextMenu.MenuKindTypes.SYSTEM_MENU, null);
+
         this.addListener(new Listener());
     }
 
@@ -74,6 +78,7 @@ public class GameSystem extends WidgetGroup {
     public void dispose() {
         button.dispose();
         buttonSelected.dispose();
+        menu.dispose();
     }
 
     private class Listener extends InputListener {

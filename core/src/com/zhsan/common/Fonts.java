@@ -47,7 +47,7 @@ public class Fonts {
                 EnumMap<Style, String> styles = new EnumMap<>(Style.class);
                 styles.put(Style.REGULAR, n.getAttributes().getNamedItem("regular").getNodeValue());
                 styles.put(Style.BOLD, n.getAttributes().getNamedItem("bold").getNodeValue());
-                fonts.put(n.getAttributes().getNamedItem("name").getNodeValue(), styles);
+                fonts.put(n.getAttributes().getNamedItem("xmlName").getNodeValue(), styles);
             }
         } catch (Exception e) {
             throw new FileReadException(Paths.FONTS + "Fonts.xml", e);
