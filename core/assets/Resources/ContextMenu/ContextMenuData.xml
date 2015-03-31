@@ -231,7 +231,7 @@
             <MenuItem ID="1" Name="CurrentTroopRightClick" DisplayName="部队" ChangeDisplayName="CurrentTroopDisplayName" />
             <MenuItem ID="2" Name="CurrentArchitectureRightClick" DisplayName="建筑" ChangeDisplayName="CurrentArchitectureDisplayName" />
         </MenuKind>
-		<MenuKind ID="10" Name="SystemMenu" DisplayName="系统菜单" IsLeft="true" Width="240" Height="25">
+		<MenuKind ID="10" Name="SystemMenu" DisplayName="系统菜单" IsLeft="true" Width="120" Height="25">
 			<MenuItem ID="1" Name="Save" DisplayName="存储进度" DisplayIfTrue="SaveAvail" />
             <MenuItem ID="2" Name="Load" DisplayName="读取进度" DisplayIfTrue="LoadAvail" />
 			<MenuItem ID="3" Name="Quit" DisplayName="退出游戏"/>

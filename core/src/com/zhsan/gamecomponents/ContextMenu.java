@@ -77,7 +77,7 @@ public class ContextMenu extends WidgetGroup {
     private Texture hasChild;
     private Sound clickSound, expandSound, collapseSound;
 
-    private EnumMap<MenuKindType, MenuKind> menuKinds;
+    private EnumMap<MenuKindType, MenuKind> menuKinds = new EnumMap<>(MenuKindType.class);
 
     private GameScreen screen;
 
@@ -181,6 +181,7 @@ public class ContextMenu extends WidgetGroup {
     public void show(MenuKindType type, Point position) {
         showingType = type;
         this.position = position;
+        this.setVisible(showingType != null);
     }
 
     private static int kindMaxDepth_r(MenuItem kind, int r) {
@@ -192,9 +193,9 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private static int kindMaxDepth(MenuKind kind) {
-        int result = 1;
+        int result = 0;
         for (MenuItem item : kind.items) {
-            result = Math.max(result, kindMaxDepth_r(item, 1));
+            result = Math.max(result, kindMaxDepth_r(item, 0));
         }
         return result;
     }
@@ -246,10 +247,15 @@ public class ContextMenu extends WidgetGroup {
                 if (kind.isByLeftClick) {
                     batch.draw(menuLeft.get(), bound.getX(), bound.getY() + i * kind.height, kind.width, kind.height);
                     menuLeftText.setText(kind.items.get(i).displayName);
+                    menuLeftText.setPosition(bound.getX(), bound.getY() + i * kind.height);
+                    menuLeftText.setSize(kind.width, kind.height);
                     menuLeftText.draw(batch, parentAlpha);
                 } else {
                     batch.draw(menuRight.get(), bound.getX(), bound.getY() + i * kind.height, kind.width, kind.height);
                     menuRightText.setText(kind.items.get(i).displayName);
+                    menuRightText.setPosition(bound.getX(), bound.getY() + i * kind.height);
+                    menuRightText.setWidth(kind.width);
+                    menuLeftText.setSize(kind.width, kind.height);
                     menuRightText.draw(batch, parentAlpha);
                 }
             }
