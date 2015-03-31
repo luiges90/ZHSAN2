@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -32,7 +31,6 @@ public class GameSystem extends WidgetGroup {
     private boolean isMouseOnButton;
 
     private GameScreen screen;
-    private ContextMenu menu;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "GameSystemData.xml");
@@ -63,8 +61,6 @@ public class GameSystem extends WidgetGroup {
 
         loadXml();
 
-        this.menu = new ContextMenu(screen, ContextMenu.MenuKindTypes.SYSTEM_MENU, null);
-
         this.addListener(new Listener());
     }
 
@@ -78,7 +74,6 @@ public class GameSystem extends WidgetGroup {
     public void dispose() {
         button.dispose();
         buttonSelected.dispose();
-        menu.dispose();
     }
 
     private class Listener extends InputListener {
@@ -87,6 +82,15 @@ public class GameSystem extends WidgetGroup {
         public boolean mouseMoved(InputEvent event, float x, float y) {
             isMouseOnButton = buttonPosition.contains(x, y);
             return isMouseOnButton;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (buttonPosition.contains(x, y)) {
+                screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
+                return true;
+            }
+            return false;
         }
     }
 

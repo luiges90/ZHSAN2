@@ -1,7 +1,21 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Root>
-    <ContextMenuRightClick FileName="ContextMenuRightClick.png" SelectedFileName="ContextMenuRightClickSelected.png" DisabledFileName="ContextMenuRightDisabled" FontName="方正隶变_GBK" FontSize="13" FontStyle="Bold" FontColor="4288070589" />
-    <ContextMenuLeftClick FileName="ContextMenuLeftClick.png" SelectedFileName="ContextMenuLeftClickSelected.png" DisabledFileName="ContextMenuLeftDisabled" FontName="方正隶变_GBK" FontSize="13" FontStyle="Bold" FontColor="4288070589" />
+    <ContextMenuRightClick FileName="ContextMenuRightClick.png"
+                           Selected="ContextMenuRightClickSelected.png"
+                           Disabled="ContextMenuRightDisabled.png"
+                           FontName="方正隶变_GBK"
+                           FontSize="13"
+                           FontStyle="Bold"
+                           Align="Center"
+                           FontColor="4288070589" />
+    <ContextMenuLeftClick FileName="ContextMenuLeftClick.png"
+                          Selected="ContextMenuLeftClickSelected.png"
+                          Disabled="ContextMenuLeftDisabled.png"
+                          FontName="方正隶变_GBK"
+                          FontSize="13"
+                          FontStyle="Bold"
+                          Align="Center"
+                          FontColor="4288070589" />
     <HasChildTexture FileName="HasChild.png" />
     <SoundFile Click="Click.wav" Open="Open.wav" Fold="Fold.wav" />
     <MenuKindList>
@@ -119,7 +133,7 @@
                     <MenuItem ID="3" Name="KillPerson" DisplayName="处斩下属" DisplayIfTrue="KillPersonAvail" />
                     <MenuItem ID="4" Name="KillCaptive" DisplayName="处斩俘虏" DisplayIfTrue="ReleaseCaptiveAvail" />
                 </MenuItem>
-				<MenuItem ID="9" Name="MakeMarriage" DisplayName="赐婚" DisplayIfTrue="HasMarriageToMake"/> 
+				<MenuItem ID="9" Name="MakeMarriage" DisplayName="赐婚" DisplayIfTrue="HasMarriageToMake"/>
                 <MenuItem ID="6" Name="Palace" DisplayName="后宫">
                     <MenuItem ID="1" Name="MakePrincess" DisplayName="纳妃" DisplayIfTrue="kenafei" />
                     <MenuItem ID="2" Name="Palace" DisplayName="宠幸" DisplayIfTrue="kejinhougong" />
