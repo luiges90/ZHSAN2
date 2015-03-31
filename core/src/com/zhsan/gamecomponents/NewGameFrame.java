@@ -11,11 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.CheckboxWidget;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
@@ -65,16 +65,13 @@ public class NewGameFrame extends GameFrame {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            margins = Integer.parseInt(dom.getElementsByTagName("Margins").item(0).getAttributes()
-                    .getNamedItem("value").getNodeValue());
-            listPaddings = Integer.parseInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
-                    .getNamedItem("padding").getNodeValue());
-            listSelectedColor = Utility.loadColorFromXml(
-                    Integer.parseUnsignedInt(dom.getElementsByTagName("Lists").item(0).getAttributes()
-                            .getNamedItem("selectedColor").getNodeValue())
+            margins = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Margins").item(0), "value"));
+            listPaddings = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Lists").item(0), "padding"));
+            listSelectedColor = XmlHelper.loadColorFromXml(
+                    Integer.parseUnsignedInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Lists").item(0), "selectedColor"))
             );
-            scrollButton = new Texture(Gdx.files.external(DATA_PATH + dom.getElementsByTagName("Scroll")
-                    .item(0).getAttributes().getNamedItem( "fileName").getNodeValue()));
+            scrollButton = new Texture(Gdx.files.external(DATA_PATH +
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("Scroll").item(0), "fileName")));
 
             scenarioStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioList").item(0));
             scenarioDescriptionStyle = TextWidget.Setting.fromXml(dom.getElementsByTagName("ScenarioDescription").item(0));
@@ -82,9 +79,9 @@ public class NewGameFrame extends GameFrame {
 
             Node checkboxNode = dom.getElementsByTagName("FactionListCheckBox").item(0);
             checkbox = new Texture(Gdx.files.external(DATA_PATH +
-                            checkboxNode.getAttributes().getNamedItem("Unchecked").getNodeValue()));
+                    XmlHelper.loadAttribute(checkboxNode, "Unchecked")));
             checkboxChecked = new Texture(Gdx.files.external(DATA_PATH +
-                    checkboxNode.getAttributes().getNamedItem("Checked").getNodeValue()));
+                    XmlHelper.loadAttribute(checkboxNode, "Checked")));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "NewGameFrameData.xml", e);
         }

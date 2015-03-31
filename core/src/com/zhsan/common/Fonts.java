@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,9 +46,9 @@ public class Fonts {
                 Node n = list.item(i);
 
                 EnumMap<Style, String> styles = new EnumMap<>(Style.class);
-                styles.put(Style.REGULAR, n.getAttributes().getNamedItem("regular").getNodeValue());
-                styles.put(Style.BOLD, n.getAttributes().getNamedItem("bold").getNodeValue());
-                fonts.put(n.getAttributes().getNamedItem("xmlName").getNodeValue(), styles);
+                styles.put(Style.REGULAR, XmlHelper.loadAttribute(n, "regular"));
+                styles.put(Style.BOLD, XmlHelper.loadAttribute(n, "bold"));
+                fonts.put(XmlHelper.loadAttribute(n, "xmlName"), styles);
             }
         } catch (Exception e) {
             throw new FileReadException(Paths.FONTS + "Fonts.xml", e);

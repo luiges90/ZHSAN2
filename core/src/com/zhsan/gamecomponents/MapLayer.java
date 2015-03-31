@@ -17,6 +17,7 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.GetKeyFocusWhenEntered;
 import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.gameobject.TerrainDetail;
@@ -78,19 +79,19 @@ public class MapLayer extends WidgetGroup {
             dom = db.parse(f.read());
 
             Node zoom = dom.getElementsByTagName("MapZoom").item(0);
-            mapZoomMin = Integer.parseInt(zoom.getAttributes().getNamedItem("Min").getNodeValue());
-            mapZoomMax = Integer.parseInt(zoom.getAttributes().getNamedItem("Max").getNodeValue());
+            mapZoomMin = Integer.parseInt(XmlHelper.loadAttribute(zoom, "Min"));
+            mapZoomMax = Integer.parseInt(XmlHelper.loadAttribute(zoom, "Max"));
 
             Node scroll = dom.getElementsByTagName("MapScroll").item(0);
-            mapMouseScrollFactor = Integer.parseInt(scroll.getAttributes().getNamedItem("MouseFactor").getNodeValue());
-            mapScrollBoundary = Integer.parseInt(scroll.getAttributes().getNamedItem("Boundary").getNodeValue());
-            mapScrollFactor = Float.parseFloat(scroll.getAttributes().getNamedItem("Factor").getNodeValue());
+            mapMouseScrollFactor = Integer.parseInt(XmlHelper.loadAttribute(scroll, "MouseFactor"));
+            mapScrollBoundary = Integer.parseInt(XmlHelper.loadAttribute(scroll, "Boundary"));
+            mapScrollFactor = Float.parseFloat(XmlHelper.loadAttribute(scroll, "Factor"));
 
             Node info = dom.getElementsByTagName("MapInfo").item(0);
             mapInfo = new TextWidget<>(TextWidget.Setting.fromXml(info));
             this.addActor(mapInfo);
-            mapInfoMargin = Integer.parseInt(info.getAttributes().getNamedItem("BottomMargin").getNodeValue());
-            mapInfoFormat = info.getAttributes().getNamedItem("TextFormat").getNodeValue();
+            mapInfoMargin = Integer.parseInt(XmlHelper.loadAttribute(info, "BottomMargin"));
+            mapInfoFormat = XmlHelper.loadAttribute(info, "TextFormat");
 
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "MapLayerData.xml", e);

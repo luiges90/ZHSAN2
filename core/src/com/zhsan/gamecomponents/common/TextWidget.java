@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
-import com.zhsan.common.Utility;
 import org.w3c.dom.Node;
 
 /**
@@ -30,19 +29,19 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
             this.fontName = fontName;
             this.fontSize = fontSize;
             this.fontStyle = fontStyle;
-            this.fontColor = Utility.loadColorFromXml(fontColor);
+            this.fontColor = XmlHelper.loadColorFromXml(fontColor);
             this.align = align;
         }
 
         public static Setting fromXml(Node node) {
-            String fontName = node.getAttributes().getNamedItem("FontName").getNodeValue();
-            int fontSize = Integer.parseInt(node.getAttributes().getNamedItem("FontSize").getNodeValue());
-            String fontStyleStr = node.getAttributes().getNamedItem("FontStyle").getNodeValue();
-            int fontColor = Integer.parseUnsignedInt(node.getAttributes().getNamedItem("FontColor").getNodeValue());
+            String fontName = XmlHelper.loadAttribute(node, "FontName");
+            int fontSize = Integer.parseInt(XmlHelper.loadAttribute(node, "FontSize"));
+            String fontStyleStr = XmlHelper.loadAttribute(node, "FontStyle");
+            int fontColor = Integer.parseUnsignedInt(XmlHelper.loadAttribute(node, "FontColor"));
 
             Fonts.Style fontStyle = Fonts.Style.valueOf(fontStyleStr.trim().toUpperCase());
 
-            BitmapFont.HAlignment align = Utility.loadHAlignmentFromXML(node);
+            BitmapFont.HAlignment align = XmlHelper.loadHAlignmentFromXml(node);
 
             return new Setting(fontName, fontSize, fontStyle, fontColor, align);
         }

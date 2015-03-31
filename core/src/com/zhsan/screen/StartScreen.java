@@ -9,10 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
-import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.GameFrame;
 import com.zhsan.gamecomponents.NewGameFrame;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -42,19 +42,19 @@ public class StartScreen extends WidgetGroup {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            start = Utility.loadRectangleFromXml(dom.getElementsByTagName("StartButton").item(0));
+            start = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("StartButton").item(0));
             start.y = txStart.getHeight() - start.y - start.height;
 
-            load = Utility.loadRectangleFromXml(dom.getElementsByTagName("LoadButton").item(0));
+            load = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("LoadButton").item(0));
             load.y = txStart.getHeight() - load.y - load.height;
 
-            setting = Utility.loadRectangleFromXml(dom.getElementsByTagName("SettingButton").item(0));
+            setting = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("SettingButton").item(0));
             setting.y = txStart.getHeight() - setting.y - setting.height;
 
-            credit = Utility.loadRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
+            credit = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("CreditButton").item(0));
             credit.y = txStart.getHeight() - credit.y - credit.height;
 
-            exit = Utility.loadRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
+            exit = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("ExitButton").item(0));
             exit.y = txStart.getHeight() - exit.y - exit.height;
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "Start.xml", e);

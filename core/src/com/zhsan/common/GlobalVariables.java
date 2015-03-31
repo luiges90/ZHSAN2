@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,10 +35,9 @@ public class GlobalVariables {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            NodeList list = dom.getElementsByTagName("GlobalVariables");
-            NamedNodeMap attributes = list.item(0).getAttributes();
-            scrollSpeed = Float.parseFloat(attributes.getNamedItem("scrollSpeed").getNodeValue());
-            showGrid = Boolean.parseBoolean(attributes.getNamedItem("showGrid").getNodeValue());
+            Node node = dom.getElementsByTagName("GlobalVariables").item(0);
+            scrollSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "scrollSpeed"));
+            showGrid = Boolean.parseBoolean(XmlHelper.loadAttribute(node, "showGrid"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

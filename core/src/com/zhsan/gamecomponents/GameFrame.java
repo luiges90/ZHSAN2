@@ -16,6 +16,7 @@ import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -45,7 +46,7 @@ public class GameFrame extends WidgetGroup {
             width = Integer.parseInt(node.getAttributes().getNamedItem("Width").getNodeValue());
 
             FileHandle f = Gdx.files.external(RES_PATH + File.separator + "Data" + File.separator +
-                node.getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(node, "FileName"));
             image = new Texture(f);
         }
 
@@ -83,7 +84,7 @@ public class GameFrame extends WidgetGroup {
 
             FileHandle fh;
             fh = Gdx.files.external(dataPath +
-                    dom.getElementsByTagName("BackGround").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("BackGround").item(0), "FileName"));
             background = new Texture(fh);
 
             titleWidget = new TextWidget(TextWidget.Setting.fromXml(dom.getElementsByTagName("Title").item(0)));
@@ -91,39 +92,39 @@ public class GameFrame extends WidgetGroup {
 
             Node okNode = dom.getElementsByTagName("OKButton").item(0);
             Node cancelNode = dom.getElementsByTagName("CancelButton").item(0);
-            okWidth = Integer.parseInt(okNode.getAttributes().getNamedItem("Width").getNodeValue());
-            okHeight = Integer.parseInt(okNode.getAttributes().getNamedItem("Height").getNodeValue());
-            okRight = Integer.parseInt(okNode.getAttributes().getNamedItem("MarginRight").getNodeValue());
-            okBottom = Integer.parseInt(okNode.getAttributes().getNamedItem("MarginBottom").getNodeValue());
-            cancelWidth = Integer.parseInt(cancelNode.getAttributes().getNamedItem("Width").getNodeValue());
-            cancelHeight = Integer.parseInt(cancelNode.getAttributes().getNamedItem("Height").getNodeValue());
-            cancelRight = Integer.parseInt(cancelNode.getAttributes().getNamedItem("MarginRight").getNodeValue());
-            cancelBottom = Integer.parseInt(cancelNode.getAttributes().getNamedItem("MarginBottom").getNodeValue());
+            okWidth = Integer.parseInt(XmlHelper.loadAttribute(okNode, "Width"));
+            okHeight = Integer.parseInt(XmlHelper.loadAttribute(okNode, "Height"));
+            okRight = Integer.parseInt(XmlHelper.loadAttribute(okNode, "MarginRight"));
+            okBottom = Integer.parseInt(XmlHelper.loadAttribute(okNode, "MarginBottom"));
+            cancelWidth = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "Width"));
+            cancelHeight = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "Height"));
+            cancelRight = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "MarginRight"));
+            cancelBottom = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "MarginBottom"));
 
             okTexture = StateTexture.fromXml(dataPath, okNode);
             cancelTexture = StateTexture.fromXml(dataPath, cancelNode);
 
             Node sound = dom.getElementsByTagName("SoundFile").item(0);
-            fh = Gdx.files.external(dataPath + sound.getAttributes().getNamedItem("OK").getNodeValue());
+            fh = Gdx.files.external(dataPath + XmlHelper.loadAttribute(sound, "OK"));
             okSound = Gdx.audio.newSound(fh);
 
-            fh = Gdx.files.external(dataPath + sound.getAttributes().getNamedItem("Cancel").getNodeValue());
+            fh = Gdx.files.external(dataPath + XmlHelper.loadAttribute(sound, "Cancel"));
             cancelSound = Gdx.audio.newSound(fh);
 
             fh = Gdx.files.external(dataPath +
-                    dom.getElementsByTagName("TopLeft").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("TopLeft").item(0), "FileName"));
             topLeft = new Texture(fh);
 
             fh = Gdx.files.external(dataPath +
-                    dom.getElementsByTagName("TopRight").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("TopRight").item(0), "FileName"));
             topRight = new Texture(fh);
 
             fh = Gdx.files.external(dataPath +
-                    dom.getElementsByTagName("BottomLeft").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("BottomLeft").item(0), "FileName"));
             bottomLeft = new Texture(fh);
 
             fh = Gdx.files.external(dataPath +
-                    dom.getElementsByTagName("BottomRight").item(0).getAttributes().getNamedItem("FileName").getNodeValue());
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("BottomRight").item(0), "FileName"));
             bottomRight = new Texture(fh);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "GameFrameData.xml", e);

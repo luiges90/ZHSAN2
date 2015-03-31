@@ -5,6 +5,10 @@ package com.zhsan.common.exception;
  */
 public class FileReadException extends RuntimeException {
 
+    public FileReadException(String msg) {
+        super(msg);
+    }
+
     public FileReadException(String file, Exception cause) {
         super("Failed to load: " + file, cause);
     }

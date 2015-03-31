@@ -12,6 +12,7 @@ import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.Nullable;
@@ -94,37 +95,12 @@ public class ContextMenu extends WidgetGroup {
             Node itemNode = itemNodes.item(i);
             if (itemNode instanceof Text) continue;
 
-            item.name = itemNode.getAttributes().getNamedItem("Name").getNodeValue();
-            item.displayName = itemNode.getAttributes().getNamedItem("DisplayName").getNodeValue();
-
-            Node enableAttr = itemNode.getAttributes().getNamedItem("DisplayIfTrue");
-            if (enableAttr != null) {
-                item.enabledMethodName = enableAttr.getNodeValue();
-            } else {
-                item.enabledMethodName = null;
-            }
-
-            Node showDisabledNode = itemNode.getAttributes().getNamedItem("DisplayAll");
-            if (showDisabledNode != null) {
-                item.showDisabled = Boolean.parseBoolean(showDisabledNode.getNodeValue());
-            } else {
-                item.showDisabled = true;
-            }
-
-            Node oppositeNode = itemNode.getAttributes().getNamedItem("OppositeName");
-            if (oppositeNode != null) {
-                item.oppositeName = oppositeNode.getNodeValue();
-            } else {
-                item.oppositeName = item.displayName;
-            }
-
-            Node oppositeMethodNode = itemNode.getAttributes().getNamedItem("OppositeIfTrue");
-            if (oppositeMethodNode != null) {
-                item.oppositeMethodName = oppositeMethodNode.getNodeValue();
-            } else {
-                item.oppositeMethodName = null;
-            }
-
+            item.name = XmlHelper.loadAttribute(itemNode, "Name");
+            item.displayName = XmlHelper.loadAttribute(itemNode, "DisplayName");
+            item.enabledMethodName = XmlHelper.loadAttribute(itemNode, "DisplayIfTrue", null);
+            item.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(itemNode, "DisplayAll", null));
+            item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
+            item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
             item.children = loadMenuItem(itemNode);
 
             items.add(item);
@@ -151,36 +127,30 @@ public class ContextMenu extends WidgetGroup {
             menuLeftText = new TextWidget<>(TextWidget.Setting.fromXml(leftClickNode));
 
             hasChild = new Texture(Gdx.files.external(DATA_PATH +
-                    dom.getElementsByTagName("HasChildTexture").item(0).getAttributes().getNamedItem("FileName").getNodeValue()));
+                    XmlHelper.loadAttribute(dom.getElementsByTagName("HasChildTexture").item(0), "FileName")));
 
             Node soundNode = dom.getElementsByTagName("SoundFile").item(0);
             clickSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
-                                soundNode.getAttributes().getNamedItem("Click").getNodeValue()));
+                    XmlHelper.loadAttribute(soundNode, "Click")));
             expandSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
-                                soundNode.getAttributes().getNamedItem("Open").getNodeValue()));
+                    XmlHelper.loadAttribute(soundNode, "Open")));
             collapseSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
-                                soundNode.getAttributes().getNamedItem("Fold").getNodeValue()));
+                    XmlHelper.loadAttribute(soundNode, "Fold")));
 
             NodeList nodeList = dom.getElementsByTagName("MenuKindList").item(0).getChildNodes();
             for (int i = 0; i < nodeList.getLength(); ++i) {
                 Node kindNode = nodeList.item(i);
                 if (kindNode instanceof Text) continue;
 
-                String name = kindNode.getAttributes().getNamedItem("Name").getNodeValue();
+                String name = XmlHelper.loadAttribute(kindNode, "Name");
 
                 MenuKind menuKind = new MenuKind();
                 menuKind.name = name;
-                menuKind.displayName = kindNode.getAttributes().getNamedItem("DisplayName").getNodeValue();
-                menuKind.isByLeftClick = Boolean.parseBoolean(kindNode.getAttributes().getNamedItem("IsLeft").getNodeValue());
-                menuKind.width = Integer.parseInt(kindNode.getAttributes().getNamedItem("Width").getNodeValue());
-                menuKind.height = Integer.parseInt(kindNode.getAttributes().getNamedItem("Height").getNodeValue());
-
-                Node nodeShowDisabled = kindNode.getAttributes().getNamedItem("DisplayAll");
-                if (nodeShowDisabled != null) {
-                    menuKind.showDisabled = Boolean.parseBoolean(nodeShowDisabled.getNodeValue());
-                } else {
-                    menuKind.showDisabled = true;
-                }
+                menuKind.displayName = XmlHelper.loadAttribute(kindNode, "DisplayName");
+                menuKind.isByLeftClick = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "IsLeft"));
+                menuKind.width = Integer.parseInt(XmlHelper.loadAttribute(kindNode, "Width"));
+                menuKind.height = Integer.parseInt(XmlHelper.loadAttribute(kindNode, "Height"));
+                menuKind.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "DisplayAll", "True"));
                 menuKind.items = loadMenuItem(kindNode);
 
                 MenuKindType type = MenuKindType.fromXmlName(name);

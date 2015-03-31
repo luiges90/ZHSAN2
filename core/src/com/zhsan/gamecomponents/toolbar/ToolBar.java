@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -48,13 +47,13 @@ public class ToolBar extends WidgetGroup {
 
             Node bg = dom.getElementsByTagName("Background").item(0);
 
-            backgroundHeight = Integer.parseInt(bg.getAttributes().getNamedItem("Height").getNodeValue());
+            backgroundHeight = Integer.parseInt(XmlHelper.loadAttribute(bg, "Height"));
             background = new Texture(Gdx.files.external(DATA_PATH +
-                    bg.getAttributes().getNamedItem("FileName").getNodeValue()));
+                    XmlHelper.loadAttribute(bg, "FileName")));
 
             Node gameSystemNode = dom.getElementsByTagName("GameSystem").item(0);
-            gameSystemPos = Utility.loadRectangleFromXml(gameSystemNode);
-            gameSystemAlign = Utility.loadHAlignmentFromXML(gameSystemNode);
+            gameSystemPos = XmlHelper.loadRectangleFromXml(gameSystemNode);
+            gameSystemAlign = XmlHelper.loadHAlignmentFromXml(gameSystemNode);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ToolBarData.xml", e);
         }

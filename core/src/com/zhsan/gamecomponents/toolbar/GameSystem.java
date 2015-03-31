@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.ContextMenu;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -44,9 +45,9 @@ public class GameSystem extends WidgetGroup {
             Node n = dom.getElementsByTagName("ButtonTexture").item(0);
 
             button = new Texture(Gdx.files.external(
-                    DATA_PATH + n.getAttributes().getNamedItem("FileName").getNodeValue()));
+                    DATA_PATH + XmlHelper.loadAttribute(n, "FileName")));
             buttonSelected = new Texture(Gdx.files.external
-                    (DATA_PATH + n.getAttributes().getNamedItem("Selected").getNodeValue()));
+                    (DATA_PATH + XmlHelper.loadAttribute(n, "Selected")));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "GameSystemData.xml", e);
         }
