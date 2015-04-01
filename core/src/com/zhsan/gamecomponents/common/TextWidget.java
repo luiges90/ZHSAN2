@@ -19,10 +19,10 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     }
 
     public static final class Setting {
-        private String fontName;
-        private int fontSize;
-        private Fonts.Style fontStyle;
-        private Color fontColor;
+        private final String fontName;
+        private final int fontSize;
+        private final Fonts.Style fontStyle;
+        private final Color fontColor;
         public final BitmapFont.HAlignment align;
 
         private Setting(String fontName, int fontSize, Fonts.Style fontStyle, int fontColor, BitmapFont.HAlignment align) {
@@ -79,6 +79,23 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         font.setScale((float) setting.fontSize / Fonts.SIZE);
 
         this.shapeRenderer = new ShapeRenderer();
+    }
+
+    public TextWidget(TextWidget<ExtraType> old) {
+        this.setting = old.setting;
+        this.padding = old.padding;
+        this.text = old.text;
+        this.valign = old.valign;
+        this.selected = old.selected;
+        this.selectedOutlineColor = old.selectedOutlineColor == null ? null : new Color(old.selectedOutlineColor);
+        this.extra = old.extra;
+
+        this.shapeRenderer = new ShapeRenderer();
+
+        BitmapFont ref = Fonts.get(setting.fontName, setting.fontStyle);
+        font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
+        font.setColor(setting.fontColor);
+        font.setScale((float) setting.fontSize / Fonts.SIZE);
     }
 
     public String getText() {
