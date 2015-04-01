@@ -27,6 +27,12 @@ public class StateTexture {
         this.disabled = disabled;
     }
 
+    public StateTexture(StateTexture old) {
+        this.normal = old.normal;
+        this.selected = old.selected;
+        this.disabled = old.disabled;
+    }
+
     public void setState(State s) {
         this.state = s;
     }

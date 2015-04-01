@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
@@ -26,7 +27,6 @@ import org.w3c.dom.Text;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.awt.*;
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -64,8 +64,7 @@ public class ContextMenu extends WidgetGroup {
         private boolean showDisabled;
         private List<MenuItem> children;
 
-        private StateTexture background;
-        private TextWidget<Void> widget;
+        private StateBackgroundTextWidget<MenuItem> widget;
     }
 
     private static class MenuKind {
@@ -90,7 +89,7 @@ public class ContextMenu extends WidgetGroup {
 
     private MenuKindType showingType;
 
-    private List<MenuItem> loadMenuItem(Node node, StateTexture background, TextWidget<Void> widgetTemplate) {
+    private List<MenuItem> loadMenuItem(Node node, StateTexture background, TextWidget<MenuItem> widgetTemplate) {
         NodeList itemNodes = node.getChildNodes();
         List<MenuItem> items = new ArrayList<>();
 
@@ -105,9 +104,10 @@ public class ContextMenu extends WidgetGroup {
             item.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(itemNode, "DisplayAll", null));
             item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
             item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
-            item.background = background;
-            item.widget = new TextWidget<>(widgetTemplate);
+            item.widget = new StateBackgroundTextWidget<>(widgetTemplate, background);
             item.children = loadMenuItem(itemNode, background, widgetTemplate);
+
+            this.addActor(item.widget);
 
             items.add(item);
         }
@@ -126,11 +126,11 @@ public class ContextMenu extends WidgetGroup {
 
             Node rightClickNode = dom.getElementsByTagName("ContextMenuRightClick").item(0);
             StateTexture menuRight = StateTexture.fromXml(DATA_PATH, rightClickNode);
-            TextWidget<Void> menuRightText = new TextWidget<>(TextWidget.Setting.fromXml(rightClickNode));
+            TextWidget<MenuItem> menuRightText = new TextWidget<>(TextWidget.Setting.fromXml(rightClickNode));
 
             Node leftClickNode = dom.getElementsByTagName("ContextMenuLeftClick").item(0);
             StateTexture menuLeft = StateTexture.fromXml(DATA_PATH, leftClickNode);
-            TextWidget<Void> menuLeftText = new TextWidget<>(TextWidget.Setting.fromXml(leftClickNode));
+            TextWidget<MenuItem> menuLeftText = new TextWidget<>(TextWidget.Setting.fromXml(leftClickNode));
 
             hasChild = new Texture(Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("HasChildTexture").item(0), "FileName")));
@@ -259,13 +259,14 @@ public class ContextMenu extends WidgetGroup {
             }
             for (int i = 0; i < kind.items.size(); ++i) {
                 // TODO disabled method, showAll
-                batch.draw(kind.items.get(i).background.get(),
+                batch.draw(kind.items.get(i).widget.getBackground().get(),
                         bound.getX(), bound.getY() + i * kind.height, kind.width, kind.height);
 
-                TextWidget<Void> widget = kind.items.get(i).widget;
+                TextWidget<MenuItem> widget = kind.items.get(i).widget;
                 widget.setText(kind.items.get(i).displayName);
                 widget.setPosition(bound.getX(), bound.getY() + i * kind.height);
                 widget.setSize(kind.width, kind.height);
+                widget.setExtra(kind.items.get(i));
                 widget.addListener(new MenuItemListener(widget));
 
                 widget.draw(batch, parentAlpha);
@@ -275,7 +276,6 @@ public class ContextMenu extends WidgetGroup {
 
     private void disposeMenuItems(List<MenuItem> items) {
         for (MenuItem item : items) {
-            item.background.dispose();
             item.widget.dispose();
             disposeMenuItems(item.children);
         }
@@ -294,15 +294,20 @@ public class ContextMenu extends WidgetGroup {
 
     private class MenuItemListener extends InputListener {
 
-        private TextWidget<Void> widget;
+        private TextWidget<MenuItem> widget;
 
-        public MenuItemListener(TextWidget<Void> widget) {
+        public MenuItemListener(TextWidget<MenuItem> widget) {
             this.widget = widget;
         }
 
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-            super.enter(event, x, y, pointer, fromActor);
+            this.widget.getExtra().widget.getBackground().setState(StateTexture.State.SELECTED);
+        }
+
+        @Override
+        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+            this.widget.getExtra().widget.getBackground().setState(StateTexture.State.NORMAL);
         }
     }
 
