@@ -1,4 +1,6 @@
-package com.zhsan.gamecomponents.common;
+package com.zhsan.gamecomponents.common.textwidget;
+
+import com.zhsan.gamecomponents.common.StateTexture;
 
 /**
  * Created by Peter on 1/4/2015.

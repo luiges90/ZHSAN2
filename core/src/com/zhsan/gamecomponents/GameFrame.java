@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
-import com.zhsan.gamecomponents.common.TextWidget;
+import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

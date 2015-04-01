@@ -1,12 +1,12 @@
-package com.zhsan.gamecomponents.common;
+package com.zhsan.gamecomponents.common.textwidget;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Node;
 
 /**
@@ -54,10 +54,6 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
     private String text;
     private VAlignment valign = VAlignment.CENTER;
 
-    private ShapeRenderer shapeRenderer;
-    private boolean selected = false;
-    private Color selectedOutlineColor;
-
     private ExtraType extra;
 
     public TextWidget(Setting setting) {
@@ -77,8 +73,6 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
-
-        this.shapeRenderer = new ShapeRenderer();
     }
 
     public TextWidget(TextWidget<ExtraType> old) {
@@ -86,11 +80,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         this.padding = old.padding;
         this.text = old.text;
         this.valign = old.valign;
-        this.selected = old.selected;
-        this.selectedOutlineColor = old.selectedOutlineColor == null ? null : new Color(old.selectedOutlineColor);
         this.extra = old.extra;
-
-        this.shapeRenderer = new ShapeRenderer();
 
         BitmapFont ref = Fonts.get(setting.fontName, setting.fontStyle);
         font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
@@ -98,28 +88,12 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         font.setScale((float) setting.fontSize / Fonts.SIZE);
     }
 
-    public String getText() {
-        return text;
-    }
-
     public void setText(String text) {
         this.text = text;
     }
 
-    public int getPadding() {
-        return padding;
-    }
-
     public void setPadding(int padding) {
         this.padding = padding;
-    }
-
-    public Color getSelectedOutlineColor() {
-        return selectedOutlineColor;
-    }
-
-    public void setSelectedOutlineColor(Color selectedOutlineColor) {
-        this.selectedOutlineColor = selectedOutlineColor;
     }
 
     public ExtraType getExtra() {
@@ -171,28 +145,9 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         validate();
 
         font.drawWrapped(batch, text, getTextX(), getTextY(), getWidth(), setting.align);
-
-        if (selected) {
-            batch.end();
-            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-            shapeRenderer.setTransformMatrix(batch.getTransformMatrix());
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.setColor(selectedOutlineColor);
-            shapeRenderer.rect(getX(), getY(), getWidth(), getHeight());
-            shapeRenderer.end();
-            batch.begin();
-        }
     }
 
     public void dispose() {
         font.dispose();
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
     }
 }

@@ -12,10 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.exception.FileReadException;
-import com.zhsan.gamecomponents.common.CheckboxWidget;
-import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
-import com.zhsan.gamecomponents.common.TextWidget;
-import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gamecomponents.common.*;
+import com.zhsan.gamecomponents.common.textwidget.CheckboxWidget;
+import com.zhsan.gamecomponents.common.textwidget.SelectableTextWidget;
+import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
@@ -130,9 +130,8 @@ public class NewGameFrame extends GameFrame {
 
         VerticalGroup scenarioList = new VerticalGroup();
         for (Pair<String, GameSurvey> i : surveys) {
-            TextWidget<Pair<String, GameSurvey>> widget = new TextWidget<>(scenarioStyle, i.getRight().getTitle());
+            SelectableTextWidget<Pair<String, GameSurvey>> widget = new SelectableTextWidget<>(scenarioStyle, i.getRight().getTitle(), listSelectedColor);
             widget.setTouchable(Touchable.enabled);
-            widget.setSelectedOutlineColor(listSelectedColor);
             widget.setExtra(i);
             widget.setWidth(paneWidth);
             widget.setPadding(listPaddings);
@@ -197,9 +196,9 @@ public class NewGameFrame extends GameFrame {
 
     private class ScenarioTextInputListener extends InputListener {
 
-        private TextWidget<Pair<String, GameSurvey>> widget;
+        private SelectableTextWidget<Pair<String, GameSurvey>> widget;
 
-        public ScenarioTextInputListener(TextWidget<Pair<String, GameSurvey>> widget) {
+        public ScenarioTextInputListener(SelectableTextWidget<Pair<String, GameSurvey>> widget) {
             this.widget = widget;
         }
 
@@ -225,7 +224,6 @@ public class NewGameFrame extends GameFrame {
             for (Faction i : factions.getListOrderedById()) {
                 CheckboxWidget<Faction> widget = new CheckboxWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
                 widget.setTouchable(Touchable.enabled);
-                widget.setSelectedOutlineColor(listSelectedColor);
                 widget.setExtra(i);
                 widget.setWidth(factionPane.getWidth());
                 widget.setPadding(listPaddings);

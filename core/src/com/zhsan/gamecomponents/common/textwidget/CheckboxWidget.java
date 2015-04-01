@@ -1,9 +1,10 @@
-package com.zhsan.gamecomponents.common;
+package com.zhsan.gamecomponents.common.textwidget;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 
 /**
  * Created by Peter on 15/3/2015.
