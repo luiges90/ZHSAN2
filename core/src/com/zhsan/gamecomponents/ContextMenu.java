@@ -259,12 +259,14 @@ public class ContextMenu extends WidgetGroup {
             }
             for (int i = 0; i < kind.items.size(); ++i) {
                 // TODO disabled method, showAll
+                float x = bound.getX();
+                float y = bound.getY() + bound.getHeight() - i * kind.height;
                 batch.draw(kind.items.get(i).widget.getBackground().get(),
-                        bound.getX(), bound.getY() + i * kind.height, kind.width, kind.height);
+                        x, y, kind.width, kind.height);
 
                 TextWidget<MenuItem> widget = kind.items.get(i).widget;
                 widget.setText(kind.items.get(i).displayName);
-                widget.setPosition(bound.getX(), bound.getY() + i * kind.height);
+                widget.setPosition(x, y);
                 widget.setSize(kind.width, kind.height);
                 widget.setExtra(kind.items.get(i));
                 widget.addListener(new MenuItemListener(widget));
