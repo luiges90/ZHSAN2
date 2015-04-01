@@ -174,6 +174,7 @@ public class ContextMenu extends WidgetGroup {
         this.setHeight(Gdx.graphics.getHeight());
 
         this.setVisible(false);
+        this.addListener(new RightClickListener());
 
         loadXml();
     }
@@ -182,6 +183,9 @@ public class ContextMenu extends WidgetGroup {
         showingType = type;
         this.position = position;
         this.setVisible(showingType != null);
+        if (showingType != null) {
+            clickSound.play();
+        }
     }
 
     private static int kindMaxDepth_r(MenuItem kind, int r) {
@@ -271,6 +275,20 @@ public class ContextMenu extends WidgetGroup {
         clickSound.dispose();
         expandSound.dispose();
         collapseSound.dispose();
+    }
+
+    private class RightClickListener extends InputListener {
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (button == Input.Buttons.RIGHT) {
+                collapseSound.play();
+                showingType = null;
+                setVisible(false);
+                return true;
+            }
+            return false;
+        }
     }
 
 }
