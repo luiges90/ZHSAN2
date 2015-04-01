@@ -28,7 +28,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
-        contextMenu.show(type, position);
+        contextMenu.show(type, scen, position);
     }
 
     public GameScenario getScenario() {

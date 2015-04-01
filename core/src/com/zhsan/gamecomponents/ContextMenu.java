@@ -18,6 +18,7 @@ import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gameobject.GameScenario;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -28,6 +29,7 @@ import org.w3c.dom.Text;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.List;
 
@@ -37,11 +39,13 @@ import java.util.List;
 public class ContextMenu extends WidgetGroup {
 
     public enum MenuKindType {
-        SYSTEM_MENU("SystemMenu");
+        SYSTEM_MENU("SystemMenu", GameScenario.class);
 
         public final String xmlName;
-        MenuKindType(String xmlName) {
+        public final Class<?> carryingObj;
+        MenuKindType(String xmlName, Class<?> carryingObj) {
             this.xmlName = xmlName;
+            this.carryingObj = carryingObj;
         }
 
         public static final MenuKindType fromXmlName(String name) {
@@ -56,15 +60,15 @@ public class ContextMenu extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private static class MenuItem {
-        private String name;
+        private String fullName;
         private String displayName;
-        private String oppositeName;
+        private String oppositeDisplayName;
         @Nullable private String enabledMethodName;
         @Nullable private String oppositeMethodName;
         private boolean showDisabled;
         private List<MenuItem> children;
 
-        private StateBackgroundTextWidget<MenuItem> widget;
+        private StateBackgroundTextWidget<MenuItem> textWidget;
     }
 
     private static class MenuKind {
@@ -89,7 +93,9 @@ public class ContextMenu extends WidgetGroup {
 
     private MenuKindType showingType;
 
-    private List<MenuItem> loadMenuItem(Node node, StateTexture background, TextWidget<MenuItem> widgetTemplate) {
+    private Object currentObject;
+
+    private List<MenuItem> loadMenuItem(Node node, String parentName, StateTexture background, TextWidget<MenuItem> widgetTemplate) {
         NodeList itemNodes = node.getChildNodes();
         List<MenuItem> items = new ArrayList<>();
 
@@ -98,16 +104,16 @@ public class ContextMenu extends WidgetGroup {
             Node itemNode = itemNodes.item(i);
             if (itemNode instanceof Text) continue;
 
-            item.name = XmlHelper.loadAttribute(itemNode, "Name");
+            item.fullName = parentName + "_" + XmlHelper.loadAttribute(itemNode, "Name");
             item.displayName = XmlHelper.loadAttribute(itemNode, "DisplayName");
             item.enabledMethodName = XmlHelper.loadAttribute(itemNode, "DisplayIfTrue", null);
             item.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(itemNode, "DisplayAll", null));
-            item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
-            item.oppositeName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
-            item.widget = new StateBackgroundTextWidget<>(widgetTemplate, background);
-            item.children = loadMenuItem(itemNode, background, widgetTemplate);
+            item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
+            item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
+            item.textWidget = new StateBackgroundTextWidget<>(widgetTemplate, background);
+            item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate);
 
-            this.addActor(item.widget);
+            this.addActor(item.textWidget);
 
             items.add(item);
         }
@@ -159,9 +165,9 @@ public class ContextMenu extends WidgetGroup {
                 menuKind.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "DisplayAll", "True"));
 
                 if (menuKind.isByLeftClick) {
-                    menuKind.items = loadMenuItem(kindNode, menuLeft, menuLeftText);
+                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuLeft, menuLeftText);
                 } else {
-                    menuKind.items = loadMenuItem(kindNode, menuRight, menuRightText);
+                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuRight, menuRightText);
                 }
 
                 MenuKindType type = MenuKindType.fromXmlName(name);
@@ -190,10 +196,15 @@ public class ContextMenu extends WidgetGroup {
         loadXml();
     }
 
-    public void show(MenuKindType type, Point position) {
-        showingType = type;
+    public void show(MenuKindType type, Object object, Point position) {
+        if (!type.carryingObj.isAssignableFrom(object.getClass())) {
+            throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
+                + type.carryingObj + ". " + object.getClass() + " received.");
+        }
+        this.currentObject = object;
+        this.showingType = type;
         this.position = position;
-        this.setVisible(showingType != null);
+        this.setVisible(true);
         if (showingType != null) {
             clickSound.play();
         }
@@ -261,10 +272,10 @@ public class ContextMenu extends WidgetGroup {
                 // TODO disabled method, showAll
                 float x = bound.getX();
                 float y = bound.getY() + bound.getHeight() - i * kind.height;
-                batch.draw(kind.items.get(i).widget.getBackground().get(),
+                batch.draw(kind.items.get(i).textWidget.getBackground().get(),
                         x, y, kind.width, kind.height);
 
-                TextWidget<MenuItem> widget = kind.items.get(i).widget;
+                TextWidget<MenuItem> widget = kind.items.get(i).textWidget;
                 widget.setText(kind.items.get(i).displayName);
                 widget.setPosition(x, y);
                 widget.setSize(kind.width, kind.height);
@@ -278,7 +289,7 @@ public class ContextMenu extends WidgetGroup {
 
     private void disposeMenuItems(List<MenuItem> items) {
         for (MenuItem item : items) {
-            item.widget.dispose();
+            item.textWidget.dispose();
             disposeMenuItems(item.children);
         }
     }
@@ -294,6 +305,12 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
+    private void dismiss() {
+        collapseSound.play();
+        showingType = null;
+        setVisible(false);
+    }
+
     private class MenuItemListener extends InputListener {
 
         private TextWidget<MenuItem> widget;
@@ -304,12 +321,27 @@ public class ContextMenu extends WidgetGroup {
 
         @Override
         public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-            this.widget.getExtra().widget.getBackground().setState(StateTexture.State.SELECTED);
+            this.widget.getExtra().textWidget.getBackground().setState(StateTexture.State.SELECTED);
         }
 
         @Override
         public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-            this.widget.getExtra().widget.getBackground().setState(StateTexture.State.NORMAL);
+            this.widget.getExtra().textWidget.getBackground().setState(StateTexture.State.NORMAL);
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (this.widget.getExtra().fullName.equals("SystemMenu_Continue")) {
+                dismiss();
+            } else {
+                try {
+                    ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
+                            .invoke(null, screen, currentObject);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            return true;
         }
     }
 
@@ -318,9 +350,7 @@ public class ContextMenu extends WidgetGroup {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (button == Input.Buttons.RIGHT) {
-                collapseSound.play();
-                showingType = null;
-                setVisible(false);
+                dismiss();
                 return true;
             }
             return false;
