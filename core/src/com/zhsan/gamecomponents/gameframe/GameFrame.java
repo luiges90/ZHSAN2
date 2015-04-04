@@ -154,6 +154,11 @@ public class GameFrame extends WidgetGroup {
     public void resize(int width, int height) {
         this.setWidth(width);
         this.setHeight(height);
+
+        titleWidget.setX(getLeftBound());
+        titleWidget.setY(getTopBound());
+        titleWidget.setWidth(getRightBound() - getLeftBound());
+        titleWidget.setHeight(getHeight() - getTopBound());
     }
 
     protected final void setTitle(String title) {

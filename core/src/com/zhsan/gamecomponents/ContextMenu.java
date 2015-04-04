@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -194,6 +195,18 @@ public class ContextMenu extends WidgetGroup {
         this.addListener(new ScreenClickListener());
 
         loadXml();
+    }
+
+    public void resize(int width, int height) {
+        float widthExpanded = width / this.getWidth();
+        float heightExpanded = height / this.getHeight();
+
+        this.setWidth(width);
+        this.setHeight(height);
+
+        if (position != null) {
+            position = new Point(MathUtils.round(position.x * widthExpanded), MathUtils.round(position.y * heightExpanded));
+        }
     }
 
     public void show(MenuKindType type, Object object, Point position) {

@@ -56,6 +56,7 @@ public class GameScreen extends WidgetGroup {
 
     public void resize(int width, int height) {
         mapLayer.resize(width, height);
+        contextMenu.resize(width, height);
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
         }

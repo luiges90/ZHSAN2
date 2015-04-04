@@ -28,7 +28,6 @@ public class GameSystem extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private Texture button, buttonSelected;
-    private Rectangle buttonPosition;
     private boolean isMouseOnButton;
 
     private GameScreen screen;
@@ -54,11 +53,12 @@ public class GameSystem extends WidgetGroup {
     }
 
     public GameSystem(GameScreen screen, Rectangle buttonPosition) {
-        this.buttonPosition = buttonPosition;
         this.screen = screen;
 
-        this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(Gdx.graphics.getHeight());
+        this.setX(buttonPosition.x);
+        this.setY(buttonPosition.y);
+        this.setWidth(buttonPosition.width);
+        this.setHeight(buttonPosition.height);
 
         loadXml();
 
@@ -69,7 +69,7 @@ public class GameSystem extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(isMouseOnButton ? buttonSelected : button, buttonPosition.getX(), buttonPosition.getY());
+        batch.draw(isMouseOnButton ? buttonSelected : button, this.getX(), this.getY());
     }
 
     public void dispose() {
@@ -81,17 +81,14 @@ public class GameSystem extends WidgetGroup {
 
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
-            isMouseOnButton = buttonPosition.contains(x, y);
-            return isMouseOnButton;
+            isMouseOnButton = true;
+            return true;
         }
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (buttonPosition.contains(x, y)) {
-                screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
-                return true;
-            }
-            return false;
+            screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
+            return true;
         }
     }
 
