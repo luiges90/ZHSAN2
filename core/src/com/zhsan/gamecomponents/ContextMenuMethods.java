@@ -19,4 +19,8 @@ public final class ContextMenuMethods {
         // no-op. Let ContextMenu close.
     }
 
+    public static void SystemMenu_Save(GameScreen screen, Object object) {
+        screen.showSaveGameFrame();
+    }
+
 }

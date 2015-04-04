@@ -49,11 +49,13 @@ public class FileGameFrame extends GameFrame {
 
     private String title;
     private Usage usage;
+    private float widthRatio, heightRatio;
 
     private int margins;
     private int listPaddings;
     private Color listSelectedColor;
 
+    private VerticalGroup fileList = new VerticalGroup();
     private ScrollPane filePane;
     private TextWidget.Setting fileStyle;
 
@@ -68,6 +70,10 @@ public class FileGameFrame extends GameFrame {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
+
+            Node nodeSizeRatio = dom.getElementsByTagName("SizeRatio").item(0);
+            widthRatio = Float.parseFloat(XmlHelper.loadAttribute(nodeSizeRatio, "width"));
+            heightRatio = Float.parseFloat(XmlHelper.loadAttribute(nodeSizeRatio, "height"));
 
             if (usage == Usage.SAVE) {
                 title = XmlHelper.loadAttribute(dom.getElementsByTagName("Title").item(0), "save");
@@ -90,27 +96,40 @@ public class FileGameFrame extends GameFrame {
         }
     }
 
-    public FileGameFrame(float width, float height, Usage usage, OnFileSelected fileListener) {
-        super(width, height, "", null);
+    public FileGameFrame(Usage usage, OnFileSelected fileListener) {
+        super(0, 0, "", null);
 
         loadXml(usage);
 
         setTitle(title);
+        setWidth(Gdx.graphics.getWidth() * widthRatio);
+        setHeight(Gdx.graphics.getHeight() * heightRatio);
 
         onFileSelected = fileListener;
 
         initFilePane();
 
         super.setOkEnabled(false);
+        super.addOnClickListener(new ButtonListener());
     }
 
-    private void initFilePane() {
-        float paneHeight = (getTopBound() - getBottomActiveBound() - margins * 2);
-        float paneWidth = (getRightBound() - getLeftBound() - margins * 2);
+    public void show() {
+        populateFilePane();
+        setVisible(true);
+    }
 
+    private float getPaneWidth() {
+        return getRightBound() - getLeftBound() - margins * 2;
+    }
+
+    private float getPaneHeight() {
+        return getTopBound() - getBottomActiveBound() - margins * 2;
+    }
+
+    private void populateFilePane() {
         FileHandle[] saveFiles = Gdx.files.external(SAVE_FILE_PATH).list();
 
-        VerticalGroup fileList = new VerticalGroup();
+        fileList.clear();
         for (FileHandle fh : saveFiles) {
             if (!fh.isDirectory()) continue;
 
@@ -122,12 +141,19 @@ public class FileGameFrame extends GameFrame {
             SelectableTextWidget<FileHandle> widget = new SelectableTextWidget<>(fileStyle, description, listSelectedColor);
             widget.setTouchable(Touchable.enabled);
             widget.setExtra(fh);
-            widget.setWidth(paneWidth);
+            widget.setWidth(getPaneWidth());
             widget.setPadding(listPaddings);
             fileList.addActor(widget);
 
             widget.addListener(new FileSelectListener(widget));
         }
+    }
+
+    private void initFilePane() {
+        float paneHeight = getPaneHeight();
+        float paneWidth = getPaneWidth();
+
+        populateFilePane();
 
         filePane = new ScrollPane(fileList);
         Table scenarioPaneContainer = WidgetUtility.setupScrollpane(getLeftBound() + margins, getTopBound() - margins - paneHeight,
@@ -148,6 +174,19 @@ public class FileGameFrame extends GameFrame {
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             onFileSelected.onFileSelected(widget.getExtra());
             return true;
+        }
+    }
+
+    private class ButtonListener implements GameFrame.OnClick {
+
+        @Override
+        public void onOkClicked() {
+
+        }
+
+        @Override
+        public void onCancelClicked() {
+            setVisible(false);
         }
     }
 

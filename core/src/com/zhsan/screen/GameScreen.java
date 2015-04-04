@@ -1,10 +1,13 @@
 package com.zhsan.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
+import com.zhsan.gamecomponents.gameframe.FileGameFrame;
 import com.zhsan.gameobject.GameScenario;
 
 /**
@@ -16,6 +19,8 @@ public class GameScreen extends WidgetGroup {
 
     private MapLayer mapLayer;
     private ContextMenu contextMenu;
+
+    private FileGameFrame saveGameFrame, loadGameFrame;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
@@ -29,6 +34,20 @@ public class GameScreen extends WidgetGroup {
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
         contextMenu.show(type, scen, position);
+    }
+
+    public void showSaveGameFrame() {
+        if (saveGameFrame == null) {
+            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, new FileGameFrame.OnFileSelected() {
+                @Override
+                public void onFileSelected(FileHandle file) {
+
+                }
+            });
+            this.addActor(saveGameFrame);
+        } else {
+            saveGameFrame.show();
+        }
     }
 
     public GameScenario getScenario() {
