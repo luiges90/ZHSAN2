@@ -331,16 +331,13 @@ public class ContextMenu extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (this.widget.getExtra().fullName.equals("SystemMenu_Continue")) {
-                dismiss();
-            } else {
-                try {
-                    ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
-                            .invoke(null, screen, currentObject);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    throw new IllegalArgumentException(e);
-                }
+            try {
+                ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
+                        .invoke(null, screen, currentObject);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new IllegalArgumentException(e);
             }
+            dismiss();
             return true;
         }
     }
