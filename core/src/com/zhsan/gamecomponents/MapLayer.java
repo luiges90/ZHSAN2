@@ -322,9 +322,9 @@ public class MapLayer extends WidgetGroup {
             moveStateX = MoveStateX.IDLE;
             moveStateY = MoveStateY.IDLE;
 
-            if (x < mapScrollBoundary) {
+            if (x < mapScrollBoundary && y > toolBar.getToolbarHeight()) {
                 moveStateX = MoveStateX.LEFT;
-            } else if (x > getWidth() - mapScrollBoundary) {
+            } else if (x > getWidth() - mapScrollBoundary && y > toolBar.getToolbarHeight()) {
                 moveStateX = MoveStateX.RIGHT;
             }
             if (toolBar.getToolbarHeight() < y && y < toolBar.getToolbarHeight() + mapScrollBoundary) {
