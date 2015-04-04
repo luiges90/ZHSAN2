@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
-import com.zhsan.gamecomponents.GameFrame;
-import com.zhsan.gamecomponents.NewGameFrame;
+import com.zhsan.gamecomponents.gameframe.GameFrame;
+import com.zhsan.gamecomponents.gameframe.NewGameFrame;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Document;
 
