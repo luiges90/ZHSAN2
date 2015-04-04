@@ -151,6 +151,10 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
+    protected final void setTitle(String title) {
+        titleWidget.setText(title);
+    }
+
     public final void addOnClickListener(@NotNull OnClick buttonListener) {
         this.buttonListener = buttonListener;
         this.addListener(new InputListener() {

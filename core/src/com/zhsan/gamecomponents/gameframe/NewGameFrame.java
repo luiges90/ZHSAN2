@@ -43,6 +43,8 @@ public class NewGameFrame extends GameFrame {
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
 
+    private String title;
+
     private int margins;
     private int listPaddings;
     private Color listSelectedColor;
@@ -64,6 +66,8 @@ public class NewGameFrame extends GameFrame {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
+
+            title = XmlHelper.loadAttribute(dom.getElementsByTagName("Title").item(0), "title");
 
             margins = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Margins").item(0), "value"));
             listPaddings = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Lists").item(0), "padding"));
@@ -88,9 +92,11 @@ public class NewGameFrame extends GameFrame {
     }
 
     public NewGameFrame(float width, float height, OnScenarioChosenListener listener) {
-        super(width, height, GlobalStrings.getString(GlobalStrings.NEW_GAME), null);
+        super(width, height, "", null);
 
         loadXml();
+
+        setTitle(title);
 
         initScenarioListPane();
         initScenarioDescriptionPane();
@@ -100,26 +106,6 @@ public class NewGameFrame extends GameFrame {
 
         super.addOnClickListener(new ButtonListener());
         super.setOkEnabled(false);
-    }
-
-    private Table setupScrollpane(float x, float y, float paneWidth, float paneHeight, ScrollPane target) {
-        ScrollPane.ScrollPaneStyle scrollPaneStyle = new ScrollPane.ScrollPaneStyle();
-        scrollPaneStyle.vScrollKnob = new TextureRegionDrawable(new TextureRegion(scrollButton));
-
-        target.setStyle(scrollPaneStyle);
-        target.setFadeScrollBars(false);
-        target.setOverscroll(false, false);
-        target.setFlickScroll(false);
-
-        target.addListener(new GetScrollFocusWhenEntered(target));
-
-        Table scenarioPaneContainer = new Table();
-        scenarioPaneContainer.setX(x);
-        scenarioPaneContainer.setY(y);
-        scenarioPaneContainer.setWidth(paneWidth);
-        scenarioPaneContainer.setHeight(paneHeight);
-        scenarioPaneContainer.add(target).fill().expand();
-        return scenarioPaneContainer;
     }
 
     private void initScenarioListPane() {
@@ -141,8 +127,8 @@ public class NewGameFrame extends GameFrame {
         }
 
         scenarioPane = new ScrollPane(scenarioList);
-        Table scenarioPaneContainer = setupScrollpane(getLeftBound() + margins, getTopBound() - margins - paneHeight,
-                paneWidth, paneHeight, scenarioPane);
+        Table scenarioPaneContainer = WidgetUtility.setupScrollpane(getLeftBound() + margins, getTopBound() - margins - paneHeight,
+                paneWidth, paneHeight, scenarioPane, scrollButton);
 
         addActor(scenarioPaneContainer);
     }
@@ -155,8 +141,8 @@ public class NewGameFrame extends GameFrame {
         scenDescPane.setWidth(paneWidth);
 
         scenarioDescriptionPane = new ScrollPane(scenDescPane);
-        Table scenarioDescriptionPaneContainer = setupScrollpane(getLeftBound() + margins, getBottomActiveBound() + margins,
-                paneWidth, paneHeight, scenarioDescriptionPane);
+        Table scenarioDescriptionPaneContainer = WidgetUtility.setupScrollpane(getLeftBound() + margins, getBottomActiveBound() + margins,
+                paneWidth, paneHeight, scenarioDescriptionPane, scrollButton);
 
         addActor(scenarioDescriptionPaneContainer);
     }
@@ -168,8 +154,8 @@ public class NewGameFrame extends GameFrame {
         VerticalGroup factionList = new VerticalGroup();
 
         factionPane = new ScrollPane(factionList);
-        Table factionPaneContainer = setupScrollpane(getRightBound() - margins - paneWidth, getBottomActiveBound() + margins,
-                paneWidth, paneHeight, factionPane);
+        Table factionPaneContainer = WidgetUtility.setupScrollpane(getRightBound() - margins - paneWidth, getBottomActiveBound() + margins,
+                paneWidth, paneHeight, factionPane, scrollButton);
 
         addActor(factionPaneContainer);
     }

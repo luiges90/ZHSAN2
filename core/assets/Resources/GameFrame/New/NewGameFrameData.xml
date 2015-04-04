@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
+	<Title title="选择剧本" />
 	<Margins value="16"/>
 	<Lists padding="8" selectedColor="4294967295"/>
 	<Scroll fileName="ScrollButton.jpg" />
