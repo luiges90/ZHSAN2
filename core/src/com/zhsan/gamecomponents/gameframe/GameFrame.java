@@ -131,11 +131,11 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    public GameFrame(float width, float height, String title, @Nullable OnClick buttonListener) {
+    public GameFrame(String title, @Nullable OnClick buttonListener) {
         loadXml();
 
-        this.setWidth(width);
-        this.setHeight(height);
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(Gdx.graphics.getHeight());
 
         this.setOkEnabled(true);
         this.setCancelEnabled(true);
@@ -149,6 +149,11 @@ public class GameFrame extends WidgetGroup {
         if (buttonListener != null) {
             this.addOnClickListener(buttonListener);
         }
+    }
+
+    public void resize(int width, int height) {
+        this.setWidth(width);
+        this.setHeight(height);
     }
 
     protected final void setTitle(String title) {

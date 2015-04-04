@@ -91,8 +91,8 @@ public class NewGameFrame extends GameFrame {
         }
     }
 
-    public NewGameFrame(float width, float height, OnScenarioChosenListener listener) {
-        super(width, height, "", null);
+    public NewGameFrame(OnScenarioChosenListener listener) {
+        super("", null);
 
         loadXml();
 

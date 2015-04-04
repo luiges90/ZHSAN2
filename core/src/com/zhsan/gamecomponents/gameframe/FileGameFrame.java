@@ -97,13 +97,11 @@ public class FileGameFrame extends GameFrame {
     }
 
     public FileGameFrame(Usage usage, OnFileSelected fileListener) {
-        super(0, 0, "", null);
+        super("", null);
 
         loadXml(usage);
 
         setTitle(title);
-        setWidth(Gdx.graphics.getWidth() * widthRatio);
-        setHeight(Gdx.graphics.getHeight() * heightRatio);
 
         onFileSelected = fileListener;
 

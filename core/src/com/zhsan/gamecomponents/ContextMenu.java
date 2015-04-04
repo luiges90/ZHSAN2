@@ -191,7 +191,7 @@ public class ContextMenu extends WidgetGroup {
         this.setHeight(Gdx.graphics.getHeight());
 
         this.setVisible(false);
-        this.addListener(new RightClickListener());
+        this.addListener(new ScreenClickListener());
 
         loadXml();
     }
@@ -306,7 +306,6 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private void dismiss() {
-        collapseSound.play();
         showingType = null;
         setVisible(false);
     }
@@ -337,20 +336,21 @@ public class ContextMenu extends WidgetGroup {
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalArgumentException(e);
             }
+            clickSound.play();
             dismiss();
             return true;
         }
     }
 
-    private class RightClickListener extends InputListener {
+    private class ScreenClickListener extends InputListener {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (button == Input.Buttons.RIGHT) {
+                collapseSound.play();
                 dismiss();
-                return true;
             }
-            return false;
+            return true;
         }
     }
 

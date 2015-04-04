@@ -56,6 +56,7 @@ public class GameScreen extends WidgetGroup {
 
     public void resize(int width, int height) {
         mapLayer.resize(width, height);
+        saveGameFrame.resize(width, height);
     }
 
     public void draw(Batch batch, float parentAlpha) {
