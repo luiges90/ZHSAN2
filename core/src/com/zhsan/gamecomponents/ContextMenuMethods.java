@@ -15,7 +15,7 @@ public final class ContextMenuMethods {
         Gdx.app.exit();
     }
 
-    public static void SystemMenu_Continue(GameScreen screen, Objecct object) {
+    public static void SystemMenu_Continue(GameScreen screen, Object object) {
         // no-op. Let ContextMenu close.
     }
 
