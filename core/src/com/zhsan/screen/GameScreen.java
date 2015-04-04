@@ -38,11 +38,19 @@ public class GameScreen extends WidgetGroup {
 
     public void showSaveGameFrame() {
         if (saveGameFrame == null) {
-            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, new FileGameFrame.OnFileSelected() {
-                @Override
-                public void onFileSelected(FileHandle file) {
+            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, file -> {
 
-                }
+            });
+            this.addActor(saveGameFrame);
+        } else {
+            saveGameFrame.show();
+        }
+    }
+
+    public void showLoadGameFrame() {
+        if (saveGameFrame == null) {
+            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
+
             });
             this.addActor(saveGameFrame);
         } else {

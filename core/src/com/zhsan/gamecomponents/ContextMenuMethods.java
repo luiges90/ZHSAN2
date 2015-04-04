@@ -23,4 +23,8 @@ public final class ContextMenuMethods {
         screen.showSaveGameFrame();
     }
 
+    public static void SystemMenu_Load(GameScreen screen, Object object) {
+        screen.showLoadGameFrame();
+    }
+
 }
