@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <GlobalStrings 
  title="中華三國志"
+ gameSurveySaveHeader="标题,年,月,日,保存时间,存档信息,地图位置,描述,存档版本"
 />

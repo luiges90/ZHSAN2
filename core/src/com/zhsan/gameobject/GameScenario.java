@@ -16,9 +16,10 @@ import java.util.List;
  */
 public class GameScenario {
 
-    public static final String PATH = Paths.DATA + "Scenarios" + File.separator;
+    public static final int SAVE_VERSION = 2;
 
-    public static final DateTimeFormatter DATE_TIME_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
+    public static final String SCENARIO_PATH = Paths.DATA + "Scenario" + File.separator;
+    public static final String SAVE_PATH = Paths.DATA + "Save" + File.separator;
 
     private GameSurvey gameSurvey;
     private GameObjectList<TerrainDetail> terrainDetails;
@@ -27,7 +28,7 @@ public class GameScenario {
     public static List<Pair<String, GameSurvey>> loadAllGameSurveys() {
         List<Pair<String, GameSurvey>> result = new ArrayList<>();
 
-        FileHandle[] scenarios = Gdx.files.external(PATH).list();
+        FileHandle[] scenarios = Gdx.files.external(SCENARIO_PATH).list();
         for (FileHandle f : scenarios) {
             if (f.isDirectory()) {
                 result.add(new ImmutablePair<>(f.path(), GameSurvey.fromCSV(f.path())));
@@ -53,5 +54,22 @@ public class GameScenario {
 
     public GameSurvey getGameSurvey() {
         return gameSurvey;
+    }
+
+    public void save(FileHandle out) {
+        FileHandle result = out;
+        if (result == null) {
+            FileHandle root = Gdx.files.external(SAVE_PATH);
+            int i = 1;
+            do {
+                result = root.child("Save" + i);
+                i++;
+            } while (result.exists());
+            result.mkdirs();
+        }
+
+        result.emptyDirectory();
+
+        gameSurvey.toCSV(result);
     }
 }

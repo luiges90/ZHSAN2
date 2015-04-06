@@ -19,6 +19,10 @@ public final class Point {
         );
     }
 
+    public String toCSV() {
+        return x + " " + y;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

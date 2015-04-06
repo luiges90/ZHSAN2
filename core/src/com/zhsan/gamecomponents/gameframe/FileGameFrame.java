@@ -35,7 +35,7 @@ import java.time.format.FormatStyle;
 public class FileGameFrame extends GameFrame {
 
     public interface OnFileSelected {
-        public void onFileSelected(FileHandle file);
+        public void onFileSelected(@Nullable FileHandle file);
     }
 
     public enum Usage {
@@ -54,6 +54,7 @@ public class FileGameFrame extends GameFrame {
     private int margins;
     private int listPaddings;
     private Color listSelectedColor;
+    private String newFileString;
 
     private VerticalGroup fileList = new VerticalGroup();
     private ScrollPane filePane;
@@ -62,7 +63,7 @@ public class FileGameFrame extends GameFrame {
     private Texture scrollButton;
     private OnFileSelected onFileSelected;
 
-    private void loadXml(Usage usage) {
+    private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "FileGameFrameData.xml");
 
         Document dom;
@@ -80,6 +81,8 @@ public class FileGameFrame extends GameFrame {
             } else if (usage == Usage.LOAD) {
                 title = XmlHelper.loadAttribute(dom.getElementsByTagName("Title").item(0), "load");
             }
+
+            newFileString = XmlHelper.loadAttribute(dom.getElementsByTagName("Strings").item(0), "newFile");
 
             margins = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Margins").item(0), "value"));
             listPaddings = Integer.parseInt(XmlHelper.loadAttribute(dom.getElementsByTagName("Lists").item(0), "padding"));
@@ -99,7 +102,9 @@ public class FileGameFrame extends GameFrame {
     public FileGameFrame(Usage usage, OnFileSelected fileListener) {
         super("", null);
 
-        loadXml(usage);
+        this.usage = usage;
+
+        loadXml();
 
         setTitle(title);
 
@@ -137,8 +142,17 @@ public class FileGameFrame extends GameFrame {
                     survey.getMessage();
 
             SelectableTextWidget<FileHandle> widget = new SelectableTextWidget<>(fileStyle, description, listSelectedColor);
-            widget.setTouchable(Touchable.enabled);
             widget.setExtra(fh);
+            widget.setWidth(getPaneWidth());
+            widget.setPadding(listPaddings);
+            fileList.addActor(widget);
+
+            widget.addListener(new FileSelectListener(widget));
+        }
+
+        if (usage == Usage.SAVE) {
+            SelectableTextWidget<FileHandle> widget = new SelectableTextWidget<>(fileStyle, newFileString, listSelectedColor);
+            widget.setExtra(null);
             widget.setWidth(getPaneWidth());
             widget.setPadding(listPaddings);
             fileList.addActor(widget);
@@ -171,6 +185,7 @@ public class FileGameFrame extends GameFrame {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             onFileSelected.onFileSelected(widget.getExtra());
+            FileGameFrame.super.dismiss(true);
             return true;
         }
     }

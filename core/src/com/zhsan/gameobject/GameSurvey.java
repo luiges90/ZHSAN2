@@ -3,20 +3,27 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.common.exception.FileWriteException;
+import com.zhsan.resources.GlobalStrings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Created by Peter on 8/3/2015.
  */
 public final class GameSurvey {
+
+    public static final DateTimeFormatter SAVE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
+    public static final String SAVE_FILE = "GameSurvey.csv";
 
     private String title;
     private LocalDate startDate;
@@ -37,7 +44,7 @@ public final class GameSurvey {
     }
 
     public static final GameSurvey fromCSV(String path) {
-        FileHandle f = Gdx.files.external(path + File.separator + "GameSurvey.csv");
+        FileHandle f = Gdx.files.external(path + File.separator + SAVE_FILE);
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;
@@ -51,7 +58,7 @@ public final class GameSurvey {
                         Integer.parseInt(line[1]),
                         Integer.parseInt(line[2]),
                         Integer.parseInt(line[3])));
-                b.setSaveDate(LocalDateTime.parse(line[4], GameScenario.DATE_TIME_FORMAT));
+                b.setSaveDate(LocalDateTime.parse(line[4], SAVE_DATE_FORMAT));
                 b.setMessage(line[5]);
                 b.setInitialPosition(Point.fromCSV(line[6]));
                 b.setDescription(line[7]);
@@ -64,10 +71,26 @@ public final class GameSurvey {
                 return b.createGameSurvey();
             }
         } catch (IOException e) {
-            throw new FileReadException(path + File.separator + "GameSurvey.csv", e);
+            throw new FileReadException(f.path(), e);
         }
 
-        throw new FileReadException(path + File.separator + "GameSurvey.csv", new EmptyFileException());
+        throw new FileReadException(f.path(), new EmptyFileException());
+    }
+
+    public final void toCSV(FileHandle root) {
+        FileHandle f = root.child(SAVE_FILE);
+        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+            writer.writeNext(GlobalStrings.getString(GlobalStrings.GAME_SURVEY_SAVE_HEADER).split(","));
+            writer.writeNext(new String[]{
+                    title,
+                    String.valueOf(startDate.getYear()), String.valueOf(startDate.getMonth().getValue()), String.valueOf(startDate.getDayOfMonth()),
+                    SAVE_DATE_FORMAT.format(LocalDateTime.now()), message,
+                    cameraPosition.toCSV(), description, String.valueOf(GameScenario.SAVE_VERSION)
+            });
+        } catch (IOException e) {
+            throw new FileWriteException(f.path(), e);
+        }
+
     }
 
     public String getTitle() {

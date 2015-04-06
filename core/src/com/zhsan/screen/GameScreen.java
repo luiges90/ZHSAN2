@@ -38,9 +38,7 @@ public class GameScreen extends WidgetGroup {
 
     public void showSaveGameFrame() {
         if (saveGameFrame == null) {
-            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, file -> {
-
-            });
+            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, scen::save);
             this.addActor(saveGameFrame);
         } else {
             saveGameFrame.show();

@@ -292,16 +292,22 @@ public class GameFrame extends WidgetGroup {
     private void handleTouchDown(int button, float x, float y) {
         if (ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.NORMAL);
-            okSound.play();
             buttonListener.onOkClicked();
-            this.setVisible(false);
+            dismiss(true);
         }
         if ((cancel.contains(x, y) || button == Input.Buttons.RIGHT) && isCancelEnabled()) {
-            cancelTexture.setState(StateTexture.State.NORMAL);
-            cancelSound.play();
             buttonListener.onCancelClicked();
-            this.setVisible(false);
+            dismiss(false);
         }
+    }
+
+    protected final void dismiss(boolean ok) {
+        if (ok) {
+            okSound.play();
+        } else {
+            cancelSound.play();
+        }
+        this.setVisible(false);
     }
 
     public void dispose() {

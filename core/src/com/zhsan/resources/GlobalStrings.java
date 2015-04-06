@@ -19,7 +19,7 @@ import java.util.Map;
 public class GlobalStrings {
 
     public static final String TITLE = "title";
-    public static final String NEW_GAME = "newGame";
+    public static final String GAME_SURVEY_SAVE_HEADER = "gameSurveySaveHeader";
 
     private GlobalStrings() {}
 
