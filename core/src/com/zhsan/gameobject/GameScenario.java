@@ -70,7 +70,7 @@ public class GameScenario {
 
         result.emptyDirectory();
 
-        gameSurvey.toCSV(result);
+        GameSurvey.toCSV(result, gameSurvey);
         TerrainDetail.toCSV(result, terrainDetails);
     }
 }

@@ -77,15 +77,20 @@ public final class GameSurvey {
         throw new FileReadException(f.path(), new EmptyFileException());
     }
 
-    public final void toCSV(FileHandle root) {
+    public static final void toCSV(FileHandle root, GameSurvey gameSurvey) {
         FileHandle f = root.child(SAVE_FILE);
         try (CSVWriter writer = new CSVWriter(f.writer(false))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.GAME_SURVEY_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
-                    title,
-                    String.valueOf(startDate.getYear()), String.valueOf(startDate.getMonth().getValue()), String.valueOf(startDate.getDayOfMonth()),
-                    SAVE_DATE_FORMAT.format(LocalDateTime.now()), message,
-                    cameraPosition.toCSV(), description, String.valueOf(GameScenario.SAVE_VERSION)
+                    gameSurvey.title,
+                    String.valueOf(gameSurvey.startDate.getYear()),
+                    String.valueOf(gameSurvey.startDate.getMonth().getValue()),
+                    String.valueOf(gameSurvey.startDate.getDayOfMonth()),
+                    SAVE_DATE_FORMAT.format(LocalDateTime.now()),
+                    gameSurvey.message,
+                    gameSurvey.cameraPosition.toCSV(),
+                    gameSurvey.description,
+                    String.valueOf(GameScenario.SAVE_VERSION)
             });
         } catch (IOException e) {
             throw new FileWriteException(f.path(), e);
