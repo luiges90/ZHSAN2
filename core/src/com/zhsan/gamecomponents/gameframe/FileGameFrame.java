@@ -136,7 +136,7 @@ public class FileGameFrame extends GameFrame {
         for (FileHandle fh : saveFiles) {
             if (!fh.isDirectory()) continue;
 
-            GameSurvey survey = GameSurvey.fromCSV(fh.path());
+            GameSurvey survey = GameSurvey.fromCSV(fh);
             String description = survey.getTitle() + " " +
                     survey.getSaveDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)) + " " +
                     survey.getMessage();

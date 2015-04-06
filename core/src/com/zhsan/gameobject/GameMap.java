@@ -57,8 +57,11 @@ public class GameMap {
         return result;
     }
 
-    public static GameMap fromCSV(String path, @NotNull GameScenario scen) {
-        FileHandle f = Gdx.files.external(path + File.separator + SAVE_FILE);
+    public static GameMap fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        int version = scen.getGameSurvey().getVersion();
+
+        FileHandle f = root.child(SAVE_FILE);
+        GameMapBuilder builder = new GameMapBuilder();
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;
@@ -66,22 +69,46 @@ public class GameMap {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                GameMapBuilder builder = new GameMapBuilder();
-                builder.setZoom(Integer.parseInt(line[2]));
-                builder.setWidth(Integer.parseInt(line[3]));
-                builder.setHeight(Integer.parseInt(line[4]));
-                builder.setMapData(readMapData(scen, builder.width, builder.height, line[5]));
-                builder.setFileName(line[6]);
-                builder.setImageCount(Integer.parseInt(line[7]));
-                builder.setTileInEachImage(Integer.parseInt(line[8]));
-
-                return builder.createGameMap();
+                if (version == 1) {
+                    builder.setZoom(Integer.parseInt(line[2]));
+                    builder.setWidth(Integer.parseInt(line[3]));
+                    builder.setHeight(Integer.parseInt(line[4]));
+                    builder.setMapData(readMapData(scen, builder.width, builder.height, line[5]));
+                    builder.setFileName(line[6]);
+                    builder.setImageCount(Integer.parseInt(line[7]));
+                    builder.setTileInEachImage(Integer.parseInt(line[8]));
+                } else {
+                    builder.setZoom(Integer.parseInt(line[0]));
+                    builder.setWidth(Integer.parseInt(line[1]));
+                    builder.setHeight(Integer.parseInt(line[2]));
+                    builder.setFileName(line[3]);
+                    builder.setImageCount(Integer.parseInt(line[4]));
+                    builder.setTileInEachImage(Integer.parseInt(line[5]));
+                }
             }
         } catch (IOException e) {
             throw new FileReadException(f.path(), e);
         }
 
-        throw new FileReadException(f.path(), new EmptyFileException());
+        if (version == 1) {
+            return builder.createGameMap();
+        } else {
+            FileHandle data = root.child(MAP_DATA_FILE);
+            try (BufferedReader reader = new BufferedReader(data.reader())) {
+                StringBuilder entireData = new StringBuilder();
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    entireData.append(line).append(" ");
+                }
+
+                builder.setMapData(readMapData(scen, builder.width, builder.height, entireData.toString()));
+
+                return builder.createGameMap();
+            } catch (IOException e) {
+                throw new FileReadException(f.path(), e);
+            }
+        }
     }
 
     public static void toCSV(FileHandle root, GameMap map) {

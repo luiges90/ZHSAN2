@@ -31,7 +31,7 @@ public class GameScenario {
         FileHandle[] scenarios = Gdx.files.external(SCENARIO_PATH).list();
         for (FileHandle f : scenarios) {
             if (f.isDirectory()) {
-                result.add(new ImmutablePair<>(f.path(), GameSurvey.fromCSV(f.path())));
+                result.add(new ImmutablePair<>(f.path(), GameSurvey.fromCSV(f)));
             }
         }
 
@@ -39,9 +39,13 @@ public class GameScenario {
     }
 
     public GameScenario(String fileName) {
-        gameSurvey = GameSurvey.fromCSV(fileName);
-        terrainDetails = TerrainDetail.fromCSV(fileName, this);
-        gameMap = GameMap.fromCSV(fileName, this);
+        this(Gdx.files.external(fileName));
+    }
+
+    public GameScenario(FileHandle file) {
+        gameSurvey = GameSurvey.fromCSV(file);
+        terrainDetails = TerrainDetail.fromCSV(file, this);
+        gameMap = GameMap.fromCSV(file, this);
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
@@ -74,4 +78,5 @@ public class GameScenario {
         TerrainDetail.toCSV(result, terrainDetails);
         GameMap.toCSV(result, gameMap);
     }
+
 }

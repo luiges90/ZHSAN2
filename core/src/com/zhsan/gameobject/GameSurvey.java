@@ -43,8 +43,8 @@ public final class GameSurvey {
         this.version = version;
     }
 
-    public static final GameSurvey fromCSV(String path) {
-        FileHandle f = Gdx.files.external(path + File.separator + SAVE_FILE);
+    public static final GameSurvey fromCSV(FileHandle root) {
+        FileHandle f = root.child(SAVE_FILE);
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;

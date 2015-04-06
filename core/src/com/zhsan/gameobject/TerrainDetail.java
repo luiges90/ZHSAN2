@@ -35,10 +35,12 @@ public class TerrainDetail extends GameObject {
         this.fireDamageRate = fireDamageRate;
     }
 
-    public static final GameObjectList<TerrainDetail> fromCSV(String path, @NotNull GameScenario scen) {
+    public static final GameObjectList<TerrainDetail> fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        int version = scen.getGameSurvey().getVersion();
+
         GameObjectList<TerrainDetail> result = new GameObjectList<>();
 
-        FileHandle f = Gdx.files.external(path + File.separator + SAVE_FILE);
+        FileHandle f = root.child(SAVE_FILE);
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;
@@ -47,10 +49,17 @@ public class TerrainDetail extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 TerrainDetailBuilder builder = new TerrainDetailBuilder();
-                builder.setId(Integer.parseInt(line[0]));
-                builder.setName(line[1]);
-                builder.setCanBeViewedThrough(Boolean.parseBoolean(line[3]));
-                builder.setFireDamageRate(Float.parseFloat(line[14]));
+                if (version == 1) {
+                    builder.setId(Integer.parseInt(line[0]));
+                    builder.setName(line[1]);
+                    builder.setCanBeViewedThrough(Boolean.parseBoolean(line[3]));
+                    builder.setFireDamageRate(Float.parseFloat(line[14]));
+                } else {
+                    builder.setId(Integer.parseInt(line[0]));
+                    builder.setName(line[1]);
+                    builder.setCanBeViewedThrough(Boolean.parseBoolean(line[2]));
+                    builder.setFireDamageRate(Float.parseFloat(line[3]));
+                }
 
                 result.add(builder.createTerrainDetail());
             }
