@@ -5,17 +5,18 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.resources.GlobalStrings;
 import jdk.nashorn.internal.objects.Global;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,9 @@ import java.util.List;
  * Created by Peter on 17/3/2015.
  */
 public class GameMap {
+
+    public static final String SAVE_FILE = "Map.csv";
+    public static final String MAP_DATA_FILE = "MapData.txt";
 
     private int zoom;
     private int width;
@@ -54,7 +58,7 @@ public class GameMap {
     }
 
     public static GameMap fromCSV(String path, @NotNull GameScenario scen) {
-        FileHandle f = Gdx.files.external(path + File.separator + "Map.csv");
+        FileHandle f = Gdx.files.external(path + File.separator + SAVE_FILE);
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;
@@ -74,10 +78,40 @@ public class GameMap {
                 return builder.createGameMap();
             }
         } catch (IOException e) {
-            throw new FileReadException(path + File.separator + "Map.csv", e);
+            throw new FileReadException(f.path(), e);
         }
 
-        throw new FileReadException(path + File.separator + "Map.csv", new EmptyFileException());
+        throw new FileReadException(f.path(), new EmptyFileException());
+    }
+
+    public static void toCSV(FileHandle root, GameMap map) {
+        FileHandle f = root.child(SAVE_FILE);
+        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+            writer.writeNext(GlobalStrings.getString(GlobalStrings.MAP_SAVE_HEADER).split(","));
+            writer.writeNext(new String[]{
+                    String.valueOf(map.zoom),
+                    String.valueOf(map.width),
+                    String.valueOf(map.height),
+                    map.fileName,
+                    String.valueOf(map.imageCount),
+                    String.valueOf(map.tileInEachImage)
+            });
+        } catch (IOException e) {
+            throw new FileWriteException(f.path(), e);
+        }
+
+        FileHandle data = root.child(MAP_DATA_FILE);
+        try (Writer writer = data.writer(false)) {
+            for (int r = 0; r < map.mapData.length; ++r) {
+                for (int c = 0; c < map.mapData.length; ++c) {
+                    writer.write(String.format("%3s", map.mapData[c][r].id));
+                }
+                writer.write("\n");
+            }
+        } catch (IOException e) {
+            throw new FileWriteException(data.path(), e);
+        }
+
     }
 
     /**
