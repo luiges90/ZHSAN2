@@ -71,5 +71,6 @@ public class GameScenario {
         result.emptyDirectory();
 
         gameSurvey.toCSV(result);
+        TerrainDetail.toCSV(result, terrainDetails);
     }
 }

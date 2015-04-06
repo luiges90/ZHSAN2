@@ -24,12 +24,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public List<T> getListOrderedById() {
         List<T> t = new ArrayList<>(content.values());
-        t.sort(new Comparator<T>() {
-            @Override
-            public int compare(T o1, T o2) {
-                return o1.id - o2.id;
-            }
-        });
+        t.sort((o1, o2) -> o1.id - o2.id);
         return t;
     }
 

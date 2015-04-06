@@ -20,6 +20,7 @@ public class GlobalStrings {
 
     public static final String TITLE = "title";
     public static final String GAME_SURVEY_SAVE_HEADER = "gameSurveySaveHeader";
+    public static final String TERRAIN_DETAIL_SAVE_HEADER = "terrainDetailSaveHeader";
 
     private GlobalStrings() {}
 
