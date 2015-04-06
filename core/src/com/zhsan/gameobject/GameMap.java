@@ -48,7 +48,7 @@ public class GameMap {
 
     private static TerrainDetail[][] readMapData(GameScenario scen, int width, int height, String line) {
         TerrainDetail[][] result = new TerrainDetail[height][width];
-        String[] split = line.split("\\s");
+        String[] split = line.trim().split("\\s+");
         for (int i = 0; i < result.length; ++i) {
             for (int j = 0; j < result[i].length; ++j) {
                 result[j][i] = scen.getTerrainDetails().get(Integer.parseInt(split[i * result.length + j]));

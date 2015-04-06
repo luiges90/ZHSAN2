@@ -46,13 +46,13 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showLoadGameFrame() {
-        if (saveGameFrame == null) {
-            saveGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
+        if (loadGameFrame == null) {
+            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
                 scen = new GameScenario(file);
             });
-            this.addActor(saveGameFrame);
+            this.addActor(loadGameFrame);
         } else {
-            saveGameFrame.show();
+            loadGameFrame.show();
         }
     }
 
