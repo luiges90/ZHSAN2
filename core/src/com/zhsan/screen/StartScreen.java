@@ -10,9 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.gameframe.FileGameFrame;
 import com.zhsan.gamecomponents.gameframe.GameFrame;
 import com.zhsan.gamecomponents.gameframe.NewGameFrame;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gameobject.GameScenario;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -31,6 +33,7 @@ public class StartScreen extends WidgetGroup {
     private Rectangle start, load, setting, credit, exit;
 
     private GameFrame newGameFrame;
+    private FileGameFrame loadGameFrame;
     private NewGameFrame.OnScenarioChosenListener listener;
 
     private void loadXml() {
@@ -91,7 +94,14 @@ public class StartScreen extends WidgetGroup {
     }
 
     private void openLoad() {
-
+        if (loadGameFrame == null) {
+            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
+                listener.onScenarioChosen(file, null);
+            });
+            this.addActor(loadGameFrame);
+        } else {
+            loadGameFrame.show();
+        }
     }
 
     private void openSettings() {

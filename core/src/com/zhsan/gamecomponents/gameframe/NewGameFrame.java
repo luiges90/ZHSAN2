@@ -4,13 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.*;
 import com.zhsan.gamecomponents.common.textwidget.CheckboxWidget;
@@ -20,7 +18,6 @@ import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.GameSurvey;
-import com.zhsan.resources.GlobalStrings;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,7 +34,7 @@ import java.util.List;
 public class NewGameFrame extends GameFrame {
 
     public interface OnScenarioChosenListener {
-        public void onScenarioChosen(String scenPath, List<Integer> factionIds);
+        public void onScenarioChosen(FileHandle file, List<Integer> factionIds);
     }
 
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
@@ -56,7 +53,7 @@ public class NewGameFrame extends GameFrame {
     private Texture checkbox, checkboxChecked;
 
     private OnScenarioChosenListener listener;
-    private String chosenScenarioPath;
+    private FileHandle chosenScenario;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "NewGameFrameData.xml");
@@ -112,11 +109,11 @@ public class NewGameFrame extends GameFrame {
         float paneHeight = (getTopBound() - getBottomActiveBound() - margins * 3) / 2;
         float paneWidth = (getRightBound() - getLeftBound() - margins * 3) / 2;
 
-        List<Pair<String, GameSurvey>> surveys = GameScenario.loadAllGameSurveys();
+        List<Pair<FileHandle, GameSurvey>> surveys = GameScenario.loadAllGameSurveys();
 
         VerticalGroup scenarioList = new VerticalGroup();
-        for (Pair<String, GameSurvey> i : surveys) {
-            SelectableTextWidget<Pair<String, GameSurvey>> widget = new SelectableTextWidget<>(scenarioStyle, i.getRight().getTitle(), listSelectedColor);
+        for (Pair<FileHandle, GameSurvey> i : surveys) {
+            SelectableTextWidget<Pair<FileHandle, GameSurvey>> widget = new SelectableTextWidget<>(scenarioStyle, i.getRight().getTitle(), listSelectedColor);
             widget.setExtra(i);
             widget.setWidth(paneWidth);
             widget.setPadding(listPaddings);
@@ -170,7 +167,7 @@ public class NewGameFrame extends GameFrame {
                     chosenFactions.add(cb.getExtra().getId());
                 }
             }
-            listener.onScenarioChosen(chosenScenarioPath, chosenFactions);
+            listener.onScenarioChosen(chosenScenario, chosenFactions);
         }
 
         @Override
@@ -181,15 +178,15 @@ public class NewGameFrame extends GameFrame {
 
     private class ScenarioTextInputListener extends InputListener {
 
-        private SelectableTextWidget<Pair<String, GameSurvey>> widget;
+        private SelectableTextWidget<Pair<FileHandle, GameSurvey>> widget;
 
-        public ScenarioTextInputListener(SelectableTextWidget<Pair<String, GameSurvey>> widget) {
+        public ScenarioTextInputListener(SelectableTextWidget<Pair<FileHandle, GameSurvey>> widget) {
             this.widget = widget;
         }
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            chosenScenarioPath = widget.getExtra().getLeft();
+            chosenScenario = widget.getExtra().getLeft();
 
             ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().getDescription());
 

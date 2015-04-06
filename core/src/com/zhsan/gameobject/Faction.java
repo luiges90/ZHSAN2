@@ -23,16 +23,18 @@ import java.util.List;
  */
 public class Faction extends GameObject {
 
+    public static final String SAVE_FILE = "Faction.csv";
+
     private String name;
 
     private Faction(int id) {
         super(id);
     }
 
-    public static final GameObjectList<Faction> fromCSVQuick(String path, int version) {
+    public static final GameObjectList<Faction> fromCSVQuick(FileHandle root, int version) {
         GameObjectList<Faction> result = new GameObjectList<>();
 
-        FileHandle f = Gdx.files.external(path + File.separator + "Faction.csv");
+        FileHandle f = root.child(SAVE_FILE);
         try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
             String[] line;
             int index = 0;
@@ -47,7 +49,7 @@ public class Faction extends GameObject {
 
             return result;
         } catch (IOException e) {
-            throw new FileReadException(path + File.separator + "Faction.csv", e);
+            throw new FileReadException(f.path(), e);
         }
     }
 

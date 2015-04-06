@@ -25,13 +25,13 @@ public class GameScenario {
     private GameObjectList<TerrainDetail> terrainDetails;
     private GameMap gameMap;
 
-    public static List<Pair<String, GameSurvey>> loadAllGameSurveys() {
-        List<Pair<String, GameSurvey>> result = new ArrayList<>();
+    public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
+        List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
 
         FileHandle[] scenarios = Gdx.files.external(SCENARIO_PATH).list();
         for (FileHandle f : scenarios) {
             if (f.isDirectory()) {
-                result.add(new ImmutablePair<>(f.path(), GameSurvey.fromCSV(f)));
+                result.add(new ImmutablePair<>(f, GameSurvey.fromCSV(f)));
             }
         }
 

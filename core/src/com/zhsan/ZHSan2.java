@@ -2,6 +2,7 @@ package com.zhsan;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -46,7 +47,7 @@ public class ZHSan2 extends ApplicationAdapter {
     private class OnNewScenarioSelected implements NewGameFrame.OnScenarioChosenListener {
 
         @Override
-        public void onScenarioChosen(String scenPath, List<Integer> factionIds) {
+        public void onScenarioChosen(FileHandle file, List<Integer> factionIds) {
             Gdx.input.setInputProcessor(null);
 
             startScreen.dispose();
@@ -54,7 +55,7 @@ public class ZHSan2 extends ApplicationAdapter {
             startScreen = null;
             startStage = null;
 
-            GameScenario scen = new GameScenario(scenPath);
+            GameScenario scen = new GameScenario(file);
 
             gameScreen = new GameScreen(scen);
 
