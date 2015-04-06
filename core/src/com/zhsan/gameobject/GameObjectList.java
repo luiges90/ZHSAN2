@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
-    private HashMap<Integer, T> content = new HashMap<>();
+    private SortedMap<Integer, T> content = new TreeMap<>();
 
     public void add(T obj) {
         content.put(obj.id, obj);
@@ -20,12 +20,6 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     @Override
     public Iterator<T> iterator() {
         return content.values().iterator();
-    }
-
-    public List<T> getListOrderedById() {
-        List<T> t = new ArrayList<>(content.values());
-        t.sort((o1, o2) -> o1.id - o2.id);
-        return t;
     }
 
 }
