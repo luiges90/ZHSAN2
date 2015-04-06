@@ -22,7 +22,7 @@ public class GetScrollFocusWhenEntered extends InputListener {
 
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-        actor.getStage().setScrollFocus(null);
+        // actor.getStage().setScrollFocus(null);
     }
 
 }

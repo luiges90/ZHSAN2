@@ -22,7 +22,7 @@ public class GetKeyFocusWhenEntered extends InputListener {
 
     @Override
     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-        actor.getStage().setKeyboardFocus(null);
+        // actor.getStage().setKeyboardFocus(null);
     }
 
 }
