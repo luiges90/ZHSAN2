@@ -112,6 +112,7 @@ public class ContextMenu extends WidgetGroup {
             item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
             item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
             item.textWidget = new StateBackgroundTextWidget<>(widgetTemplate, background);
+            item.textWidget.addListener(new MenuItemListener(item.textWidget));
             item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate);
 
             this.addActor(item.textWidget);
@@ -293,7 +294,6 @@ public class ContextMenu extends WidgetGroup {
                 widget.setPosition(x, y);
                 widget.setSize(kind.width, kind.height);
                 widget.setExtra(kind.items.get(i));
-                widget.addListener(new MenuItemListener(widget));
 
                 widget.draw(batch, parentAlpha);
             }
