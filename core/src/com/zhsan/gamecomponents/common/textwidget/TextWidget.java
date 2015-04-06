@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.utils.Disposable;
 import com.zhsan.common.Fonts;
+import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Node;
 
@@ -70,7 +71,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         this.text = text;
 
         BitmapFont ref = Fonts.get(setting.fontName, setting.fontStyle);
-        font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
+        font = WidgetUtility.cloneBitmapFont(ref);
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
     }
@@ -83,7 +84,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         this.extra = old.extra;
 
         BitmapFont ref = Fonts.get(setting.fontName, setting.fontStyle);
-        font = new BitmapFont(ref.getData(), ref.getRegions(), ref.usesIntegerPositions());
+        font = WidgetUtility.cloneBitmapFont(ref);
         font.setColor(setting.fontColor);
         font.setScale((float) setting.fontSize / Fonts.SIZE);
     }
@@ -106,7 +107,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
 
     /**
      * Compute minimum height to show the text completely
-     * @param width
+     * @param width width of text bounds
      */
     public float computeNeededHeight(float width) {
         BitmapFont.TextBounds bounds = font.getWrappedBounds(text, width);

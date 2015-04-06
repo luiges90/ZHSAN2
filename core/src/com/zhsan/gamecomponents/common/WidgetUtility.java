@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents.common;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -31,4 +32,26 @@ public final class WidgetUtility {
         scenarioPaneContainer.add(target).fill().expand();
         return scenarioPaneContainer;
     }
+
+    public static BitmapFont cloneBitmapFont(BitmapFont old) {
+        BitmapFont.BitmapFontData data = new BitmapFont.BitmapFontData();
+        data.ascent = old.getData().ascent;
+        data.capHeight = old.getData().capHeight;
+        data.descent = old.getData().descent;
+        data.down = old.getData().down;
+        data.flipped = old.getData().flipped;
+        data.fontFile = old.getData().fontFile;
+        data.lineHeight = old.getData().lineHeight;
+        data.scaleX = old.getData().scaleX;
+        data.scaleY = old.getData().scaleY;
+        data.spaceWidth = old.getData().spaceWidth;
+        data.xHeight = old.getData().xHeight;
+        data.imagePaths = old.getData().imagePaths;
+        for (int i = 0; i < old.getData().glyphs.length; ++i) {
+            data.glyphs[i] = old.getData().glyphs[i];
+        }
+
+        return new BitmapFont(data, old.getRegions(), old.usesIntegerPositions());
+    }
+
 }
