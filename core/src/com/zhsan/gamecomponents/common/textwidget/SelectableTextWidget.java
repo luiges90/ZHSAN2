@@ -3,6 +3,9 @@ package com.zhsan.gamecomponents.common.textwidget;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 /**
  * Created by Peter on 1/4/2015.
@@ -17,6 +20,17 @@ public class SelectableTextWidget<ExtraType> extends TextWidget<ExtraType> {
         super(setting, title);
         this.shapeRenderer = new ShapeRenderer();
         this.selectedOutlineColor = selectedOutlineColor;
+        this.addListener(new InputListener(){
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                selected = true;
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                selected = false;
+            }
+        });
     }
 
     @Override
@@ -35,8 +49,6 @@ public class SelectableTextWidget<ExtraType> extends TextWidget<ExtraType> {
         }
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
-    }
+
 
 }

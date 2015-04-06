@@ -179,7 +179,7 @@ public class FileGameFrame extends GameFrame {
 
         @Override
         public void onOkClicked() {
-
+            // no-op. This button will not be enabled at all.
         }
 
         @Override

@@ -117,7 +117,6 @@ public class NewGameFrame extends GameFrame {
         VerticalGroup scenarioList = new VerticalGroup();
         for (Pair<String, GameSurvey> i : surveys) {
             SelectableTextWidget<Pair<String, GameSurvey>> widget = new SelectableTextWidget<>(scenarioStyle, i.getRight().getTitle(), listSelectedColor);
-            widget.setTouchable(Touchable.enabled);
             widget.setExtra(i);
             widget.setWidth(paneWidth);
             widget.setPadding(listPaddings);
@@ -186,16 +185,6 @@ public class NewGameFrame extends GameFrame {
 
         public ScenarioTextInputListener(SelectableTextWidget<Pair<String, GameSurvey>> widget) {
             this.widget = widget;
-        }
-
-        @Override
-        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-            widget.setSelected(true);
-        }
-
-        @Override
-        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-            widget.setSelected(false);
         }
 
         @Override
