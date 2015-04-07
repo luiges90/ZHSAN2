@@ -31,15 +31,18 @@ public final class GameSurvey {
     private String message;
     private String description;
     private Point cameraPosition;
+    private String resourcePackName;
     private int version;
 
-    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message, Point initialPosition, String description, int version) {
+    private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message,
+                       Point initialPosition, String description, String resourcePackName, int version) {
         this.title = title;
         this.startDate = startDate;
         this.saveDate = saveDate;
         this.message = message;
         this.cameraPosition = initialPosition;
         this.description = description;
+        this.resourcePackName = resourcePackName == null || resourcePackName.isEmpty() ? "default" : resourcePackName;
         this.version = version;
     }
 
@@ -63,8 +66,10 @@ public final class GameSurvey {
                 b.setInitialPosition(Point.fromCSV(line[6]));
                 b.setDescription(line[7]);
                 if (line.length >= 9) {
-                    b.setVersion(Integer.parseInt(line[8]));
+                    b.setResourcePackName(line[8]);
+                    b.setVersion(Integer.parseInt(line[9]));
                 } else {
+                    b.setResourcePackName("");
                     b.setVersion(1);
                 }
 
@@ -90,6 +95,7 @@ public final class GameSurvey {
                     gameSurvey.message,
                     gameSurvey.cameraPosition.toCSV(),
                     gameSurvey.description,
+                    gameSurvey.resourcePackName,
                     String.valueOf(GameScenario.SAVE_VERSION)
             });
         } catch (IOException e) {
@@ -130,6 +136,10 @@ public final class GameSurvey {
         return version;
     }
 
+    public String getResourcePackName() {
+        return resourcePackName;
+    }
+
     private static class GameSurveyBuilder {
         private String title;
         private LocalDate startDate;
@@ -137,6 +147,7 @@ public final class GameSurvey {
         private String message;
         private Point initialPosition;
         private String description;
+        private String resourcePackName;
         private int version;
 
         public GameSurveyBuilder setTitle(String title) {
@@ -174,8 +185,13 @@ public final class GameSurvey {
             return this;
         }
 
+        public GameSurveyBuilder setResourcePackName(String resourcePackName) {
+            this.resourcePackName = resourcePackName;
+            return this;
+        }
+
         public GameSurvey createGameSurvey() {
-            return new GameSurvey(title, startDate, saveDate, message, initialPosition, description, version);
+            return new GameSurvey(title, startDate, saveDate, message, initialPosition, description, resourcePackName, version);
         }
     }
 }

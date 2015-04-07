@@ -36,7 +36,7 @@ public class GameMap {
     private int tileInEachImage;
     private TerrainDetail[][] mapData;
 
-    public GameMap(int zoom, int width, int height, String fileName, int imageCount, int tileInEachImage, TerrainDetail[][] mapData) {
+    private GameMap(int zoom, int width, int height, String fileName, int imageCount, int tileInEachImage, TerrainDetail[][] mapData) {
         this.zoom = zoom;
         this.width = width;
         this.height = height;
