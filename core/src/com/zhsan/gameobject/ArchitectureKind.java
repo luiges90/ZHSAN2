@@ -74,8 +74,9 @@ public class ArchitectureKind extends GameObject {
 
                 ArchitectureKind kind = new ArchitectureKind(Integer.parseInt(line[0]));
                 if (version == 1) {
-
+                    kind.setName(line[1]);
                 } else {
+                    kind.setName(line[1]);
                 }
 
                 result.add(kind);
