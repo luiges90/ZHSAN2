@@ -24,7 +24,9 @@ public class GameScenario {
     private GameSurvey gameSurvey;
     private GameObjectList<TerrainDetail> terrainDetails;
     private GameMap gameMap;
+
     private GameObjectList<ArchitectureKind> architectureKinds;
+    private GameObjectList<Architecture> architectures;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -43,7 +45,9 @@ public class GameScenario {
         gameSurvey = GameSurvey.fromCSV(file);
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
+
         architectureKinds = ArchitectureKind.fromCSV(file, this);
+        architectures = Architecture.fromCSV(file, this);
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
@@ -56,6 +60,10 @@ public class GameScenario {
 
     public GameSurvey getGameSurvey() {
         return gameSurvey;
+    }
+
+    public GameObjectList<ArchitectureKind> getArchitectureKinds() {
+        return architectureKinds;
     }
 
     public void save(FileHandle out) {
@@ -76,6 +84,7 @@ public class GameScenario {
         TerrainDetail.toCSV(result, terrainDetails);
         GameMap.toCSV(result, gameMap);
         ArchitectureKind.toCSV(result, architectureKinds);
+        Architecture.toCSV(result, architectures);
     }
 
 }
