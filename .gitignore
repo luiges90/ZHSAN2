@@ -66,9 +66,8 @@ build/
 tools
 *.log
 
-## images too big to maintain on git
-core/assets/Resources/Map/
-core/assets/Resources/Architecture/
+## maps are too big to maintain on git
+core/assets/Resources/Map/kure_2.0/
 
 ## save files
 core/assets/GameData/Save
