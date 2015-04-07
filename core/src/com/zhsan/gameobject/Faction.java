@@ -1,22 +1,11 @@
 package com.zhsan.gameobject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.opencsv.CSVReader;
-import com.zhsan.common.Utility;
-import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Peter on 14/3/2015.
@@ -52,7 +41,7 @@ public class Faction extends GameObject {
     }
 
     public int getId() {
-        return id;
+        return super.getId();
     }
 
 }

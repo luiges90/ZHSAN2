@@ -5,7 +5,7 @@ package com.zhsan.gameobject;
  */
 public abstract class GameObject {
 
-    public final int id;
+    private final int id;
 
     private String name;
 
@@ -21,4 +21,7 @@ public abstract class GameObject {
         return name;
     }
 
+    public int getId() {
+        return id;
+    }
 }

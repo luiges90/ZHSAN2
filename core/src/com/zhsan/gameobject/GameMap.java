@@ -1,24 +1,14 @@
 package com.zhsan.gameobject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.zhsan.common.Point;
-import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.resources.GlobalStrings;
-import jdk.nashorn.internal.objects.Global;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Peter on 17/3/2015.
@@ -131,7 +121,7 @@ public class GameMap {
         try (Writer writer = data.writer(false)) {
             for (int r = 0; r < map.mapData.length; ++r) {
                 for (int c = 0; c < map.mapData.length; ++c) {
-                    writer.write(String.format("%3s", map.mapData[c][r].id));
+                    writer.write(String.format("%3s", map.mapData[c][r].getId()));
                 }
                 writer.write("\n");
             }

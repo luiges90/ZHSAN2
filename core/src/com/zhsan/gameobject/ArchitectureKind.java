@@ -94,7 +94,7 @@ public class ArchitectureKind extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_KIND_SAVE_HEADER).split(","));
             for (ArchitectureKind detail : kinds) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.id), detail.getName()
+                        String.valueOf(detail.getId()), detail.getName()
                 });
             }
         } catch (IOException e) {

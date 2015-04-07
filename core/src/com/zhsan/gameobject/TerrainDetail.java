@@ -1,6 +1,5 @@
 package com.zhsan.gameobject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -8,14 +7,9 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.resources.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Peter on 17/3/2015.
@@ -75,7 +69,7 @@ public class TerrainDetail extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.TERRAIN_DETAIL_SAVE_HEADER).split(","));
             for (TerrainDetail detail : terrainDetails) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.id), detail.getName(),
+                        String.valueOf(detail.getId()), detail.getName(),
                         String.valueOf(detail.canBeViewedThrough), String.valueOf(detail.fireDamageRate)
                 });
             }

@@ -25,14 +25,14 @@ public final class GameSurvey {
     public static final DateTimeFormatter SAVE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
     public static final String SAVE_FILE = "GameSurvey.csv";
 
-    private String title;
-    private LocalDate startDate;
-    private LocalDateTime saveDate;
-    private String message;
-    private String description;
+    private final String title;
+    private final LocalDate startDate;
+    private final LocalDateTime saveDate;
+    private final String message;
+    private final String description;
     private Point cameraPosition;
-    private String resourcePackName;
-    private int version;
+    private final String resourcePackName;
+    private final int version;
 
     private GameSurvey(String title, LocalDate startDate, LocalDateTime saveDate, String message,
                        Point initialPosition, String description, String resourcePackName, int version) {

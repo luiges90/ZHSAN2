@@ -10,7 +10,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     private SortedMap<Integer, T> content = new TreeMap<>();
 
     public void add(T obj) {
-        content.put(obj.id, obj);
+        content.put(obj.getId(), obj);
     }
 
     public T get(int id) {

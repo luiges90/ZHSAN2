@@ -67,10 +67,10 @@ public class Architecture extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_SAVE_HEADER).split(","));
             for (Architecture d : data) {
                 writer.writeNext(new String[]{
-                        String.valueOf(d.id),
+                        String.valueOf(d.getId()),
                         d.nameImageName,
                         d.getName(),
-                        String.valueOf(d.kind.id)
+                        String.valueOf(d.kind.getId())
                 });
             }
         } catch (IOException e) {

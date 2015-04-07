@@ -21,12 +21,12 @@ public class GameScenario {
     public static final String SCENARIO_PATH = Paths.DATA + "Scenario" + File.separator;
     public static final String SAVE_PATH = Paths.DATA + "Save" + File.separator;
 
-    private GameSurvey gameSurvey;
-    private GameObjectList<TerrainDetail> terrainDetails;
-    private GameMap gameMap;
+    private final GameSurvey gameSurvey;
+    private final GameObjectList<TerrainDetail> terrainDetails;
+    private final GameMap gameMap;
 
-    private GameObjectList<ArchitectureKind> architectureKinds;
-    private GameObjectList<Architecture> architectures;
+    private final GameObjectList<ArchitectureKind> architectureKinds;
+    private final GameObjectList<Architecture> architectures;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
