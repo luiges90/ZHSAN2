@@ -18,11 +18,18 @@ import java.util.Map;
  */
 public class GlobalStrings {
 
-    public static final String TITLE = "title";
-    public static final String GAME_SURVEY_SAVE_HEADER = "gameSurveySaveHeader";
-    public static final String TERRAIN_DETAIL_SAVE_HEADER = "terrainDetailSaveHeader";
-    public static final String MAP_SAVE_HEADER = "mapSaveHeader";
-    public static final String ARCHITECURE_KIND_SAVE_HEADER = "architectureKindSaveHeader";
+    public enum Keys {
+        TITLE("title"),
+        GAME_SURVEY_SAVE_HEADER("gameSurveySaveHeader"),
+        TERRAIN_DETAIL_SAVE_HEADER("terrainDetailSaveHeader"),
+        MAP_SAVE_HEADER("mapSaveHeader"),
+        ARCHITECTURE_KIND_SAVE_HEADER("architectureKindSaveHeader");
+
+        private final String xmlName;
+        Keys(String name) {
+            this.xmlName = name;
+        }
+    }
 
     private GlobalStrings() {}
 
@@ -49,9 +56,9 @@ public class GlobalStrings {
         }
     }
 
-    public static String getString(String key) {
+    public static String getString(Keys key) {
         if (strings == null) load();
-        return strings.get(key);
+        return strings.get(key.xmlName);
     }
 
 }

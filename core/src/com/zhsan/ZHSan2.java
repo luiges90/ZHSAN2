@@ -33,7 +33,7 @@ public class ZHSan2 extends ApplicationAdapter {
         Fonts.init();
         GlobalVariables.load();
 
-        Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.TITLE));
+        Gdx.graphics.setTitle(GlobalStrings.getString(GlobalStrings.Keys.TITLE));
 
         startScreen = new StartScreen(new OnNewScenarioSelected());
 

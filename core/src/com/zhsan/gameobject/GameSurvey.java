@@ -85,7 +85,7 @@ public final class GameSurvey {
     public static final void toCSV(FileHandle root, GameSurvey gameSurvey) {
         FileHandle f = root.child(SAVE_FILE);
         try (CSVWriter writer = new CSVWriter(f.writer(false))) {
-            writer.writeNext(GlobalStrings.getString(GlobalStrings.GAME_SURVEY_SAVE_HEADER).split(","));
+            writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.GAME_SURVEY_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
                     gameSurvey.title,
                     String.valueOf(gameSurvey.startDate.getYear()),

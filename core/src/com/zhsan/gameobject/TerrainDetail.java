@@ -72,7 +72,7 @@ public class TerrainDetail extends GameObject {
     public static final void toCSV(FileHandle root, GameObjectList<TerrainDetail> terrainDetails) {
         FileHandle f = root.child(SAVE_FILE);
         try (CSVWriter writer = new CSVWriter(f.writer(false))) {
-            writer.writeNext(GlobalStrings.getString(GlobalStrings.TERRAIN_DETAIL_SAVE_HEADER).split(","));
+            writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.TERRAIN_DETAIL_SAVE_HEADER).split(","));
             for (TerrainDetail detail : terrainDetails) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.id), detail.getName(),
