@@ -22,4 +22,8 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.values().iterator();
     }
 
+    public int size() {
+        return content.size();
+    }
+
 }

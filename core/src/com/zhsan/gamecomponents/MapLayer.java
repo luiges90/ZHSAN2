@@ -258,7 +258,7 @@ public class MapLayer extends WidgetGroup {
 
         TerrainDetail terrain = screen.getScenario().getGameMap().getTerrainAt(px, py);
         if (terrain != null) {
-            String text = String.format(mapInfoFormat, terrain.name, px, py);
+            String text = String.format(mapInfoFormat, terrain.getName(), px, py);
             mapInfo.setText(text);
         } else {
             mapInfo.setText("");

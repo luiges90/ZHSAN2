@@ -68,6 +68,7 @@ tools
 
 ## images too big to maintain on git
 core/assets/Resources/Map/
+core/assets/Resources/Architecture/
 
 ## save files
 core/assets/GameData/Save

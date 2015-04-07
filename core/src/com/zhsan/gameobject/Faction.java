@@ -25,8 +25,6 @@ public class Faction extends GameObject {
 
     public static final String SAVE_FILE = "Faction.csv";
 
-    private String name;
-
     private Faction(int id) {
         super(id);
     }
@@ -43,7 +41,7 @@ public class Faction extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Faction t = new Faction(Integer.parseInt(line[0]));
-                t.name = line[3];
+                t.setName(line[3]);
                 result.add(t);
             }
 
@@ -55,10 +53,6 @@ public class Faction extends GameObject {
 
     public int getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
 }

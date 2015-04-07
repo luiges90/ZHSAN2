@@ -38,10 +38,6 @@ public class GameScenario {
         return result;
     }
 
-    public GameScenario(String fileName) {
-        this(Gdx.files.external(fileName));
-    }
-
     public GameScenario(FileHandle file) {
         gameSurvey = GameSurvey.fromCSV(file);
         terrainDetails = TerrainDetail.fromCSV(file, this);

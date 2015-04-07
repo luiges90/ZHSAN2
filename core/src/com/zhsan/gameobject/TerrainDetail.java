@@ -24,13 +24,12 @@ public class TerrainDetail extends GameObject {
 
     public static final String SAVE_FILE = "TerrainDetail.csv";
 
-    public final String name;
     public final boolean canBeViewedThrough;
     public final float fireDamageRate;
 
     private TerrainDetail(int id, String name, boolean canBeViewedThrough, float fireDamageRate) {
         super(id);
-        this.name = name;
+        super.setName(name);
         this.canBeViewedThrough = canBeViewedThrough;
         this.fireDamageRate = fireDamageRate;
     }
@@ -76,7 +75,7 @@ public class TerrainDetail extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.TERRAIN_DETAIL_SAVE_HEADER).split(","));
             for (TerrainDetail detail : terrainDetails) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.id), detail.name,
+                        String.valueOf(detail.id), detail.getName(),
                         String.valueOf(detail.canBeViewedThrough), String.valueOf(detail.fireDamageRate)
                 });
             }
