@@ -19,9 +19,14 @@ import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
+import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.ArchitectureKind;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.gameobject.TerrainDetail;
 import com.zhsan.screen.GameScreen;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -29,6 +34,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,13 +52,47 @@ public class MapLayer extends WidgetGroup {
         IDLE, IN, OUT
     }
 
-    public static final String RES_PATH = Paths.RESOURCES + "Map" + File.separator;
-    public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
+    public static final String MAP_TILE_PATH = Paths.RESOURCES + "Map" + File.separator;
+    public static final String ARCHITECTURE_RES_PATH = Paths.RESOURCES + "Architecture" + File.separator;
+
+    public static final String DATA_PATH = MAP_TILE_PATH + "Data" + File.separator;
+
+    private static final class ArchitectureImageQuantifier {
+        private enum Quantifier { DEFAULT, DIAGONAL_SQUARE, HORIZONTAL, VERTICAL }
+
+        public final Quantifier quantifier;
+        public final int size;
+
+        public ArchitectureImageQuantifier(@NotNull Quantifier quantifier, int size) {
+            this.quantifier = quantifier;
+            this.size = size;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            ArchitectureImageQuantifier that = (ArchitectureImageQuantifier) o;
+
+            if (size != that.size) return false;
+            return quantifier == that.quantifier;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = quantifier.hashCode();
+            result = 31 * result + size;
+            return result;
+        }
+    }
+
+    private Map<Pair<ArchitectureKind, ArchitectureImageQuantifier>, Texture> architectureImages = new HashMap<>();
+    private Map<String, Texture> mapTiles = new HashMap<>();
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
     private float mapScrollFactor;
-
-    private Map<String, Texture> mapTiles = new HashMap<>();
 
     private GameScreen screen;
     private Vector2 mapCameraPosition;
@@ -70,7 +110,7 @@ public class MapLayer extends WidgetGroup {
     private ToolBar toolBar;
 
     private void loadXml() {
-        FileHandle f = Gdx.files.external(RES_PATH + "MapLayerData.xml");
+        FileHandle f = Gdx.files.external(MAP_TILE_PATH + "MapLayerData.xml");
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -94,7 +134,7 @@ public class MapLayer extends WidgetGroup {
             mapInfoFormat = XmlHelper.loadAttribute(info, "TextFormat");
 
         } catch (Exception e) {
-            throw new FileReadException(RES_PATH + "MapLayerData.xml", e);
+            throw new FileReadException(MAP_TILE_PATH + "MapLayerData.xml", e);
         }
     }
 
@@ -141,7 +181,7 @@ public class MapLayer extends WidgetGroup {
         if (mapTiles.containsKey(fileName)) {
             return mapTiles.get(fileName);
         }
-        Texture t = new Texture(Gdx.files.external(RES_PATH + mapName + File.separator + fileName + ".jpg"));
+        Texture t = new Texture(Gdx.files.external(MAP_TILE_PATH + mapName + File.separator + fileName + ".jpg"));
         mapTiles.put(fileName, t);
         return t;
     }
@@ -208,6 +248,7 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void draw(Batch batch, float parentAlpha) {
+        // draw map tiles
         GameMap map = screen.getScenario().getGameMap();
         int zoom = map.getZoom();
 
@@ -253,18 +294,154 @@ public class MapLayer extends WidgetGroup {
             }
         }
 
-        int px = (int) (mousePosition.x + getX() + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
-        int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
+        {
+            int px = (int) (mousePosition.x + getX() + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
+            int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
 
-        TerrainDetail terrain = screen.getScenario().getGameMap().getTerrainAt(px, py);
-        if (terrain != null) {
-            String text = String.format(mapInfoFormat, terrain.getName(), px, py);
-            mapInfo.setText(text);
-        } else {
-            mapInfo.setText("");
+            TerrainDetail terrain = map.getTerrainAt(px, py);
+            if (terrain != null) {
+                String text = String.format(mapInfoFormat, terrain.getName(), px, py);
+                mapInfo.setText(text);
+            } else {
+                mapInfo.setText("");
+            }
         }
 
+        // draw architectures
+        for (Architecture a : screen.getScenario().getArchitectures()) {
+            Point mapCenter = Point.getCenter(a.getLocation());
+            if (xLo * map.getTileInEachImage() <= mapCenter.x && mapCenter.x <= (xHi + 1) * map.getTileInEachImage() &&
+                    yLo * map.getTileInEachImage() <= (map.getHeight() - mapCenter.y + 1) &&
+                    (map.getHeight() - mapCenter.y + 1) <= (yHi + 1) * map.getTileInEachImage()) {
+                Pair<ArchitectureImageQuantifier, Texture> image =
+                        getArchitectureImage(screen.getScenario().getGameSurvey().getResourcePackName(),
+                        a.getKind(), a.getLocation());
+
+                int px = (mapCenter.x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
+                int py = ((map.getHeight() - 1 - mapCenter.y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
+                int sx = zoom;
+                int sy = zoom;
+                switch (image.getLeft().quantifier) {
+                    case DEFAULT: break;
+                    case HORIZONTAL:
+                        sx = zoom * image.getLeft().size;
+                        break;
+                    case VERTICAL:
+                        sy = zoom * image.getLeft().size;
+                        break;
+                    case DIAGONAL_SQUARE:
+                        sx = zoom * (image.getLeft().size * 2 + 1);
+                        sy = zoom * (image.getLeft().size * 2 + 1);
+                        break;
+                }
+                batch.draw(image.getRight(), px - sx / 2, py - sy / 2, sx, sy);
+            }
+
+        }
+
+        // draw childrens
         super.draw(batch, parentAlpha);
+    }
+
+    private Texture getArchitectureImage(String resSet, ArchitectureKind kind, ArchitectureImageQuantifier quantifier) {
+        if (!architectureImages.containsKey(new ImmutablePair<>(kind, quantifier))) {
+            String name = String.valueOf(kind.getId());
+            String defaultName = name;
+            switch (quantifier.quantifier) {
+                case DIAGONAL_SQUARE:
+                    name += "-d" + quantifier.size;
+                    break;
+                case HORIZONTAL:
+                    name += "-h" + quantifier.size;
+                    break;
+                case VERTICAL:
+                    name += "-v" + quantifier.size;
+                    break;
+                case DEFAULT:
+                    break;
+            }
+            name += ".png";
+            defaultName += ".png";
+            FileHandle f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + name);
+            if (!f.exists()) {
+                f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + defaultName);
+            }
+            Texture t = new Texture(f);
+            architectureImages.put(new ImmutablePair<>(kind, quantifier), t);
+        }
+        return architectureImages.get(new ImmutablePair<>(kind, quantifier));
+    }
+
+    private Pair<ArchitectureImageQuantifier, Texture> getArchitectureImage(String resSet, ArchitectureKind kind, List<Point> shape) {
+        if (shape.size() == 1) {
+            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
+            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
+        }
+
+        // is horizontal?
+        int h = shape.get(0).y;
+        boolean horizontal = true;
+        for (Point p : shape) {
+            if (p.y != h) {
+                horizontal = false;
+            }
+        }
+        if (horizontal) {
+            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.HORIZONTAL, shape.size());
+            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
+        }
+
+        // is vertical?
+        int v = shape.get(0).x;
+        boolean vertical = true;
+        for (Point p : shape) {
+            if (p.x != v) {
+                vertical = false;
+            }
+        }
+        if (vertical) {
+            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.VERTICAL, shape.size());
+            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
+        }
+
+        // is diagonal square?
+        Point center = Point.getCenter(shape);
+        if (shape.contains(center)) {
+            for (int i = 1; ; ++i) {
+                int count = 0;
+                for (int j = 0; j < i; ++j) {
+                    // bottom to right diagonal
+                    if (shape.contains(new Point(center.x + j, center.y - i + j))) {
+                        count++;
+                    }
+                    // right to top diagonal
+                    if (shape.contains(new Point(center.x + i - j, center.y + j))) {
+                        count++;
+                    }
+                    // top to left diagonal
+                    if (shape.contains(new Point(center.x - j, center.y + i - j))) {
+                        count++;
+                    }
+                    // left to bottom diagonal
+                    if (shape.contains(new Point(center.x - i + j, center.y - j))) {
+                        count++;
+                    }
+                }
+                if (count == 0) {
+                    // all empty, a diagonal square ends.
+                    ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DIAGONAL_SQUARE, i);
+                    return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
+                } else if (count < 4 * i) {
+                    // not a diagonal square
+                    ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
+                    return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
+                } // else 4 * i == count, diagonal square size increase, next iteration
+            }
+        }
+
+        // no match
+        ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
+        return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
     }
 
     public void dispose() {

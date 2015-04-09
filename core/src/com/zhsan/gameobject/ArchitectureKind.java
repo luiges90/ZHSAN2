@@ -1,17 +1,21 @@
 package com.zhsan.gameobject;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.Paths;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.resources.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Peter on 7/4/2015.
@@ -19,41 +23,6 @@ import java.util.Map;
 public class ArchitectureKind extends GameObject {
 
     public static final String SAVE_FILE = "ArchitectureKind.csv";
-
-    private static final class ImageQuantifier {
-        private enum Quantifier { DEFAULT, DIAGONAL_SQUARE, HORIZONTAL, VERTICAL }
-
-        public final Quantifier quantifier;
-        public final int sizeX, sizeY;
-
-        public ImageQuantifier(@NotNull Quantifier quantifier, int sizeX, int sizeY) {
-            this.quantifier = quantifier;
-            this.sizeX = sizeX;
-            this.sizeY = sizeY;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ImageQuantifier that = (ImageQuantifier) o;
-
-            if (sizeX != that.sizeX) return false;
-            if (sizeY != that.sizeY) return false;
-            return quantifier == that.quantifier;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = quantifier.hashCode();
-            result = 31 * result + sizeX;
-            result = 31 * result + sizeY;
-            return result;
-        }
-    }
-
-    private Map<ImageQuantifier, Texture> images;
 
     private ArchitectureKind(int id) {
         super(id);

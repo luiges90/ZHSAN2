@@ -5,5 +5,5 @@
  terrainDetailSaveHeader="地形编号,地形名称,视线可穿透,火焰伤害率"
  mapSaveHeader="格宽缩放,宽度,高度,文件名,地图张数,每张图含方格数"
  architectureKindSaveHeader="ID,名称"
- architectureSaveHeader="ID,名称编号,名称,种类"
+ architectureSaveHeader="ID,名称编号,名称,种类,位置"
 />

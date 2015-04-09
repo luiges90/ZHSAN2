@@ -62,6 +62,10 @@ public class GameScenario {
         return gameSurvey;
     }
 
+    public GameObjectList<Architecture> getArchitectures() {
+        return architectures;
+    }
+
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {
         return architectureKinds;
     }

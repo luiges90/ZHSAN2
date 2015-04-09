@@ -1,5 +1,9 @@
 package com.zhsan.common;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Created by Peter on 8/3/2015.
  */
@@ -19,8 +23,38 @@ public final class Point {
         );
     }
 
+    public static List<Point> fromCSVList(String s) {
+        List<Point> points = new ArrayList<>();
+        String[] t = s.trim().split("\\s");
+
+        for (int i = 0; i < t.length; i += 2) {
+            points.add(new Point(Integer.parseInt(t[i]), Integer.parseInt(t[i + 1])));
+        }
+
+        return points;
+    }
+
     public String toCSV() {
         return x + " " + y;
+    }
+
+    public static String toCSVList(List<Point> points) {
+        StringBuilder sb = new StringBuilder();
+        for (Point p : points) {
+            sb.append(p.x).append(" ").append(p.y).append(" ");
+        }
+        return sb.toString();
+    }
+
+    public static Point getCenter(List<Point> shape) {
+        Point minX = Collections.min(shape, (o1, o2) -> Integer.compare(o1.x, o2.x));
+        Point minY = Collections.min(shape, (o1, o2) -> Integer.compare(o1.y, o2.y));
+        Point maxX = Collections.max(shape, (o1, o2) -> Integer.compare(o1.x, o2.x));
+        Point maxY = Collections.max(shape, (o1, o2) -> Integer.compare(o1.y, o2.y));
+        int cx = (minX.x + maxX.x) / 2;
+        int cy = (minY.y + maxY.y) / 2;
+
+        return new Point(cx, cy);
     }
 
     @Override
