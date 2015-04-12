@@ -319,19 +319,27 @@ public class MapLayer extends WidgetGroup {
 
                 int px = (mapCenter.x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
                 int py = ((map.getHeight() - 1 - mapCenter.y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
-                int sx = zoom;
-                int sy = zoom;
+                int sx, sy;
                 switch (image.getLeft().quantifier) {
-                    case DEFAULT: break;
+                    case DEFAULT:
+                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                        break;
                     case HORIZONTAL:
-                        sx = zoom * image.getLeft().size;
+                        sx = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
                         break;
                     case VERTICAL:
-                        sy = zoom * image.getLeft().size;
+                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        sy = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
                         break;
                     case DIAGONAL_SQUARE:
-                        sx = zoom * (image.getLeft().size * 2 + 1);
-                        sy = zoom * (image.getLeft().size * 2 + 1);
+                        sx = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
+                        sy = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
+                        break;
+                    default:
+                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
                         break;
                 }
                 batch.draw(image.getRight(), px - sx / 2, py - sy / 2, sx, sy);

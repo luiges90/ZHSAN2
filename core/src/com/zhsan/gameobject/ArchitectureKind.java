@@ -24,6 +24,8 @@ public class ArchitectureKind extends GameObject {
 
     public static final String SAVE_FILE = "ArchitectureKind.csv";
 
+    private float drawOffsetL, drawOffsetW;
+
     private ArchitectureKind(int id) {
         super(id);
     }
@@ -48,6 +50,14 @@ public class ArchitectureKind extends GameObject {
                     kind.setName(line[1]);
                 }
 
+                if (version == 1) {
+                    kind.drawOffsetL = kind.getId() == 2 ? 4 : 0;
+                    kind.drawOffsetW = kind.getId() == 2 ? 2 : 0;
+                } else {
+                    kind.drawOffsetL = Integer.parseInt(line[2]);
+                    kind.drawOffsetW = Integer.parseInt(line[3]);
+                }
+
                 result.add(kind);
             }
         } catch (IOException e) {
@@ -63,7 +73,8 @@ public class ArchitectureKind extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_KIND_SAVE_HEADER).split(","));
             for (ArchitectureKind detail : kinds) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.getId()), detail.getName()
+                        String.valueOf(detail.getId()), detail.getName(),
+                        String.valueOf(detail.getDrawOffsetLength()), String.valueOf(detail.getDrawOffsetWidth())
                 });
             }
         } catch (IOException e) {
@@ -72,4 +83,11 @@ public class ArchitectureKind extends GameObject {
 
     }
 
+    public float getDrawOffsetLength() {
+        return drawOffsetL;
+    }
+
+    public float getDrawOffsetWidth() {
+        return drawOffsetW;
+    }
 }
