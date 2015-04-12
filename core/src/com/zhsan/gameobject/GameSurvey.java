@@ -25,6 +25,8 @@ public final class GameSurvey {
     public static final DateTimeFormatter SAVE_DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy/M/dd H:mm:ss");
     public static final String SAVE_FILE = "GameSurvey.csv";
 
+    public static final String DEFAULT_RESOURCE_PACK = "default";
+
     private final String title;
     private final LocalDate startDate;
     private final LocalDateTime saveDate;

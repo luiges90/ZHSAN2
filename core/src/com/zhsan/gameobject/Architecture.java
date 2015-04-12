@@ -93,4 +93,7 @@ public class Architecture extends GameObject {
 
     }
 
+    public String getNameImageName() {
+        return nameImageName;
+    }
 }

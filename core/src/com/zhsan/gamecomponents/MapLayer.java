@@ -19,10 +19,7 @@ import com.zhsan.gamecomponents.common.GetScrollFocusWhenEntered;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
-import com.zhsan.gameobject.Architecture;
-import com.zhsan.gameobject.ArchitectureKind;
-import com.zhsan.gameobject.GameMap;
-import com.zhsan.gameobject.TerrainDetail;
+import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,6 +38,8 @@ import java.util.Map;
  * Created by Peter on 19/3/2015.
  */
 public class MapLayer extends WidgetGroup {
+
+    public static final String CAPTION_FOLDER_NAME = "Caption";
 
     private enum MoveStateX {
         IDLE, LEFT, RIGHT
@@ -89,6 +88,7 @@ public class MapLayer extends WidgetGroup {
     }
 
     private Map<Pair<ArchitectureKind, ArchitectureImageQuantifier>, Texture> architectureImages = new HashMap<>();
+    private Map<String, Texture> architectureNameImages = new HashMap<>();
     private Map<String, Texture> mapTiles = new HashMap<>();
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
@@ -108,6 +108,8 @@ public class MapLayer extends WidgetGroup {
     private Texture grid;
 
     private ToolBar toolBar;
+
+    private float captionSize;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(MAP_TILE_PATH + "MapLayerData.xml");
@@ -132,6 +134,8 @@ public class MapLayer extends WidgetGroup {
             this.addActor(mapInfo);
             mapInfoMargin = Integer.parseInt(XmlHelper.loadAttribute(info, "BottomMargin"));
             mapInfoFormat = XmlHelper.loadAttribute(info, "TextFormat");
+
+            captionSize = Float.parseFloat(XmlHelper.loadAttribute(dom.getElementsByTagName("Caption").item(0), "Size"));
 
         } catch (Exception e) {
             throw new FileReadException(MAP_TILE_PATH + "MapLayerData.xml", e);
@@ -310,39 +314,62 @@ public class MapLayer extends WidgetGroup {
         // draw architectures
         for (Architecture a : screen.getScenario().getArchitectures()) {
             Point mapCenter = Point.getCenter(a.getLocation());
+            String resPack = screen.getScenario().getGameSurvey().getResourcePackName();
             if (xLo * map.getTileInEachImage() <= mapCenter.x && mapCenter.x <= (xHi + 1) * map.getTileInEachImage() &&
                     yLo * map.getTileInEachImage() <= (map.getHeight() - mapCenter.y + 1) &&
                     (map.getHeight() - mapCenter.y + 1) <= (yHi + 1) * map.getTileInEachImage()) {
+                // draw architecture main
                 Pair<ArchitectureImageQuantifier, Texture> image =
-                        getArchitectureImage(screen.getScenario().getGameSurvey().getResourcePackName(),
-                        a.getKind(), a.getLocation());
+                        getArchitectureImage(resPack, a.getKind(), a.getLocation());
 
-                int px = (mapCenter.x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
-                int py = ((map.getHeight() - 1 - mapCenter.y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
-                int sx, sy;
+                int mainX = (mapCenter.x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
+                int mainY = ((map.getHeight() - 1 - mapCenter.y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
+                int mainSizeX, mainSizeY;
+                int mainSizeYNoOffset;
                 switch (image.getLeft().quantifier) {
                     case DEFAULT:
-                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeYNoOffset = zoom;
                         break;
                     case HORIZONTAL:
-                        sx = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
-                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeX = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeYNoOffset = zoom;
                         break;
                     case VERTICAL:
-                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        sy = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeY = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                        mainSizeYNoOffset = zoom * image.getLeft().size;
                         break;
                     case DIAGONAL_SQUARE:
-                        sx = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
-                        sy = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeX = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeY = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeYNoOffset = zoom * (image.getLeft().size * 2 + 1);
                         break;
                     default:
-                        sx = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        sy = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                        mainSizeYNoOffset = zoom;
                         break;
                 }
-                batch.draw(image.getRight(), px - sx / 2, py - sy / 2, sx, sy);
+                batch.draw(image.getRight(), mainX - mainSizeX / 2, mainY - mainSizeY / 2, mainSizeX, mainSizeY);
+
+                // draw header
+                String name = a.getNameImageName();
+                if (!architectureNameImages.containsKey(name)) {
+                    FileHandle fh = Gdx.files.external(ARCHITECTURE_RES_PATH + resPack + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
+                    if (!fh.exists()) {
+                        fh = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
+                    }
+                    Texture nameImage = new Texture(fh);
+                    architectureNameImages.put(name, nameImage);
+                }
+                Texture nameImage = architectureNameImages.get(name);
+                int nameImageHeight = (int) (zoom * captionSize);
+                int nameImageWidth = (int) ((float) nameImage.getWidth() * nameImageHeight / nameImage.getHeight());
+                batch.draw(nameImage, mainX - nameImageWidth / 2, mainY + mainSizeYNoOffset / 2 - nameImageHeight / 2,
+                        nameImageWidth, nameImageHeight);
             }
 
         }
@@ -373,6 +400,12 @@ public class MapLayer extends WidgetGroup {
             FileHandle f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + name);
             if (!f.exists()) {
                 f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + defaultName);
+                if (!f.exists()) {
+                    f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + name);
+                    if (!f.exists()) {
+                        f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + defaultName);
+                    }
+                }
             }
             Texture t = new Texture(f);
             architectureImages.put(new ImmutablePair<>(kind, quantifier), t);
@@ -455,6 +488,8 @@ public class MapLayer extends WidgetGroup {
     public void dispose() {
         toolBar.dispose();
         mapTiles.values().forEach(Texture::dispose);
+        architectureImages.values().forEach(Texture::dispose);
+        architectureNameImages.values().forEach(Texture::dispose);
     }
 
     private class InputEventListener extends InputListener {

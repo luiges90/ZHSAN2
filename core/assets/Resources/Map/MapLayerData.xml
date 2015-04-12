@@ -10,4 +10,5 @@
 		BottomMargin="16"
 		TextFormat="%s (%d,%d)">
 	</MapInfo>
+	<Caption Size="0.5" />
 </Root>
