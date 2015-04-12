@@ -277,12 +277,12 @@ public class GameFrame extends WidgetGroup {
     }
 
     private void handleMouseMove(float x, float y) {
-        if (ok.contains(x, y) && isOkEnabled()) {
+        if (ok != null && ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.SELECTED);
         } else {
             okTexture.setState(isOkEnabled() ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
         }
-        if (cancel.contains(x, y) && isCancelEnabled()) {
+        if (cancel != null && cancel.contains(x, y) && isCancelEnabled()) {
             cancelTexture.setState(StateTexture.State.SELECTED);
         } else {
             cancelTexture.setState(isCancelEnabled() ? StateTexture.State.NORMAL : StateTexture.State.DISABLED);
@@ -290,12 +290,12 @@ public class GameFrame extends WidgetGroup {
     }
 
     private void handleTouchDown(int button, float x, float y) {
-        if (ok.contains(x, y) && isOkEnabled()) {
+        if (ok != null && ok.contains(x, y) && isOkEnabled()) {
             okTexture.setState(StateTexture.State.NORMAL);
             buttonListener.onOkClicked();
             dismiss(true);
         }
-        if ((cancel.contains(x, y) || button == Input.Buttons.RIGHT) && isCancelEnabled()) {
+        if (cancel != null && ((cancel.contains(x, y) || button == Input.Buttons.RIGHT) && isCancelEnabled())) {
             buttonListener.onCancelClicked();
             dismiss(false);
         }
