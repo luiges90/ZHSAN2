@@ -36,6 +36,10 @@ public class GameScreen extends WidgetGroup {
         contextMenu.show(type, scen, position);
     }
 
+    public void showContextMenu(ContextMenu.MenuKindType type, Object item, Point position) {
+        contextMenu.show(type, item, position);
+    }
+
     public void showSaveGameFrame() {
         if (saveGameFrame == null) {
             saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, scen::save);

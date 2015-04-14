@@ -19,6 +19,7 @@ import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +41,10 @@ import java.util.List;
 public class ContextMenu extends WidgetGroup {
 
     public enum MenuKindType {
-        SYSTEM_MENU("SystemMenu", GameScenario.class);
+        SYSTEM_MENU("SystemMenu", GameScenario.class),
+        ARCHITECTURE_LEFT_MENU("ArchitectureLeftClick", Architecture.class),
+        ARCHITECTURE_RIGHT_MENU("ArchitectureRightClick", Architecture.class)
+        ;
 
         public final String xmlName;
         public final Class<?> carryingObj;
@@ -50,8 +54,10 @@ public class ContextMenu extends WidgetGroup {
         }
 
         public static final MenuKindType fromXmlName(String name) {
-            switch (name) {
-                case "SystemMenu": return SYSTEM_MENU;
+            for (MenuKindType type : MenuKindType.values()) {
+                if (type.xmlName.equals(name)) {
+                    return type;
+                }
             }
             return null;
         }
@@ -224,68 +230,36 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
-    private static int kindMaxDepth_r(MenuItem kind, int r) {
-        int result = r + 1;
-        for (MenuItem item : kind.children) {
-            result = Math.max(result, kindMaxDepth_r(item, result));
-        }
-        return result;
-    }
-
-    private static int kindMaxDepth(MenuKind kind) {
-        int result = 0;
-        for (MenuItem item : kind.items) {
-            result = Math.max(result, kindMaxDepth_r(item, 0));
-        }
-        return result;
-    }
-
-    private static int kindMaxRow_r(MenuItem kind) {
-        int result = kind.children.size();
-        for (int i = 0; i < kind.children.size(); ++i) {
-            result = Math.max(result, i + kindMaxRow_r(kind.children.get(i)));
-        }
-        return result;
-    }
-
-    private static int kindMaxRow(MenuKind kind) {
-        int result = kind.items.size();
-        for (int i = 0; i < kind.items.size(); ++i) {
-            result = Math.max(result, i + kindMaxRow_r(kind.items.get(i)));
-        }
-        return result;
-    }
-
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
         if (showingType != null) {
             MenuKind kind = menuKinds.get(showingType);
-            int width = kind.width * kindMaxDepth(kind);
-            int height = kind.height * kindMaxRow(kind);
+            int width = kind.width;
+            int height = kind.height * kind.items.size();
             Rectangle bound;
             if (position == null) {
                 bound = new Rectangle(this.getWidth() / 2 - width / 2, this.getHeight() / 2 - height / 2, width, height);
             } else {
                 if (position.x + width > getWidth()) {
                     if (position.y - height < 0) {
-                        bound = new Rectangle(position.x - width, position.y, position.x, position.y + height);
+                        bound = new Rectangle(position.x - width, position.y, width, height);
                     } else {
-                        bound = new Rectangle(position.x - width, position.y - height, position.x, position.y);
+                        bound = new Rectangle(position.x - width, position.y - height, width, height);
                     }
                 } else {
                     if (position.y - height < 0) {
-                        bound = new Rectangle(position.x, position.y, position.x + width, position.y + height);
+                        bound = new Rectangle(position.x, position.y, width, height);
                     } else {
-                        bound = new Rectangle(position.x, position.y - height, position.x + width, height);
+                        bound = new Rectangle(position.x, position.y - height, width, height);
                     }
                 }
             }
             for (int i = 0; i < kind.items.size(); ++i) {
                 // TODO disabled method, showAll
                 float x = bound.getX();
-                float y = bound.getY() + bound.getHeight() - i * kind.height;
+                float y = bound.getY() + bound.getHeight() - (i + 1) * kind.height;
                 batch.draw(kind.items.get(i).textWidget.getBackground().get(),
                         x, y, kind.width, kind.height);
 

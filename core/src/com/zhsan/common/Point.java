@@ -1,5 +1,8 @@
 package com.zhsan.common;
 
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +16,11 @@ public final class Point {
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Point(Vector2 v) {
+        this.x = MathUtils.round(v.x);
+        this.y = MathUtils.round(v.y);
     }
 
     public static Point fromCSV(String s) {

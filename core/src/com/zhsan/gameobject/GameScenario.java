@@ -3,6 +3,7 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
+import com.zhsan.common.Point;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -64,6 +65,15 @@ public class GameScenario {
 
     public GameObjectList<Architecture> getArchitectures() {
         return architectures;
+    }
+
+    public Architecture getArchitectureAt(Point p) {
+        for (Architecture a : architectures) {
+            if (a.getLocation().contains(p)) {
+                return a;
+            }
+        }
+        return null;
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {

@@ -251,6 +251,16 @@ public class MapLayer extends WidgetGroup {
         );
     }
 
+    private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
+
+    private Point mouseOnMapPosition() {
+        GameMap map = screen.getScenario().getGameMap();
+
+        int px = (int) (mousePosition.x + getX() + mapDrawOffsetX) / map.getZoom() + imageLoX * map.getTileInEachImage();
+        int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + mapDrawOffsetY) / map.getZoom() + imageLoY * map.getTileInEachImage());
+        return new Point(px, py);
+    }
+
     public void draw(Batch batch, float parentAlpha) {
         // draw map tiles
         GameMap map = screen.getScenario().getGameMap();
@@ -274,6 +284,11 @@ public class MapLayer extends WidgetGroup {
 
         int offsetX = (int) (startPointFromCameraX - this.getWidth() / 2);
         int offsetY = (int) (startPointFromCameraY - this.getHeight() / 2);
+
+        mapDrawOffsetX = offsetX;
+        mapDrawOffsetY = offsetY;
+        imageLoX = xLo;
+        imageLoY = yLo;
 
         for (int y = yLo; y <= yHi; ++y) {
             for (int x = xLo; x <= xHi; ++x) {
@@ -299,8 +314,9 @@ public class MapLayer extends WidgetGroup {
         }
 
         {
-            int px = (int) (mousePosition.x + getX() + offsetX) / map.getZoom() + xLo * map.getTileInEachImage();
-            int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + offsetY) / map.getZoom() + yLo * map.getTileInEachImage());
+            Point p = mouseOnMapPosition();
+            int px = p.x;
+            int py = p.y;
 
             TerrainDetail terrain = map.getTerrainAt(px, py);
             if (terrain != null) {
@@ -493,6 +509,24 @@ public class MapLayer extends WidgetGroup {
     }
 
     private class InputEventListener extends InputListener {
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            mousePosition.set(x, y);
+
+            Point pos = mouseOnMapPosition();
+            Architecture a = screen.getScenario().getArchitectureAt(pos);
+
+            if (a != null) {
+                if (button == Input.Buttons.LEFT) {
+                    screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_LEFT_MENU, a, new Point(mousePosition));
+                } else if (button == Input.Buttons.RIGHT) {
+                    screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_RIGHT_MENU, a, new Point(mousePosition));
+                }
+            }
+
+            return false;
+        }
 
         @Override
         public boolean keyDown(InputEvent event, int keycode) {
