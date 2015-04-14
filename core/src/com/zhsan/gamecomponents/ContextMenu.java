@@ -333,10 +333,8 @@ public class ContextMenu extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (button == Input.Buttons.RIGHT) {
-                collapseSound.play();
-                dismiss();
-            }
+            collapseSound.play();
+            dismiss();
             return true;
         }
     }
