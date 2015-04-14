@@ -122,6 +122,7 @@ public class ContextMenu extends WidgetGroup {
             item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate);
 
             this.addActor(item.textWidget);
+            item.textWidget.setVisible(false);
 
             items.add(item);
         }
@@ -268,6 +269,7 @@ public class ContextMenu extends WidgetGroup {
                 widget.setPosition(x, y);
                 widget.setSize(kind.width, kind.height);
                 widget.setExtra(kind.items.get(i));
+                widget.setVisible(true);
 
                 widget.draw(batch, parentAlpha);
             }
@@ -293,6 +295,9 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private void dismiss() {
+        for (MenuItem item : menuKinds.get(showingType).items) {
+            item.textWidget.setVisible(false);
+        }
         showingType = null;
         setVisible(false);
     }
