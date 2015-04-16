@@ -74,6 +74,8 @@ public class ContextMenu extends WidgetGroup {
         @Nullable private String oppositeMethodName;
         private boolean showDisabled;
         private List<MenuItem> children;
+        private boolean expanded = false;
+        private int depth;
 
         private StateBackgroundTextWidget<MenuItem> textWidget;
     }
@@ -102,7 +104,7 @@ public class ContextMenu extends WidgetGroup {
 
     private Object currentObject;
 
-    private List<MenuItem> loadMenuItem(Node node, String parentName, StateTexture background, TextWidget<MenuItem> widgetTemplate) {
+    private List<MenuItem> loadMenuItem(Node node, String parentName, StateTexture background, TextWidget<MenuItem> widgetTemplate, int depth) {
         NodeList itemNodes = node.getChildNodes();
         List<MenuItem> items = new ArrayList<>();
 
@@ -119,7 +121,8 @@ public class ContextMenu extends WidgetGroup {
             item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
             item.textWidget = new StateBackgroundTextWidget<>(widgetTemplate, background);
             item.textWidget.addListener(new MenuItemListener(item.textWidget));
-            item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate);
+            item.depth = depth;
+            item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate, depth + 1);
 
             this.addActor(item.textWidget);
             item.textWidget.setVisible(false);
@@ -174,9 +177,9 @@ public class ContextMenu extends WidgetGroup {
                 menuKind.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "DisplayAll", "True"));
 
                 if (menuKind.isByLeftClick) {
-                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuLeft, menuLeftText);
+                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuLeft, menuLeftText, 1);
                 } else {
-                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuRight, menuRightText);
+                    menuKind.items = loadMenuItem(kindNode, menuKind.name, menuRight, menuRightText, 1);
                 }
 
                 MenuKindType type = MenuKindType.fromXmlName(name);
@@ -231,48 +234,72 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
+    private void drawMenuItem_r(Batch batch, float parentAlpha, MenuKind kind, MenuItem item, int depth, int index) {
+        if (item.expanded) {
+            drawMenu(batch, parentAlpha, kind.width * depth, kind.height * index, kind, item.children);
+
+            int innerIndex = item.children.size() - 1;
+            for (MenuItem inner : item.children) {
+                drawMenuItem_r(batch, parentAlpha, kind, inner, depth + 1, index + innerIndex);
+                innerIndex--;
+            }
+        }
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
         if (showingType != null) {
             MenuKind kind = menuKinds.get(showingType);
-            int width = kind.width;
-            int height = kind.height * kind.items.size();
-            Rectangle bound;
-            if (position == null) {
-                bound = new Rectangle(this.getWidth() / 2 - width / 2, this.getHeight() / 2 - height / 2, width, height);
-            } else {
-                if (position.x + width > getWidth()) {
-                    if (position.y - height < 0) {
-                        bound = new Rectangle(position.x - width, position.y, width, height);
-                    } else {
-                        bound = new Rectangle(position.x - width, position.y - height, width, height);
-                    }
+            drawMenu(batch, parentAlpha, 0, 0, kind, kind.items);
+
+            int index = kind.items.size() - 1;
+            for (MenuItem item : kind.items) {
+                drawMenuItem_r(batch, parentAlpha, kind, item, 1, index);
+                index--;
+            }
+        }
+    }
+
+    private void drawMenu(Batch batch, float parentAlpha, int xOffset, int yOffset, MenuKind kind, List<MenuItem> items) {
+        int width = kind.width;
+        int height = kind.height * kind.items.size();
+        Rectangle bound;
+        if (position == null) {
+            bound = new Rectangle(this.getWidth() / 2 - width / 2, this.getHeight() / 2 - height / 2, width, height);
+        } else {
+            int px = position.x + xOffset;
+            int py = position.y + yOffset;
+            if (px + width > getWidth()) {
+                if (py - height < 0) {
+                    bound = new Rectangle(px - width, py, width, height);
                 } else {
-                    if (position.y - height < 0) {
-                        bound = new Rectangle(position.x, position.y, width, height);
-                    } else {
-                        bound = new Rectangle(position.x, position.y - height, width, height);
-                    }
+                    bound = new Rectangle(px - width, py - height, width, height);
+                }
+            } else {
+                if (py - height < 0) {
+                    bound = new Rectangle(px, py, width, height);
+                } else {
+                    bound = new Rectangle(px, py - height, width, height);
                 }
             }
-            for (int i = 0; i < kind.items.size(); ++i) {
-                // TODO disabled method, showAll
-                float x = bound.getX();
-                float y = bound.getY() + bound.getHeight() - (i + 1) * kind.height;
-                batch.draw(kind.items.get(i).textWidget.getBackground().get(),
-                        x, y, kind.width, kind.height);
+        }
+        for (int i = 0; i < items.size(); ++i) {
+            // TODO disabled method, showAll
+            float x = bound.getX();
+            float y = bound.getY() + bound.getHeight() - (i + 1) * kind.height;
+            batch.draw(items.get(i).textWidget.getBackground().get(),
+                    x, y, kind.width, kind.height);
 
-                TextWidget<MenuItem> widget = kind.items.get(i).textWidget;
-                widget.setText(kind.items.get(i).displayName);
-                widget.setPosition(x, y);
-                widget.setSize(kind.width, kind.height);
-                widget.setExtra(kind.items.get(i));
-                widget.setVisible(true);
+            TextWidget<MenuItem> widget = items.get(i).textWidget;
+            widget.setText(items.get(i).displayName);
+            widget.setPosition(x, y);
+            widget.setSize(kind.width, kind.height);
+            widget.setExtra(items.get(i));
+            widget.setVisible(true);
 
-                widget.draw(batch, parentAlpha);
-            }
+            widget.draw(batch, parentAlpha);
         }
     }
 
@@ -295,11 +322,50 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private void dismiss() {
-        for (MenuItem item : menuKinds.get(showingType).items) {
-            item.textWidget.setVisible(false);
-        }
+        collapse();
         showingType = null;
         setVisible(false);
+    }
+
+    private void collapse_r(MenuItem item) {
+        item.expanded = false;
+        item.textWidget.setVisible(false);
+        for (MenuItem i : item.children) {
+            collapse_r(i);
+        }
+    }
+
+    private void collapse() {
+        for (MenuItem item : menuKinds.get(showingType).items) {
+            collapse_r(item);
+        }
+    }
+
+    private MenuItem getExpandedItem(MenuItem item, int maxDepth, int currentDepth) {
+        if (maxDepth > currentDepth) {
+            for (MenuItem i : item.children) {
+                MenuItem r = getExpandedItem(i, maxDepth, currentDepth + 1);
+                if (r != null) {
+                    return r;
+                }
+            }
+        }
+        if (item.expanded) {
+            return item;
+        }
+        return null;
+    }
+
+    private boolean containDescendent(MenuItem r, MenuItem s) {
+        if (r.children.contains(s)) {
+            return true;
+        }
+        for (MenuItem item : r.children) {
+            if (containDescendent(item, s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private class MenuItemListener extends InputListener {
@@ -322,15 +388,32 @@ public class ContextMenu extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            try {
-                ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
-                        .invoke(null, screen, currentObject);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalArgumentException(e);
+            if (button == Input.Buttons.LEFT) {
+                if (this.widget.getExtra().children.size() > 0) {
+                    MenuKind kind = menuKinds.get(showingType);
+                    for (MenuItem item : kind.items) {
+                        MenuItem r = getExpandedItem(item, this.widget.getExtra().depth, 1);
+                        if (r != null && !containDescendent(r, this.widget.getExtra())) {
+                            collapse_r(r);
+                        }
+                    }
+
+                    this.widget.getExtra().expanded = true;
+                    expandSound.play();
+                } else {
+                    try {
+                        ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
+                                .invoke(null, screen, currentObject);
+                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                        // throw new IllegalArgumentException(e);
+                    }
+                    clickSound.play();
+                    dismiss();
+                }
+
+                return true;
             }
-            clickSound.play();
-            dismiss();
-            return true;
+            return false;
         }
     }
 
@@ -338,9 +421,22 @@ public class ContextMenu extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            collapseSound.play();
-            dismiss();
-            return true;
+            if (button == Input.Buttons.RIGHT) {
+                collapseSound.play();
+
+                MenuKind kind = menuKinds.get(showingType);
+                for (MenuItem item : kind.items) {
+                    MenuItem r = getExpandedItem(item, Integer.MAX_VALUE, 1);
+                    if (r != null) {
+                        collapse_r(r);
+                        return true;
+                    }
+                }
+
+                dismiss();
+                return true;
+            }
+            return false;
         }
     }
 
