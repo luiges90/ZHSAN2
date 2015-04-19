@@ -114,6 +114,8 @@ public class SmallMap extends WidgetGroup {
     }
 
     public void resize(int width, int height, Rectangle pos) {
+        this.setWidth(width);
+        this.setHeight(height);
         buttonPos = pos;
     }
 
