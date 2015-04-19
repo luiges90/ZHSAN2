@@ -234,13 +234,13 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
-    private void drawMenuItem_r(Batch batch, float parentAlpha, MenuKind kind, MenuItem item, int depth, int index) {
+    private void drawMenuItem_r(Batch batch, float parentAlpha, MenuKind kind, MenuItem item, int depth, int index, int lastSize) {
         if (item.expanded) {
-            drawMenu(batch, parentAlpha, kind.width * depth, kind.height * index, kind, item.children);
+            drawMenu(batch, parentAlpha, kind.width * depth, -kind.height * (lastSize - index - 1), kind, item.children, depth);
 
             int innerIndex = item.children.size() - 1;
             for (MenuItem inner : item.children) {
-                drawMenuItem_r(batch, parentAlpha, kind, inner, depth + 1, index + innerIndex);
+                drawMenuItem_r(batch, parentAlpha, kind, inner, depth + 1, innerIndex, item.children.size());
                 innerIndex--;
             }
         }
@@ -252,19 +252,19 @@ public class ContextMenu extends WidgetGroup {
 
         if (showingType != null) {
             MenuKind kind = menuKinds.get(showingType);
-            drawMenu(batch, parentAlpha, 0, 0, kind, kind.items);
+            drawMenu(batch, parentAlpha, 0, 0, kind, kind.items, 0);
 
             int index = kind.items.size() - 1;
             for (MenuItem item : kind.items) {
-                drawMenuItem_r(batch, parentAlpha, kind, item, 1, index);
+                drawMenuItem_r(batch, parentAlpha, kind, item, 1, index, kind.items.size());
                 index--;
             }
         }
     }
 
-    private void drawMenu(Batch batch, float parentAlpha, int xOffset, int yOffset, MenuKind kind, List<MenuItem> items) {
+    private void drawMenu(Batch batch, float parentAlpha, int xOffset, int yOffset, MenuKind kind, List<MenuItem> items, int submenuDepth) {
         int width = kind.width;
-        int height = kind.height * kind.items.size();
+        int height = kind.height * items.size();
         Rectangle bound;
         if (position == null) {
             bound = new Rectangle(this.getWidth() / 2 - width / 2, this.getHeight() / 2 - height / 2, width, height);
@@ -272,14 +272,15 @@ public class ContextMenu extends WidgetGroup {
             int px = position.x + xOffset;
             int py = position.y + yOffset;
             if (px + width > getWidth()) {
+                boolean rootLeft = position.x + width > getWidth();
                 if (py - height < 0) {
-                    bound = new Rectangle(px - width, py, width, height);
+                    bound = new Rectangle(px - width * (submenuDepth * 2 + (rootLeft ? 1 : 0)), py - (submenuDepth > 0 ? kind.height : 0), width, height);
                 } else {
-                    bound = new Rectangle(px - width, py - height, width, height);
+                    bound = new Rectangle(px - width * (submenuDepth * 2 + (rootLeft ? 1 : 0)), py - height, width, height);
                 }
             } else {
                 if (py - height < 0) {
-                    bound = new Rectangle(px, py, width, height);
+                    bound = new Rectangle(px, py - (submenuDepth > 0 ? kind.height : 0), width, height);
                 } else {
                     bound = new Rectangle(px, py - height, width, height);
                 }
