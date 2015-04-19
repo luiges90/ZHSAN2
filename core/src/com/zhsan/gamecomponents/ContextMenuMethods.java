@@ -27,4 +27,12 @@ public final class ContextMenuMethods {
         screen.showLoadGameFrame();
     }
 
+    public static void MapRightClick_Save(GameScreen screen, Object object) {
+        screen.showSaveGameFrame();
+    }
+
+    public static void MapRightClick_Load(GameScreen screen, Object object) {
+        screen.showLoadGameFrame();
+    }
+
 }
