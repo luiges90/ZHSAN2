@@ -76,7 +76,9 @@ public class StateTexture {
     public void dispose() {
         normal.dispose();
         selected.dispose();
-        disabled.dispose();
+        if (disabled != null) {
+            disabled.dispose();
+        }
     }
 
 }
