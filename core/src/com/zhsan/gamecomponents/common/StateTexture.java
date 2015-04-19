@@ -34,6 +34,9 @@ public class StateTexture {
     }
 
     public void setState(State s) {
+        if (s == State.DISABLED && disabled == null) {
+            throw new IllegalStateException("No disabled texture is set for this StateTexture");
+        }
         this.state = s;
     }
 
@@ -52,7 +55,7 @@ public class StateTexture {
     public static StateTexture fromXml(String path, Node node) {
         String normal = XmlHelper.loadAttribute(node, "FileName");
         String selected = XmlHelper.loadAttribute(node, "Selected");
-        String disabled = XmlHelper.loadAttribute(node, "Disabled");
+        String disabled = XmlHelper.loadAttribute(node, "Disabled", null);
 
         FileHandle f;
         f = Gdx.files.external(path + File.separator + normal);
@@ -61,8 +64,11 @@ public class StateTexture {
         f = Gdx.files.external(path + File.separator + selected);
         Texture tSelected = new Texture(f);
 
-        f = Gdx.files.external(path + File.separator + disabled);
-        Texture tDisabled = new Texture(f);
+        Texture tDisabled = null;
+        if (disabled != null) {
+            f = Gdx.files.external(path + File.separator + disabled);
+            tDisabled = new Texture(f);
+        }
 
         return new StateTexture(tNormal, tSelected, tDisabled);
     }

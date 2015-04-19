@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.ContextMenu;
+import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
@@ -27,7 +28,7 @@ public class GameSystem extends WidgetGroup {
     public static final String RES_PATH = ToolBar.RES_PATH + "GameSystem" + File.separator;
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
-    private Texture button, buttonSelected;
+    private StateTexture button;
     private boolean isMouseOnButton;
 
     private GameScreen screen;
@@ -42,11 +43,7 @@ public class GameSystem extends WidgetGroup {
             dom = db.parse(f.read());
 
             Node n = dom.getElementsByTagName("ButtonTexture").item(0);
-
-            button = new Texture(Gdx.files.external(
-                    DATA_PATH + XmlHelper.loadAttribute(n, "FileName")));
-            buttonSelected = new Texture(Gdx.files.external
-                    (DATA_PATH + XmlHelper.loadAttribute(n, "Selected")));
+            button = StateTexture.fromXml(DATA_PATH, n);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "GameSystemData.xml", e);
         }
@@ -69,24 +66,24 @@ public class GameSystem extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(isMouseOnButton ? buttonSelected : button, this.getX(), this.getY());
+        batch.draw(button.get(), this.getX(), this.getY());
     }
 
     public void dispose() {
         button.dispose();
-        buttonSelected.dispose();
     }
 
     private class Listener extends InputListener {
 
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
-            isMouseOnButton = true;
+            button.setState(StateTexture.State.SELECTED);
             return true;
         }
 
         @Override
-        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int mouseButton) {
+            button.setState(StateTexture.State.NORMAL);
             screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
             return true;
         }
