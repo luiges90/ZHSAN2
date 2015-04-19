@@ -9,10 +9,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
@@ -46,6 +48,8 @@ public class SmallMap extends WidgetGroup {
     private int mapWidth, mapHeight, tileSize;
     private Texture map;
 
+    private int architectureScale;
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "SmallMapData.xml");
 
@@ -56,8 +60,11 @@ public class SmallMap extends WidgetGroup {
             dom = db.parse(f.read());
 
             toolButton = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("ToolTexture").item(0));
+
+            Node architectureNode = dom.getElementsByTagName("Architecture").item(0);
             architecture = new Texture(Gdx.files.external(DATA_PATH +
-                    XmlHelper.loadAttribute(dom.getElementsByTagName("Architecture").item(0), "FileName")));
+                    XmlHelper.loadAttribute(architectureNode, "FileName")));
+            architectureScale = Integer.parseInt(XmlHelper.loadAttribute(architectureNode, "Scale"));
 
             Node mapNode = dom.getElementsByTagName("Map").item(0);
             mapOpacity = Float.parseFloat(XmlHelper.loadAttribute(mapNode, "Transparent"));
@@ -82,7 +89,7 @@ public class SmallMap extends WidgetGroup {
         loadXml();
 
         GameMap gameMap = screen.getScenario().getGameMap();
-        this.tileSize = Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight());
+        this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
         this.mapWidth = this.tileSize * gameMap.getWidth();
         this.mapHeight = this.tileSize * gameMap.getHeight();
         this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
@@ -97,6 +104,7 @@ public class SmallMap extends WidgetGroup {
         batch.draw(toolButton.get(), buttonPos.getX(), buttonPos.getY(), buttonPos.getWidth(), buttonPos.getHeight());
 
         if (toolButton.getState() == StateTexture.State.SELECTED) {
+            // draw minimap
             float dx = 0;
             switch (hAlign) {
                 case LEFT:
@@ -109,7 +117,17 @@ public class SmallMap extends WidgetGroup {
                     dx = this.getWidth() - mapWidth;
                     break;
             }
-            batch.draw(map, dx, ((ToolBar) this.getParent()).getToolbarHeight(), mapWidth, mapHeight);
+            float dy = ((ToolBar) this.getParent()).getToolbarHeight();
+            batch.draw(map, dx, dy, mapWidth, mapHeight);
+
+            // draw architectures on top of it
+            for (Architecture a : screen.getScenario().getArchitectures()) {
+                for (Point p : a.getLocation()) {
+                    int size = tileSize * architectureScale;
+                    batch.draw(architecture,
+                            dx + p.x * tileSize - size / 2, dy + mapHeight - p.y * tileSize - size / 2, size, size);
+                }
+            }
         }
     }
 
