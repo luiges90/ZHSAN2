@@ -3,10 +3,12 @@ package com.zhsan.gamecomponents.toolbar;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.common.StateTexture;
@@ -64,6 +66,11 @@ public class GameSystem extends WidgetGroup {
         super.draw(batch, parentAlpha);
 
         batch.draw(button.get(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+    }
+
+    public void resize(int width, int height, Rectangle pos) {
+        this.setPosition(pos.x, pos.y);
+        this.setSize(pos.width, pos.height);
     }
 
     public void dispose() {

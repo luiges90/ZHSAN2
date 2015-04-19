@@ -97,15 +97,11 @@ public class ToolBar extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        Rectangle actualGameSystemPos =
-                Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, width);
-        gameSystem.setPosition(actualGameSystemPos.x, actualGameSystemPos.y);
-        gameSystem.setSize(actualGameSystemPos.width, actualGameSystemPos.height);
+        gameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth());
+        gameSystem.resize(width, height, gameSystemPos);
 
-        Rectangle actualSmallMapPos =
-                Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, width);
-        smallMap.setPosition(actualSmallMapPos.x, actualSmallMapPos.y);
-        smallMap.setSize(actualSmallMapPos.width, actualSmallMapPos.height);
+        smallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth());
+        smallMap.resize(width, height, smallMapPos);
     }
 
     public void dispose() {

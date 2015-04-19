@@ -52,10 +52,10 @@ public class MapLayer extends WidgetGroup {
         IDLE, IN, OUT
     }
 
-    public static final String MAP_TILE_PATH = Paths.RESOURCES + "Map" + File.separator;
+    public static final String MAP_ROOT_PATH = Paths.RESOURCES + "Map" + File.separator;
     public static final String ARCHITECTURE_RES_PATH = Paths.RESOURCES + "Architecture" + File.separator;
 
-    public static final String DATA_PATH = MAP_TILE_PATH + "Data" + File.separator;
+    public static final String DATA_PATH = MAP_ROOT_PATH + "Data" + File.separator;
 
     private static final class ArchitectureImageQuantifier {
         private enum Quantifier { DEFAULT, DIAGONAL_SQUARE, HORIZONTAL, VERTICAL }
@@ -113,7 +113,7 @@ public class MapLayer extends WidgetGroup {
     private float captionSize;
 
     private void loadXml() {
-        FileHandle f = Gdx.files.external(MAP_TILE_PATH + "MapLayerData.xml");
+        FileHandle f = Gdx.files.external(MAP_ROOT_PATH + "MapLayerData.xml");
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -139,7 +139,7 @@ public class MapLayer extends WidgetGroup {
             captionSize = Float.parseFloat(XmlHelper.loadAttribute(dom.getElementsByTagName("Caption").item(0), "Size"));
 
         } catch (Exception e) {
-            throw new FileReadException(MAP_TILE_PATH + "MapLayerData.xml", e);
+            throw new FileReadException(MAP_ROOT_PATH + "MapLayerData.xml", e);
         }
     }
 
@@ -186,7 +186,7 @@ public class MapLayer extends WidgetGroup {
         if (mapTiles.containsKey(fileName)) {
             return mapTiles.get(fileName);
         }
-        Texture t = new Texture(Gdx.files.external(MAP_TILE_PATH + mapName + File.separator + fileName + ".jpg"));
+        Texture t = new Texture(Gdx.files.external(MAP_ROOT_PATH + mapName + File.separator + fileName + ".jpg"));
         mapTiles.put(fileName, t);
         return t;
     }

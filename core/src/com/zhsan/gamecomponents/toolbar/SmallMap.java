@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -37,9 +38,13 @@ public class SmallMap extends WidgetGroup {
     private StateTexture toolButton;
 
     private float mapOpacity;
-    private int mapWidth, mapHeight, tileSize, maxTileSize;
+    private int maxMapWidth, maxMapHeight, maxTileSize;
 
+    private Rectangle buttonPos;
     private BitmapFont.HAlignment hAlign;
+
+    private int mapWidth, mapHeight, tileSize;
+    private Texture map;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "SmallMapData.xml");
@@ -56,9 +61,8 @@ public class SmallMap extends WidgetGroup {
 
             Node mapNode = dom.getElementsByTagName("Map").item(0);
             mapOpacity = Float.parseFloat(XmlHelper.loadAttribute(mapNode, "Transparent"));
-            mapWidth = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "MaxWidth"));
-            mapHeight = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "MaxHeight"));
-            tileSize = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "TileLength"));
+            maxMapWidth = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "MaxWidth"));
+            maxMapHeight = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "MaxHeight"));
             maxTileSize = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "TileLengthMax"));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "SmallMapData.xml", e);
@@ -68,13 +72,20 @@ public class SmallMap extends WidgetGroup {
     public SmallMap(GameScreen screen, Rectangle buttonPosition, BitmapFont.HAlignment hAlign) {
         this.screen = screen;
         this.hAlign = hAlign;
+        this.buttonPos = buttonPosition;
 
-        this.setX(buttonPosition.x);
-        this.setY(buttonPosition.y);
-        this.setWidth(buttonPosition.width);
-        this.setHeight(buttonPosition.height);
+        this.setX(0);
+        this.setY(0);
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(Gdx.graphics.getHeight());
 
         loadXml();
+
+        GameMap gameMap = screen.getScenario().getGameMap();
+        this.tileSize = Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight());
+        this.mapWidth = this.tileSize * gameMap.getWidth();
+        this.mapHeight = this.tileSize * gameMap.getHeight();
+        this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
 
         this.addListener(new Listener());
     }
@@ -83,7 +94,27 @@ public class SmallMap extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(toolButton.get(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        batch.draw(toolButton.get(), buttonPos.getX(), buttonPos.getY(), buttonPos.getWidth(), buttonPos.getHeight());
+
+        if (toolButton.getState() == StateTexture.State.SELECTED) {
+            float dx = 0;
+            switch (hAlign) {
+                case LEFT:
+                    dx = 0;
+                    break;
+                case CENTER:
+                    dx = this.getWidth() / 2 - mapWidth / 2;
+                    break;
+                case RIGHT:
+                    dx = this.getWidth() - mapWidth;
+                    break;
+            }
+            batch.draw(map, dx, ((ToolBar) this.getParent()).getToolbarHeight(), mapWidth, mapHeight);
+        }
+    }
+
+    public void resize(int width, int height, Rectangle pos) {
+        buttonPos = pos;
     }
 
     public void dispose() {
@@ -94,12 +125,15 @@ public class SmallMap extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (toolButton.getState() == StateTexture.State.NORMAL) {
-                toolButton.setState(StateTexture.State.SELECTED);
-            } else {
-                toolButton.setState(StateTexture.State.NORMAL);
+            if (buttonPos.contains(x, y)) {
+                if (toolButton.getState() == StateTexture.State.NORMAL) {
+                    toolButton.setState(StateTexture.State.SELECTED);
+                } else {
+                    toolButton.setState(StateTexture.State.NORMAL);
+                }
+                return true;
             }
-            return true;
+            return false;
         }
     }
 }
