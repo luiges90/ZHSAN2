@@ -191,6 +191,13 @@ public class MapLayer extends WidgetGroup {
         return t;
     }
 
+    public void setMapCameraPosition(Point p) {
+        this.mapCameraPosition = new Vector2(p.x * mapZoomMax, (screen.getScenario().getGameMap().getHeight() - 1 - p.y) * mapZoomMax);
+        screen.getScenario().getGameSurvey().setCameraPosition(
+                new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
+        );
+    }
+
     private void moveLeft() {
         mapCameraPosition.add(-mapScrollFactor * GlobalVariables.scrollSpeed /
                 screen.getScenario().getGameMap().getZoom(), 0);

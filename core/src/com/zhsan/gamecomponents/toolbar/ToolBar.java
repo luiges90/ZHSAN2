@@ -79,7 +79,7 @@ public class ToolBar extends WidgetGroup {
                 Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth()));
         this.addActor(gameSystem);
 
-        smallMap = new SmallMap(screen,
+        smallMap = new SmallMap(screen, backgroundHeight,
                 Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
                 smallMapAlign);
         this.addActor(smallMap);

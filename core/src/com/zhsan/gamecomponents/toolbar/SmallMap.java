@@ -45,8 +45,9 @@ public class SmallMap extends WidgetGroup {
     private Rectangle buttonPos;
     private BitmapFont.HAlignment hAlign;
 
-    private int mapWidth, mapHeight, tileSize;
+    private int tileSize;
     private Texture map;
+    private Rectangle mapPos;
 
     private int architectureScale;
 
@@ -76,7 +77,7 @@ public class SmallMap extends WidgetGroup {
         }
     }
 
-    public SmallMap(GameScreen screen, Rectangle buttonPosition, BitmapFont.HAlignment hAlign) {
+    public SmallMap(GameScreen screen, int toolbarHeight, Rectangle buttonPosition, BitmapFont.HAlignment hAlign) {
         this.screen = screen;
         this.hAlign = hAlign;
         this.buttonPos = buttonPosition;
@@ -90,9 +91,24 @@ public class SmallMap extends WidgetGroup {
 
         GameMap gameMap = screen.getScenario().getGameMap();
         this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
-        this.mapWidth = this.tileSize * gameMap.getWidth();
-        this.mapHeight = this.tileSize * gameMap.getHeight();
+        int mapWidth = this.tileSize * gameMap.getWidth();
+        int mapHeight = this.tileSize * gameMap.getHeight();
         this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
+
+        float dx = 0;
+        switch (hAlign) {
+            case LEFT:
+                dx = 0;
+                break;
+            case CENTER:
+                dx = this.getWidth() / 2 - mapWidth / 2;
+                break;
+            case RIGHT:
+                dx = this.getWidth() - mapWidth;
+                break;
+        }
+        float dy = toolbarHeight;
+        mapPos = new Rectangle(dx, dy, mapWidth, mapHeight);
 
         this.addListener(new Listener());
     }
@@ -105,27 +121,15 @@ public class SmallMap extends WidgetGroup {
 
         if (toolButton.getState() == StateTexture.State.SELECTED) {
             // draw minimap
-            float dx = 0;
-            switch (hAlign) {
-                case LEFT:
-                    dx = 0;
-                    break;
-                case CENTER:
-                    dx = this.getWidth() / 2 - mapWidth / 2;
-                    break;
-                case RIGHT:
-                    dx = this.getWidth() - mapWidth;
-                    break;
-            }
-            float dy = ((ToolBar) this.getParent()).getToolbarHeight();
-            batch.draw(map, dx, dy, mapWidth, mapHeight);
+            batch.draw(map, mapPos.getX(), mapPos.getY(), mapPos.getWidth(), mapPos.getHeight());
 
             // draw architectures on top of it
             for (Architecture a : screen.getScenario().getArchitectures()) {
                 for (Point p : a.getLocation()) {
                     int size = tileSize * architectureScale;
                     batch.draw(architecture,
-                            dx + p.x * tileSize - size / 2, dy + mapHeight - p.y * tileSize - size / 2, size, size);
+                            mapPos.getX() + p.x * tileSize - size / 2, mapPos.getY() + mapPos.getHeight() - p.y * tileSize - size / 2,
+                            size, size);
                 }
             }
         }
@@ -135,6 +139,20 @@ public class SmallMap extends WidgetGroup {
         this.setWidth(width);
         this.setHeight(height);
         buttonPos = pos;
+
+        float dx = 0;
+        switch (hAlign) {
+            case LEFT:
+                dx = 0;
+                break;
+            case CENTER:
+                dx = this.getWidth() / 2 - mapPos.getWidth() / 2;
+                break;
+            case RIGHT:
+                dx = this.getWidth() - mapPos.getWidth();
+                break;
+        }
+        mapPos.setX(dx);
     }
 
     public void dispose() {
@@ -153,6 +171,14 @@ public class SmallMap extends WidgetGroup {
                 }
                 return true;
             }
+
+            if (mapPos.contains(x, y)) {
+                int px = (int) ((x - mapPos.getX()) / tileSize);
+                int py = (int) ((y - mapPos.getY()) / tileSize);
+                screen.getMapLayer().setMapCameraPosition(new Point(px, screen.getScenario().getGameMap().getHeight() - py));
+                return true;
+            }
+
             return false;
         }
     }

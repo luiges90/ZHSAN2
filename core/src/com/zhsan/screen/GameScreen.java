@@ -74,6 +74,10 @@ public class GameScreen extends WidgetGroup {
         super.draw(batch, parentAlpha);
     }
 
+    public MapLayer getMapLayer() {
+        return mapLayer;
+    }
+
     public void dispose() {
         mapLayer.dispose();
         contextMenu.dispose();
