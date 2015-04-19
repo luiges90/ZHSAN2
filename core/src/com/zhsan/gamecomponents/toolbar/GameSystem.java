@@ -27,7 +27,6 @@ public class GameSystem extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private StateTexture button;
-    private boolean isMouseOnButton;
 
     private GameScreen screen;
 
@@ -64,7 +63,7 @@ public class GameSystem extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(button.get(), this.getX(), this.getY());
+        batch.draw(button.get(), this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }
 
     public void dispose() {

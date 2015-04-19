@@ -16,10 +16,10 @@ public class XmlHelper {
 
     public static Rectangle loadRectangleFromXml(Node node) {
         Rectangle rect = new Rectangle();
-        rect.setX(Integer.parseInt(node.getAttributes().getNamedItem("X").getNodeValue()));
-        rect.setY(Integer.parseInt(node.getAttributes().getNamedItem("Y").getNodeValue()));
-        rect.setWidth(Integer.parseInt(node.getAttributes().getNamedItem("Width").getNodeValue()));
-        rect.setHeight(Integer.parseInt(node.getAttributes().getNamedItem("Height").getNodeValue()));
+        rect.setX(Integer.parseInt(XmlHelper.loadAttribute(node, "X")));
+        rect.setY(Integer.parseInt(XmlHelper.loadAttribute(node, "Y")));
+        rect.setWidth(Integer.parseInt(XmlHelper.loadAttribute(node, "Width")));
+        rect.setHeight(Integer.parseInt(XmlHelper.loadAttribute(node, "Height")));
         return rect;
     }
 

@@ -52,6 +52,10 @@ public class StateTexture {
         }
     }
 
+    public State getState() {
+        return state;
+    }
+
     public static StateTexture fromXml(String path, Node node) {
         String normal = XmlHelper.loadAttribute(node, "FileName");
         String selected = XmlHelper.loadAttribute(node, "Selected");

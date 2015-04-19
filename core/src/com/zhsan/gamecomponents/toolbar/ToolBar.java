@@ -34,6 +34,10 @@ public class ToolBar extends WidgetGroup {
     private Rectangle gameSystemPos;
     private BitmapFont.HAlignment gameSystemAlign;
 
+    private SmallMap smallMap;
+    private Rectangle smallMapPos;
+    private BitmapFont.HAlignment smallMapAlign;
+
     private GameScreen screen;
 
     private void loadXml() {
@@ -54,6 +58,10 @@ public class ToolBar extends WidgetGroup {
             Node gameSystemNode = dom.getElementsByTagName("GameSystem").item(0);
             gameSystemPos = XmlHelper.loadRectangleFromXml(gameSystemNode);
             gameSystemAlign = XmlHelper.loadHAlignmentFromXml(gameSystemNode);
+
+            Node smallMapNode = dom.getElementsByTagName("SmallMap").item(0);
+            smallMapPos = XmlHelper.loadRectangleFromXml(smallMapNode);
+            smallMapAlign = XmlHelper.loadHAlignmentFromXml(smallMapNode);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ToolBarData.xml", e);
         }
@@ -67,9 +75,14 @@ public class ToolBar extends WidgetGroup {
 
         loadXml();
 
-        gameSystem = new GameSystem(screen, Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign,
-                this.getWidth()));
+        gameSystem = new GameSystem(screen,
+                Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth()));
         this.addActor(gameSystem);
+
+        smallMap = new SmallMap(screen,
+                Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
+                smallMapAlign);
+        this.addActor(smallMap);
     }
 
     public int getToolbarHeight() {
@@ -88,11 +101,17 @@ public class ToolBar extends WidgetGroup {
                 Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, width);
         gameSystem.setPosition(actualGameSystemPos.x, actualGameSystemPos.y);
         gameSystem.setSize(actualGameSystemPos.width, actualGameSystemPos.height);
+
+        Rectangle actualSmallMapPos =
+                Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, width);
+        smallMap.setPosition(actualSmallMapPos.x, actualSmallMapPos.y);
+        smallMap.setSize(actualSmallMapPos.width, actualSmallMapPos.height);
     }
 
     public void dispose() {
         background.dispose();
         gameSystem.dispose();
+        smallMap.dispose();
     }
 
 }
