@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 17/3/2015.
  */
-public class TerrainDetail extends GameObject {
+public final class TerrainDetail extends GameObject {
 
     public static final String SAVE_FILE = "TerrainDetail.csv";
 

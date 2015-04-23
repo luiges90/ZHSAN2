@@ -62,7 +62,7 @@ public class GameScenario {
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
-        return terrainDetails;
+        return terrainDetails.asUnmodifiable();
     }
 
     public GameMap getGameMap() {
@@ -74,7 +74,7 @@ public class GameScenario {
     }
 
     public GameObjectList<Architecture> getArchitectures() {
-        return architectures;
+        return architectures.asUnmodifiable();
     }
 
     public Architecture getArchitectureAt(Point p) {
@@ -87,15 +87,15 @@ public class GameScenario {
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {
-        return architectureKinds;
+        return architectureKinds.asUnmodifiable();
     }
 
     public GameObjectList<Section> getSections() {
-        return sections;
+        return sections.asUnmodifiable();
     }
 
     public GameObjectList<Faction> getFactions() {
-        return factions;
+        return factions.asUnmodifiable();
     }
 
     public void save(FileHandle out) {
@@ -115,10 +115,10 @@ public class GameScenario {
         GameSurvey.toCSV(result, gameSurvey);
         TerrainDetail.toCSV(result, terrainDetails);
         GameMap.toCSV(result, gameMap);
-        ArchitectureKind.toCSV(result, architectureKinds);
-        Architecture.toCSV(result, architectures);
-        Section.toCSV(result, sections);
-        Faction.toCSV(result, factions);
+        ArchitectureKind.toCSV(result, architectureKinds.asUnmodifiable());
+        Architecture.toCSV(result, architectures.asUnmodifiable());
+        Section.toCSV(result, sections.asUnmodifiable());
+        Faction.toCSV(result, factions.asUnmodifiable());
     }
 
 }
