@@ -23,7 +23,7 @@ public class Section extends GameObject {
 
     public static final String SAVE_FILE = "Section.csv";
 
-    private Set<Integer> architectureIds;
+    private Set<Integer> architectureIds = new HashSet<>();
     private int belongedFactionId;
 
     public Section(int id) {

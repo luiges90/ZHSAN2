@@ -11,9 +11,13 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList(){}
 
-    public GameObjectList(GameObjectList<T> old) {
-        content = new TreeMap<>(old.content);
-        unmodifiable = old.unmodifiable;
+    public GameObjectList(GameObjectList<T> old, boolean unmodifiable) {
+        if (unmodifiable) {
+            content = Collections.unmodifiableSortedMap(old.content);
+        } else {
+            content = new TreeMap<>(old.content);
+        }
+        this.unmodifiable = unmodifiable;
     }
 
     public void add(T obj) {
@@ -27,23 +31,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            @Override
-            public boolean hasNext() {
-                return content.values().iterator().hasNext();
-            }
-
-            @Override
-            public T next() {
-                return content.values().iterator().next();
-            }
-
-            @Override
-            public void remove() {
-                if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
-                content.values().iterator().remove();
-            }
-        };
+        return content.values().iterator();
     }
 
     public int size() {
@@ -55,8 +43,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
      * @return
      */
     public GameObjectList<T> asUnmodifiable() {
-        GameObjectList<T> result = new GameObjectList<>(this);
-        result.unmodifiable = true;
+        GameObjectList<T> result = new GameObjectList<>(this, true);
         return result;
     }
 

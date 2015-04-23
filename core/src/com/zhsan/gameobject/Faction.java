@@ -22,7 +22,7 @@ public class Faction extends GameObject {
 
     public static final String SAVE_FILE = "Faction.csv";
 
-    private Set<Integer> sectionIds;
+    private Set<Integer> sectionIds = new HashSet<>();
 
     private Faction(int id) {
         super(id);
