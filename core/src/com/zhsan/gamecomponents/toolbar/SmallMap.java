@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -127,9 +128,11 @@ public class SmallMap extends WidgetGroup {
             for (Architecture a : screen.getScenario().getArchitectures()) {
                 for (Point p : a.getLocation()) {
                     int size = tileSize * architectureScale;
-                    batch.draw(architecture,
-                            mapPos.getX() + p.x * tileSize - size / 2, mapPos.getY() + mapPos.getHeight() - p.y * tileSize - size / 2,
-                            size, size);
+
+                    Sprite sprite = new Sprite(architecture, size ,size);
+                    sprite.setCenter((int) (mapPos.getX() + p.x * tileSize - size / 2), (int) (mapPos.getY() + mapPos.getHeight() - p.y * tileSize - size / 2));
+                    sprite.setColor(0, 0, 0, 1);
+                    sprite.draw(batch);
                 }
             }
         }

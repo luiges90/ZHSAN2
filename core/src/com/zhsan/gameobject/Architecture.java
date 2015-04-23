@@ -27,6 +27,8 @@ public class Architecture extends GameObject {
 
     private List<Point> location;
 
+    private int belongedSectionId;
+
     private Architecture(int id) {
         super(id);
     }
@@ -63,6 +65,7 @@ public class Architecture extends GameObject {
                     data.setName(line[2]);
                     data.kind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
                     data.location = Point.fromCSVList(line[4]);
+                    data.belongedSectionId = Integer.parseInt(line[5]);
                 }
 
                 result.add(data);
@@ -84,7 +87,8 @@ public class Architecture extends GameObject {
                         d.nameImageName,
                         d.getName(),
                         String.valueOf(d.kind.getId()),
-                        Point.toCSVList(d.location)
+                        Point.toCSVList(d.location),
+                        String.valueOf(d.belongedSectionId)
                 });
             }
         } catch (IOException e) {
@@ -93,7 +97,21 @@ public class Architecture extends GameObject {
 
     }
 
+    public static final void setup(GameScenario scenario) {
+        for (Architecture a : scenario.getArchitectures()) {
+            for (Section s : scenario.getSections()) {
+                if (s.getArchitectureIds().contains(a.getId())) {
+                    a.belongedSectionId = s.getId();
+                }
+            }
+        }
+    }
+
     public String getNameImageName() {
         return nameImageName;
+    }
+
+    public int getBelongedSectionId() {
+        return belongedSectionId;
     }
 }

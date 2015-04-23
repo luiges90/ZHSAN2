@@ -24,7 +24,9 @@ public class GlobalStrings {
         TERRAIN_DETAIL_SAVE_HEADER("terrainDetailSaveHeader"),
         MAP_SAVE_HEADER("mapSaveHeader"),
         ARCHITECTURE_KIND_SAVE_HEADER("architectureKindSaveHeader"),
-        ARCHITECTURE_SAVE_HEADER("architectureSaveHeader")
+        ARCHITECTURE_SAVE_HEADER("architectureSaveHeader"),
+        SECTION_SAVE_HEADER("sectionSaveHeader"),
+        FACTION_SAVE_HEADER("factionSaveHeader")
         ;
 
         private final String xmlName;

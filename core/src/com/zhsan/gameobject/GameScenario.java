@@ -28,6 +28,8 @@ public class GameScenario {
 
     private final GameObjectList<ArchitectureKind> architectureKinds;
     private final GameObjectList<Architecture> architectures;
+    private final GameObjectList<Section> sections;
+    private final GameObjectList<Faction> factions;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -49,6 +51,14 @@ public class GameScenario {
 
         architectureKinds = ArchitectureKind.fromCSV(file, this);
         architectures = Architecture.fromCSV(file, this);
+        sections = Section.fromCSV(file, this);
+        factions = Faction.fromCSV(file, this);
+
+        for (int i = 0; i < 2; ++i) {
+            Architecture.setup(this);
+            Section.setup(this);
+            Faction.setup(this);
+        }
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
@@ -80,6 +90,14 @@ public class GameScenario {
         return architectureKinds;
     }
 
+    public GameObjectList<Section> getSections() {
+        return sections;
+    }
+
+    public GameObjectList<Faction> getFactions() {
+        return factions;
+    }
+
     public void save(FileHandle out) {
         FileHandle result = out;
         if (result == null) {
@@ -99,6 +117,8 @@ public class GameScenario {
         GameMap.toCSV(result, gameMap);
         ArchitectureKind.toCSV(result, architectureKinds);
         Architecture.toCSV(result, architectures);
+        Section.toCSV(result, sections);
+        Faction.toCSV(result, factions);
     }
 
 }
