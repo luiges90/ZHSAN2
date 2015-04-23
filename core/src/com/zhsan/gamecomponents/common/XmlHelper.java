@@ -29,6 +29,10 @@ public class XmlHelper {
         return temp;
     }
 
+    public static String saveColorToXml(Color color) {
+        return Integer.toUnsignedString(Color.argb8888(color));
+    }
+
     public static List<Integer> loadIntegerListFromXml(String s) {
         String[] split = s.split("\\s");
         List<Integer> result = new ArrayList<>();

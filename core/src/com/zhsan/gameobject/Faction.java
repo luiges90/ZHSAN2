@@ -1,6 +1,7 @@
 package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
@@ -11,18 +12,18 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Peter on 14/3/2015.
  */
 public class Faction extends GameObject {
 
+    private static final String COLOR_FILE = "Color.csv";
     public static final String SAVE_FILE = "Faction.csv";
 
     private Set<Integer> sectionIds = new HashSet<>();
+    private Color color;
 
     private Faction(int id) {
         super(id);
@@ -58,6 +59,24 @@ public class Faction extends GameObject {
     public static final GameObjectList<Faction> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         int version = scen.getGameSurvey().getVersion();
 
+        Map<Integer, Color> colors = new HashMap<>();
+        if (version == 1) {
+            FileHandle color = root.child(COLOR_FILE);
+            try (CSVReader reader = new CSVReader(new InputStreamReader(color.read()))) {
+                String[] line;
+                int index = 0;
+                while ((line = reader.readNext()) != null) {
+                    index++;
+                    if (index == 1) continue; // skip first line.
+                    colors.put(Integer.parseInt(line[0]),
+                            XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[1])));
+                }
+
+            } catch (IOException e) {
+                throw new FileReadException(color.path(), e);
+            }
+        }
+
         GameObjectList<Faction> result = new GameObjectList<>();
 
         FileHandle f = root.child(SAVE_FILE);
@@ -71,8 +90,10 @@ public class Faction extends GameObject {
                 Faction t = new Faction(Integer.parseInt(line[0]));
                 if (version == 1) {
                     t.setName(line[3]);
+                    t.color = colors.get(Integer.parseInt(line[2]));
                 } else {
                     t.setName(line[1]);
+                    t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
                 }
                 result.add(t);
             }
@@ -90,7 +111,8 @@ public class Faction extends GameObject {
             for (Faction d : data) {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
-                        d.getName()
+                        d.getName(),
+                        XmlHelper.saveColorToXml(d.color)
                 });
             }
         } catch (IOException e) {

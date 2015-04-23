@@ -7,5 +7,5 @@
  architectureKindSaveHeader="ID,名称,绘图延展(长度),绘图延展(阔度)"
  architectureSaveHeader="ID,名称编号,名称,种类,位置,所屬軍區"
  sectionSaveHeader="ID,名稱,所屬勢力"
- factionSaveHeader="ID,名稱"
+ factionSaveHeader="ID,名稱,顏色"
 />
