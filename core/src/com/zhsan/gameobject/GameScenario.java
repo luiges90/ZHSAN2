@@ -48,8 +48,8 @@ public class GameScenario {
         gameSurvey = GameSurvey.fromCSV(file);
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
-
         architectureKinds = ArchitectureKind.fromCSV(file, this);
+
         architectures = Architecture.fromCSV(file, this);
         sections = Section.fromCSV(file, this);
         factions = Faction.fromCSV(file, this);

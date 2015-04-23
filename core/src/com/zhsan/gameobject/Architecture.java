@@ -1,7 +1,6 @@
 package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.Point;
@@ -21,13 +20,15 @@ public class Architecture extends GameObject {
 
     public static final String SAVE_FILE = "Architecture.csv";
 
+    private GameScenario scenario;
+
     private String nameImageName;
 
     private ArchitectureKind kind;
 
     private List<Point> location;
 
-    private int belongedSectionId;
+    private int belongedSectionId = -1;
 
     private Architecture(int id) {
         super(id);
@@ -68,6 +69,7 @@ public class Architecture extends GameObject {
                     data.belongedSectionId = Integer.parseInt(line[5]);
                 }
 
+                data.scenario = scen;
                 result.add(data);
             }
         } catch (IOException e) {
@@ -113,5 +115,13 @@ public class Architecture extends GameObject {
 
     public int getBelongedSectionId() {
         return belongedSectionId;
+    }
+
+    public Section getBelongedSection() {
+        return scenario.getSections().get(belongedSectionId);
+    }
+
+    public Faction getBelongedFaction() {
+        return getBelongedSection() == null ? null: getBelongedSection().getBelongedFaction();
     }
 }

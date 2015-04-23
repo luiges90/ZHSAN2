@@ -24,4 +24,12 @@ public abstract class GameObject {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

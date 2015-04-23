@@ -22,6 +22,8 @@ public class Faction extends GameObject {
     private static final String COLOR_FILE = "Color.csv";
     public static final String SAVE_FILE = "Faction.csv";
 
+    private GameScenario scenario;
+
     private Set<Integer> sectionIds = new HashSet<>();
     private Color color;
 
@@ -91,10 +93,13 @@ public class Faction extends GameObject {
                 if (version == 1) {
                     t.setName(line[3]);
                     t.color = colors.get(Integer.parseInt(line[2]));
+                    t.sectionIds = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[9]));
                 } else {
                     t.setName(line[1]);
                     t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
                 }
+
+                t.scenario = scen;
                 result.add(t);
             }
 
@@ -133,5 +138,9 @@ public class Faction extends GameObject {
 
     public Set<Integer> getSectionIds() {
         return Collections.unmodifiableSet(sectionIds);
+    }
+
+    public Color getColor() {
+        return color;
     }
 }

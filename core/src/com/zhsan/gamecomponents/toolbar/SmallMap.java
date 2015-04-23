@@ -17,6 +17,7 @@ import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameMap;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
@@ -130,9 +131,12 @@ public class SmallMap extends WidgetGroup {
                 for (Point p : a.getLocation()) {
                     int size = tileSize * architectureScale;
 
+                    Faction f = a.getBelongedFaction();
+                    Color color = f == null ? Color.WHITE : f.getColor();
+
                     Sprite sprite = new Sprite(architecture, size ,size);
                     sprite.setCenter((int) (mapPos.getX() + p.x * tileSize - size / 2), (int) (mapPos.getY() + mapPos.getHeight() - p.y * tileSize - size / 2));
-                    sprite.setColor(0, 0, 0, 1);
+                    sprite.setColor(color);
                     sprite.draw(batch);
                 }
             }

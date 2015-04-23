@@ -23,8 +23,10 @@ public class Section extends GameObject {
 
     public static final String SAVE_FILE = "Section.csv";
 
+    private GameScenario scenario;
+
     private Set<Integer> architectureIds = new HashSet<>();
-    private int belongedFactionId;
+    private int belongedFactionId = -1;
 
     public Section(int id) {
         super(id);
@@ -51,6 +53,7 @@ public class Section extends GameObject {
                     data.belongedFactionId = Integer.parseInt(line[2]);
                 }
 
+                data.scenario = scen;
                 result.add(data);
             }
         } catch (IOException e) {
@@ -99,5 +102,9 @@ public class Section extends GameObject {
 
     public int getBelongedFactionId() {
         return belongedFactionId;
+    }
+
+    public Faction getBelongedFaction() {
+        return scenario.getFactions().get(belongedFactionId);
     }
 }
