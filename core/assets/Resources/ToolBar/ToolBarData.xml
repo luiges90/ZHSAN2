@@ -2,5 +2,5 @@
 <Root>
   <Background FileName="Background.bmp" Height="48" />
   <GameSystem Align="Right" X="2" Y="10" Width="112" Height="33" FileName="System.png" Selected="SystemSelected.png" />
-  <SmallMap Align="Right" X="116" Y="10" Width="64" Height="33" />
+  <SmallMap Align="Right" X="116" Y="10" Width="64" Height="33" FileName="SmallMap.png" Selected="SmallMapSelected.png"/>
 </Root>

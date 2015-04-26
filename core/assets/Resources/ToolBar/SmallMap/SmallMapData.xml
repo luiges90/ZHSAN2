@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-  <ToolTexture FileName="Tool.png" Selected="ToolSelected.png" />
   <Map Transparent="0.9" MaxWidth="400" MaxHeight="400" TileLengthMax="8" />
   <Architecture FileName="Architecture.png" Scale="3"/>
 </Root>

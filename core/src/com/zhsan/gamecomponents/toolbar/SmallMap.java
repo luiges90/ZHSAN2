@@ -40,30 +40,25 @@ public class SmallMap extends WidgetGroup {
     private GameScreen screen;
 
     private Texture architecture;
-    private StateTexture toolButton;
 
     private float mapOpacity;
     private int maxMapWidth, maxMapHeight, maxTileSize;
 
-    private Rectangle buttonPos;
-    private BitmapFont.HAlignment hAlign;
-
     private int tileSize;
     private Texture map;
-    private Rectangle mapPos;
+
+    private BitmapFont.HAlignment hAlignment;
 
     private int architectureScale;
 
     private void loadXml() {
-        FileHandle f = Gdx.files.external(RES_PATH + "SmallMapData.xml");
+        FileHandle f = Gdx.files.external(RES_PATH + FILE_NAME);
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
-
-            toolButton = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("ToolTexture").item(0));
 
             Node architectureNode = dom.getElementsByTagName("Architecture").item(0);
             architecture = new Texture(Gdx.files.external(DATA_PATH +
@@ -76,42 +71,39 @@ public class SmallMap extends WidgetGroup {
             maxMapHeight = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "MaxHeight"));
             maxTileSize = Integer.parseInt(XmlHelper.loadAttribute(mapNode, "TileLengthMax"));
         } catch (Exception e) {
-            throw new FileReadException(RES_PATH + "SmallMapData.xml", e);
+            throw new FileReadException(RES_PATH + FILE_NAME, e);
         }
     }
 
-    public SmallMap(GameScreen screen, int toolbarHeight, Rectangle buttonPosition, BitmapFont.HAlignment hAlign) {
+    public SmallMap(GameScreen screen, BitmapFont.HAlignment hAlignment, int toolbarSize) {
         this.screen = screen;
-        this.hAlign = hAlign;
-        this.buttonPos = buttonPosition;
-
-        this.setX(buttonPos.getX());
-        this.setY(buttonPos.getY());
-        this.setWidth(buttonPos.getWidth());
-        this.setHeight(buttonPos.getHeight());
+        this.hAlignment = hAlignment;
 
         loadXml();
 
         GameMap gameMap = screen.getScenario().getGameMap();
+        this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
+
         this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
         int mapWidth = this.tileSize * gameMap.getWidth();
         int mapHeight = this.tileSize * gameMap.getHeight();
-        this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
 
         float dx = 0;
-        switch (hAlign) {
+        switch (hAlignment) {
             case LEFT:
                 dx = 0;
                 break;
             case CENTER:
-                dx = this.getWidth() / 2 - mapWidth / 2;
+                dx = Gdx.graphics.getWidth() / 2 - mapWidth / 2;
                 break;
             case RIGHT:
-                dx = this.getWidth() - mapWidth;
+                dx = Gdx.graphics.getWidth() - mapWidth;
                 break;
         }
-        float dy = toolbarHeight;
-        mapPos = new Rectangle(dx, dy, mapWidth, mapHeight);
+        float dy = toolbarSize;
+
+        this.setPosition(dx, dy);
+        this.setSize(mapWidth, mapHeight);
 
         this.addListener(new Listener());
     }
@@ -120,74 +112,62 @@ public class SmallMap extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(toolButton.get(), buttonPos.getX(), buttonPos.getY(), buttonPos.getWidth(), buttonPos.getHeight());
+        // draw minimap
+        batch.draw(map, getX(), getY(), getWidth(), getHeight());
 
-        if (toolButton.getState() == StateTexture.State.SELECTED) {
-            // draw minimap
-            batch.draw(map, mapPos.getX(), mapPos.getY(), mapPos.getWidth(), mapPos.getHeight());
+        // draw architectures on top of it
+        for (Architecture a : screen.getScenario().getArchitectures()) {
+            for (Point p : a.getLocation()) {
+                int size = tileSize * architectureScale;
 
-            // draw architectures on top of it
-            for (Architecture a : screen.getScenario().getArchitectures()) {
-                for (Point p : a.getLocation()) {
-                    int size = tileSize * architectureScale;
+                Faction f = a.getBelongedFaction();
+                Color color = f == null ? Color.WHITE : f.getColor();
 
-                    Faction f = a.getBelongedFaction();
-                    Color color = f == null ? Color.WHITE : f.getColor();
-
-                    Sprite sprite = new Sprite(architecture, size ,size);
-                    sprite.setCenter((int) (mapPos.getX() + p.x * tileSize - size / 2), (int) (mapPos.getY() + mapPos.getHeight() - p.y * tileSize - size / 2));
-                    sprite.setColor(color);
-                    sprite.draw(batch);
-                }
+                Sprite sprite = new Sprite(architecture, size ,size);
+                sprite.setCenter((int) (getX() + p.x * tileSize - size / 2), (int) (getY() + getHeight() - p.y * tileSize - size / 2));
+                sprite.setColor(color);
+                sprite.draw(batch);
             }
         }
     }
 
-    public void resize(int width, int height, Rectangle pos) {
-        this.setWidth(width);
-        this.setHeight(height);
-        buttonPos = pos;
+    public final void resize(int width, int height) {
+        GameMap gameMap = screen.getScenario().getGameMap();
+        this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
+        int mapWidth = this.tileSize * gameMap.getWidth();
+        int mapHeight = this.tileSize * gameMap.getHeight();
 
         float dx = 0;
-        switch (hAlign) {
+        switch (hAlignment) {
             case LEFT:
                 dx = 0;
                 break;
             case CENTER:
-                dx = this.getWidth() / 2 - mapPos.getWidth() / 2;
+                dx = width / 2 - mapWidth / 2;
                 break;
             case RIGHT:
-                dx = this.getWidth() - mapPos.getWidth();
+                dx = width - mapWidth;
                 break;
         }
-        mapPos.setX(dx);
+        float dy = screen.getToolBarHeight();
+
+        this.setPosition(dx, dy);
+        this.setSize(mapWidth, mapHeight);
     }
 
     public void dispose() {
-        toolButton.dispose();
+        architecture.dispose();
+        map.dispose();
     }
 
     private class Listener extends InputListener {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (buttonPos.contains(x, y)) {
-                if (toolButton.getState() == StateTexture.State.NORMAL) {
-                    toolButton.setState(StateTexture.State.SELECTED);
-                } else {
-                    toolButton.setState(StateTexture.State.NORMAL);
-                }
-                return true;
-            }
-
-            if (mapPos.contains(x, y)) {
-                int px = (int) ((x - mapPos.getX()) / tileSize);
-                int py = (int) ((y - mapPos.getY()) / tileSize);
-                screen.getMapLayer().setMapCameraPosition(new Point(px, screen.getScenario().getGameMap().getHeight() - py));
-                return true;
-            }
-
-            return false;
+            int px = (int) ((x) / tileSize);
+            int py = (int) ((y) / tileSize);
+            screen.getMapLayer().setMapCameraPosition(new Point(px, screen.getScenario().getGameMap().getHeight() - py));
+            return true;
         }
     }
 }

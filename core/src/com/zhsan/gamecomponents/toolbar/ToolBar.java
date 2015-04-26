@@ -39,7 +39,9 @@ public class ToolBar extends WidgetGroup {
     private BitmapFont.HAlignment gameSystemAlign;
 
     private SmallMap smallMap;
-    private Rectangle smallMapPos;
+
+    private StateTexture smallMapButton;
+    private Rectangle smallMapPos, actualSmallMapPos;
     private BitmapFont.HAlignment smallMapAlign;
 
     private GameScreen screen;
@@ -67,6 +69,7 @@ public class ToolBar extends WidgetGroup {
             Node smallMapNode = dom.getElementsByTagName("SmallMap").item(0);
             smallMapPos = XmlHelper.loadRectangleFromXml(smallMapNode);
             smallMapAlign = XmlHelper.loadHAlignmentFromXml(smallMapNode);
+            smallMapButton = StateTexture.fromXml(DATA_PATH, smallMapNode);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ToolBarData.xml", e);
         }
@@ -79,9 +82,9 @@ public class ToolBar extends WidgetGroup {
 
         this.setHeight(backgroundHeight);
 
-        smallMap = new SmallMap(screen, backgroundHeight,
-                Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
-                smallMapAlign);
+        smallMap = new SmallMap(screen, smallMapAlign, backgroundHeight);
+        smallMap.setVisible(false);
+
         this.addActor(smallMap);
 
         this.addListener(new Listener());
@@ -96,25 +99,31 @@ public class ToolBar extends WidgetGroup {
         if (actualGameSystemPos == null) {
             actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
         }
+        if (actualSmallMapPos == null) {
+            actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, getWidth());
+        }
 
         batch.draw(background, 0, 0, getWidth(), backgroundHeight);
 
         batch.draw(gameSystem.get(), actualGameSystemPos.getX(), actualGameSystemPos.getY(),
                 actualGameSystemPos.getWidth(), actualGameSystemPos.getHeight());
+        batch.draw(smallMapButton.get(), actualSmallMapPos.getX(), actualSmallMapPos.getY(),
+                actualSmallMapPos.getWidth(), actualSmallMapPos.getHeight());
 
         super.draw(batch, parentAlpha);
     }
 
     public void resize(int width, int height) {
         actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
+        actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, getWidth());
 
-        Rectangle actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, width);
-        smallMap.resize(width, height, actualSmallMapPos);
+        smallMap.resize(width, height);
     }
 
     public void dispose() {
         background.dispose();
         gameSystem.dispose();
+        smallMapButton.dispose();
         smallMap.dispose();
     }
 
@@ -133,6 +142,15 @@ public class ToolBar extends WidgetGroup {
             if (actualGameSystemPos.contains(x, y)) {
                 gameSystem.setState(StateTexture.State.NORMAL);
                 screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
+            }
+            if (actualSmallMapPos.contains(x, y)) {
+                if (smallMapButton.getState() == StateTexture.State.NORMAL) {
+                    smallMapButton.setState(StateTexture.State.SELECTED);
+                    smallMap.setVisible(true);
+                } else {
+                    smallMapButton.setState(StateTexture.State.NORMAL);
+                    smallMap.setVisible(false);
+                }
             }
             return true;
         }
