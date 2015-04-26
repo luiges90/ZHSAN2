@@ -150,7 +150,7 @@ public class MapLayer extends WidgetGroup {
 
         mapInfo.setX(0);
         mapInfo.setY(mapInfoMargin);
-        mapInfo.setWidth(getWidth());
+        mapInfo.setWidth(Gdx.graphics.getWidth());
 
         grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
 
