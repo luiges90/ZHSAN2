@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
     <Background FileName="Background.png" />
-    <ContentText X="200" Y="60" Width="450" Height="84"
+	<Margin bottom="16" />
+    <ContentText X="64" Y="60" Width="470" Height="70"
             FontName="方正隶变_GBK"
             FontSize="16"
             FontStyle="Regular"

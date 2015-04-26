@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents.contextmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.screen.GameScreen;
 
 /**
@@ -12,7 +13,12 @@ public final class ContextMenuMethods {
     private ContextMenuMethods(){}
 
     public static void SystemMenu_Quit(GameScreen screen, Object object) {
-        Gdx.app.exit();
+        screen.showTextDialog(TextDialog.TextKeys.EXIT_GAME, new TextDialog.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                Gdx.app.exit();
+            }
+        });
     }
 
     public static void SystemMenu_Continue(GameScreen screen, Object object) {

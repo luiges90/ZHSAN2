@@ -102,6 +102,10 @@ public class GameScreen extends WidgetGroup {
         textDialog.show(content, onDismissListener);
     }
 
+    public void showTextDialog(TextDialog.TextKeys key, TextDialog.OnDismissListener onDismissListener) {
+        textDialog.show(key, onDismissListener);
+    }
+
     public int getToolBarHeight() {
         return toolBar.getToolbarHeight();
     }

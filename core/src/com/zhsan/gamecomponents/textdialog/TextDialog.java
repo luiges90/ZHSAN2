@@ -16,16 +16,41 @@ import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Peter on 26/4/2015.
  */
 public class TextDialog extends WidgetGroup {
+
+    public static enum TextKeys {
+        EXIT_GAME("ExitGame"),
+        EXIT_SAVE_GAME("ExitSaveGame")
+        ;
+
+        private final String xmlName;
+        TextKeys(String name) {
+            this.xmlName = name;
+        }
+    }
+
+    private static TextKeys getKeyFromXml(String s) {
+        for (TextKeys k : TextKeys.values()) {
+            if (k.xmlName.equals(s)) {
+                return k;
+            }
+        }
+        throw new IllegalArgumentException("Key " + s + " not found.");
+    }
 
     public interface OnDismissListener {
         public void onDismiss();
@@ -35,6 +60,8 @@ public class TextDialog extends WidgetGroup {
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private GameScreen screen;
+
+    private int marginBottom;
 
     private Texture background;
 
@@ -47,6 +74,8 @@ public class TextDialog extends WidgetGroup {
     private String text;
     private OnDismissListener onDismissListener;
 
+    private EnumMap<TextKeys, String> strings;
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "TextDialogData.xml");
 
@@ -55,6 +84,9 @@ public class TextDialog extends WidgetGroup {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
+
+            marginBottom = Integer.parseInt(dom.getElementsByTagName("Margin").item(0).
+                    getAttributes().getNamedItem("bottom").getNodeValue());
 
             Node bg = dom.getElementsByTagName("Background").item(0);
             background = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(bg, "FileName")));
@@ -71,6 +103,27 @@ public class TextDialog extends WidgetGroup {
         }
     }
 
+    private void loadText() {
+        FileHandle f = Gdx.files.external(RES_PATH + "TextDialogText.xml");
+
+        Document dom;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+
+        strings = new EnumMap<>(TextKeys.class);
+        try {
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            dom = db.parse(f.read());
+
+            NodeList list = dom.getElementsByTagName("TextDialogTexts");
+            NamedNodeMap attributes = list.item(0).getAttributes();
+            for (int i = 0; i < attributes.getLength(); ++i) {
+                strings.put(getKeyFromXml(attributes.item(i).getNodeName()), attributes.item(i).getNodeValue());
+            }
+        } catch (Exception e) {
+            throw new FileReadException(RES_PATH + "TextDialogText.xml", e);
+        }
+    }
+
     public TextDialog(GameScreen screen) {
         this.screen = screen;
 
@@ -78,6 +131,7 @@ public class TextDialog extends WidgetGroup {
         this.setHeight(Gdx.graphics.getHeight());
 
         loadXml();
+        loadText();
 
         this.setVisible(false);
         this.addListener(new Listener());
@@ -89,7 +143,7 @@ public class TextDialog extends WidgetGroup {
             int width = background.getWidth();
             int height = background.getHeight();
             float x = getWidth() / 2 - width / 2;
-            float y = getHeight() / 2 - height / 2;
+            float y = screen.getToolBarHeight() + marginBottom;
 
             batch.draw(background, x, y, width, height);
 
@@ -105,6 +159,12 @@ public class TextDialog extends WidgetGroup {
 
     public void show(String s, OnDismissListener onDismissListener) {
         text = s;
+        this.onDismissListener = onDismissListener;
+        this.setVisible(true);
+    }
+
+    public void show(TextKeys s, OnDismissListener onDismissListener) {
+        text = strings.get(s);
         this.onDismissListener = onDismissListener;
         this.setVisible(true);
     }

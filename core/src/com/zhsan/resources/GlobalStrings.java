@@ -10,6 +10,7 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +36,18 @@ public class GlobalStrings {
         }
     }
 
+    private static Keys getKeyFromXml(String s) {
+        for (Keys k : Keys.values()) {
+            if (k.xmlName.equals(s)) {
+                return k;
+            }
+        }
+        throw new IllegalArgumentException("Key " + s + " not found.");
+    }
+
     private GlobalStrings() {}
 
-    private static Map<String, String> strings = null;
+    private static EnumMap<Keys, String> strings = null;
 
     private static void load() {
         FileHandle f = Gdx.files.external(Paths.RESOURCES + "GlobalStrings.xml");
@@ -45,7 +55,7 @@ public class GlobalStrings {
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-        strings = new HashMap<>();
+        strings = new EnumMap<>(Keys.class);
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
@@ -53,7 +63,7 @@ public class GlobalStrings {
             NodeList list = dom.getElementsByTagName("GlobalStrings");
             NamedNodeMap attributes = list.item(0).getAttributes();
             for (int i = 0; i < attributes.getLength(); ++i) {
-                strings.put(attributes.item(i).getNodeName(), attributes.item(i).getNodeValue());
+                strings.put(getKeyFromXml(attributes.item(i).getNodeName()), attributes.item(i).getNodeValue());
             }
         } catch (Exception e) {
             throw new FileReadException(Paths.RESOURCES + "GlobalStrings.xml", e);
