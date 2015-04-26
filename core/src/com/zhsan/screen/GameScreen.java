@@ -46,8 +46,6 @@ public class GameScreen extends WidgetGroup {
         this.addActor(textDialog);
 
         this.addActor(toolBar);
-
-        mapLayer.debugAll();
     }
 
     public void resize(int width, int height) {

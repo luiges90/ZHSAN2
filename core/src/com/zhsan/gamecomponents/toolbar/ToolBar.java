@@ -79,8 +79,6 @@ public class ToolBar extends WidgetGroup {
 
         this.setHeight(backgroundHeight);
 
-        actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
-
         smallMap = new SmallMap(screen, backgroundHeight,
                 Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
                 smallMapAlign);
@@ -95,6 +93,10 @@ public class ToolBar extends WidgetGroup {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        if (actualGameSystemPos == null) {
+            actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
+        }
+
         batch.draw(background, 0, 0, getWidth(), backgroundHeight);
 
         batch.draw(gameSystem.get(), actualGameSystemPos.getX(), actualGameSystemPos.getY(),
@@ -104,8 +106,6 @@ public class ToolBar extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        this.setSize(width, getToolbarHeight());
-
         actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
 
         Rectangle actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, width);
