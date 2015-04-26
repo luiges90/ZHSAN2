@@ -6,6 +6,7 @@ import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
+import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gameobject.GameScenario;
 
 /**
@@ -19,6 +20,7 @@ public class GameScreen extends WidgetGroup {
     private ContextMenu contextMenu;
 
     private FileGameFrame saveGameFrame, loadGameFrame;
+    private TextDialog textDialog;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
@@ -28,6 +30,9 @@ public class GameScreen extends WidgetGroup {
 
         contextMenu = new ContextMenu(this);
         this.addActor(contextMenu);
+
+        textDialog = new TextDialog(this);
+        this.addActor(textDialog);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
@@ -62,6 +67,10 @@ public class GameScreen extends WidgetGroup {
         return scen;
     }
 
+    public void showTextDialog(String content, TextDialog.OnDismissListener onDismissListener) {
+        textDialog.show(content, onDismissListener);
+    }
+
     public void resize(int width, int height) {
         mapLayer.resize(width, height);
         contextMenu.resize(width, height);
@@ -81,6 +90,7 @@ public class GameScreen extends WidgetGroup {
     public void dispose() {
         mapLayer.dispose();
         contextMenu.dispose();
+        textDialog.dispose();
     }
 
 }

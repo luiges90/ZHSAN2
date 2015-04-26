@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+    <Background FileName="Background.png" />
+    <ContentText X="200" Y="60" Width="450" Height="84"
+            FontName="方正隶变_GBK"
+            FontSize="16"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Left"/>
+    <PageButton FileName="FirstPage.png" X="648" Y="152" Width="20" Height="20" />
+</Root>
