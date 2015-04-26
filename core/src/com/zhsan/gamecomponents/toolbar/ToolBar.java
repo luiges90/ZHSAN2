@@ -6,11 +6,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
+import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -30,8 +34,8 @@ public class ToolBar extends WidgetGroup {
     private Texture background;
     private int backgroundHeight;
 
-    private GameSystem gameSystem;
-    private Rectangle gameSystemPos;
+    private StateTexture gameSystem;
+    private Rectangle gameSystemPos, actualGameSystemPos;
     private BitmapFont.HAlignment gameSystemAlign;
 
     private SmallMap smallMap;
@@ -58,6 +62,7 @@ public class ToolBar extends WidgetGroup {
             Node gameSystemNode = dom.getElementsByTagName("GameSystem").item(0);
             gameSystemPos = XmlHelper.loadRectangleFromXml(gameSystemNode);
             gameSystemAlign = XmlHelper.loadHAlignmentFromXml(gameSystemNode);
+            gameSystem = StateTexture.fromXml(DATA_PATH, gameSystemNode);
 
             Node smallMapNode = dom.getElementsByTagName("SmallMap").item(0);
             smallMapPos = XmlHelper.loadRectangleFromXml(smallMapNode);
@@ -72,17 +77,16 @@ public class ToolBar extends WidgetGroup {
 
         loadXml();
 
-        this.setWidth(Gdx.graphics.getWidth());
         this.setHeight(backgroundHeight);
+
+        actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
 
         smallMap = new SmallMap(screen, backgroundHeight,
                 Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
                 smallMapAlign);
         this.addActor(smallMap);
 
-        gameSystem = new GameSystem(screen,
-                Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth()));
-        this.addActor(gameSystem);
+        this.addListener(new Listener());
     }
 
     public int getToolbarHeight() {
@@ -93,14 +97,16 @@ public class ToolBar extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(background, 0, 0, getWidth(), backgroundHeight);
 
+        batch.draw(gameSystem.get(), actualGameSystemPos.getX(), actualGameSystemPos.getY(),
+                actualGameSystemPos.getWidth(), actualGameSystemPos.getHeight());
+
         super.draw(batch, parentAlpha);
     }
 
     public void resize(int width, int height) {
         this.setSize(width, getToolbarHeight());
 
-        Rectangle actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, width);
-        gameSystem.resize(width, height, actualGameSystemPos);
+        actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
 
         Rectangle actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, width);
         smallMap.resize(width, height, actualSmallMapPos);
@@ -110,6 +116,26 @@ public class ToolBar extends WidgetGroup {
         background.dispose();
         gameSystem.dispose();
         smallMap.dispose();
+    }
+
+    private class Listener extends InputListener {
+
+        @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            if (actualGameSystemPos.contains(x, y)) {
+                gameSystem.setState(StateTexture.State.SELECTED);
+            }
+            return true;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int mouseButton) {
+            if (actualGameSystemPos.contains(x, y)) {
+                gameSystem.setState(StateTexture.State.NORMAL);
+                screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
+            }
+            return true;
+        }
     }
 
 }

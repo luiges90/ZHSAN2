@@ -29,6 +29,8 @@ public class GameScreen extends WidgetGroup {
         this.scen = scen;
 
         toolBar = new ToolBar(this);
+        toolBar.setPosition(0, 0);
+        toolBar.setWidth(Gdx.graphics.getWidth());
 
         mapLayer = new MapLayer(this);
         mapLayer.setPosition(0, getToolBarHeight());
@@ -49,12 +51,16 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
+        mapLayer.setPosition(0, getToolBarHeight());
         mapLayer.setSize(width, height - getToolBarHeight());
         mapLayer.resize(width, height);
 
+        contextMenu.setPosition(0, getToolBarHeight());
         contextMenu.setSize(width, height - getToolBarHeight());
         contextMenu.resize(width, height);
 
+        toolBar.setPosition(0, 0);
+        toolBar.setWidth(width);
         toolBar.resize(width, height);
 
         if (saveGameFrame != null) {
