@@ -49,7 +49,6 @@ public class FileGameFrame extends GameFrame {
 
     private String title;
     private Usage usage;
-    private float widthRatio, heightRatio;
 
     private int margins;
     private int listPaddings;
@@ -71,10 +70,6 @@ public class FileGameFrame extends GameFrame {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
-
-            Node nodeSizeRatio = dom.getElementsByTagName("SizeRatio").item(0);
-            widthRatio = Float.parseFloat(XmlHelper.loadAttribute(nodeSizeRatio, "width"));
-            heightRatio = Float.parseFloat(XmlHelper.loadAttribute(nodeSizeRatio, "height"));
 
             if (usage == Usage.SAVE) {
                 title = XmlHelper.loadAttribute(dom.getElementsByTagName("Title").item(0), "save");
@@ -172,6 +167,12 @@ public class FileGameFrame extends GameFrame {
                 paneWidth, paneHeight, filePane, scrollButton);
 
         addActor(scenarioPaneContainer);
+    }
+
+    public void resize(int width, int height) {
+        super.resize(width, height);
+
+        initFilePane();
     }
 
     private class FileSelectListener extends InputListener {

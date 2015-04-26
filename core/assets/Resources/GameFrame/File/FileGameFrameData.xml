@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
-	<SizeRatio width="0.8" height="0.8" />
 	<Title save="储存游戏" load="读取游戏"/>
 	<Strings newFile="新储档" />
 	<Margins value="16"/>
