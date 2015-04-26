@@ -108,8 +108,6 @@ public class MapLayer extends WidgetGroup {
 
     private Texture grid;
 
-    private ToolBar toolBar;
-
     private float captionSize;
 
     private void loadXml() {
@@ -146,21 +144,12 @@ public class MapLayer extends WidgetGroup {
     public MapLayer(GameScreen screen) {
         this.screen = screen;
 
-        // add toolbar
-        toolBar = new ToolBar(screen);
-
-        this.setPosition(0, 0);
-        this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(Gdx.graphics.getHeight());
-
-        this.addActor(toolBar);
-
         // init myself
         loadXml();
 
         mapInfo.setX(0);
         mapInfo.setY(mapInfoMargin);
-        mapInfo.setWidth(Gdx.graphics.getWidth());
+        mapInfo.setWidth(getWidth());
 
         grid = new Texture(Gdx.files.external(DATA_PATH + "Grid.png"));
 
@@ -174,10 +163,6 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-        toolBar.setSize(width, height);
-        toolBar.resize(width, height);
-
-        this.setSize(width, height - toolBar.getToolbarHeight());
         mapInfo.setWidth(this.getWidth());
     }
 
@@ -510,7 +495,6 @@ public class MapLayer extends WidgetGroup {
     }
 
     public void dispose() {
-        toolBar.dispose();
         mapTiles.values().forEach(Texture::dispose);
         architectureImages.values().forEach(Texture::dispose);
         architectureNameImages.values().forEach(Texture::dispose);
@@ -588,12 +572,12 @@ public class MapLayer extends WidgetGroup {
             moveStateX = MoveStateX.IDLE;
             moveStateY = MoveStateY.IDLE;
 
-            if (x < mapScrollBoundary && y > toolBar.getToolbarHeight()) {
+            if (x < mapScrollBoundary) {
                 moveStateX = MoveStateX.LEFT;
-            } else if (x > getWidth() - mapScrollBoundary && y > toolBar.getToolbarHeight()) {
+            } else if (x > getWidth() - mapScrollBoundary) {
                 moveStateX = MoveStateX.RIGHT;
             }
-            if (toolBar.getToolbarHeight() < y && y < toolBar.getToolbarHeight() + mapScrollBoundary) {
+            if (y < mapScrollBoundary) {
                 moveStateY = MoveStateY.BOTTOM;
             } else if (y > getHeight() - mapScrollBoundary) {
                 moveStateY = MoveStateY.TOP;

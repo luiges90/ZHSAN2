@@ -70,19 +70,19 @@ public class ToolBar extends WidgetGroup {
     public ToolBar(GameScreen screen) {
         this.screen = screen;
 
-        this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(Gdx.graphics.getHeight());
-
         loadXml();
 
-        gameSystem = new GameSystem(screen,
-                Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth()));
-        this.addActor(gameSystem);
+        this.setWidth(Gdx.graphics.getWidth());
+        this.setHeight(backgroundHeight);
 
         smallMap = new SmallMap(screen, backgroundHeight,
                 Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, this.getWidth()),
                 smallMapAlign);
         this.addActor(smallMap);
+
+        gameSystem = new GameSystem(screen,
+                Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, this.getWidth()));
+        this.addActor(gameSystem);
     }
 
     public int getToolbarHeight() {
@@ -97,6 +97,8 @@ public class ToolBar extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
+        this.setSize(width, getToolbarHeight());
+
         Rectangle actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, width);
         gameSystem.resize(width, height, actualGameSystemPos);
 

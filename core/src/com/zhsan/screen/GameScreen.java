@@ -1,5 +1,6 @@
 package com.zhsan.screen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Point;
@@ -7,6 +8,7 @@ import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
+import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.GameScenario;
 
 /**
@@ -21,18 +23,43 @@ public class GameScreen extends WidgetGroup {
 
     private FileGameFrame saveGameFrame, loadGameFrame;
     private TextDialog textDialog;
+    private ToolBar toolBar;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
 
+        toolBar = new ToolBar(this);
+
         mapLayer = new MapLayer(this);
+        mapLayer.setPosition(0, getToolBarHeight());
+        mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - getToolBarHeight());
         this.addActor(mapLayer);
 
         contextMenu = new ContextMenu(this);
+        contextMenu.setPosition(0, getToolBarHeight());
+        contextMenu.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - getToolBarHeight());
         this.addActor(contextMenu);
 
         textDialog = new TextDialog(this);
         this.addActor(textDialog);
+
+        this.addActor(toolBar);
+
+        mapLayer.debugAll();
+    }
+
+    public void resize(int width, int height) {
+        mapLayer.setSize(width, height - getToolBarHeight());
+        mapLayer.resize(width, height);
+
+        contextMenu.setSize(width, height - getToolBarHeight());
+        contextMenu.resize(width, height);
+
+        toolBar.resize(width, height);
+
+        if (saveGameFrame != null) {
+            saveGameFrame.resize(width, height);
+        }
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
@@ -71,12 +98,8 @@ public class GameScreen extends WidgetGroup {
         textDialog.show(content, onDismissListener);
     }
 
-    public void resize(int width, int height) {
-        mapLayer.resize(width, height);
-        contextMenu.resize(width, height);
-        if (saveGameFrame != null) {
-            saveGameFrame.resize(width, height);
-        }
+    public int getToolBarHeight() {
+        return toolBar.getToolbarHeight();
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -88,6 +111,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void dispose() {
+        toolBar.dispose();
         mapLayer.dispose();
         contextMenu.dispose();
         textDialog.dispose();

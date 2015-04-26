@@ -85,10 +85,10 @@ public class SmallMap extends WidgetGroup {
         this.hAlign = hAlign;
         this.buttonPos = buttonPosition;
 
-        this.setX(0);
-        this.setY(0);
-        this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(Gdx.graphics.getHeight());
+        this.setX(buttonPos.getX());
+        this.setY(buttonPos.getY());
+        this.setWidth(buttonPos.getWidth());
+        this.setHeight(buttonPos.getHeight());
 
         loadXml();
 

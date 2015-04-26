@@ -200,9 +200,6 @@ public class ContextMenu extends WidgetGroup {
     public ContextMenu(GameScreen screen) {
         this.screen = screen;
 
-        this.setWidth(Gdx.graphics.getWidth());
-        this.setHeight(Gdx.graphics.getHeight());
-
         this.setVisible(false);
         this.addListener(new ScreenClickListener());
 
@@ -213,11 +210,8 @@ public class ContextMenu extends WidgetGroup {
         float widthExpanded = width / this.getWidth();
         float heightExpanded = height / this.getHeight();
 
-        this.setWidth(width);
-        this.setHeight(height);
-
         if (position != null) {
-            position = new Point(MathUtils.round(position.x * widthExpanded), MathUtils.round(position.y * heightExpanded));
+            position = new Point(MathUtils.round(position.x * widthExpanded + getX()), MathUtils.round(position.y * heightExpanded + getY()));
         }
     }
 
@@ -228,7 +222,7 @@ public class ContextMenu extends WidgetGroup {
         }
         this.currentObject = object;
         this.showingType = type;
-        this.position = position;
+        this.position = position == null ? null : new Point((int)(position.x + getX()), (int)(position.y + getY()));
         this.setVisible(true);
         if (showingType != null) {
             clickSound.play();
@@ -249,8 +243,6 @@ public class ContextMenu extends WidgetGroup {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
         if (showingType != null) {
             MenuKind kind = menuKinds.get(showingType);
             drawMenu(batch, parentAlpha, 0, 0, kind, kind.items, 0);
@@ -261,6 +253,8 @@ public class ContextMenu extends WidgetGroup {
                 index--;
             }
         }
+
+        super.draw(batch, parentAlpha);
     }
 
     private void drawMenu(Batch batch, float parentAlpha, int xOffset, int yOffset, MenuKind kind, List<MenuItem> items, int submenuDepth) {
@@ -268,25 +262,26 @@ public class ContextMenu extends WidgetGroup {
         int height = kind.height * items.size();
         Rectangle bound;
         if (position == null) {
-            bound = new Rectangle(this.getWidth() / 2 - width / 2, this.getHeight() / 2 - height / 2, width, height);
+            bound = new Rectangle(this.getWidth() / 2 - width / 2 + getX(), this.getHeight() / 2 - height / 2 + getY(), width, height);
         } else {
             int px = position.x + xOffset;
             int py = position.y + yOffset;
             if (px + width > getWidth()) {
-                boolean rootLeft = position.x + width > getWidth();
-                if (py - height < 0) {
+                boolean rootLeft = getX() + position.x + width > getWidth();
+                if (py - height < getY()) {
                     bound = new Rectangle(px - width * (submenuDepth * 2 + (rootLeft ? 1 : 0)), py - (submenuDepth > 0 ? kind.height : 0), width, height);
                 } else {
                     bound = new Rectangle(px - width * (submenuDepth * 2 + (rootLeft ? 1 : 0)), py - height, width, height);
                 }
             } else {
-                if (py - height < 0) {
+                if (py - height < getY()) {
                     bound = new Rectangle(px, py - (submenuDepth > 0 ? kind.height : 0), width, height);
                 } else {
                     bound = new Rectangle(px, py - height, width, height);
                 }
             }
         }
+
         for (int i = 0; i < items.size(); ++i) {
             // TODO disabled method, showAll
             float x = bound.getX();
@@ -296,12 +291,10 @@ public class ContextMenu extends WidgetGroup {
 
             TextWidget<MenuItem> widget = items.get(i).textWidget;
             widget.setText(items.get(i).displayName);
-            widget.setPosition(x, y);
+            widget.setPosition(x - getX(), y - getY());
             widget.setSize(kind.width, kind.height);
             widget.setExtra(items.get(i));
             widget.setVisible(true);
-
-            widget.draw(batch, parentAlpha);
         }
     }
 
