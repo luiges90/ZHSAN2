@@ -399,14 +399,14 @@ public class ContextMenu extends WidgetGroup {
                     this.widget.getExtra().expanded = true;
                     expandSound.play();
                 } else {
+                    clickSound.play();
+                    dismiss();
                     try {
                         ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
                                 .invoke(null, screen, currentObject);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                         // throw new IllegalArgumentException(e);
                     }
-                    clickSound.play();
-                    dismiss();
                 }
 
                 return true;

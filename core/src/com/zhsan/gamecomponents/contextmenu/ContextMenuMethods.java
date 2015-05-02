@@ -36,6 +36,10 @@ public final class ContextMenuMethods {
         screen.showLoadGameFrame();
     }
 
+    public static void MapRightClick_System(GameScreen screen, Object object) {
+        screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
+    }
+
     public static void MapRightClick_Save(GameScreen screen, Object object) {
         screen.showSaveGameFrame();
     }
