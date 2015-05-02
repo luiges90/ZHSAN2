@@ -220,6 +220,7 @@ public class ContextMenu extends WidgetGroup {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
                 + type.carryingObj + ". " + object.getClass() + " received.");
         }
+        dismiss();
         this.currentObject = object;
         this.showingType = type;
         this.position = position == null ? null : new Point((int)(position.x + getX()), (int)(position.y + getY()));
@@ -331,8 +332,10 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private void collapse() {
-        for (MenuItem item : menuKinds.get(showingType).items) {
-            collapse_r(item);
+        if (menuKinds != null && showingType != null && menuKinds.get(showingType) != null) {
+            for (MenuItem item : menuKinds.get(showingType).items) {
+                collapse_r(item);
+            }
         }
     }
 
