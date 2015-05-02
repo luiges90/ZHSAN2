@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents.contextmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.screen.GameScreen;
 
@@ -13,10 +14,12 @@ public final class ContextMenuMethods {
     private ContextMenuMethods(){}
 
     public static void SystemMenu_Quit(GameScreen screen, Object object) {
-        screen.showTextDialog(TextDialog.TextKeys.EXIT_GAME, new TextDialog.OnDismissListener() {
+        screen.showConfirmationDialog(TextDialog.TextKeys.EXIT_GAME, new ConfirmationDialog.OnDismissListener() {
             @Override
-            public void onDismiss() {
-                Gdx.app.exit();
+            public void onDismiss(boolean confirmed) {
+                if (confirmed) {
+                    Gdx.app.exit();
+                }
             }
         });
     }

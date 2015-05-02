@@ -137,18 +137,22 @@ public class TextDialog extends WidgetGroup {
         this.addListener(new Listener());
     }
 
+    protected Rectangle getDialogPosition() {
+        int width = background.getWidth();
+        int height = background.getHeight();
+        float x = getWidth() / 2 - width / 2;
+        float y = screen.getToolBarHeight() + marginBottom;
+        return new Rectangle(x, y, width, height);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         if (this.isVisible()) {
-            int width = background.getWidth();
-            int height = background.getHeight();
-            float x = getWidth() / 2 - width / 2;
-            float y = screen.getToolBarHeight() + marginBottom;
-
-            batch.draw(background, x, y, width, height);
+            Rectangle pos = getDialogPosition();
+            batch.draw(background, pos.x, pos.y, pos.width, pos.height);
 
             content.setText(text);
-            content.setPosition(x + contentPos.getX(), y + contentPos.getY());
+            content.setPosition(pos.x + contentPos.getX(), pos.y + contentPos.getY());
             content.setSize(contentPos.getWidth(), contentPos.getHeight());
 
             content.draw(batch, parentAlpha);
@@ -164,9 +168,11 @@ public class TextDialog extends WidgetGroup {
     }
 
     public void show(TextKeys s, OnDismissListener onDismissListener) {
-        text = strings.get(s);
-        this.onDismissListener = onDismissListener;
-        this.setVisible(true);
+        this.show(getStringFromKey(s), onDismissListener);
+    }
+
+    protected final String getStringFromKey(TextKeys s) {
+        return strings.get(s);
     }
 
     public void dispose() {

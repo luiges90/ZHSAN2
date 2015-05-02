@@ -7,6 +7,7 @@ import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
+import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.GameScenario;
@@ -23,6 +24,7 @@ public class GameScreen extends WidgetGroup {
 
     private FileGameFrame saveGameFrame, loadGameFrame;
     private TextDialog textDialog;
+    private ConfirmationDialog confirmationDialog;
     private ToolBar toolBar;
 
     public GameScreen(GameScenario scen) {
@@ -44,6 +46,9 @@ public class GameScreen extends WidgetGroup {
 
         textDialog = new TextDialog(this);
         this.addActor(textDialog);
+
+        confirmationDialog = new ConfirmationDialog(this);
+        this.addActor(confirmationDialog);
 
         this.addActor(toolBar);
     }
@@ -104,6 +109,14 @@ public class GameScreen extends WidgetGroup {
 
     public void showTextDialog(TextDialog.TextKeys key, TextDialog.OnDismissListener onDismissListener) {
         textDialog.show(key, onDismissListener);
+    }
+
+    public void showConfirmationDialog(String content, ConfirmationDialog.OnDismissListener onDismissListener) {
+        confirmationDialog.show(content, onDismissListener);
+    }
+
+    public void showConfirmationDialog(TextDialog.TextKeys key, ConfirmationDialog.OnDismissListener onDismissListener) {
+        confirmationDialog.show(key, onDismissListener);
     }
 
     public int getToolBarHeight() {
