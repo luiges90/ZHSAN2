@@ -92,6 +92,8 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private Texture hasChild;
+    private int hasChildMargin;
+
     private Sound clickSound, expandSound, collapseSound;
 
     private EnumMap<MenuKindType, MenuKind> menuKinds = new EnumMap<>(MenuKindType.class);
@@ -151,8 +153,10 @@ public class ContextMenu extends WidgetGroup {
             StateTexture menuLeft = StateTexture.fromXml(DATA_PATH, leftClickNode);
             TextWidget<MenuItem> menuLeftText = new TextWidget<>(TextWidget.Setting.fromXml(leftClickNode));
 
+            Node hasChildNode = dom.getElementsByTagName("HasChildTexture").item(0);
             hasChild = new Texture(Gdx.files.external(DATA_PATH +
-                    XmlHelper.loadAttribute(dom.getElementsByTagName("HasChildTexture").item(0), "FileName")));
+                    XmlHelper.loadAttribute(hasChildNode, "FileName")));
+            hasChildMargin = Integer.parseInt(XmlHelper.loadAttribute(hasChildNode, "Margin"));
 
             Node soundNode = dom.getElementsByTagName("SoundFile").item(0);
             clickSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
@@ -296,6 +300,12 @@ public class ContextMenu extends WidgetGroup {
             widget.setSize(kind.width, kind.height);
             widget.setExtra(items.get(i));
             widget.setVisible(true);
+
+            if (items.get(i).children.size() > 0 &&
+                    items.get(i).textWidget.getBackground().getState() == StateTexture.State.SELECTED) {
+                batch.draw(hasChild,
+                        x - getX() + kind.width + hasChildMargin, y + kind.height / 2 - hasChild.getHeight() / 2);
+            }
         }
     }
 
