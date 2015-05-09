@@ -254,7 +254,33 @@ public class TabListGameFrame extends GameFrame {
 
         super.draw(batch, parentAlpha);
 
+        drawTabs(batch, parentAlpha);
+    }
 
+    private int drawTabs(Batch batch, float parentAlpha) {
+        List<Tab> tabs = showingListKind.tabs;
+
+        float offsetX = getLeftBound();
+        float offsetY = getTopActiveBound();
+
+        int x = 0;
+        int y = 0;
+        for (Tab t : tabs) {
+            t.tabButton.setText(t.displayName);
+            t.tabButton.setPosition(offsetX + x, offsetY - y);
+            t.tabButton.setSize(t.tabButton.getBackground().get().getWidth(),
+                    t.tabButton.getBackground().get().getHeight());
+
+            t.tabButton.draw(batch, parentAlpha);
+
+            x += t.tabButton.getWidth() + showingListKind.tabMargin;
+            if (x + t.tabButton.getWidth() > getRightBound() - getLeftBound()) {
+                y += t.tabButton.getHeight() + showingListKind.tabMargin;
+                x = 0;
+            }
+        }
+
+        return y + showingListKind.tabMargin;
     }
 
     private class ButtonListener implements OnClick {
@@ -266,7 +292,7 @@ public class TabListGameFrame extends GameFrame {
 
         @Override
         public void onCancelClicked() {
-            setVisible(false);
+
         }
     }
 }

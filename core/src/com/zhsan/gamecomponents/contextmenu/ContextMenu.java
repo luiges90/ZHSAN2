@@ -291,8 +291,6 @@ public class ContextMenu extends WidgetGroup {
             // TODO disabled method, showAll
             float x = bound.getX();
             float y = bound.getY() + bound.getHeight() - (i + 1) * kind.height;
-            batch.draw(items.get(i).textWidget.getBackground().get(),
-                    x, y, kind.width, kind.height);
 
             TextWidget<MenuItem> widget = items.get(i).textWidget;
             widget.setText(items.get(i).displayName);

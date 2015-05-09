@@ -197,6 +197,10 @@ public class GameFrame extends WidgetGroup {
         return getHeight() - topEdge.width;
     }
 
+    protected final float getTopActiveBound() {
+        return getTopBound() - titleWidget.getHeight();
+    }
+
     protected final float getBottomBound() {
         return bottomEdge.width;
     }
