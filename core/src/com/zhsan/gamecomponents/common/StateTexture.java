@@ -57,9 +57,13 @@ public class StateTexture {
     }
 
     public static StateTexture fromXml(String path, Node node) {
-        String normal = XmlHelper.loadAttribute(node, "FileName");
-        String selected = XmlHelper.loadAttribute(node, "Selected");
-        String disabled = XmlHelper.loadAttribute(node, "Disabled", null);
+        return fromXml(path, node, "");
+    }
+
+    public static StateTexture fromXml(String path, Node node, String attributePrefix) {
+        String normal = XmlHelper.loadAttribute(node, attributePrefix + "FileName");
+        String selected = XmlHelper.loadAttribute(node, attributePrefix + "Selected");
+        String disabled = XmlHelper.loadAttribute(node, attributePrefix + "Disabled", null);
 
         FileHandle f;
         f = Gdx.files.external(path + File.separator + normal);

@@ -1,13 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-  <TabButton Width="92" Height="32" FileName="TabButton.png" SelectedFileName="TabButtonSelected.png"/>
+  <TabButton FileName="TabButton.png" Selected="TabButtonSelected.png"/>
   <ColumnHeader Height="24" FileName="ColumnHeader.jpg"/>
   <ColumnSpliter Width="5" Height="24" FileName="ColumnSpliter.jpg"/>
   <ScrollButton Width="16" FileName="ScrollButton.jpg"/>
   <Arrows LeftFileName="LeftArrow.png" RightFileName="RightArrow.png"/>
-  <FocusTrack FileName="FocusTrack.jpg"/>
-  <CheckBox Name="Selected" DisplayName="选择" Width="18" FileName="CheckBox.png" SelectedFileName="CheckBoxSelected.png" RoundFileName="RoundCheckBox.png" RoundSelectedFileName="RoundCheckBoxSelected.png"/>
-  <Portrait Width="64" Height="80" />
+  <CheckBox Name="Selected" DisplayName="选择" Width="18" FileName="CheckBox.png" Selected="CheckBoxSelected.png"
+            RoundFileName="RoundCheckBox.png" RoundSelected="RoundCheckBoxSelected.png"/>
   <TabText FontName="方正隶变_GBK"
            FontSize="13"
            FontStyle="Bold"
@@ -21,8 +20,8 @@
               Align="Middle">
   </ColumnText>
   <SoundFile Select="Select.wav"/>
-  <TabList RowHeight="25" FrameWidth="940" FrameHeight="550" ClientX="0" ClientY="0" ClientWidth="940" ClientHeight="500" OKButtonX="700" OKButtonY="515" CancelButtonX="800" CancelButtonY="515" MapViewSelectorButtonX="10" MapViewSelectorButtonY="515">
-    <ListKind ID="1" Name="Person" DisplayName="人物列表" ShowPortrait ="true">
+  <TabList RowHeight="25">
+    <ListKind ID="1" Name="Person" DisplayName="人物列表">
       <Columns>
         <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="姓名" MinWidth="100" DetailLevel="1" 
                 FontName="方正隶变_GBK"
@@ -1686,7 +1685,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-    <ListKind ID="3" Name="Faction" DisplayName="势力列表" ShowPortrait ="true">
+    <ListKind ID="3" Name="Faction" DisplayName="势力列表">
       <Columns>
         <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="名称" MinWidth="100" DetailLevel="1"
                 FontName="方正隶变_GBK"
@@ -1876,7 +1875,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-    <ListKind ID="4" Name="Troop" DisplayName="部队列表" ShowPortrait ="true">
+    <ListKind ID="4" Name="Troop" DisplayName="部队列表">
       <Columns>
         <Column ID="0" Name="DisplayName" IsNumber="false" DisplayName="名称" MinWidth="100" DetailLevel="1"
                 FontName="方正隶变_GBK"
@@ -2412,7 +2411,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-    <ListKind ID="6" Name="Work" DisplayName="工作" ShowPortrait ="true">
+    <ListKind ID="6" Name="Work" DisplayName="工作">
       <Columns>
         <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="姓名" MinWidth="100" DetailLevel="1"
                 FontName="方正隶变_GBK"
@@ -3229,7 +3228,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-    <ListKind ID="11" Name="Military" DisplayName="编队列表" ShowPortrait ="true">
+    <ListKind ID="11" Name="Military" DisplayName="编队列表">
       <Columns>
         <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="名称" MinWidth="100" DetailLevel="1"
                 FontName="方正隶变_GBK"
@@ -3935,7 +3934,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-    <ListKind ID="20" Name="Captive" DisplayName="俘虏列表" ShowPortrait ="true">
+    <ListKind ID="20" Name="Captive" DisplayName="俘虏列表">
       <Columns>
         <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="姓名" MinWidth="80" DetailLevel="1"
                 FontName="方正隶变_GBK"
@@ -4355,7 +4354,7 @@
         </Tab>
       </Tabs>
     </ListKind>
-	<ListKind ID="29" Name="YearTable" DisplayName="年表" ShowPortrait="false">
+	<ListKind ID="29" Name="YearTable" DisplayName="年表">
       <Columns>
         <Column ID="1" Name="Date" IsNumber="false" DisplayName="日期" MinWidth="120" DetailLevel="1"
                 FontName="方正隶变_GBK"
