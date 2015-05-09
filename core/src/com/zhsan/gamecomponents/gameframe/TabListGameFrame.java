@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
@@ -13,6 +14,7 @@ import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameScenario;
+import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -28,7 +30,7 @@ import java.util.*;
  */
 public class TabListGameFrame extends GameFrame {
 
-    private static enum ListKindType {
+    public static enum ListKindType {
         ARCHITECTURE("Architecture", Architecture.class)
         ;
 
@@ -87,6 +89,11 @@ public class TabListGameFrame extends GameFrame {
     private int rowHeight;
 
     private EnumMap<ListKindType, ListKind> listKinds;
+
+    private GameScreen screen;
+
+    private ListKind showingListKind;
+    private List<?> showingData;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -153,6 +160,7 @@ public class TabListGameFrame extends GameFrame {
                         Node columnNodes = listKindNode.getChildNodes().item(j);
                         for (int k = 0; k < columnNodes.getChildNodes().getLength(); ++k) {
                             Node columnNode = columnNodes.getChildNodes().item(k);
+                            if (columnNode instanceof Text) continue;
                             Column column = new Column();
                             column.name = XmlHelper.loadAttribute(columnNode, "Name");
                             column.displayName = XmlHelper.loadAttribute(columnNode, "DisplayName");
@@ -174,6 +182,7 @@ public class TabListGameFrame extends GameFrame {
                         listKind.tabMargin = Integer.parseInt(XmlHelper.loadAttribute(tabNodes, "Margin"));
                         for (int k = 0; k < tabNodes.getChildNodes().getLength(); ++k) {
                             Node tabNode = tabNodes.getChildNodes().item(k);
+                            if (tabNode instanceof Text) continue;
                             Tab tab = new Tab();
                             tab.name = XmlHelper.loadAttribute(tabNode, "Name");
                             tab.displayName = XmlHelper.loadAttribute(tabNode, "DisplayName");
@@ -203,10 +212,34 @@ public class TabListGameFrame extends GameFrame {
         }
     }
 
-    public TabListGameFrame(String title, @Nullable OnClick buttonListener) {
-        super(title, buttonListener);
+    public TabListGameFrame(GameScreen screen) {
+        super("", null);
+
+        this.screen = screen;
 
         loadXml();
+
+        this.setVisible(false);
     }
 
+    public void show(ListKindType type, List<?> showingData) {
+        if (showingData.size() == 0) return;
+        if (!type.carryingObj.isAssignableFrom(showingData.get(0).getClass())) {
+            throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
+                    + type.carryingObj + ". " + showingData.get(0).getClass() + " received.");
+        }
+
+        this.showingListKind = listKinds.get(type);
+        this.showingData = showingData;
+        this.setVisible(true);
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.setTitle(showingListKind.title);
+
+        super.draw(batch, parentAlpha);
+
+
+    }
 }

@@ -7,6 +7,7 @@ import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
+import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
@@ -26,6 +27,8 @@ public class GameScreen extends WidgetGroup {
     private TextDialog textDialog;
     private ConfirmationDialog confirmationDialog;
     private ToolBar toolBar;
+
+    private TabListGameFrame tabListGameFrame;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
@@ -49,6 +52,9 @@ public class GameScreen extends WidgetGroup {
 
         confirmationDialog = new ConfirmationDialog(this);
         this.addActor(confirmationDialog);
+
+        tabListGameFrame = new TabListGameFrame(this);
+        this.addActor(tabListGameFrame);
 
         this.addActor(toolBar);
     }
