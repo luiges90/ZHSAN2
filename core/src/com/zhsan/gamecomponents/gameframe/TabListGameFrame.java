@@ -155,49 +155,20 @@ public class TabListGameFrame extends GameFrame {
                 ListKind listKind = new ListKind();
                 listKind.title = XmlHelper.loadAttribute(listKindNode, "DisplayName");
 
-                Map<Integer, Column> columns = new HashMap<>();
+                Map<Integer, Column> columns = null;
                 for (int j = 0; j < listKindNode.getChildNodes().getLength(); ++j) {
                     if (listKindNode.getChildNodes().item(j).getNodeName().equals("Columns")) {
                         Node columnNodes = listKindNode.getChildNodes().item(j);
-                        for (int k = 0; k < columnNodes.getChildNodes().getLength(); ++k) {
-                            Node columnNode = columnNodes.getChildNodes().item(k);
-                            if (columnNode instanceof Text) continue;
-                            Column column = new Column();
-                            column.name = XmlHelper.loadAttribute(columnNode, "Name");
-                            column.displayName = XmlHelper.loadAttribute(columnNode, "DisplayName");
-                            column.contentTemplate = new TextWidget<>(
-                                    TextWidget.Setting.fromXml(columnNode)
-                            );
-                            column.columnText = new TextWidget<>(columnText);
-                            column.width = Integer.parseInt(XmlHelper.loadAttribute(columnNode, "MinWidth"));
-
-                            columns.put(Integer.parseInt(XmlHelper.loadAttribute(columnNode, "ID")), column);
-                        }
+                        columns = loadColumnsFromXml(columnText, columnNodes);
                     }
                 }
 
-                List<Tab> tabs = new ArrayList<>();
+                List<Tab> tabs = null;
                 for (int j = 0; j < listKindNode.getChildNodes().getLength(); ++j) {
                     if (listKindNode.getChildNodes().item(j).getNodeName().equals("Tabs")) {
                         Node tabNodes = listKindNode.getChildNodes().item(j);
                         listKind.tabMargin = Integer.parseInt(XmlHelper.loadAttribute(tabNodes, "Margin"));
-                        for (int k = 0; k < tabNodes.getChildNodes().getLength(); ++k) {
-                            Node tabNode = tabNodes.getChildNodes().item(k);
-                            if (tabNode instanceof Text) continue;
-                            Tab tab = new Tab();
-                            tab.name = XmlHelper.loadAttribute(tabNode, "Name");
-                            tab.displayName = XmlHelper.loadAttribute(tabNode, "DisplayName");
-                            tab.tabButton = new StateBackgroundTextWidget<>(tabText, tabButton);
-                            List<Integer> columnIds = XmlHelper.loadIntegerListFromXml(
-                                    XmlHelper.loadAttribute(tabNode, "Columns")
-                            );
-                            tab.columns = new ArrayList<>();
-                            for (Integer l : columnIds) {
-                                tab.columns.add(columns.get(l));
-                            }
-
-                            tabs.add(tab);
-                        }
+                        tabs = loadTabsFromXml(tabButton, tabText, columns, tabNodes);
                     }
                 }
 
@@ -211,6 +182,47 @@ public class TabListGameFrame extends GameFrame {
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "TabListData.xml", e);
         }
+    }
+
+    private List<Tab> loadTabsFromXml(StateTexture tabButton, TextWidget<Tab> tabText, Map<Integer, Column> columns, Node tabNodes) {
+        List<Tab> tabs = new ArrayList<>();
+        for (int k = 0; k < tabNodes.getChildNodes().getLength(); ++k) {
+            Node tabNode = tabNodes.getChildNodes().item(k);
+            if (tabNode instanceof Text) continue;
+            Tab tab = new Tab();
+            tab.name = XmlHelper.loadAttribute(tabNode, "Name");
+            tab.displayName = XmlHelper.loadAttribute(tabNode, "DisplayName");
+            tab.tabButton = new StateBackgroundTextWidget<>(tabText, tabButton);
+            List<Integer> columnIds = XmlHelper.loadIntegerListFromXml(
+                    XmlHelper.loadAttribute(tabNode, "Columns")
+            );
+            tab.columns = new ArrayList<>();
+            for (Integer l : columnIds) {
+                tab.columns.add(columns.get(l));
+            }
+
+            tabs.add(tab);
+        }
+        return tabs;
+    }
+
+    private Map<Integer, Column> loadColumnsFromXml(TextWidget<Column> columnText, Node columnNodes) {
+        Map<Integer, Column> columns = new HashMap<>();
+        for (int k = 0; k < columnNodes.getChildNodes().getLength(); ++k) {
+            Node columnNode = columnNodes.getChildNodes().item(k);
+            if (columnNode instanceof Text) continue;
+            Column column = new Column();
+            column.name = XmlHelper.loadAttribute(columnNode, "Name");
+            column.displayName = XmlHelper.loadAttribute(columnNode, "DisplayName");
+            column.contentTemplate = new TextWidget<>(
+                    TextWidget.Setting.fromXml(columnNode)
+            );
+            column.columnText = new TextWidget<>(columnText);
+            column.width = Integer.parseInt(XmlHelper.loadAttribute(columnNode, "MinWidth"));
+
+            columns.put(Integer.parseInt(XmlHelper.loadAttribute(columnNode, "ID")), column);
+        }
+        return columns;
     }
 
     public TabListGameFrame(GameScreen screen) {
