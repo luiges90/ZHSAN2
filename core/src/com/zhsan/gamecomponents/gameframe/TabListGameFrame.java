@@ -13,6 +13,7 @@ import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObject;
+import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,7 @@ public class TabListGameFrame extends GameFrame {
     private GameScreen screen;
 
     private ListKind showingListKind;
-    private List<?> showingData;
+    private GameObjectList<?> showingData;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -220,9 +221,10 @@ public class TabListGameFrame extends GameFrame {
         loadXml();
 
         this.setVisible(false);
+        this.addOnClickListener(new ButtonListener());
     }
 
-    public void show(ListKindType type, List<?> showingData) {
+    public void show(ListKindType type, GameObjectList<?> showingData) {
         if (showingData.size() == 0) return;
         if (!type.carryingObj.isAssignableFrom(showingData.get(0).getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
@@ -241,5 +243,18 @@ public class TabListGameFrame extends GameFrame {
         super.draw(batch, parentAlpha);
 
 
+    }
+
+    private class ButtonListener implements OnClick {
+
+        @Override
+        public void onOkClicked() {
+
+        }
+
+        @Override
+        public void onCancelClicked() {
+            setVisible(false);
+        }
     }
 }

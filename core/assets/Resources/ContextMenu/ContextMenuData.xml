@@ -136,6 +136,9 @@
             <MenuItem ID="9" Name="AllEnter" DisplayName="全部入城" DisplayIfTrue="AllEnterAvail" />
         </MenuKind>
         <MenuKind ID="3" Name="MapRightClick" DisplayName="地图右键菜单" IsLeft="false" Width="130" Height="25">
+            <MenuItem ID="4" Name="Information" DisplayName="信息">
+                <MenuItem ID="6" Name="AllArchitectures" DisplayName="所有建筑" />
+            </MenuItem>
             <MenuItem ID="5" Name="Save" DisplayName="存储进度" DisplayIfTrue="SaveAvail" />
             <MenuItem ID="6" Name="Load" DisplayName="读取进度" DisplayIfTrue="LoadAvail" />
             <MenuItem ID="7" Name="System" DisplayName="系统" />

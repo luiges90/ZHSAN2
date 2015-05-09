@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents.contextmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.screen.GameScreen;
@@ -34,6 +35,10 @@ public final class ContextMenuMethods {
 
     public static void SystemMenu_Load(GameScreen screen, Object object) {
         screen.showLoadGameFrame();
+    }
+
+    public static void MapRightClick_Information_AllArchitectures(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.ARCHITECTURE, screen.getScenario().getArchitectures());
     }
 
     public static void MapRightClick_System(GameScreen screen, Object object) {

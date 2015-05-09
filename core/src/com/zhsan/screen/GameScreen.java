@@ -11,7 +11,10 @@ import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
+import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
+
+import java.util.List;
 
 /**
  * Created by Peter on 17/3/2015.
@@ -47,6 +50,8 @@ public class GameScreen extends WidgetGroup {
         contextMenu.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - getToolBarHeight());
         this.addActor(contextMenu);
 
+        this.addActor(toolBar);
+
         textDialog = new TextDialog(this);
         this.addActor(textDialog);
 
@@ -55,8 +60,6 @@ public class GameScreen extends WidgetGroup {
 
         tabListGameFrame = new TabListGameFrame(this);
         this.addActor(tabListGameFrame);
-
-        this.addActor(toolBar);
     }
 
     public void resize(int width, int height) {
@@ -75,6 +78,10 @@ public class GameScreen extends WidgetGroup {
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
         }
+    }
+
+    public void showTabList(TabListGameFrame.ListKindType type, GameObjectList<?> showingData) {
+        tabListGameFrame.show(type, showingData);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
