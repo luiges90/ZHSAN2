@@ -27,7 +27,8 @@ public class GlobalStrings {
         ARCHITECTURE_KIND_SAVE_HEADER("architectureKindSaveHeader"),
         ARCHITECTURE_SAVE_HEADER("architectureSaveHeader"),
         SECTION_SAVE_HEADER("sectionSaveHeader"),
-        FACTION_SAVE_HEADER("factionSaveHeader")
+        FACTION_SAVE_HEADER("factionSaveHeader"),
+        NO_CONTENT("noContent")
         ;
 
         private final String xmlName;

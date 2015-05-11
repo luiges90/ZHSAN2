@@ -305,7 +305,7 @@ public class GameFrame extends WidgetGroup {
         }
     }
 
-    protected final void dismiss(boolean ok) {
+    protected void dismiss(boolean ok) {
         if (ok) {
             okSound.play();
         } else {

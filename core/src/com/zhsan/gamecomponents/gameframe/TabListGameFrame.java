@@ -6,10 +6,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
+import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gamecomponents.common.textwidget.BackgroundTextWidget;
 import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Architecture;
@@ -56,7 +59,7 @@ public class TabListGameFrame extends GameFrame {
     private static class Column {
         String name, displayName;
         TextWidget<GameObject> contentTemplate;
-        TextWidget<Column> columnText;
+        BackgroundTextWidget<Column> columnText;
         int width;
     }
 
@@ -74,9 +77,6 @@ public class TabListGameFrame extends GameFrame {
 
     private Texture columnHeader;
     private int columnHeaderHeight;
-
-    private Texture columnSpliter;
-    private Point columnSpliterSize;
 
     private Texture scrollButton;
     private int scrollWidth;
@@ -97,7 +97,9 @@ public class TabListGameFrame extends GameFrame {
     private ListKind showingListKind;
     private GameObjectList<?> showingData;
 
-    private ScrollPane mainPane;
+    private Tab showingTab;
+
+    private ScrollPane contentPane;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -114,13 +116,6 @@ public class TabListGameFrame extends GameFrame {
             Node columnHeaderNode = dom.getElementsByTagName("ColumnHeader").item(0);
             columnHeader = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(columnHeaderNode, "FileName")));
             columnHeaderHeight = Integer.parseInt(XmlHelper.loadAttribute(columnHeaderNode, "Height"));
-
-            Node columnSpliterNode = dom.getElementsByTagName("ColumnSpliter").item(0);
-            columnSpliter = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(columnSpliterNode, "FileName")));
-            columnSpliterSize = new Point(
-                    Integer.parseInt(XmlHelper.loadAttribute(columnSpliterNode, "Width")),
-                    Integer.parseInt(XmlHelper.loadAttribute(columnSpliterNode, "Height"))
-            );
 
             Node scrollNode = dom.getElementsByTagName("ScrollButton").item(0);
             scrollButton = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(scrollNode, "FileName")));
@@ -140,8 +135,8 @@ public class TabListGameFrame extends GameFrame {
             TextWidget<Tab> tabText = new TextWidget<Tab>(
                     TextWidget.Setting.fromXml(dom.getElementsByTagName("TabText").item(0)));
 
-            TextWidget<Column> columnText = new TextWidget<Column>(
-                    TextWidget.Setting.fromXml(dom.getElementsByTagName("ColumnText").item(0)));
+            BackgroundTextWidget<Column> columnText = new BackgroundTextWidget<>(
+                    new TextWidget<>(TextWidget.Setting.fromXml(dom.getElementsByTagName("ColumnText").item(0))), columnHeader);
 
             selectSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
                             XmlHelper.loadAttribute(dom.getElementsByTagName("SoundFile").item(0), "Select")
@@ -176,6 +171,7 @@ public class TabListGameFrame extends GameFrame {
                 }
 
                 listKind.tabs = tabs;
+                showingTab = tabs.get(0);
 
                 ListKindType type = ListKindType.fromXmlName(XmlHelper.loadAttribute(listKindNode, "Name"));
                 if (type != null) {
@@ -201,6 +197,9 @@ public class TabListGameFrame extends GameFrame {
             );
             tab.columns = new ArrayList<>();
             for (Integer l : columnIds) {
+                if (columns.get(l) == null) {
+                    throw new IllegalArgumentException("Column not found: " + l);
+                }
                 tab.columns.add(columns.get(l));
             }
 
@@ -220,7 +219,8 @@ public class TabListGameFrame extends GameFrame {
             column.contentTemplate = new TextWidget<>(
                     TextWidget.Setting.fromXml(columnNode)
             );
-            column.columnText = new TextWidget<>(columnText);
+            column.columnText = new BackgroundTextWidget<>(columnText, columnHeader);
+            column.columnText.setText(column.displayName);
             column.width = Integer.parseInt(XmlHelper.loadAttribute(columnNode, "MinWidth"));
 
             columns.put(Integer.parseInt(XmlHelper.loadAttribute(columnNode, "ID")), column);
@@ -251,6 +251,36 @@ public class TabListGameFrame extends GameFrame {
         this.setVisible(true);
     }
 
+    private void initContentPane(int offset) {
+        Table contentTable = new Table();
+
+        // header
+        for (Column c : showingTab.columns) {
+            contentTable.add(c.columnText).width(c.width).height(columnHeaderHeight);
+        }
+        contentTable.row();
+
+        // content
+        for (GameObject o : showingData) {
+            for (Column c : showingTab.columns) {
+                TextWidget<GameObject> widget = new TextWidget<>(c.contentTemplate);
+                widget.setExtra(o);
+                widget.setText(o.getFieldString(c.name));
+
+                contentTable.add(widget).width(c.width).height(columnHeaderHeight);
+            }
+            contentTable.row();
+        }
+
+        contentTable.top().left();
+
+        contentPane = new ScrollPane(contentTable);
+        Table contentPaneContainer = WidgetUtility.setupScrollpane(getLeftBound(), getBottomActiveBound(),
+                getRightBound() - getLeftBound(), getTopActiveBound() - offset - getBottomActiveBound(), contentPane, scrollButton);
+
+        addActor(contentPaneContainer);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.setTitle(showingListKind.title);
@@ -258,6 +288,10 @@ public class TabListGameFrame extends GameFrame {
         super.draw(batch, parentAlpha);
 
         int offset = drawTabs(batch, parentAlpha);
+
+        if (contentPane == null) {
+            initContentPane(offset);
+        }
     }
 
     private int drawTabs(Batch batch, float parentAlpha) {
@@ -286,13 +320,20 @@ public class TabListGameFrame extends GameFrame {
         return y + showingListKind.tabMargin;
     }
 
+    @Override
+    protected void dismiss(boolean ok) {
+        super.dismiss(ok);
+
+        removeActor(contentPane);
+        contentPane = null;
+    }
+
     public void resize(int width, int height) {
 
     }
 
     public void dispose() {
         columnHeader.dispose();
-        columnSpliter.dispose();
         scrollButton.dispose();
         leftArrow.dispose();
         rightArrow.dispose();
