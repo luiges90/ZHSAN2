@@ -63,6 +63,11 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
+
+        toolBar.setPosition(0, 0);
+        toolBar.setWidth(width);
+        toolBar.resize(width, height);
+
         mapLayer.setPosition(0, getToolBarHeight());
         mapLayer.setSize(width, height - getToolBarHeight());
         mapLayer.resize(width, height);
@@ -71,12 +76,11 @@ public class GameScreen extends WidgetGroup {
         contextMenu.setSize(width, height - getToolBarHeight());
         contextMenu.resize(width, height);
 
-        toolBar.setPosition(0, 0);
-        toolBar.setWidth(width);
-        toolBar.resize(width, height);
-
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
+        }
+        if (loadGameFrame != null) {
+            loadGameFrame.resize(width, height);
         }
     }
 
@@ -149,6 +153,14 @@ public class GameScreen extends WidgetGroup {
         mapLayer.dispose();
         contextMenu.dispose();
         textDialog.dispose();
+        confirmationDialog.dispose();
+        tabListGameFrame.dispose();
+        if (saveGameFrame != null) {
+            saveGameFrame.dispose();
+        }
+        if (loadGameFrame != null) {
+            loadGameFrame.dispose();
+        }
     }
 
 }

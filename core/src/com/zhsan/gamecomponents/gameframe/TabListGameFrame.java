@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
@@ -95,6 +96,8 @@ public class TabListGameFrame extends GameFrame {
 
     private ListKind showingListKind;
     private GameObjectList<?> showingData;
+
+    private ScrollPane mainPane;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -254,7 +257,7 @@ public class TabListGameFrame extends GameFrame {
 
         super.draw(batch, parentAlpha);
 
-        drawTabs(batch, parentAlpha);
+        int offset = drawTabs(batch, parentAlpha);
     }
 
     private int drawTabs(Batch batch, float parentAlpha) {
@@ -281,6 +284,21 @@ public class TabListGameFrame extends GameFrame {
         }
 
         return y + showingListKind.tabMargin;
+    }
+
+    public void resize(int width, int height) {
+
+    }
+
+    public void dispose() {
+        columnHeader.dispose();
+        columnSpliter.dispose();
+        scrollButton.dispose();
+        leftArrow.dispose();
+        rightArrow.dispose();
+        checkbox.dispose();
+        radioButton.dispose();
+        selectSound.dispose();
     }
 
     private class ButtonListener implements OnClick {
