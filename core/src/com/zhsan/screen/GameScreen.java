@@ -63,7 +63,6 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void resize(int width, int height) {
-
         toolBar.setPosition(0, 0);
         toolBar.setWidth(width);
         toolBar.resize(width, height);
@@ -75,6 +74,10 @@ public class GameScreen extends WidgetGroup {
         contextMenu.setPosition(0, getToolBarHeight());
         contextMenu.setSize(width, height - getToolBarHeight());
         contextMenu.resize(width, height);
+
+        tabListGameFrame.setPosition(0, 0);
+        tabListGameFrame.setSize(width, height);
+        tabListGameFrame.resize(width, height);
 
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
