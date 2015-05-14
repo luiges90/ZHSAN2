@@ -1,6 +1,8 @@
 package com.zhsan.gameobject;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
 /**
  * Created by Peter on 17/3/2015.
  */

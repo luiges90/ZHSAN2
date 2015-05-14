@@ -26,6 +26,8 @@ public class GameScenario {
     private final GameObjectList<TerrainDetail> terrainDetails;
     private final GameMap gameMap;
 
+    private final GameData gameData;
+
     private final GameObjectList<ArchitectureKind> architectureKinds;
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
@@ -53,6 +55,8 @@ public class GameScenario {
         architectures = Architecture.fromCSV(file, this);
         sections = Section.fromCSV(file, this);
         factions = Faction.fromCSV(file, this);
+
+        gameData = GameData.fromCSV(file, this);
 
         for (int i = 0; i < 2; ++i) {
             Architecture.setup(this);
@@ -119,6 +123,7 @@ public class GameScenario {
         Architecture.toCSV(result, architectures.asUnmodifiable());
         Section.toCSV(result, sections.asUnmodifiable());
         Faction.toCSV(result, factions.asUnmodifiable());
+        GameData.toCSV(result, gameData);
     }
 
 }

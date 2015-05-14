@@ -22,6 +22,7 @@ import java.util.List;
 public class GameScreen extends WidgetGroup {
 
     private GameScenario scen;
+    private GameController controller;
 
     private MapLayer mapLayer;
     private ContextMenu contextMenu;
@@ -35,6 +36,7 @@ public class GameScreen extends WidgetGroup {
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
+        this.controller = new GameController(scen);
 
         toolBar = new ToolBar(this);
         toolBar.setPosition(0, 0);

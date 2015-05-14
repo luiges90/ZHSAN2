@@ -9,4 +9,5 @@
  architectureSaveHeader="ID,名称编号,名称,种类,位置,所屬軍區"
  sectionSaveHeader="ID,名稱,所屬勢力"
  factionSaveHeader="ID,名稱,顏色"
+ gameDataSaveHeader="玩家列表,当前玩家,势力队列"
 />
