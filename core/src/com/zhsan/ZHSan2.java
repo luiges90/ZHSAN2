@@ -15,8 +15,6 @@ import com.zhsan.resources.GlobalStrings;
 import com.zhsan.screen.GameScreen;
 import com.zhsan.screen.StartScreen;
 
-import java.util.List;
-
 public class ZHSan2 extends ApplicationAdapter {
 
     public static final int DEFAULT_WIDTH = 794;
@@ -47,7 +45,7 @@ public class ZHSan2 extends ApplicationAdapter {
     private class OnNewScenarioSelected implements NewGameFrame.OnScenarioChosenListener {
 
         @Override
-        public void onScenarioChosen(FileHandle file, List<Integer> factionIds) {
+        public void onScenarioChosen(FileHandle file, int factionId) {
             Gdx.input.setInputProcessor(null);
 
             startScreen.dispose();
@@ -55,7 +53,7 @@ public class ZHSan2 extends ApplicationAdapter {
             startScreen = null;
             startStage = null;
 
-            GameScenario scen = new GameScenario(file);
+            GameScenario scen = new GameScenario(file, factionId);
 
             gameScreen = new GameScreen(scen);
 

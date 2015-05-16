@@ -50,6 +50,7 @@ public class GameScreen extends WidgetGroup {
         this.addActor(mapLayer);
 
         screenBlind = new ScreenBlind(this);
+        screenBlind.setPosition(0, Gdx.graphics.getHeight() - screenBlind.getHeight());
         this.addActor(screenBlind);
 
         contextMenu = new ContextMenu(this);
@@ -86,6 +87,8 @@ public class GameScreen extends WidgetGroup {
         tabListGameFrame.setSize(width, height);
         tabListGameFrame.resize(width, height);
 
+        screenBlind.setPosition(0, Gdx.graphics.getHeight() - screenBlind.getHeight());
+
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
         }
@@ -118,7 +121,7 @@ public class GameScreen extends WidgetGroup {
     public void showLoadGameFrame() {
         if (loadGameFrame == null) {
             loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
-                scen = new GameScenario(file);
+                scen = new GameScenario(file, -1);
             });
             this.addActor(loadGameFrame);
         } else {

@@ -89,7 +89,7 @@ public class ScreenBlind extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(background, backgroundPos.x, backgroundPos.y, backgroundPos.width, backgroundPos.height);
+        batch.draw(background, getX() + backgroundPos.x, getY() + backgroundPos.y, backgroundPos.width, backgroundPos.height);
 
         Texture season = null;
         switch (screen.getScenario().getSeason()) {
@@ -106,17 +106,19 @@ public class ScreenBlind extends WidgetGroup {
                 season = winter;
                 break;
         }
-        batch.draw(season, seasonPos.x, seasonPos.y, seasonPos.width, seasonPos.height);
+        batch.draw(season, getX() + seasonPos.x, getY() + seasonPos.y, seasonPos.width, seasonPos.height);
 
         date.setText(dateFormatter.format(screen.getScenario().getGameDate()));
-        date.setPosition(datePos.x, datePos.y);
+        date.setPosition(getX() + datePos.x, getY() + datePos.y);
         date.setSize(datePos.width, datePos.height);
         date.draw(batch, parentAlpha);
 
-        faction.setText(screen.getScenario().getGameData().getCurrentPlayer().getName());
-        faction.setPosition(factionPos.x, factionPos.y);
-        faction.setSize(factionPos.width, factionPos.height);
-        faction.draw(batch, parentAlpha);
+        if (screen.getScenario().getGameData().getCurrentPlayer() != null) {
+            faction.setText(screen.getScenario().getGameData().getCurrentPlayer().getName());
+            faction.setPosition(getX() + factionPos.x, getY() + factionPos.y);
+            faction.setSize(factionPos.width, factionPos.height);
+            faction.draw(batch, parentAlpha);
+        }
     }
 
     public void dispose() {

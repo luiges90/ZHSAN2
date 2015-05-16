@@ -96,7 +96,7 @@ public class StartScreen extends WidgetGroup {
     private void openLoad() {
         if (loadGameFrame == null) {
             loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
-                listener.onScenarioChosen(file, null);
+                listener.onScenarioChosen(file, -1);
             });
             this.addActor(loadGameFrame);
         } else {

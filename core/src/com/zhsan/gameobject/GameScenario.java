@@ -46,7 +46,7 @@ public class GameScenario {
         return result;
     }
 
-    public GameScenario(FileHandle file) {
+    public GameScenario(FileHandle file, int playerFactionId) {
         gameSurvey = GameSurvey.fromCSV(file);
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
@@ -63,6 +63,9 @@ public class GameScenario {
             Section.setup(this);
             Faction.setup(this);
         }
+
+        Faction playerFaction = factions.get(playerFactionId);
+        gameData.setCurrentPlayer(playerFaction);
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {

@@ -8,6 +8,7 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.resources.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +21,7 @@ public class GameData {
 
     public static final String SAVE_FILE = "GameData.csv";
 
-    private Faction currentPlayer;
+    private @Nullable Faction currentPlayer;
     private int dayPassed;
 
     private GameData(){}
@@ -39,12 +40,18 @@ public class GameData {
 
                 GameData data = new GameData();
 
-                data.currentPlayer = scen.getFactions().get(Integer.parseInt(line[0]));
+                if (line[0].length() > 0) {
+                    data.currentPlayer = scen.getFactions().get(Integer.parseInt(line[0]));
+                } else {
+                    data.currentPlayer = null;
+                }
                 if (version == 1) {
                     data.dayPassed = Integer.parseInt(line[5]);
                 } else {
                     data.dayPassed = Integer.parseInt(line[1]);
                 }
+
+                return data;
             }
         } catch (IOException e) {
             throw new FileReadException(f.path(), e);
@@ -67,7 +74,11 @@ public class GameData {
 
     }
 
-    public Faction getCurrentPlayer() {
+    public void setCurrentPlayer(@Nullable Faction currentPlayer) {
+        this.currentPlayer = currentPlayer;
+    }
+
+    public @Nullable Faction getCurrentPlayer() {
         return currentPlayer;
     }
 

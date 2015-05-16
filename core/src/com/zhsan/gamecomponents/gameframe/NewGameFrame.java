@@ -37,7 +37,7 @@ import java.util.Set;
 public class NewGameFrame extends GameFrame {
 
     public interface OnScenarioChosenListener {
-        public void onScenarioChosen(FileHandle file, List<Integer> factionIds);
+        public void onScenarioChosen(FileHandle file, int factionId);
     }
 
     public static final String RES_PATH = GameFrame.RES_PATH + "New" + File.separator;
@@ -162,15 +162,16 @@ public class NewGameFrame extends GameFrame {
     private class ButtonListener implements OnClick {
         @Override
         public void onOkClicked() {
-            List<Integer> chosenFactions = new ArrayList<>();
+            int chosenFaction = -1;
             WidgetGroup factionPaneWidgets = (WidgetGroup) factionPane.getWidget();
             for (Actor w : factionPaneWidgets.getChildren()) {
                 CheckboxWidget<Faction> cb = (CheckboxWidget<Faction>) w;
                 if (cb.isChecked()) {
-                    chosenFactions.add(cb.getExtra().getId());
+                    chosenFaction = cb.getExtra().getId();
+                    break;
                 }
             }
-            listener.onScenarioChosen(chosenScenario, chosenFactions);
+            listener.onScenarioChosen(chosenScenario, chosenFaction);
         }
 
         @Override
