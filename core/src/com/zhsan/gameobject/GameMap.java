@@ -105,7 +105,7 @@ public class GameMap {
 
     public static void toCSV(FileHandle root, GameMap map) {
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+        try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.MAP_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
                     String.valueOf(map.zoom),

@@ -62,7 +62,7 @@ public class GameData {
 
     public static final void toCSV(FileHandle root, GameData data) {
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+        try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.GAME_DATA_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
                     String.valueOf(data.currentPlayer != null ? data.currentPlayer.getId() : -1),

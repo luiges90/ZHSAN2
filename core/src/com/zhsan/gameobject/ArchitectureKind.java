@@ -69,7 +69,7 @@ public class ArchitectureKind extends GameObject {
 
     public static final void toCSV(FileHandle root, GameObjectList<ArchitectureKind> kinds) {
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+        try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_KIND_SAVE_HEADER).split(","));
             for (ArchitectureKind detail : kinds) {
                 writer.writeNext(new String[]{

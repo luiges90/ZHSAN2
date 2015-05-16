@@ -65,7 +65,7 @@ public class Section extends GameObject {
 
     public static final void toCSV(FileHandle root, GameObjectList<Section> data) {
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVWriter writer = new CSVWriter(f.writer(false))) {
+        try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.SECTION_SAVE_HEADER).split(","));
             for (Section d : data) {
                 writer.writeNext(new String[]{
