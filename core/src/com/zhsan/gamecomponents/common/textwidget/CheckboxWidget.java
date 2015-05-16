@@ -21,7 +21,7 @@ public class CheckboxWidget<ExtraType> extends TextWidget<ExtraType> {
         this.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                checked = !checked;
+                setChecked(!checked);
                 return false;
             }
         });

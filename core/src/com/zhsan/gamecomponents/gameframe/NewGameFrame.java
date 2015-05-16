@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.*;
 import com.zhsan.gamecomponents.common.textwidget.CheckboxWidget;
+import com.zhsan.gamecomponents.common.textwidget.RadioButtonWidget;
 import com.zhsan.gamecomponents.common.textwidget.SelectableTextWidget;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Faction;
@@ -26,7 +27,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Peter on 8/3/2015.
@@ -194,13 +197,19 @@ public class NewGameFrame extends GameFrame {
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             group.clear();
+
+            Set<RadioButtonWidget<?>> allRadioButtons = new HashSet<>();
             for (Faction i : factions) {
-                CheckboxWidget<Faction> widget = new CheckboxWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
+                RadioButtonWidget<Faction> widget = new RadioButtonWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
                 widget.setTouchable(Touchable.enabled);
                 widget.setExtra(i);
                 widget.setWidth(factionPane.getWidth());
                 widget.setPadding(listPaddings);
                 group.addActor(widget);
+                allRadioButtons.add(widget);
+            }
+            for (RadioButtonWidget<?> i : allRadioButtons) {
+                i.setGroup(allRadioButtons);
             }
 
             NewGameFrame.this.setOkEnabled(true);
