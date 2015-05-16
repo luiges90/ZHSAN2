@@ -143,4 +143,5 @@ public class Faction extends GameObject {
     public Color getColor() {
         return color;
     }
+
 }

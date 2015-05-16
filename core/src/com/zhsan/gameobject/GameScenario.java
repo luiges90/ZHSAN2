@@ -102,6 +102,10 @@ public class GameScenario {
         return factions.asUnmodifiable();
     }
 
+    public GameData getGameData() {
+        return gameData;
+    }
+
     public void save(FileHandle out) {
         FileHandle result = out;
         if (result == null) {
