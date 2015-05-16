@@ -74,7 +74,7 @@ public class GlobalStrings {
 
     public static String getString(Keys key) {
         if (strings == null) load();
-        return strings.get(key.xmlName);
+        return strings.get(key);
     }
 
 }

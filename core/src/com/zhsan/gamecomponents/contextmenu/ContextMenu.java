@@ -334,16 +334,12 @@ public class ContextMenu extends WidgetGroup {
     private void collapse_r(MenuItem item) {
         item.expanded = false;
         item.textWidget.setVisible(false);
-        for (MenuItem i : item.children) {
-            collapse_r(i);
-        }
+        item.children.forEach(this::collapse_r);
     }
 
     private void collapse() {
         if (menuKinds != null && showingType != null && menuKinds.get(showingType) != null) {
-            for (MenuItem item : menuKinds.get(showingType).items) {
-                collapse_r(item);
-            }
+            menuKinds.get(showingType).items.forEach(this::collapse_r);
         }
     }
 

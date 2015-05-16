@@ -120,9 +120,7 @@ public class GameScreen extends WidgetGroup {
 
     public void showLoadGameFrame() {
         if (loadGameFrame == null) {
-            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
-                scen = new GameScenario(file, -1);
-            });
+            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> scen = new GameScenario(file, -1));
             this.addActor(loadGameFrame);
         } else {
             loadGameFrame.show();

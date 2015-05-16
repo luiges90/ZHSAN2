@@ -32,17 +32,18 @@ public abstract class GameObject {
     }
 
     public Object getField(String fname) {
-        if (fname.equals("Id")) {
-            return id;
-        } else if (fname.equals("Name")) {
-            return name;
-        } else {
-            try {
-                Method m = this.getClass().getMethod("get" + fname);
-                return m.invoke(this);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                return null;
-            }
+        switch (fname) {
+            case "Id":
+                return id;
+            case "Name":
+                return name;
+            default:
+                try {
+                    Method m = this.getClass().getMethod("get" + fname);
+                    return m.invoke(this);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    return null;
+                }
         }
     }
 

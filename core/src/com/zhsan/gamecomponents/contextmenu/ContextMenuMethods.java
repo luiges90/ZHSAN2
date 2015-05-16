@@ -15,12 +15,9 @@ public final class ContextMenuMethods {
     private ContextMenuMethods(){}
 
     public static void SystemMenu_Quit(GameScreen screen, Object object) {
-        screen.showConfirmationDialog(TextDialog.TextKeys.EXIT_GAME, new ConfirmationDialog.OnDismissListener() {
-            @Override
-            public void onDismiss(boolean confirmed) {
-                if (confirmed) {
-                    Gdx.app.exit();
-                }
+        screen.showConfirmationDialog(TextDialog.TextKeys.EXIT_GAME, confirmed -> {
+            if (confirmed) {
+                Gdx.app.exit();
             }
         });
     }

@@ -65,7 +65,7 @@ public class GameData {
         try (CSVWriter writer = new CSVWriter(f.writer(false))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.GAME_DATA_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
-                    String.valueOf(data.currentPlayer.getId()),
+                    String.valueOf(data.currentPlayer != null ? data.currentPlayer.getId() : -1),
                     String.valueOf(data.dayPassed)
             });
         } catch (IOException e) {

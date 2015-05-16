@@ -132,7 +132,7 @@ public class TabListGameFrame extends GameFrame {
             radioButton = StateTexture.fromXml(DATA_PATH, checkboxNode, "Round");
 
             StateTexture tabButton = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("TabButton").item(0));
-            TextWidget<Tab> tabText = new TextWidget<Tab>(
+            TextWidget<Tab> tabText = new TextWidget<>(
                     TextWidget.Setting.fromXml(dom.getElementsByTagName("TabText").item(0)));
 
             BackgroundTextWidget<Column> columnText = new BackgroundTextWidget<>(
