@@ -36,7 +36,7 @@ public class ArchitectureKind extends GameObject {
         GameObjectList<ArchitectureKind> result = new GameObjectList<>();
 
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
             String[] line;
             int index = 0;
             while ((line = reader.readNext()) != null) {

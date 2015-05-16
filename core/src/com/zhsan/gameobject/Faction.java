@@ -35,7 +35,7 @@ public class Faction extends GameObject {
         GameObjectList<Faction> result = new GameObjectList<>();
 
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
             String[] line;
             int index = 0;
             while ((line = reader.readNext()) != null) {
@@ -64,7 +64,7 @@ public class Faction extends GameObject {
         Map<Integer, Color> colors = new HashMap<>();
         if (version == 1) {
             FileHandle color = root.child(COLOR_FILE);
-            try (CSVReader reader = new CSVReader(new InputStreamReader(color.read()))) {
+            try (CSVReader reader = new CSVReader(new InputStreamReader(color.read(), "UTF-8"))) {
                 String[] line;
                 int index = 0;
                 while ((line = reader.readNext()) != null) {
@@ -82,7 +82,7 @@ public class Faction extends GameObject {
         GameObjectList<Faction> result = new GameObjectList<>();
 
         FileHandle f = root.child(SAVE_FILE);
-        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
             String[] line;
             int index = 0;
             while ((line = reader.readNext()) != null) {

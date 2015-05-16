@@ -54,7 +54,7 @@ public class GameMap {
 
         FileHandle f = root.child(SAVE_FILE);
         GameMapBuilder builder = new GameMapBuilder();
-        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read()))) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
             String[] line;
             int index = 0;
             while ((line = reader.readNext()) != null) {
