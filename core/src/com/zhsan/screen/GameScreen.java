@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Point;
+import com.zhsan.gamecomponents.ScreenBlind;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
@@ -33,6 +34,8 @@ public class GameScreen extends WidgetGroup {
 
     private TabListGameFrame tabListGameFrame;
 
+    private ScreenBlind screenBlind;
+
     public GameScreen(GameScenario scen) {
         this.scen = scen;
         this.controller = new GameController(scen);
@@ -45,6 +48,9 @@ public class GameScreen extends WidgetGroup {
         mapLayer.setPosition(0, getToolBarHeight());
         mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - getToolBarHeight());
         this.addActor(mapLayer);
+
+        screenBlind = new ScreenBlind(this);
+        this.addActor(screenBlind);
 
         contextMenu = new ContextMenu(this);
         contextMenu.setPosition(0, getToolBarHeight());
@@ -159,6 +165,7 @@ public class GameScreen extends WidgetGroup {
         textDialog.dispose();
         confirmationDialog.dispose();
         tabListGameFrame.dispose();
+        screenBlind.dispose();
         if (saveGameFrame != null) {
             saveGameFrame.dispose();
         }

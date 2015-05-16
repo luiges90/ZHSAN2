@@ -8,7 +8,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +104,36 @@ public class GameScenario {
 
     public GameData getGameData() {
         return gameData;
+    }
+
+    public LocalDate getGameDate() {
+        return gameSurvey.getStartDate().plusDays(gameData.getDayPassed());
+    }
+
+    public enum Season {
+        SPRING, SUMMER, AUTUMN, WINTER
+    }
+    public Season getSeason() {
+        LocalDate date = getGameDate();
+        switch (date.getMonth().getValue()) {
+            case 3:
+            case 4:
+            case 5:
+                return Season.SPRING;
+            case 6:
+            case 7:
+            case 8:
+                return Season.SUMMER;
+            case 9:
+            case 10:
+            case 11:
+                return Season.AUTUMN;
+            case 12:
+            case 1:
+            case 2:
+                return Season.WINTER;
+        }
+        throw new IllegalStateException("Unexpected month: " + date.getMonth().getValue());
     }
 
     public void save(FileHandle out) {

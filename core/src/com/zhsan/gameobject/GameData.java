@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 
 /**
  * Created by Peter on 14/5/2015.
@@ -20,6 +21,7 @@ public class GameData {
     public static final String SAVE_FILE = "GameData.csv";
 
     private Faction currentPlayer;
+    private int dayPassed;
 
     private GameData(){}
 
@@ -38,6 +40,11 @@ public class GameData {
                 GameData data = new GameData();
 
                 data.currentPlayer = scen.getFactions().get(Integer.parseInt(line[0]));
+                if (version == 1) {
+                    data.dayPassed = Integer.parseInt(line[5]);
+                } else {
+                    data.dayPassed = Integer.parseInt(line[1]);
+                }
             }
         } catch (IOException e) {
             throw new FileReadException(f.path(), e);
@@ -52,6 +59,7 @@ public class GameData {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.GAME_DATA_SAVE_HEADER).split(","));
             writer.writeNext(new String[]{
                     String.valueOf(data.currentPlayer.getId()),
+                    String.valueOf(data.dayPassed)
             });
         } catch (IOException e) {
             throw new FileWriteException(f.path(), e);
@@ -63,5 +71,7 @@ public class GameData {
         return currentPlayer;
     }
 
-
+    public int getDayPassed() {
+        return dayPassed;
+    }
 }

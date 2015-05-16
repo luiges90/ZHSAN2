@@ -178,6 +178,7 @@ public class TextDialog extends WidgetGroup {
     public void dispose() {
         background.dispose();
         nextButton.dispose();
+        content.dispose();
     }
 
     public class Listener extends InputListener {
