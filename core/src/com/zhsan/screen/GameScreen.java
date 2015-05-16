@@ -159,6 +159,13 @@ public class GameScreen extends WidgetGroup {
         return mapLayer;
     }
 
+    public void runDays(int days) {
+        for (int i = 0; i < days; ++i) {
+            controller.runDay();
+            getScenario().advanceDay();
+        }
+    }
+
     public void dispose() {
         toolBar.dispose();
         mapLayer.dispose();

@@ -85,4 +85,8 @@ public class GameData {
     public int getDayPassed() {
         return dayPassed;
     }
+
+    public void advanceDay() {
+        dayPassed++;
+    }
 }

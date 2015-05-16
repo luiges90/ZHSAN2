@@ -113,6 +113,10 @@ public class GameScenario {
         return gameSurvey.getStartDate().plusDays(gameData.getDayPassed());
     }
 
+    public void advanceDay() {
+        gameData.advanceDay();
+    }
+
     public enum Season {
         SPRING, SUMMER, AUTUMN, WINTER
     }
