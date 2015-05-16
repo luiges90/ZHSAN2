@@ -3,7 +3,9 @@ package com.zhsan.gamelogic.ai;
 import com.zhsan.gamelogic.GameOrder;
 import com.zhsan.gameobject.Faction;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,8 +19,9 @@ public class FactionAI {
         this.faction = f;
     }
 
-    public Set<? extends GameOrder> makeOrder() {
-        return new HashSet<>();
+    public void makeOrder() {
+        faction.clearOrder();
+
     }
 
     public Faction getFaction() {

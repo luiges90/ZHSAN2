@@ -7,6 +7,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.gamelogic.FactionOrder;
 import com.zhsan.resources.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,6 +24,7 @@ public class Faction extends GameObject {
     public static final String SAVE_FILE = "Faction.csv";
 
     private GameScenario scenario;
+    private List<FactionOrder> orders = new ArrayList<>();
 
     private Set<Integer> sectionIds = new HashSet<>();
     private Color color;
@@ -144,4 +146,15 @@ public class Faction extends GameObject {
         return color;
     }
 
+    public List<FactionOrder> getOrders() {
+        return Collections.unmodifiableList(orders);
+    }
+
+    public void addOrder(FactionOrder order) {
+        orders.add(order);
+    }
+
+    public void clearOrder() {
+        orders.clear();
+    }
 }
