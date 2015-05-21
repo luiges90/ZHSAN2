@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <UpperArrowTexture FileName="UpperArrow.png" Selected="UpperArrowSelected.png"/>
+  <LowerArrowTexture FileName="LowerArrow.png" Selected="LowerArrowSelected.png"/>
+  <PlayTexture FileName="Play.png" Selected="PlaySelected.png"/>
+  <PauseTexture FileName="Pause.png" Selected="PauseSelected.png"/>
+  <StopTexture FileName="Stop.png" Selected="StopSelected.png"/>
+  <FirstDigitUpperArrowPosition X="5" Y="10" Width="20" Height="6"/>
+  <FirstDigitLowerArrowPosition X="5" Y="37" Width="20" Height="6"/>
+  <FirstDigitTextPosition X="5" Y="12" Width="20" Height="28"/>
+  <SecondDigitUpperArrowPosition X="30" Y="10" Width="20" Height="6"/>
+  <SecondDigitLowerArrowPosition X="30" Y="37" Width="20" Height="6"/>
+  <SecondDigitTextPosition X="30" Y="12" Width="20" Height="28"/>
+  <PlayPosition X="60" Y="10" Width="33" Height="33"/>
+  <StopPosition X="95" Y="10" Width="33" Height="33"/>
+  <DaysLeftTextPosition X="140" Y="12" Width="40" Height="28"/>
+  <DaysToGo DefaultDays ="1"
+            FontName="方正隶变_GBK"
+            FontSize="32"
+            FontStyle="Bold"
+            FontColor="4278190335" >
+  </DaysToGo>
+  <DaysLeft FontName="方正隶变_GBK"
+            FontSize="32"
+            FontStyle="Bold"
+            FontColor="4278190335" >
+  </DaysLeft>
+</Root>

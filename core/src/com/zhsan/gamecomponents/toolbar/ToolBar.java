@@ -44,6 +44,8 @@ public class ToolBar extends WidgetGroup {
     private Rectangle smallMapPos, actualSmallMapPos;
     private BitmapFont.HAlignment smallMapAlign;
 
+    private DateRunner dateRunner;
+
     private GameScreen screen;
 
     private void loadXml() {
@@ -87,6 +89,10 @@ public class ToolBar extends WidgetGroup {
 
         this.addActor(smallMap);
 
+        dateRunner = new DateRunner(screen);
+
+        this.addActor(dateRunner);
+
         this.addListener(new Listener());
     }
 
@@ -125,6 +131,7 @@ public class ToolBar extends WidgetGroup {
         gameSystem.dispose();
         smallMapButton.dispose();
         smallMap.dispose();
+        dateRunner.dispose();
     }
 
     private class Listener extends InputListener {
