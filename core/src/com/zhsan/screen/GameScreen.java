@@ -267,6 +267,9 @@ public class GameScreen extends WidgetGroup {
     public void stopRunDays() {
         pauseDayRunner.set(false);
         stopDayRunner.set(true);
+        synchronized (dayPauseLock) {
+            dayPauseLock.notifyAll();
+        }
     }
 
     public boolean isDayRunning() {
