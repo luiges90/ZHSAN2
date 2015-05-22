@@ -22,8 +22,10 @@ public class GlobalVariables {
 
     private GlobalVariables() {}
 
-    public static float scrollSpeed;
-    public static boolean showGrid;
+    public static float scrollSpeed = 1.0f;
+    public static boolean showGrid = true;
+
+    public static int maxRunningDays = 99;
 
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
@@ -38,6 +40,7 @@ public class GlobalVariables {
             Node node = dom.getElementsByTagName("GlobalVariables").item(0);
             scrollSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "scrollSpeed"));
             showGrid = Boolean.parseBoolean(XmlHelper.loadAttribute(node, "showGrid"));
+            maxRunningDays = Integer.parseInt(XmlHelper.loadAttribute(node, "maxRunningDays"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

@@ -5,9 +5,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
@@ -61,7 +63,7 @@ public class DateRunner extends WidgetGroup {
             downArrow2 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("LowerArrowTexture").item(0));
             play = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PlayTexture").item(0));
             pause = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PauseTexture").item(0));
-            stop = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PauseTexture").item(0));
+            stop = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("StopTexture").item(0));
 
             d1Up = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("FirstDigitUpperArrowPosition").item(0));
             d1Down = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("FirstDigitLowerArrowPosition").item(0));
@@ -126,6 +128,7 @@ public class DateRunner extends WidgetGroup {
 
             @Override
             public void stopped() {
+                daysLeft = 0;
                 running = false;
             }
         });
@@ -186,7 +189,7 @@ public class DateRunner extends WidgetGroup {
                 pause.setState(StateTexture.State.SELECTED);
             } else {
                 play.setState(StateTexture.State.NORMAL);
-                pause.setState(StateTexture.State.SELECTED);
+                pause.setState(StateTexture.State.NORMAL);
             }
 
             if (stopPos.contains(x, y)) {
@@ -225,38 +228,42 @@ public class DateRunner extends WidgetGroup {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (d1Up.contains(x, y)) {
+                upArrow1.setState(StateTexture.State.NORMAL);
                 daysToGo += 10;
             }
 
             if (d1Down.contains(x, y)) {
+                downArrow1.setState(StateTexture.State.NORMAL);
                 daysToGo -= 10;
             }
 
             if (d2Up.contains(x, y)) {
+                upArrow2.setState(StateTexture.State.NORMAL);
                 daysToGo += 1;
             }
 
             if (d2Down.contains(x, y)) {
+                downArrow2.setState(StateTexture.State.NORMAL);
                 daysToGo -= 1;
             }
 
-            daysToGo = MathUtils.clamp(daysToGo, 0, 99);
+            daysToGo = MathUtils.clamp(daysToGo, 0, GlobalVariables.maxRunningDays);
 
             if (playPos.contains(x, y)) {
+                play.setState(StateTexture.State.NORMAL);
+                pause.setState(StateTexture.State.NORMAL);
                 if (!running) {
                     running = true;
-                    daysLeft = daysToGo;
-                    screen.runDays(daysToGo);
+                    screen.runDays(daysLeft == 0 ? daysToGo : 0);
                 } else {
                     running = false;
-                    daysLeft = daysToGo;
                     screen.pauseRunDays();
                 }
             }
 
             if (stopPos.contains(x, y)) {
+                stop.setState(StateTexture.State.NORMAL);
                 running = false;
-                daysLeft = 0;
                 screen.stopRunDays();
             }
 

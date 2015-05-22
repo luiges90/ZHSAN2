@@ -2,7 +2,9 @@ package com.zhsan.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.ScreenBlind;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
@@ -18,6 +20,7 @@ import com.zhsan.gameobject.GameScenario;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Peter on 17/3/2015.
@@ -176,31 +179,81 @@ public class GameScreen extends WidgetGroup {
         runningDaysListeners.add(l);
     }
 
+    private Thread dayRunner;
+    private AtomicBoolean pauseDayRunner = new AtomicBoolean(false);
+    private AtomicBoolean stopDayRunner = new AtomicBoolean(false);
+    private volatile int moreDays;
+    private final Object dayPauseLock = new Object();
+
     public void runDays(int days) {
-        for (RunningDaysListener x :runningDaysListeners) {
-            x.started(days);
+        if (dayRunner != null && dayRunner.isAlive()) {
+            synchronized (GameScreen.this) {
+                moreDays = days;
+            }
+            pauseDayRunner.set(false);
+            synchronized (dayPauseLock) {
+                dayPauseLock.notifyAll();
+            }
+            return;
         }
 
-        for (int i = 0; i < days; ++i) {
-            controller.runDay();
-            getScenario().advanceDay();
+        final int fDays = days;
+        Runnable dayRunnable = () -> {
+            int rDays = fDays;
+            for (RunningDaysListener x : runningDaysListeners) {
+                x.started(rDays);
+            }
+
+            for (int i = 0; i < rDays; ++i) {
+                controller.runDay();
+                getScenario().advanceDay();
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    // ignore
+                }
+
+                synchronized (GameScreen.this) {
+                    rDays += moreDays;
+                    moreDays = 0;
+                }
+                MathUtils.clamp(rDays, 0, GlobalVariables.maxRunningDays);
+
+                for (RunningDaysListener x : runningDaysListeners) {
+                    x.passed(rDays - i - 1);
+                }
+
+                while (pauseDayRunner.get()) {
+                    synchronized (dayPauseLock) {
+                        try {
+                            dayPauseLock.wait();
+                        } catch (InterruptedException e) {
+                            // ignore
+                        }
+                    }
+                }
+
+                if (stopDayRunner.compareAndSet(true, false)) {
+                    break;
+                }
+            }
 
             for (RunningDaysListener x : runningDaysListeners) {
-                x.passed(days - i - 1);
+                x.stopped();
             }
-        }
-
-        for (RunningDaysListener x : runningDaysListeners) {
-            x.stopped();
-        }
+        };
+        dayRunner = new Thread(dayRunnable, "Day runner");
+        dayRunner.start();
     }
 
     public void pauseRunDays() {
-        // pause running days
+        pauseDayRunner.set(true);
     }
 
     public void stopRunDays() {
-        // stop running days
+        pauseDayRunner.set(false);
+        stopDayRunner.set(true);
     }
 
     public void dispose() {
