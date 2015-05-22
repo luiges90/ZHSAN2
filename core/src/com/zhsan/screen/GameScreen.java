@@ -182,8 +182,17 @@ public class GameScreen extends WidgetGroup {
     private Thread dayRunner;
     private AtomicBoolean pauseDayRunner = new AtomicBoolean(false);
     private AtomicBoolean stopDayRunner = new AtomicBoolean(false);
+    private volatile boolean dayRunning = false;
     private volatile int moreDays;
     private final Object dayPauseLock = new Object();
+
+    public void continueRunDays() {
+        if (dayRunning) {
+            pauseRunDays();
+        } else {
+            runDays(dayRunner != null && dayRunner.isAlive() ? 0 : getDaysOnDateRunner());
+        }
+    }
 
     public void runDays(int days) {
         if (dayRunner != null && dayRunner.isAlive()) {
@@ -205,6 +214,8 @@ public class GameScreen extends WidgetGroup {
             }
 
             for (int i = 0; i < rDays; ++i) {
+                dayRunning = true;
+
                 controller.runDay();
                 getScenario().advanceDay();
 
@@ -218,7 +229,7 @@ public class GameScreen extends WidgetGroup {
                     rDays += moreDays;
                     moreDays = 0;
                 }
-                MathUtils.clamp(rDays, 0, GlobalVariables.maxRunningDays);
+                rDays = MathUtils.clamp(rDays, 0, GlobalVariables.maxRunningDays);
 
                 for (RunningDaysListener x : runningDaysListeners) {
                     x.passed(rDays - i - 1);
@@ -227,6 +238,7 @@ public class GameScreen extends WidgetGroup {
                 while (pauseDayRunner.get()) {
                     synchronized (dayPauseLock) {
                         try {
+                            dayRunning = false;
                             dayPauseLock.wait();
                         } catch (InterruptedException e) {
                             // ignore
@@ -239,6 +251,7 @@ public class GameScreen extends WidgetGroup {
                 }
             }
 
+            dayRunning = false;
             for (RunningDaysListener x : runningDaysListeners) {
                 x.stopped();
             }
@@ -254,6 +267,14 @@ public class GameScreen extends WidgetGroup {
     public void stopRunDays() {
         pauseDayRunner.set(false);
         stopDayRunner.set(true);
+    }
+
+    public boolean isDayRunning() {
+        return dayRunning;
+    }
+
+    private int getDaysOnDateRunner() {
+        return toolBar.getDaysToGo();
     }
 
     public void dispose() {

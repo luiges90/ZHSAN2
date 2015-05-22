@@ -44,7 +44,6 @@ public class DateRunner extends WidgetGroup {
     private TextWidget<Void> daysToGoText1, daysToGoText2, daysLeftText;
 
     private int daysLeft, daysToGo;
-    private boolean running = false;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "DateRunnerData.xml");
@@ -129,7 +128,6 @@ public class DateRunner extends WidgetGroup {
             @Override
             public void stopped() {
                 daysLeft = 0;
-                running = false;
             }
         });
     }
@@ -157,7 +155,7 @@ public class DateRunner extends WidgetGroup {
         daysToGoText2.draw(batch, parentAlpha);
 
         // controls
-        batch.draw(running ? pause.get() : play.get(), playPos.x + getX(), playPos.y + getY(), playPos.width, playPos.height);
+        batch.draw(screen.isDayRunning() ? pause.get() : play.get(), playPos.x + getX(), playPos.y + getY(), playPos.width, playPos.height);
         batch.draw(stop.get(), stopPos.x + getX(), stopPos.y + getY(), stopPos.width, stopPos.height);
 
         // days left
@@ -178,6 +176,10 @@ public class DateRunner extends WidgetGroup {
         daysToGoText1.dispose();
         daysToGoText2.dispose();
         daysLeftText.dispose();
+    }
+
+    public int getDaysToGo() {
+        return daysToGo;
     }
 
     private class Listener extends InputListener {
@@ -252,18 +254,15 @@ public class DateRunner extends WidgetGroup {
             if (playPos.contains(x, y)) {
                 play.setState(StateTexture.State.NORMAL);
                 pause.setState(StateTexture.State.NORMAL);
-                if (!running) {
-                    running = true;
+                if (!screen.isDayRunning()) {
                     screen.runDays(daysLeft == 0 ? daysToGo : 0);
                 } else {
-                    running = false;
                     screen.pauseRunDays();
                 }
             }
 
             if (stopPos.contains(x, y)) {
                 stop.setState(StateTexture.State.NORMAL);
-                running = false;
                 screen.stopRunDays();
             }
 

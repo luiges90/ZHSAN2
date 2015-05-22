@@ -134,6 +134,10 @@ public class ToolBar extends WidgetGroup {
         dateRunner.dispose();
     }
 
+    public int getDaysToGo() {
+        return dateRunner.getDaysToGo();
+    }
+
     private class Listener extends InputListener {
 
         @Override
