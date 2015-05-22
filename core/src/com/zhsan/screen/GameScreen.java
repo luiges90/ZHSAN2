@@ -206,14 +206,12 @@ public class GameScreen extends WidgetGroup {
             return;
         }
 
-        final int fDays = days;
         Runnable dayRunnable = () -> {
-            int rDays = fDays;
             for (RunningDaysListener x : runningDaysListeners) {
-                x.started(rDays);
+                x.started(days);
             }
 
-            for (int i = 0; i < rDays; ++i) {
+            for (int i = 0; i < days; ++i) {
                 dayRunning = true;
 
                 controller.runDay();
@@ -226,13 +224,15 @@ public class GameScreen extends WidgetGroup {
                 }
 
                 synchronized (GameScreen.this) {
-                    rDays += moreDays;
+                    i -= moreDays;
+                    if (days - i - 1 > GlobalVariables.maxRunningDays) {
+                        i += days - i - GlobalVariables.maxRunningDays - 1;
+                    }
                     moreDays = 0;
                 }
-                rDays = MathUtils.clamp(rDays, 0, GlobalVariables.maxRunningDays);
 
                 for (RunningDaysListener x : runningDaysListeners) {
-                    x.passed(rDays - i - 1);
+                    x.passed(days - i - 1);
                 }
 
                 while (pauseDayRunner.get()) {
