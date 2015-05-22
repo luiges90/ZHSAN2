@@ -185,6 +185,17 @@ public class DateRunner extends WidgetGroup {
     private class Listener extends InputListener {
 
         @Override
+        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+            play.setState(StateTexture.State.NORMAL);
+            pause.setState(StateTexture.State.NORMAL);
+            stop.setState(StateTexture.State.NORMAL);
+            upArrow1.setState(StateTexture.State.NORMAL);
+            upArrow2.setState(StateTexture.State.NORMAL);
+            downArrow1.setState(StateTexture.State.NORMAL);
+            downArrow2.setState(StateTexture.State.NORMAL);
+        }
+
+        @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
             if (playPos.contains(x, y)) {
                 play.setState(StateTexture.State.SELECTED);
