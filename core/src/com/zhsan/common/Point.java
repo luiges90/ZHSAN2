@@ -2,6 +2,8 @@ package com.zhsan.common;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.zhsan.gamecomponents.common.XmlHelper;
+import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,5 +93,11 @@ public final class Point {
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+
+    public static Point fromXml(Node position) {
+        return new Point(
+                Integer.parseInt(XmlHelper.loadAttribute(position, "X")),
+                Integer.parseInt(XmlHelper.loadAttribute(position, "Y")));
     }
 }

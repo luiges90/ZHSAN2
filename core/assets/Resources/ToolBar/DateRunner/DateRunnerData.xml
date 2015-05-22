@@ -1,28 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
+  <Position X="0" Y="0"/>
   <UpperArrowTexture FileName="UpperArrow.png" Selected="UpperArrowSelected.png"/>
   <LowerArrowTexture FileName="LowerArrow.png" Selected="LowerArrowSelected.png"/>
   <PlayTexture FileName="Play.png" Selected="PlaySelected.png"/>
   <PauseTexture FileName="Pause.png" Selected="PauseSelected.png"/>
   <StopTexture FileName="Stop.png" Selected="StopSelected.png"/>
-  <FirstDigitUpperArrowPosition X="5" Y="10" Width="20" Height="6"/>
-  <FirstDigitLowerArrowPosition X="5" Y="37" Width="20" Height="6"/>
-  <FirstDigitTextPosition X="5" Y="12" Width="20" Height="28"/>
-  <SecondDigitUpperArrowPosition X="30" Y="10" Width="20" Height="6"/>
-  <SecondDigitLowerArrowPosition X="30" Y="37" Width="20" Height="6"/>
-  <SecondDigitTextPosition X="30" Y="12" Width="20" Height="28"/>
+  <FirstDigitUpperArrowPosition X="5" Y="38" Width="20" Height="6"/>
+  <FirstDigitLowerArrowPosition X="5" Y="11" Width="20" Height="6"/>
+  <FirstDigitTextPosition X="5" Y="14" Width="20" Height="24"/>
+  <SecondDigitUpperArrowPosition X="30" Y="38" Width="20" Height="6"/>
+  <SecondDigitLowerArrowPosition X="30" Y="11" Width="20" Height="6"/>
+  <SecondDigitTextPosition X="30" Y="14" Width="20" Height="24"/>
   <PlayPosition X="60" Y="10" Width="33" Height="33"/>
   <StopPosition X="95" Y="10" Width="33" Height="33"/>
-  <DaysLeftTextPosition X="140" Y="12" Width="40" Height="28"/>
+  <DaysLeftTextPosition X="140" Y="14" Width="40" Height="24"/>
   <DaysToGo DefaultDays ="1"
             FontName="方正隶变_GBK"
-            FontSize="32"
+            FontSize="24"
             FontStyle="Bold"
-            FontColor="4278190335" >
+            FontColor="4294967295"
+            Align="Middle">
   </DaysToGo>
   <DaysLeft FontName="方正隶变_GBK"
-            FontSize="32"
+            FontSize="24"
             FontStyle="Bold"
-            FontColor="4278190335" >
+            FontColor="4294967295"
+            Align="Middle">
   </DaysLeft>
 </Root>

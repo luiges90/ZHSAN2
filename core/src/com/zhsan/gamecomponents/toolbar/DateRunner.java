@@ -3,10 +3,13 @@ package com.zhsan.gamecomponents.toolbar;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Paths;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
@@ -24,20 +27,22 @@ import java.io.File;
  */
 public class DateRunner extends WidgetGroup {
 
-    public static final String RES_PATH = Paths.RESOURCES + "DateRunner" + File.separator;
+    public static final String RES_PATH = ToolBar.RES_PATH + "DateRunner" + File.separator;
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
     private GameScreen screen;
 
     private StateTexture play, pause, stop;
-    private StateTexture upArrow, downArrow;
+    private StateTexture upArrow1, downArrow1, upArrow2, downArrow2;
 
     private Rectangle d1Up, d1Down, d1Num, d2Up, d2Down, d2Num;
     private Rectangle playPos, stopPos, daysLeftPos;
+    private Point position;
 
-    private TextWidget<Void> daysToGoText, daysLeftText;
+    private TextWidget<Void> daysToGoText1, daysToGoText2, daysLeftText;
 
     private int daysLeft, daysToGo;
+    private boolean running = false;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "DateRunnerData.xml");
@@ -48,8 +53,12 @@ public class DateRunner extends WidgetGroup {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            upArrow = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("UpperArrowTexture").item(0));
-            downArrow = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("LowerArrowTexture").item(0));
+            position = Point.fromXml(dom.getElementsByTagName("Position").item(0));
+
+            upArrow1 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("UpperArrowTexture").item(0));
+            downArrow1 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("LowerArrowTexture").item(0));
+            upArrow2 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("UpperArrowTexture").item(0));
+            downArrow2 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("LowerArrowTexture").item(0));
             play = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PlayTexture").item(0));
             pause = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PauseTexture").item(0));
             stop = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("PauseTexture").item(0));
@@ -66,7 +75,8 @@ public class DateRunner extends WidgetGroup {
             daysLeftPos = XmlHelper.loadRectangleFromXml(dom.getElementsByTagName("DaysLeftTextPosition").item(0));
 
             Node daysToGoNode = dom.getElementsByTagName("DaysToGo").item(0);
-            daysToGoText = new TextWidget<>(TextWidget.Setting.fromXml(daysToGoNode));
+            daysToGoText1 = new TextWidget<>(TextWidget.Setting.fromXml(daysToGoNode));
+            daysToGoText2 = new TextWidget<>(TextWidget.Setting.fromXml(daysToGoNode));
             daysToGo = Integer.parseInt(XmlHelper.loadAttribute(daysToGoNode, "DefaultDays"));
             daysLeftText = new TextWidget<>(TextWidget.Setting.fromXml(
                     dom.getElementsByTagName("DaysLeft").item(0)
@@ -76,30 +86,181 @@ public class DateRunner extends WidgetGroup {
         }
     }
 
+    private final void setSizeToWrapWidget() {
+        // set size of widget so that it can capture input events properly
+        Rectangle[] allRect = new Rectangle[]{d1Up, d1Down, d1Num, d2Up, d2Down, d2Num, playPos, stopPos, daysLeftPos};
+
+        float width = 0;
+        for (Rectangle r : allRect) {
+            width = Math.max(width, r.x + r.width);
+        }
+
+        float height = 0;
+        for (Rectangle r : allRect) {
+            height = Math.max(height, r.y + r.height);
+        }
+
+        this.setSize(width, height);
+    }
+
     public DateRunner(GameScreen screen) {
         this.screen = screen;
 
+        loadXml();
+
+        this.setPosition(position.x, position.y);
+        setSizeToWrapWidget();
+
         this.addListener(new Listener());
+
+        screen.addRunningDaysListener(new GameScreen.RunningDaysListener() {
+            @Override
+            public void started(int i) {
+                daysLeft = i;
+            }
+
+            @Override
+            public void passed(int i) {
+                daysLeft = i;
+            }
+
+            @Override
+            public void stopped() {
+                running = false;
+            }
+        });
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
+        // digit 1
+        batch.draw(upArrow1.get(), d1Up.x + getX(), d1Up.y + getY(), d1Up.width, d1Up.height);
+        batch.draw(downArrow1.get(), d1Down.x + getX(), d1Down.y + getY(), d1Down.width, d1Down.height);
 
+        daysToGoText1.setText(String.valueOf(daysToGo / 10));
+        daysToGoText1.setPosition(d1Num.x + getX(), d1Num.y + getY());
+        daysToGoText1.setSize(d1Num.width, d1Num.height);
+        daysToGoText1.draw(batch, parentAlpha);
+
+        // digit 2
+        batch.draw(upArrow2.get(), d2Up.x + getX(), d2Up.y + getY(), d2Up.width, d2Up.height);
+        batch.draw(downArrow2.get(), d2Down.x + getX(), d2Down.y + getY(), d2Down.width, d2Down.height);
+
+        daysToGoText2.setText(String.valueOf(daysToGo % 10));
+        daysToGoText2.setPosition(d2Num.x + getX(), d2Num.y + getY());
+        daysToGoText2.setSize(d2Num.width, d2Num.height);
+        daysToGoText2.draw(batch, parentAlpha);
+
+        // controls
+        batch.draw(running ? pause.get() : play.get(), playPos.x + getX(), playPos.y + getY(), playPos.width, playPos.height);
+        batch.draw(stop.get(), stopPos.x + getX(), stopPos.y + getY(), stopPos.width, stopPos.height);
+
+        // days left
+        daysLeftText.setText(String.format("%02d", daysLeft));
+        daysLeftText.setPosition(daysLeftPos.x + getX(), daysLeftPos.y + getY());
+        daysLeftText.setSize(daysLeftPos.width, daysLeftPos.height);
+        daysLeftText.draw(batch, parentAlpha);
     }
 
     public void dispose() {
         play.dispose();
         pause.dispose();
         stop.dispose();
-        upArrow.dispose();
-        downArrow.dispose();
-        daysToGoText.dispose();
+        upArrow1.dispose();
+        downArrow1.dispose();
+        upArrow2.dispose();
+        downArrow2.dispose();
+        daysToGoText1.dispose();
+        daysToGoText2.dispose();
         daysLeftText.dispose();
     }
 
     private class Listener extends InputListener {
 
+        @Override
+        public boolean mouseMoved(InputEvent event, float x, float y) {
+            if (playPos.contains(x, y)) {
+                play.setState(StateTexture.State.SELECTED);
+                pause.setState(StateTexture.State.SELECTED);
+            } else {
+                play.setState(StateTexture.State.NORMAL);
+                pause.setState(StateTexture.State.SELECTED);
+            }
+
+            if (stopPos.contains(x, y)) {
+                stop.setState(StateTexture.State.SELECTED);
+            } else {
+                stop.setState(StateTexture.State.NORMAL);
+            }
+
+            if (d1Up.contains(x, y)) {
+                upArrow1.setState(StateTexture.State.SELECTED);
+            } else {
+                upArrow1.setState(StateTexture.State.NORMAL);
+            }
+
+            if (d1Down.contains(x, y)) {
+                downArrow1.setState(StateTexture.State.SELECTED);
+            } else {
+                downArrow1.setState(StateTexture.State.NORMAL);
+            }
+
+            if (d2Up.contains(x, y)) {
+                upArrow2.setState(StateTexture.State.SELECTED);
+            } else {
+                upArrow2.setState(StateTexture.State.NORMAL);
+            }
+
+            if (d2Down.contains(x, y)) {
+                downArrow2.setState(StateTexture.State.SELECTED);
+            } else {
+                downArrow2.setState(StateTexture.State.NORMAL);
+            }
+
+            return true;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (d1Up.contains(x, y)) {
+                daysToGo += 10;
+            }
+
+            if (d1Down.contains(x, y)) {
+                daysToGo -= 10;
+            }
+
+            if (d2Up.contains(x, y)) {
+                daysToGo += 1;
+            }
+
+            if (d2Down.contains(x, y)) {
+                daysToGo -= 1;
+            }
+
+            daysToGo = MathUtils.clamp(daysToGo, 0, 99);
+
+            if (playPos.contains(x, y)) {
+                if (!running) {
+                    running = true;
+                    daysLeft = daysToGo;
+                    screen.runDays(daysToGo);
+                } else {
+                    running = false;
+                    daysLeft = daysToGo;
+                    screen.pauseRunDays();
+                }
+            }
+
+            if (stopPos.contains(x, y)) {
+                running = false;
+                daysLeft = 0;
+                screen.stopRunDays();
+            }
+
+            return true;
+        }
     }
 }

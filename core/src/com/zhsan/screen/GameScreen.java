@@ -16,10 +16,21 @@ import com.zhsan.gamelogic.GameController;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Peter on 17/3/2015.
  */
 public class GameScreen extends WidgetGroup {
+
+    public interface RunningDaysListener {
+        public void started(int daysLeft);
+
+        public void passed(int daysLeft);
+
+        public void stopped();
+    }
 
     private GameScenario scen;
     private GameController controller;
@@ -35,6 +46,8 @@ public class GameScreen extends WidgetGroup {
     private TabListGameFrame tabListGameFrame;
 
     private ScreenBlind screenBlind;
+
+    private List<RunningDaysListener> runningDaysListeners = new ArrayList<>();
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
@@ -159,11 +172,35 @@ public class GameScreen extends WidgetGroup {
         return mapLayer;
     }
 
+    public void addRunningDaysListener(RunningDaysListener l) {
+        runningDaysListeners.add(l);
+    }
+
     public void runDays(int days) {
+        for (RunningDaysListener x :runningDaysListeners) {
+            x.started(days);
+        }
+
         for (int i = 0; i < days; ++i) {
             controller.runDay();
             getScenario().advanceDay();
+
+            for (RunningDaysListener x : runningDaysListeners) {
+                x.passed(days - i - 1);
+            }
         }
+
+        for (RunningDaysListener x : runningDaysListeners) {
+            x.stopped();
+        }
+    }
+
+    public void pauseRunDays() {
+        // pause running days
+    }
+
+    public void stopRunDays() {
+        // stop running days
     }
 
     public void dispose() {
