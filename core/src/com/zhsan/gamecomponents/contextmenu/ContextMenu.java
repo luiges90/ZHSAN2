@@ -20,9 +20,9 @@ import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.screen.GameScreen;
-import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -73,6 +73,7 @@ public class ContextMenu extends WidgetGroup {
         private List<MenuItem> children;
         private boolean expanded = false;
         private int depth;
+        private String displayIfTrueMethod;
 
         private StateBackgroundTextWidget<MenuItem> textWidget;
     }
@@ -113,6 +114,7 @@ public class ContextMenu extends WidgetGroup {
             item.fullName = parentName + "_" + XmlHelper.loadAttribute(itemNode, "Name");
             item.displayName = XmlHelper.loadAttribute(itemNode, "DisplayName");
             item.textWidget = new StateBackgroundTextWidget<>(widgetTemplate, background);
+            item.displayIfTrueMethod = XmlHelper.loadAttribute(itemNode, "DisplayIfTrue", null);
             item.textWidget.addListener(new MenuItemListener(item.textWidget));
             item.depth = depth;
             item.children = loadMenuItem(itemNode, item.fullName, background, widgetTemplate, depth + 1);
@@ -222,14 +224,27 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
+    private boolean drawItem(MenuItem item) {
+        return item.displayIfTrueMethod == null ||
+                !(currentObject instanceof GameObject) ||
+                (((GameObject) currentObject).satisfyMethod(item.displayIfTrueMethod));
+    }
+
     private void drawMenuItem_r(Batch batch, float parentAlpha, MenuKind kind, MenuItem item, int depth, int index, int lastSize) {
         if (item.expanded) {
-            drawMenu(batch, parentAlpha, kind.width * depth, -kind.height * (lastSize - index - 1), kind, item.children, depth);
+            boolean hasShowingItem = false;
 
             int innerIndex = item.children.size() - 1;
             for (MenuItem inner : item.children) {
-                drawMenuItem_r(batch, parentAlpha, kind, inner, depth + 1, innerIndex, item.children.size());
-                innerIndex--;
+                if (drawItem(item)) {
+                    drawMenuItem_r(batch, parentAlpha, kind, inner, depth + 1, innerIndex, item.children.size());
+                    innerIndex--;
+                    hasShowingItem = true;
+                }
+            }
+
+            if (hasShowingItem){
+                drawMenu(batch, parentAlpha, kind.width * depth, -kind.height * (lastSize - index - 1), kind, item.children, depth);
             }
         }
     }
@@ -238,12 +253,20 @@ public class ContextMenu extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         if (showingType != null) {
             MenuKind kind = menuKinds.get(showingType);
-            drawMenu(batch, parentAlpha, 0, 0, kind, kind.items, 0);
+
+            boolean hasShowingItem = false;
 
             int index = kind.items.size() - 1;
             for (MenuItem item : kind.items) {
-                drawMenuItem_r(batch, parentAlpha, kind, item, 1, index, kind.items.size());
-                index--;
+                if (drawItem(item)) {
+                    drawMenuItem_r(batch, parentAlpha, kind, item, 1, index, kind.items.size());
+                    index--;
+                    hasShowingItem = true;
+                }
+            }
+
+            if (hasShowingItem) {
+                drawMenu(batch, parentAlpha, 0, 0, kind, kind.items, 0);
             }
         }
 
@@ -275,22 +298,26 @@ public class ContextMenu extends WidgetGroup {
             }
         }
 
+        int drawIndex = 0;
         for (int i = 0; i < items.size(); ++i) {
             // TODO disabled method, showAll
-            float x = bound.getX();
-            float y = bound.getY() + bound.getHeight() - (i + 1) * kind.height;
+            if (drawItem(items.get(i))) {
+                float x = bound.getX();
+                float y = bound.getY() + bound.getHeight() - (drawIndex + 1) * kind.height;
 
-            TextWidget<MenuItem> widget = items.get(i).textWidget;
-            widget.setText(items.get(i).displayName);
-            widget.setPosition(x - getX(), y - getY());
-            widget.setSize(kind.width, kind.height);
-            widget.setExtra(items.get(i));
-            widget.setVisible(true);
+                TextWidget<MenuItem> widget = items.get(i).textWidget;
+                widget.setText(items.get(i).displayName);
+                widget.setPosition(x - getX(), y - getY());
+                widget.setSize(kind.width, kind.height);
+                widget.setExtra(items.get(i));
+                widget.setVisible(true);
 
-            if (items.get(i).children.size() > 0 &&
-                    items.get(i).textWidget.getBackground().getState() == StateTexture.State.SELECTED) {
-                batch.draw(hasChild,
-                        x - getX() + kind.width + hasChildMargin, y + kind.height / 2 - hasChild.getHeight() / 2);
+                if (items.get(i).children.size() > 0 &&
+                        items.get(i).textWidget.getBackground().getState() == StateTexture.State.SELECTED) {
+                    batch.draw(hasChild,
+                            x - getX() + kind.width + hasChildMargin, y + kind.height / 2 - hasChild.getHeight() / 2);
+                }
+                drawIndex++;
             }
         }
     }
@@ -396,8 +423,10 @@ public class ContextMenu extends WidgetGroup {
                     try {
                         ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
                                 .invoke(null, screen, currentObject);
-                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                        // throw new IllegalArgumentException(e);
+                    } catch (NoSuchMethodException | IllegalAccessException e) {
+                        throw new IllegalArgumentException(e);
+                    } catch (InvocationTargetException e) {
+                        throw new RuntimeException(e);
                     }
                 }
 

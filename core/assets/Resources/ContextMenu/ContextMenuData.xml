@@ -21,11 +21,11 @@
     <MenuKindList>
         <MenuKind ID="1" Name="ArchitectureRightClick" IsLeft="false" Width="120" Height="25">
             <MenuItem ID="1" Name="Architecture" DisplayName="所屬建築" >
-                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" />
+                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" DisplayIfTrue="HasFaction"/>
                 <MenuItem ID="2" Name="AllUnhiredPersons" DisplayName="在野武將" />
             </MenuItem>
-            <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力">
-                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" />
+            <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力" DisplayIfTrue="HasFaction">
+                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將"/>
             </MenuItem>
         </MenuKind>
         <MenuKind ID="2" Name="ArchitectureLeftClick" IsLeft="true" Width="100" Height="25">

@@ -87,6 +87,8 @@ public class Architecture extends GameObject {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNHIRED);
     }
 
-
+    public boolean hasFaction() {
+        return getBelongedFaction() != null;
+    }
 
 }
