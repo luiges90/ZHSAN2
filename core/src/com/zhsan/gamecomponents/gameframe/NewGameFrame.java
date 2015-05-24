@@ -26,7 +26,6 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -194,7 +193,7 @@ public class NewGameFrame extends GameFrame {
 
             ((TextWidget) scenarioDescriptionPane.getWidget()).setText(widget.getExtra().getRight().getDescription());
 
-            GameObjectList<Faction> factions = Faction.fromCSVQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().getVersion());
+            GameObjectList<Faction> factions = GameScenario.loadFactionsQuick(widget.getExtra().getLeft(), widget.getExtra().getRight().getVersion());
 
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             group.clear();

@@ -29,6 +29,7 @@ public class GameScenario {
     private final GameData gameData;
 
     private final GameObjectList<ArchitectureKind> architectureKinds;
+
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
     private final GameObjectList<Faction> factions;
@@ -47,25 +48,58 @@ public class GameScenario {
         return result;
     }
 
+    public static GameObjectList<Faction> loadFactionsQuick(FileHandle root, int version) {
+        GameObjectList<LoadingFaction> loadingFactions = LoadingFaction.fromCSVQuick(root, version);
+        GameObjectList<Faction> addingFaction = new GameObjectList<>();
+        for (LoadingFaction i : loadingFactions) {
+            addingFaction.add(new Faction(i));
+        }
+        return addingFaction;
+    }
+
     public GameScenario(FileHandle file, int playerFactionId) {
         gameSurvey = GameSurvey.fromCSV(file);
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
         architectureKinds = ArchitectureKind.fromCSV(file, this);
 
-        architectures = Architecture.fromCSV(file, this);
-        sections = Section.fromCSV(file, this);
-        factions = Faction.fromCSV(file, this);
-        persons = Person.fromCSV(file, this);
+        GameObjectList<LoadingArchitecture> loadingArchitectures = LoadingArchitecture.fromCSV(file, this);
+        GameObjectList<LoadingSection> loadingSections = LoadingSection.fromCSV(file, this);
+        GameObjectList<LoadingFaction> loadingFactions = LoadingFaction.fromCSV(file, this);
+        GameObjectList<LoadingPerson> loadingPersons = LoadingPerson.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
 
         for (int i = 0; i < 2; ++i) {
-            Person.setup(this);
-            Architecture.setup(this);
-            Section.setup(this);
-            Faction.setup(this);
+            LoadingPerson.setup(loadingPersons, loadingArchitectures);
+            LoadingArchitecture.setup(loadingArchitectures, loadingPersons, loadingSections);
+            LoadingSection.setup(loadingSections, loadingArchitectures, loadingFactions);
+            LoadingFaction.setup(loadingFactions, loadingSections);
         }
+
+        GameObjectList<Faction> addingFaction = new GameObjectList<>();
+        for (LoadingFaction i : loadingFactions) {
+            addingFaction.add(new Faction(i));
+        }
+        factions = addingFaction;
+
+        GameObjectList<Section> addingSection = new GameObjectList<>();
+        for (LoadingSection i : loadingSections) {
+            addingSection.add(new Section(i));
+        }
+        sections = addingSection;
+
+        GameObjectList<Architecture> addingArchitecture = new GameObjectList<>();
+        for (LoadingArchitecture i : loadingArchitectures) {
+            addingArchitecture.add(new Architecture(i));
+        }
+        architectures = addingArchitecture;
+
+        GameObjectList<Person> addingPerson = new GameObjectList<>();
+        for (LoadingPerson i : loadingPersons) {
+            addingPerson.add(new Person(i));
+        }
+        persons = addingPerson;
 
         Faction playerFaction = factions.get(playerFactionId);
         gameData.setCurrentPlayer(playerFaction);
