@@ -17,6 +17,7 @@ import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameObjectList;
+import com.zhsan.gameobject.Person;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -33,7 +34,8 @@ import java.util.*;
 public class TabListGameFrame extends GameFrame {
 
     public static enum ListKindType {
-        ARCHITECTURE("Architecture", Architecture.class)
+        ARCHITECTURE("Architecture", Architecture.class),
+        PERSON("Person", Person.class)
         ;
 
         public final String xmlName;
@@ -266,7 +268,7 @@ public class TabListGameFrame extends GameFrame {
 
                 contentTable.add(widget).width(c.width).height(columnHeaderHeight);
             }
-            contentTable.row();
+            contentTable.row().height(rowHeight);
         }
 
         contentTable.top().left();
