@@ -9,6 +9,6 @@
  architectureSaveHeader="ID,名称编号,名称,种类,位置,所屬軍區"
  sectionSaveHeader="ID,名稱,所屬勢力"
  factionSaveHeader="ID,名稱,顏色"
- personSaveHeader="ID,姓,名,字,狀態,位置類,位置"
+ personSaveHeader="ID,姓,名,字,狀態,位置類,位置,正移動日數"
  gameDataSaveHeader="当前玩家,劇本自今天數"
 />

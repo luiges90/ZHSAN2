@@ -87,6 +87,10 @@ public class GameScenario {
         return architectures.asUnmodifiable();
     }
 
+    public GameObjectList<Person> getPersons() {
+        return persons.asUnmodifiable();
+    }
+
     public Architecture getArchitectureAt(Point p) {
         for (Architecture a : architectures) {
             if (a.getLocation().contains(p)) {

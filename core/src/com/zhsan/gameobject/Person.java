@@ -77,6 +77,8 @@ public class Person extends GameObject {
     private LocationType locationType;
     private int locationId;
 
+    private int movingDays = 0;
+
     private Person(int id) {
         super(id);
     }
@@ -113,6 +115,7 @@ public class Person extends GameObject {
                     } else {
                         data.state = State.UNDEBUTTED;
                     }
+                    data.movingDays = Integer.parseInt(line[62]);
                 } else {
                     data.surname = line[1];
                     data.givenName = line[2];
@@ -120,6 +123,7 @@ public class Person extends GameObject {
                     data.state = State.fromCSV(line[4]);
                     data.locationType = LocationType.fromCSV(line[5]);
                     data.locationId = Integer.parseInt(line[6]);
+                    data.movingDays = Integer.parseInt(line[7]);
                 }
 
                 data.scenario = scen;
@@ -144,7 +148,8 @@ public class Person extends GameObject {
                         d.calledName,
                         d.state.toCSV(),
                         d.locationType.toCSV(),
-                        String.valueOf(d.locationId)
+                        String.valueOf(d.locationId),
+                        String.valueOf(d.movingDays)
                 });
             }
         } catch (IOException e) {
@@ -154,7 +159,35 @@ public class Person extends GameObject {
     }
 
     public static final void setup(GameScenario scenario) {
-        
+        for (Person p : scenario.getPersons()) {
+            for (Architecture a : scenario.getArchitectures()) {
+                if (a.getPersons().contains(p.getId()) || a.getMovingPersons().contains(p.getId())) {
+                    p.locationType = LocationType.ARHITECTURE;
+                    p.locationId = a.getId();
+                    p.state = State.NORMAL;
+                } else if (a.getUnhiredPersons().contains(p.getId()) || a.getUnhiredMovingPersons().contains(p.getId())) {
+                    p.locationType = LocationType.ARHITECTURE;
+                    p.locationId = a.getId();
+                    p.state = State.UNHIRED;
+                }
+            }
+        }
     }
 
+    public GameObject getLocation() {
+        switch (locationType) {
+            case ARHITECTURE:
+                return scenario.getArchitectures().get(locationId);
+        }
+        assert false;
+        return null;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public int getMovingDays() {
+        return movingDays;
+    }
 }
