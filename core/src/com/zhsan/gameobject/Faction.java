@@ -23,6 +23,8 @@ public class Faction extends GameObject {
     private static final String COLOR_FILE = "Color.csv";
     public static final String SAVE_FILE = "Faction.csv";
 
+    private String name;
+
     private GameScenario scenario;
     private List<FactionOrder> orders = new ArrayList<>();
 
@@ -144,6 +146,15 @@ public class Faction extends GameObject {
 
     public Color getColor() {
         return color;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public List<FactionOrder> getOrders() {

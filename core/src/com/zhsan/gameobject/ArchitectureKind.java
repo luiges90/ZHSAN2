@@ -24,6 +24,7 @@ public class ArchitectureKind extends GameObject {
 
     public static final String SAVE_FILE = "ArchitectureKind.csv";
 
+    private String name;
     private float drawOffsetL, drawOffsetW;
 
     private ArchitectureKind(int id) {
@@ -81,6 +82,15 @@ public class ArchitectureKind extends GameObject {
             throw new FileWriteException(f.path(), e);
         }
 
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public float getDrawOffsetLength() {

@@ -22,6 +22,7 @@ public class Architecture extends GameObject {
 
     private GameScenario scenario;
 
+    private String name;
     private String nameImageName;
 
     private ArchitectureKind kind;
@@ -107,6 +108,15 @@ public class Architecture extends GameObject {
                 }
             }
         }
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNameImageName() {

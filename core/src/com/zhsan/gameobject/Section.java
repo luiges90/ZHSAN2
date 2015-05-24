@@ -25,6 +25,8 @@ public class Section extends GameObject {
 
     private GameScenario scenario;
 
+    private String name;
+
     private Set<Integer> architectureIds = new HashSet<>();
     private int belongedFactionId = -1;
 
@@ -94,6 +96,15 @@ public class Section extends GameObject {
                 }
             }
         }
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public Set<Integer> getArchitectureIds() {
