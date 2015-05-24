@@ -37,6 +37,7 @@ public class XmlHelper {
         String[] split = s.split("\\s");
         List<Integer> result = new ArrayList<>();
         for (String i : split) {
+            if (i.isEmpty()) continue;
             result.add(Integer.parseInt(i));
         }
         return result;

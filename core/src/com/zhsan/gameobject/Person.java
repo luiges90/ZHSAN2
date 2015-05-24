@@ -175,6 +175,9 @@ public class Person extends GameObject {
     }
 
     public GameObject getLocation() {
+        if (locationType == null) {
+            return null;
+        }
         switch (locationType) {
             case ARHITECTURE:
                 return scenario.getArchitectures().get(locationId);
