@@ -126,6 +126,10 @@ public class GameScenario {
         return architectures.asUnmodifiable();
     }
 
+    public GameObjectList<Person> getPersons() {
+        return persons.asUnmodifiable();
+    }
+
     public GameObjectList<Person> getAvailablePersons() {
         return persons.filter(person -> person.getState() != Person.State.DEAD && person.getState() != Person.State.UNDEBUTTED)
                 .asUnmodifiable();

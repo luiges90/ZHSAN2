@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
+import com.zhsan.gameobject.Architecture;
 import com.zhsan.screen.GameScreen;
 
 /**
@@ -73,5 +74,18 @@ public final class ContextMenuMethods {
     public static void MapRightClick_Load(GameScreen screen, Object object) {
         screen.showLoadGameFrame();
     }
+
+    public static void ArchitectureRightClick_Architecture_AllPersons(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getPersons());
+    }
+
+    public static void ArchitectureRightClick_Architecture_AllUnhiredPersons(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getUnhiredPersons());
+    }
+
+    public static void ArchitectureRightClick_Faction_AllPersons(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getBelongedFaction().getPersons());
+    }
+
 
 }

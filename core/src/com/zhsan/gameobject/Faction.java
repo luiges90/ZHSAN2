@@ -72,4 +72,8 @@ public class Faction extends GameObject {
         orders.clear();
     }
 
+    public GameObjectList<Person> getPersons() {
+        return scenario.getPersons().filter(p -> p.getBelongedFaction() == this);
+    }
+
 }

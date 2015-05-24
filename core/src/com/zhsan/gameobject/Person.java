@@ -142,7 +142,7 @@ public class Person extends GameObject {
     }
 
     public GameObject getLocation() {
-        return location.get();
+        return location == null ? null : location.get();
     }
 
     public int getMovingDays() {

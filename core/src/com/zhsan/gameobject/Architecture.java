@@ -78,4 +78,15 @@ public class Architecture extends GameObject {
     public Faction getBelongedFaction() {
         return belongedSection == null ? null : belongedSection.getBelongedFaction();
     }
+
+    public GameObjectList<Person> getPersons() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL);
+    }
+
+    public GameObjectList<Person> getUnhiredPersons() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNHIRED);
+    }
+
+
+
 }

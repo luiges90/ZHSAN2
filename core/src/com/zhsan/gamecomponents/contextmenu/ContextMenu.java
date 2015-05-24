@@ -394,8 +394,6 @@ public class ContextMenu extends WidgetGroup {
                     clickSound.play();
                     dismiss();
                     try {
-                        String name = this.widget.getExtra().fullName;
-                        
                         ContextMenuMethods.class.getMethod(this.widget.getExtra().fullName, GameScreen.class, Object.class)
                                 .invoke(null, screen, currentObject);
                     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
