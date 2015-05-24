@@ -99,6 +99,7 @@ public class TabListGameFrame extends GameFrame {
     private Tab showingTab;
 
     private ScrollPane contentPane;
+    private List<TextWidget<?>> showingTextWidgets = new ArrayList<>();
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -267,6 +268,8 @@ public class TabListGameFrame extends GameFrame {
                 widget.setExtra(o);
                 widget.setText(o.getFieldString(c.name));
 
+                showingTextWidgets.add(widget);
+
                 contentTable.add(widget).width(c.width).height(columnHeaderHeight);
             }
             contentTable.row().height(rowHeight);
@@ -326,10 +329,22 @@ public class TabListGameFrame extends GameFrame {
 
         removeActor(contentPane);
         contentPane = null;
+        showingTextWidgets.forEach(x -> {
+            x.dispose();
+            x.setVisible(false);
+        });
+        showingTextWidgets.clear();
     }
 
     public void resize(int width, int height) {
+        super.resize(width, height);
 
+        contentPane = null;
+        showingTextWidgets.forEach(x -> {
+            x.dispose();
+            x.setVisible(false);
+        });
+        showingTextWidgets.clear();
     }
 
     public void dispose() {
