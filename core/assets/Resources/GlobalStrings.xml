@@ -2,6 +2,7 @@
 <GlobalStrings 
  title="中華三國志"
  noContent="－－－－"
+ day="天"
  gameSurveySaveHeader="标题,年,月,日,保存时间,存档信息,地图位置,描述,资源包名称,存档版本"
  terrainDetailSaveHeader="地形编号,地形名称,视线可穿透,火焰伤害率"
  mapSaveHeader="格宽缩放,宽度,高度,文件名,地图张数,每张图含方格数"

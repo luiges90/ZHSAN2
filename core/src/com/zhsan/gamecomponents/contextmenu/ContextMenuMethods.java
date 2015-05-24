@@ -58,6 +58,10 @@ public final class ContextMenuMethods {
         screen.showTabList(TabListGameFrame.ListKindType.ARCHITECTURE, screen.getScenario().getArchitectures());
     }
 
+    public static void MapRightClick_Information_AllPersons(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, screen.getScenario().getAvailablePersons());
+    }
+
     public static void MapRightClick_System(GameScreen screen, Object object) {
         screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
     }

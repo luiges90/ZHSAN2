@@ -42,7 +42,7 @@ public class Person extends GameObject {
         }
     }
 
-    public class LocationType {
+    private class LocationType {
         private final Architecture architecture;
 
         public LocationType(Architecture architecture) {
@@ -125,6 +125,32 @@ public class Person extends GameObject {
     @Override
     public String getName() {
         return surname + givenName;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public Faction getBelongedFaction() {
+        if (state == State.NORMAL) {
+            GameObject t = location.get();
+            if (t instanceof Architecture) {
+                return ((Architecture) t).getBelongedFaction();
+            }
+        }
+        return null;
+    }
+
+    public GameObject getLocation() {
+        return location.get();
+    }
+
+    public int getMovingDays() {
+        return movingDays;
+    }
+
+    public String getMovingDaysString() {
+        return movingDays == 0 ? "" : movingDays + GlobalStrings.getString(GlobalStrings.Keys.DAY);
     }
 
 }

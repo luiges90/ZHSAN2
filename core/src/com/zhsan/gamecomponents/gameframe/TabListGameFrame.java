@@ -240,13 +240,14 @@ public class TabListGameFrame extends GameFrame {
 
     public void show(ListKindType type, GameObjectList<?> showingData) {
         if (showingData.size() == 0) return;
-        if (!type.carryingObj.isAssignableFrom(showingData.get(0).getClass())) {
+        if (!type.carryingObj.isAssignableFrom(showingData.getFirst().getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
-                    + type.carryingObj + ". " + showingData.get(0).getClass() + " received.");
+                    + type.carryingObj + ". " + showingData.getFirst().getClass() + " received.");
         }
 
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
+        this.showingTab = this.showingListKind.tabs.get(0);
         this.setVisible(true);
     }
 

@@ -30,7 +30,8 @@ public class GlobalStrings {
         FACTION_SAVE_HEADER("factionSaveHeader"),
         GAME_DATA_SAVE_HEADER("gameDataSaveHeader"),
         PERSON_SAVE_HEADER("personSaveHeader"),
-        NO_CONTENT("noContent")
+        NO_CONTENT("noContent"),
+        DAY("day")
         ;
 
         private final String xmlName;
