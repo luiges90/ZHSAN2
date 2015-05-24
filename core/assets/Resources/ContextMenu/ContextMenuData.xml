@@ -19,14 +19,19 @@
     <HasChildTexture FileName="HasChild.png" Margin="8"/>
     <SoundFile Click="Click.wav" Open="Open.wav" Fold="Fold.wav" />
     <MenuKindList>
-        <MenuKind ID="1" Name="ArchitectureRightClick" DisplayName="建筑右键菜单" IsLeft="false" Width="120" Height="25" DisplayAll="False">
-            <MenuItem ID="1" Name="AllPersons" DisplayName="所有仕官武將" />
-            <MenuItem ID="2" Name="AllPersons" DisplayName="所有在野武將" />
+        <MenuKind ID="1" Name="ArchitectureRightClick" IsLeft="false" Width="120" Height="25">
+            <MenuItem ID="1" Name="Architecture" DisplayName="所屬建築" >
+                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" />
+                <MenuItem ID="2" Name="AllUnhiredPersons" DisplayName="在野武將" />
+            </MenuItem>
+            <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力">
+                <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" />
+            </MenuItem>
         </MenuKind>
-        <MenuKind ID="2" Name="ArchitectureLeftClick" DisplayName="建筑左键菜单" IsLeft="true" Width="100" Height="25">
+        <MenuKind ID="2" Name="ArchitectureLeftClick" IsLeft="true" Width="100" Height="25">
 
         </MenuKind>
-        <MenuKind ID="3" Name="MapRightClick" DisplayName="地图右键菜单" IsLeft="false" Width="130" Height="25">
+        <MenuKind ID="3" Name="MapRightClick" IsLeft="false" Width="130" Height="25">
             <MenuItem ID="1" Name="DateGo" DisplayName="进行">
                 <MenuItem ID="1" Name="1Day" DisplayName="进行一天" />
                 <MenuItem ID="2" Name="2Days" DisplayName="进行二天" />
@@ -37,13 +42,13 @@
             <MenuItem ID="4" Name="Information" DisplayName="信息">
                 <MenuItem ID="6" Name="AllArchitectures" DisplayName="所有建筑" />
             </MenuItem>
-            <MenuItem ID="5" Name="Save" DisplayName="存储进度" DisplayIfTrue="SaveAvail" />
-            <MenuItem ID="6" Name="Load" DisplayName="读取进度" DisplayIfTrue="LoadAvail" />
+            <MenuItem ID="5" Name="Save" DisplayName="存储进度" />
+            <MenuItem ID="6" Name="Load" DisplayName="读取进度" />
             <MenuItem ID="7" Name="System" DisplayName="系统" />
         </MenuKind>
-		<MenuKind ID="10" Name="SystemMenu" DisplayName="系统菜单" IsLeft="true" Width="120" Height="25">
-			<MenuItem ID="1" Name="Save" DisplayName="存储进度" DisplayIfTrue="SaveAvail" />
-            <MenuItem ID="2" Name="Load" DisplayName="读取进度" DisplayIfTrue="LoadAvail" />
+		<MenuKind ID="10" Name="SystemMenu" IsLeft="true" Width="120" Height="25">
+			<MenuItem ID="1" Name="Save" DisplayName="存储进度" />
+            <MenuItem ID="2" Name="Load" DisplayName="读取进度" />
 			<MenuItem ID="3" Name="Quit" DisplayName="退出游戏"/>
 			<MenuItem ID="4" Name="Continue" DisplayName="继续游戏"/>
 		</MenuKind>

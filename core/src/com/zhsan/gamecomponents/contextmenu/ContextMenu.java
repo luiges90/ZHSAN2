@@ -70,10 +70,6 @@ public class ContextMenu extends WidgetGroup {
     private static class MenuItem {
         private String fullName;
         private String displayName;
-        private String oppositeDisplayName;
-        @Nullable private String enabledMethodName;
-        @Nullable private String oppositeMethodName;
-        private boolean showDisabled;
         private List<MenuItem> children;
         private boolean expanded = false;
         private int depth;
@@ -83,11 +79,9 @@ public class ContextMenu extends WidgetGroup {
 
     private static class MenuKind {
         private String name;
-        private String displayName;
         private boolean isByLeftClick;
         private int width;
         private int height;
-        private boolean showDisabled;
         private List<MenuItem> items;
     }
 
@@ -118,10 +112,6 @@ public class ContextMenu extends WidgetGroup {
 
             item.fullName = parentName + "_" + XmlHelper.loadAttribute(itemNode, "Name");
             item.displayName = XmlHelper.loadAttribute(itemNode, "DisplayName");
-            item.enabledMethodName = XmlHelper.loadAttribute(itemNode, "DisplayIfTrue", null);
-            item.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(itemNode, "DisplayAll", null));
-            item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeName", item.displayName);
-            item.oppositeDisplayName = XmlHelper.loadAttribute(itemNode, "OppositeIfTrue", item.oppositeMethodName);
             item.textWidget = new StateBackgroundTextWidget<>(widgetTemplate, background);
             item.textWidget.addListener(new MenuItemListener(item.textWidget));
             item.depth = depth;
@@ -175,11 +165,9 @@ public class ContextMenu extends WidgetGroup {
 
                 MenuKind menuKind = new MenuKind();
                 menuKind.name = name;
-                menuKind.displayName = XmlHelper.loadAttribute(kindNode, "DisplayName");
                 menuKind.isByLeftClick = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "IsLeft"));
                 menuKind.width = Integer.parseInt(XmlHelper.loadAttribute(kindNode, "Width"));
                 menuKind.height = Integer.parseInt(XmlHelper.loadAttribute(kindNode, "Height"));
-                menuKind.showDisabled = Boolean.parseBoolean(XmlHelper.loadAttribute(kindNode, "DisplayAll", "True"));
 
                 if (menuKind.isByLeftClick) {
                     menuKind.items = loadMenuItem(kindNode, menuKind.name, menuLeft, menuLeftText, 1);
