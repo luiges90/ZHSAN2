@@ -25,10 +25,9 @@ public class Architecture extends GameObject {
     private String name;
     private String nameImageName;
 
-    private ArchitectureKind kind;
-
     private List<Point> location;
 
+    private int architectureKindId = -1;
     private int belongedSectionId = -1;
 
     private Architecture(int id) {
@@ -40,7 +39,7 @@ public class Architecture extends GameObject {
     }
 
     public ArchitectureKind getKind() {
-        return kind;
+        return scenario.getArchitectureKinds().get(architectureKindId);
     }
 
     public static final GameObjectList<Architecture> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -60,12 +59,12 @@ public class Architecture extends GameObject {
                 if (version == 1) {
                     data.nameImageName = line[1];
                     data.setName(line[2]);
-                    data.kind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
+                    data.architectureKindId = Integer.parseInt(line[3]);
                     data.location = Point.fromCSVList(line[7]);
                 } else {
                     data.nameImageName = line[1];
                     data.setName(line[2]);
-                    data.kind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
+                    data.architectureKindId = Integer.parseInt(line[3]);
                     data.location = Point.fromCSVList(line[4]);
                     data.belongedSectionId = Integer.parseInt(line[5]);
                 }
@@ -89,7 +88,7 @@ public class Architecture extends GameObject {
                         String.valueOf(d.getId()),
                         d.nameImageName,
                         d.getName(),
-                        String.valueOf(d.kind.getId()),
+                        String.valueOf(d.architectureKindId),
                         Point.toCSVList(d.location),
                         String.valueOf(d.belongedSectionId)
                 });
