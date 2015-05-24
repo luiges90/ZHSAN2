@@ -32,6 +32,7 @@ public class GameScenario {
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
     private final GameObjectList<Faction> factions;
+    private final GameObjectList<Person> persons;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -55,10 +56,12 @@ public class GameScenario {
         architectures = Architecture.fromCSV(file, this);
         sections = Section.fromCSV(file, this);
         factions = Faction.fromCSV(file, this);
+        persons = Person.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
 
         for (int i = 0; i < 2; ++i) {
+            Person.setup(this);
             Architecture.setup(this);
             Section.setup(this);
             Faction.setup(this);

@@ -29,6 +29,7 @@ public class GlobalStrings {
         SECTION_SAVE_HEADER("sectionSaveHeader"),
         FACTION_SAVE_HEADER("factionSaveHeader"),
         GAME_DATA_SAVE_HEADER("gameDataSaveHeader"),
+        PERSON_SAVE_HEADER("personSaveHeader"),
         NO_CONTENT("noContent")
         ;
 
