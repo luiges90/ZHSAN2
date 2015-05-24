@@ -17,8 +17,6 @@ import java.util.Set;
  */
 class LoadingSection extends GameObject {
 
-    private GameScenario scenario;
-
     private String name;
 
     private Set<Integer> architectureIds = new HashSet<>();
@@ -28,9 +26,7 @@ class LoadingSection extends GameObject {
         super(id);
     }
 
-    public static final GameObjectList<LoadingSection> fromCSV(FileHandle root, @NotNull GameScenario scen) {
-        int version = scen.getGameSurvey().getVersion();
-
+    public static final GameObjectList<LoadingSection> fromCSV(FileHandle root, int version) {
         GameObjectList<LoadingSection> result = new GameObjectList<>();
 
         FileHandle f = root.child(Section.SAVE_FILE);
@@ -49,7 +45,6 @@ class LoadingSection extends GameObject {
                     data.belongedFactionId = Integer.parseInt(line[2]);
                 }
 
-                data.scenario = scen;
                 result.add(data);
             }
         } catch (IOException e) {
@@ -84,10 +79,6 @@ class LoadingSection extends GameObject {
     @Override
     public String getName() {
         return name;
-    }
-
-    public GameScenario getScenario() {
-        return scenario;
     }
 
     public Set<Integer> getArchitectureIds() {

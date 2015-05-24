@@ -83,9 +83,10 @@ public class Person extends GameObject {
 
     private int movingDays = 0;
 
-    public Person(LoadingPerson from) {
+    public Person(LoadingPerson from, GameScenario scenario) {
         super(from.getId());
-        this.scenario = from.getScenario();
+        this.scenario = scenario;
+
         this.surname = from.getSurname();
         this.givenName = from.getGivenName();
         this.calledName = from.getCalledName();

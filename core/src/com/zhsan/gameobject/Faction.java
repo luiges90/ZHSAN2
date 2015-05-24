@@ -26,10 +26,11 @@ public class Faction extends GameObject {
 
     private Color color;
 
-    public Faction(LoadingFaction from) {
+    public Faction(LoadingFaction from, GameScenario scenario) {
         super(from.getId());
+        this.scenario = scenario;
+
         this.name = from.getName();
-        this.scenario = from.getScenario();
         this.color = from.getColor();
     }
 

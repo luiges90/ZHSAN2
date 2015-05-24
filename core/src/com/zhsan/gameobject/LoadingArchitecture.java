@@ -18,8 +18,6 @@ import java.util.Set;
  */
 class LoadingArchitecture extends GameObject {
 
-    private GameScenario scenario;
-
     private String name;
     private String nameImageName;
 
@@ -41,13 +39,7 @@ class LoadingArchitecture extends GameObject {
         return location;
     }
 
-    public ArchitectureKind getKind() {
-        return scenario.getArchitectureKinds().get(architectureKindId);
-    }
-
-    public static final GameObjectList<LoadingArchitecture> fromCSV(FileHandle root, @NotNull GameScenario scen) {
-        int version = scen.getGameSurvey().getVersion();
-
+    public static final GameObjectList<LoadingArchitecture> fromCSV(FileHandle root, int version) {
         GameObjectList<LoadingArchitecture> result = new GameObjectList<>();
 
         FileHandle f = root.child(Architecture.SAVE_FILE);
@@ -76,7 +68,6 @@ class LoadingArchitecture extends GameObject {
                     data.belongedSectionId = Integer.parseInt(line[5]);
                 }
 
-                data.scenario = scen;
                 result.add(data);
             }
         } catch (IOException e) {
@@ -149,10 +140,6 @@ class LoadingArchitecture extends GameObject {
 
     public int getBelongedSectionId() {
         return belongedSectionId;
-    }
-
-    public GameScenario getScenario() {
-        return scenario;
     }
 
     public int getArchitectureKindId() {

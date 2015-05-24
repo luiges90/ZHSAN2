@@ -20,9 +20,10 @@ public class Section extends GameObject {
 
     private Faction belongedFaction;
 
-    public Section(LoadingSection from) {
+    public Section(LoadingSection from, GameScenario scenario) {
         super(from.getId());
-        this.scenario = from.getScenario();
+        this.scenario = scenario;
+
         this.name = from.getName();
         this.belongedFaction = scenario.getFactions().get(from.getBelongedFactionId());
     }

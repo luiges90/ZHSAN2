@@ -52,21 +52,26 @@ public class GameScenario {
         GameObjectList<LoadingFaction> loadingFactions = LoadingFaction.fromCSVQuick(root, version);
         GameObjectList<Faction> addingFaction = new GameObjectList<>();
         for (LoadingFaction i : loadingFactions) {
-            addingFaction.add(new Faction(i));
+            addingFaction.add(new Faction(i, null));
         }
         return addingFaction;
     }
 
     public GameScenario(FileHandle file, int playerFactionId) {
         gameSurvey = GameSurvey.fromCSV(file);
+
+        // load common data
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
         architectureKinds = ArchitectureKind.fromCSV(file, this);
 
-        GameObjectList<LoadingArchitecture> loadingArchitectures = LoadingArchitecture.fromCSV(file, this);
-        GameObjectList<LoadingSection> loadingSections = LoadingSection.fromCSV(file, this);
-        GameObjectList<LoadingFaction> loadingFactions = LoadingFaction.fromCSV(file, this);
-        GameObjectList<LoadingPerson> loadingPersons = LoadingPerson.fromCSV(file, this);
+        // load game objects
+        int version = gameSurvey.getVersion();
+
+        GameObjectList<LoadingArchitecture> loadingArchitectures = LoadingArchitecture.fromCSV(file, version);
+        GameObjectList<LoadingSection> loadingSections = LoadingSection.fromCSV(file, version);
+        GameObjectList<LoadingFaction> loadingFactions = LoadingFaction.fromCSV(file, version);
+        GameObjectList<LoadingPerson> loadingPersons = LoadingPerson.fromCSV(file, version);
 
         gameData = GameData.fromCSV(file, this);
 
@@ -79,25 +84,25 @@ public class GameScenario {
 
         GameObjectList<Faction> addingFaction = new GameObjectList<>();
         for (LoadingFaction i : loadingFactions) {
-            addingFaction.add(new Faction(i));
+            addingFaction.add(new Faction(i, this));
         }
         factions = addingFaction;
 
         GameObjectList<Section> addingSection = new GameObjectList<>();
         for (LoadingSection i : loadingSections) {
-            addingSection.add(new Section(i));
+            addingSection.add(new Section(i, this));
         }
         sections = addingSection;
 
         GameObjectList<Architecture> addingArchitecture = new GameObjectList<>();
         for (LoadingArchitecture i : loadingArchitectures) {
-            addingArchitecture.add(new Architecture(i));
+            addingArchitecture.add(new Architecture(i, this));
         }
         architectures = addingArchitecture;
 
         GameObjectList<Person> addingPerson = new GameObjectList<>();
         for (LoadingPerson i : loadingPersons) {
-            addingPerson.add(new Person(i));
+            addingPerson.add(new Person(i, this));
         }
         persons = addingPerson;
 

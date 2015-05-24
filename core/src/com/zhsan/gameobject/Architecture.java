@@ -27,9 +27,10 @@ public class Architecture extends GameObject {
     private ArchitectureKind architectureKind;
     private Section belongedSection;
 
-    public Architecture(LoadingArchitecture from) {
+    public Architecture(LoadingArchitecture from, GameScenario scenario) {
         super(from.getId());
-        this.scenario = from.getScenario();
+        this.scenario = scenario;
+
         this.name = from.getName();
         this.nameImageName = from.getNameImageName();
         this.location = from.getLocation();

@@ -20,8 +20,6 @@ class LoadingFaction extends GameObject {
 
     private String name;
 
-    private GameScenario scenario;
-
     private Set<Integer> sectionIds = new HashSet<>();
     private Color color;
 
@@ -56,9 +54,7 @@ class LoadingFaction extends GameObject {
         }
     }
 
-    public static final GameObjectList<LoadingFaction> fromCSV(FileHandle root, @NotNull GameScenario scen) {
-        int version = scen.getGameSurvey().getVersion();
-
+    public static final GameObjectList<LoadingFaction> fromCSV(FileHandle root, int version) {
         Map<Integer, Color> colors = new HashMap<>();
         if (version == 1) {
             FileHandle color = root.child(COLOR_FILE);
@@ -97,7 +93,6 @@ class LoadingFaction extends GameObject {
                     t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
                 }
 
-                t.scenario = scen;
                 result.add(t);
             }
 
@@ -132,9 +127,5 @@ class LoadingFaction extends GameObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public GameScenario getScenario() {
-        return scenario;
     }
 }

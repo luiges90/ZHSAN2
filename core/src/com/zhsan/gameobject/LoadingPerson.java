@@ -13,8 +13,6 @@ import java.io.InputStreamReader;
  */
 class LoadingPerson extends GameObject {
 
-    private GameScenario scenario;
-
     private String surname;
     private String givenName;
     private String calledName;
@@ -35,9 +33,7 @@ class LoadingPerson extends GameObject {
         return surname + givenName;
     }
 
-    public static final GameObjectList<LoadingPerson> fromCSV(FileHandle root, @NotNull GameScenario scen) {
-        int version = scen.getGameSurvey().getVersion();
-
+    public static final GameObjectList<LoadingPerson> fromCSV(FileHandle root, int version) {
         GameObjectList<LoadingPerson> result = new GameObjectList<>();
 
         FileHandle f = root.child(Person.SAVE_FILE);
@@ -73,7 +69,6 @@ class LoadingPerson extends GameObject {
                     data.movingDays = Integer.parseInt(line[7]);
                 }
 
-                data.scenario = scen;
                 result.add(data);
             }
         } catch (IOException e) {
@@ -105,10 +100,6 @@ class LoadingPerson extends GameObject {
 
     public int getMovingDays() {
         return movingDays;
-    }
-
-    public GameScenario getScenario() {
-        return scenario;
     }
 
     public String getSurname() {
