@@ -142,7 +142,7 @@ public class GameScenario {
                     Point p = iterator.next();
                     if (getFacilityAt(p) == null) {
                         Facility f = new Facility.FacilityBuilder()
-                                .setId(archFacs.getFreeId())
+                                .setId(facilities.getFreeId())
                                 .setBelongedArchitecture(a)
                                 .setKind(kind)
                                 .setLocation(p)
