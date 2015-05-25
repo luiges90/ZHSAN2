@@ -22,7 +22,9 @@ public class FacilityKind extends GameObject {
     private String xmlName;
 
     private int endurance;
+
     private boolean indestructible;
+    private boolean mustHave;
 
     private FacilityKind(int id) {
         super(id);
@@ -51,6 +53,7 @@ public class FacilityKind extends GameObject {
                 kind.xmlName = line[2];
                 kind.endurance = Integer.parseInt(line[3]);
                 kind.indestructible = Boolean.parseBoolean(line[4]);
+                kind.mustHave = Boolean.parseBoolean(line[5]);
 
                 result.add(kind);
             }
@@ -71,7 +74,8 @@ public class FacilityKind extends GameObject {
                         detail.name,
                         detail.xmlName,
                         String.valueOf(detail.endurance),
-                        String.valueOf(detail.indestructible)
+                        String.valueOf(detail.indestructible),
+                        String.valueOf(detail.mustHave)
                 });
             }
         } catch (IOException e) {
@@ -83,5 +87,9 @@ public class FacilityKind extends GameObject {
     @Override
     public String getName() {
         return name;
+    }
+
+    public boolean isMustHave() {
+        return mustHave;
     }
 }

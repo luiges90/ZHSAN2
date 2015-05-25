@@ -1,3 +1,3 @@
-ID,名稱,XML名稱,耐久,不可被破壞
-1,農田,Farmland,500,true
-2,市場,Market,500,true
+ID,名稱,XML名稱,耐久,不可被破壞,必須存在,可建造地型
+1,農田,Farmland,500,true,true,1 2
+2,市場,Market,500,true,true,1 2

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -73,7 +74,6 @@ public class GameScenario {
         architectureKinds = ArchitectureKind.fromCSV(file, this);
 
         facilityKinds = FacilityKind.fromCSV(file, this, defaultData, ddVersion);
-        facilities = Facility.fromCSV(file, this);
 
         // load game objects
         int version = gameSurvey.getVersion();
@@ -116,8 +116,44 @@ public class GameScenario {
         }
         persons = addingPerson;
 
+        facilities = Facility.fromCSV(file, this);
+
         Faction playerFaction = factions.get(playerFactionId);
         gameData.setCurrentPlayer(playerFaction);
+
+        setupFacilities();
+    }
+
+    private final void setupFacilities() {
+        GameObjectList<FacilityKind> mustHaveFacilities = facilityKinds.filter(FacilityKind::isMustHave);
+        for (Architecture a : architectures) {
+            GameObjectList<FacilityKind> missingFacilities = new GameObjectList<>(mustHaveFacilities, false);
+
+            GameObjectList<Facility> facilities = a.getFacilities();
+            for (Facility i : facilities) {
+                if (missingFacilities.contains(i.getKind())) {
+                    missingFacilities.remove(i.getKind());
+                }
+            }
+
+            for (FacilityKind kind : missingFacilities) {
+                Iterator<Point> iterator = a.getLocation().get(0).spiralOutIterator();
+                while (iterator.hasNext()) {
+                    Point p = iterator.next();
+                    if (getFacilityAt(p) == null) {
+                        Facility f = new Facility.FacilityBuilder()
+                                .setId(facilities.getFreeId())
+                                .setBelongedArchitecture(a)
+                                .setKind(kind)
+                                .setLocation(p)
+                                .createFacility();
+                        facilities.add(f);
+                        break;
+                    }
+                }
+            }
+        }
+
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
@@ -154,12 +190,11 @@ public class GameScenario {
     }
 
     public Architecture getArchitectureAt(Point p) {
-        for (Architecture a : architectures) {
-            if (a.getLocation().contains(p)) {
-                return a;
-            }
-        }
-        return null;
+        return architectures.filter(a -> a.getLocation().contains(p)).getFirst();
+    }
+
+    public Facility getFacilityAt(Point p) {
+        return facilities.filter(f -> f.getLocation().equals(p)).getFirst();
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {

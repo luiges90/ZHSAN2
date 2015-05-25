@@ -39,7 +39,15 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public T getFirst() {
-        return content.get(content.firstKey());
+        return content.isEmpty() ? null : content.get(content.firstKey());
+    }
+
+    public boolean contains(T t) {
+        return content.containsValue(t);
+    }
+
+    public T remove(T t) {
+        return content.remove(t.getId());
     }
 
     @Override
@@ -56,13 +64,16 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.size();
     }
 
+    public int getFreeId() {
+        return content.isEmpty() ? 1 : content.lastKey() + 1;
+    }
+
     /**
      * Return a new GameObjectList that is not modifiable
      * @return
      */
     public GameObjectList<T> asUnmodifiable() {
-        GameObjectList<T> result = new GameObjectList<>(this, true);
-        return result;
+        return new GameObjectList<>(this, true);
     }
 
     public class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {

@@ -12,6 +12,6 @@
  factionSaveHeader="ID,名稱,顏色"
  personSaveHeader="ID,姓,名,字,狀態,位置類,位置,正移動日數"
  gameDataSaveHeader="当前玩家,劇本自今天數"
- facilityKindSaveHeader="ID,名稱,XML名稱,耐久,不可被破壞"
- facilitySaveHeader="ID,類型,位置,耐久"
+ facilityKindSaveHeader="ID,名稱,XML名稱,耐久,不可被破壞,必須存在"
+ facilitySaveHeader="ID,類型,位置,所屬建築,耐久"
 />

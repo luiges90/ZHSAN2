@@ -7,6 +7,7 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -65,6 +66,49 @@ public final class Point {
         int cy = (minY.y + maxY.y) / 2;
 
         return new Point(cx, cy);
+    }
+
+    /**
+     * Return an iterator which returns points further and further than this point, starting
+     * at the right and travel at CCW direction
+     * i.e. For point (0,0), it will returns
+     * (0,0), (1,0), (0,1), (-1,0), (0,-1), (2,0), (1,1), (0,2), (-1,1), (-2,0), ...
+     *
+     * This iterator never ends. So when done with it use `break` to leave the loop.
+     *
+     * @return
+     */
+    public Iterator<Point> spiralOutIterator() {
+        return new Iterator<Point>() {
+            private int i = 0;
+            private int layer = 0;
+
+            @Override
+            public boolean hasNext() {
+                return true;
+            }
+
+            @Override
+            public Point next() {
+                if (i > layer * 4) {
+                    i = 0;
+                    layer++;
+                }
+                if (i >= 0 && i < layer) {
+                    int p = i;
+                    return new Point(x + layer - p, y + p);
+                } else if (i >= layer && i < layer * 2) {
+                    int p = i - layer;
+                    return new Point(x - p, y + layer - p);
+                } else if (i >= layer * 2 && i < layer * 3) {
+                    int p = i - layer * 2;
+                    return new Point(x - (layer - p), y - p);
+                } else {
+                    int p = i - layer * 3;
+                    return new Point(x + p, y - (layer - p));
+                }
+            }
+        };
     }
 
     @Override

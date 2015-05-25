@@ -91,4 +91,8 @@ public class Architecture extends GameObject {
         return getBelongedFaction() != null;
     }
 
+    public GameObjectList<Facility> getFacilities() {
+        return scenario.getFacilities().filter(f -> f.getBelongedArchitecture() == this);
+    }
+
 }

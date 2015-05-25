@@ -21,7 +21,9 @@ public class Facility extends GameObject {
 
     private FacilityKind kind;
     private Point location;
-    private int endurace;
+    private int endurance;
+
+    private Architecture belongedArchitecture;
 
     private Facility(int id) {
         super(id);
@@ -44,11 +46,12 @@ public class Facility extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Facility data = new Facility(Integer.parseInt(line[0]));
+                Facility data = new FacilityBuilder().setId(Integer.parseInt(line[0])).createFacility();
 
                 data.kind = scen.getFacilityKinds().get(Integer.parseInt(line[1]));
                 data.location = Point.fromCSV(line[2]);
-                data.endurace = Integer.parseInt(line[3]);
+                data.belongedArchitecture = scen.getArchitectures().get(Integer.parseInt(line[3]));
+                data.endurance = Integer.parseInt(line[4]);
 
                 result.add(data);
             }
@@ -68,7 +71,8 @@ public class Facility extends GameObject {
                         String.valueOf(detail.getId()),
                         String.valueOf(detail.kind.getId()),
                         detail.location.toCSV(),
-                        String.valueOf(detail.endurace)
+                        String.valueOf(detail.belongedArchitecture.getId()),
+                        String.valueOf(detail.endurance)
                 });
             }
         } catch (IOException e) {
@@ -80,5 +84,53 @@ public class Facility extends GameObject {
     @Override
     public String getName() {
         return kind.getName();
+    }
+
+    public Architecture getBelongedArchitecture() {
+        return belongedArchitecture;
+    }
+
+    public FacilityKind getKind() {
+        return kind;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public static class FacilityBuilder {
+
+        private int id;
+        private FacilityKind kind;
+        private Point location;
+        private Architecture belongedArchitecture;
+
+        public FacilityBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public FacilityBuilder setKind(FacilityKind kind) {
+            this.kind = kind;
+            return this;
+        }
+
+        public FacilityBuilder setLocation(Point location) {
+            this.location = location;
+            return this;
+        }
+
+        public FacilityBuilder setBelongedArchitecture(Architecture belongedArchitecture) {
+            this.belongedArchitecture = belongedArchitecture;
+            return this;
+        }
+
+        public Facility createFacility() {
+            Facility f = new Facility(id);
+            f.kind = kind;
+            f.location = location;
+            f.belongedArchitecture = belongedArchitecture;
+            return f;
+        }
     }
 }
