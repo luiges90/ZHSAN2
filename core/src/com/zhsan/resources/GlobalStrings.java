@@ -30,6 +30,8 @@ public class GlobalStrings {
         FACTION_SAVE_HEADER("factionSaveHeader"),
         GAME_DATA_SAVE_HEADER("gameDataSaveHeader"),
         PERSON_SAVE_HEADER("personSaveHeader"),
+        FACILITY_KIND_SAVE_HEADER("facilityKindSaveHeader"),
+        FACILITY_SAVE_HEADER("facilitySaveHeader"),
         NO_CONTENT("noContent"),
         DAY("day")
         ;

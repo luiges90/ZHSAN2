@@ -19,6 +19,7 @@ public class GameScenario {
 
     public static final int SAVE_VERSION = 2;
 
+    public static final String DEFUALT_SCENARIO_DATA_PATH = Paths.DATA + "DefaultScenarioData" + File.separator;
     public static final String SCENARIO_PATH = Paths.DATA + "Scenario" + File.separator;
     public static final String SAVE_PATH = Paths.DATA + "Save" + File.separator;
 
@@ -29,6 +30,9 @@ public class GameScenario {
     private final GameData gameData;
 
     private final GameObjectList<ArchitectureKind> architectureKinds;
+
+    private final GameObjectList<Facility> facilities;
+    private final GameObjectList<FacilityKind> facilityKinds;
 
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
@@ -61,9 +65,15 @@ public class GameScenario {
         gameSurvey = GameSurvey.fromCSV(file);
 
         // load common data
+        FileHandle defaultData = Gdx.files.external(DEFUALT_SCENARIO_DATA_PATH);
+        int ddVersion = GameSurvey.fromCSV(defaultData).getVersion();
+
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
         architectureKinds = ArchitectureKind.fromCSV(file, this);
+
+        facilityKinds = FacilityKind.fromCSV(file, this, defaultData, ddVersion);
+        facilities = Facility.fromCSV(file, this);
 
         // load game objects
         int version = gameSurvey.getVersion();
@@ -128,6 +138,14 @@ public class GameScenario {
 
     public GameObjectList<Person> getPersons() {
         return persons.asUnmodifiable();
+    }
+
+    public GameObjectList<Facility> getFacilities() {
+        return facilities.asUnmodifiable();
+    }
+
+    public GameObjectList<FacilityKind> getFacilityKinds() {
+        return facilityKinds.asUnmodifiable();
     }
 
     public GameObjectList<Person> getAvailablePersons() {
@@ -209,13 +227,19 @@ public class GameScenario {
         result.emptyDirectory();
 
         GameSurvey.toCSV(result, gameSurvey);
+
         TerrainDetail.toCSV(result, terrainDetails);
         GameMap.toCSV(result, gameMap);
         ArchitectureKind.toCSV(result, architectureKinds.asUnmodifiable());
+
+        FacilityKind.toCSV(result, facilityKinds.asUnmodifiable());
+
+        GameData.toCSV(result, gameData);
+
         Architecture.toCSV(result, architectures.asUnmodifiable());
         Section.toCSV(result, sections.asUnmodifiable());
         Faction.toCSV(result, factions.asUnmodifiable());
-        GameData.toCSV(result, gameData);
+        Person.toCSV(result, persons.asUnmodifiable());
     }
 
 }
