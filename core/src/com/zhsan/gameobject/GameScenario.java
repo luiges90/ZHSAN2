@@ -129,8 +129,8 @@ public class GameScenario {
         for (Architecture a : architectures) {
             GameObjectList<FacilityKind> missingFacilities = new GameObjectList<>(mustHaveFacilities, false);
 
-            GameObjectList<Facility> facilities = a.getFacilities();
-            for (Facility i : facilities) {
+            GameObjectList<Facility> archFacs = a.getFacilities();
+            for (Facility i : archFacs) {
                 if (missingFacilities.contains(i.getKind())) {
                     missingFacilities.remove(i.getKind());
                 }
@@ -142,7 +142,7 @@ public class GameScenario {
                     Point p = iterator.next();
                     if (getFacilityAt(p) == null) {
                         Facility f = new Facility.FacilityBuilder()
-                                .setId(facilities.getFreeId())
+                                .setId(archFacs.getFreeId())
                                 .setBelongedArchitecture(a)
                                 .setKind(kind)
                                 .setLocation(p)
