@@ -31,8 +31,12 @@ public class ArchitectureKind extends GameObject {
         super(id);
     }
 
-    public static final GameObjectList<ArchitectureKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
-        int version = scen.getGameSurvey().getVersion();
+    public static final GameObjectList<ArchitectureKind> fromCSV(FileHandle root, @NotNull GameScenario scen, FileHandle defaultRoot, int defaultVersion) {
+        int version = defaultRoot == null ? defaultVersion : scen.getGameSurvey().getVersion();
+
+        if (version == 1) {
+            return fromCSV(defaultRoot, scen, null, defaultVersion);
+        }
 
         GameObjectList<ArchitectureKind> result = new GameObjectList<>();
 
@@ -45,19 +49,11 @@ public class ArchitectureKind extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 ArchitectureKind kind = new ArchitectureKind(Integer.parseInt(line[0]));
-                if (version == 1) {
-                    kind.setName(line[1]);
-                } else {
-                    kind.setName(line[1]);
-                }
 
-                if (version == 1) {
-                    kind.drawOffsetL = kind.getId() == 2 ? 4 : 0;
-                    kind.drawOffsetW = kind.getId() == 2 ? 2 : 0;
-                } else {
-                    kind.drawOffsetL = Integer.parseInt(line[2]);
-                    kind.drawOffsetW = Integer.parseInt(line[3]);
-                }
+                kind.setName(line[1]);
+
+                kind.drawOffsetL = Float.parseFloat(line[2]);
+                kind.drawOffsetW = Float.parseFloat(line[3]);
 
                 result.add(kind);
             }
@@ -74,8 +70,10 @@ public class ArchitectureKind extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_KIND_SAVE_HEADER).split(","));
             for (ArchitectureKind detail : kinds) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.getId()), detail.getName(),
-                        String.valueOf(detail.getDrawOffsetLength()), String.valueOf(detail.getDrawOffsetWidth())
+                        String.valueOf(detail.getId()),
+                        detail.getName(),
+                        String.valueOf(detail.getDrawOffsetLength()),
+                        String.valueOf(detail.getDrawOffsetWidth())
                 });
             }
         } catch (IOException e) {

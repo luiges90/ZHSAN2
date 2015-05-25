@@ -71,7 +71,7 @@ public class GameScenario {
 
         terrainDetails = TerrainDetail.fromCSV(file, this);
         gameMap = GameMap.fromCSV(file, this);
-        architectureKinds = ArchitectureKind.fromCSV(file, this);
+        architectureKinds = ArchitectureKind.fromCSV(file, this, defaultData, ddVersion);
 
         facilityKinds = FacilityKind.fromCSV(file, this, defaultData, ddVersion);
 
