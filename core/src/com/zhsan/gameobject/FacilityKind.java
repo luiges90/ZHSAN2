@@ -19,7 +19,6 @@ public class FacilityKind extends GameObject {
     public static final String SAVE_FILE = "FacilityKind.csv";
 
     private String name;
-    private String xmlName;
 
     private int endurance;
 
@@ -50,10 +49,9 @@ public class FacilityKind extends GameObject {
                 FacilityKind kind = new FacilityKind(Integer.parseInt(line[0]));
 
                 kind.name = line[1];
-                kind.xmlName = line[2];
-                kind.endurance = Integer.parseInt(line[3]);
-                kind.indestructible = Boolean.parseBoolean(line[4]);
-                kind.mustHave = Boolean.parseBoolean(line[5]);
+                kind.endurance = Integer.parseInt(line[2]);
+                kind.indestructible = Boolean.parseBoolean(line[3]);
+                kind.mustHave = Boolean.parseBoolean(line[4]);
 
                 result.add(kind);
             }
@@ -72,7 +70,6 @@ public class FacilityKind extends GameObject {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
                         detail.name,
-                        detail.xmlName,
                         String.valueOf(detail.endurance),
                         String.valueOf(detail.indestructible),
                         String.valueOf(detail.mustHave)

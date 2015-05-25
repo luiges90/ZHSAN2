@@ -34,6 +34,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Created by Peter on 19/3/2015.
@@ -91,6 +92,8 @@ public class MapLayer extends WidgetGroup {
     private Map<Pair<ArchitectureKind, ArchitectureImageQuantifier>, Texture> architectureImages = new HashMap<>();
     private Map<String, Texture> architectureNameImages = new HashMap<>();
     private Map<String, Texture> mapTiles = new HashMap<>();
+
+    private Map<FacilityKind, Texture> facilityKindImages = new HashMap<>();
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
     private float mapScrollFactor;
@@ -307,6 +310,7 @@ public class MapLayer extends WidgetGroup {
         }
 
         {
+            // draw map info
             Point p = mouseOnMapPosition();
             int px = p.x;
             int py = p.y;
@@ -320,71 +324,97 @@ public class MapLayer extends WidgetGroup {
             }
         }
 
-        // draw architectures
-        for (Architecture a : screen.getScenario().getArchitectures()) {
-            Point mapCenter = Point.getCenter(a.getLocation());
-            String resPack = screen.getScenario().getGameSurvey().getResourcePackName();
-            if (xLo * map.getTileInEachImage() <= mapCenter.x && mapCenter.x <= (xHi + 1) * map.getTileInEachImage() &&
-                    yLo * map.getTileInEachImage() <= (map.getHeight() - mapCenter.y + 1) &&
-                    (map.getHeight() - mapCenter.y + 1) <= (yHi + 1) * map.getTileInEachImage()) {
-                // draw architecture main
-                Pair<ArchitectureImageQuantifier, Texture> image =
-                        getArchitectureImage(resPack, a.getKind(), a.getLocation());
+        String resPack = screen.getScenario().getGameSurvey().getResourcePackName();
+        Function<Integer, Integer> drawPosX = x -> (x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
+        Function<Integer, Integer> drawPosY = y -> ((map.getHeight() - 1 - y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
 
-                int mainX = (mapCenter.x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
-                int mainY = ((map.getHeight() - 1 - mapCenter.y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
-                int mainSizeX, mainSizeY;
-                int mainSizeYNoOffset;
-                switch (image.getLeft().quantifier) {
-                    case DEFAULT:
-                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
-                        mainSizeYNoOffset = zoom;
-                        break;
-                    case HORIZONTAL:
-                        mainSizeX = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
-                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        mainSizeYNoOffset = zoom;
-                        break;
-                    case VERTICAL:
-                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        mainSizeY = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
-                        mainSizeYNoOffset = zoom * image.getLeft().size;
-                        break;
-                    case DIAGONAL_SQUARE:
-                        mainSizeX = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
-                        mainSizeY = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
-                        mainSizeYNoOffset = zoom * (image.getLeft().size * 2 + 1);
-                        break;
-                    default:
-                        mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                        mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
-                        mainSizeYNoOffset = zoom;
-                        break;
-                }
-                batch.draw(image.getRight(), mainX - mainSizeX / 2, mainY - mainSizeY / 2, mainSizeX, mainSizeY);
+        {
+            // draw architectures
+            for (Architecture a : screen.getScenario().getArchitectures()) {
+                Point mapCenter = Point.getCenter(a.getLocation());
+                if (xLo * map.getTileInEachImage() <= mapCenter.x && mapCenter.x <= (xHi + 1) * map.getTileInEachImage() &&
+                        yLo * map.getTileInEachImage() <= (map.getHeight() - mapCenter.y + 1) &&
+                        (map.getHeight() - mapCenter.y + 1) <= (yHi + 1) * map.getTileInEachImage()) {
+                    // draw architecture main
+                    Pair<ArchitectureImageQuantifier, Texture> image =
+                            getArchitectureImage(resPack, a.getKind(), a.getLocation());
 
-                // draw header
-                String name = a.getNameImageName();
-                if (!architectureNameImages.containsKey(name)) {
-                    FileHandle fh = Gdx.files.external(ARCHITECTURE_RES_PATH + resPack + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
-                    if (!fh.exists()) {
-                        fh = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
+                    int mainX = drawPosX.apply(mapCenter.x);
+                    int mainY = drawPosY.apply(mapCenter.y);
+                    int mainSizeX, mainSizeY;
+                    int mainSizeYNoOffset;
+                    switch (image.getLeft().quantifier) {
+                        case DEFAULT:
+                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                            mainSizeYNoOffset = zoom;
+                            break;
+                        case HORIZONTAL:
+                            mainSizeX = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeYNoOffset = zoom;
+                            break;
+                        case VERTICAL:
+                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeY = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
+                            mainSizeYNoOffset = zoom * image.getLeft().size;
+                            break;
+                        case DIAGONAL_SQUARE:
+                            mainSizeX = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeY = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
+                            mainSizeYNoOffset = zoom * (image.getLeft().size * 2 + 1);
+                            break;
+                        default:
+                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
+                            mainSizeYNoOffset = zoom;
+                            break;
                     }
-                    Texture nameImage = new Texture(fh);
-                    architectureNameImages.put(name, nameImage);
-                }
-                Texture nameImage = architectureNameImages.get(name);
-                int nameImageHeight = (int) (zoom * captionSize);
-                int nameImageWidth = (int) ((float) nameImage.getWidth() * nameImageHeight / nameImage.getHeight());
-                batch.draw(nameImage, mainX - nameImageWidth / 2, mainY + mainSizeYNoOffset / 2 - nameImageHeight / 2,
-                        nameImageWidth, nameImageHeight);
-            }
+                    batch.draw(image.getRight(), mainX - mainSizeX / 2, mainY - mainSizeY / 2, mainSizeX, mainSizeY);
 
+                    // draw header
+                    String name = a.getNameImageName();
+                    if (!architectureNameImages.containsKey(name)) {
+                        FileHandle fh = Gdx.files.external(ARCHITECTURE_RES_PATH + resPack + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
+                        if (!fh.exists()) {
+                            fh = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
+                        }
+                        Texture nameImage = new Texture(fh);
+                        architectureNameImages.put(name, nameImage);
+                    }
+                    Texture nameImage = architectureNameImages.get(name);
+                    int nameImageHeight = (int) (zoom * captionSize);
+                    int nameImageWidth = (int) ((float) nameImage.getWidth() * nameImageHeight / nameImage.getHeight());
+                    batch.draw(nameImage, mainX - nameImageWidth / 2, mainY + mainSizeYNoOffset / 2 - nameImageHeight / 2,
+                            nameImageWidth, nameImageHeight);
+                }
+
+            }
+        }
+
+        {
+            // draw facilities
+            for (Facility f : screen.getScenario().getFacilities()) {
+                Texture facilityImage = getFacilityImage(resPack, f.getKind());
+                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
+            }
         }
 
         // draw childrens
         super.draw(batch, parentAlpha);
+    }
+
+    private Texture getFacilityImage(String resSet, FacilityKind kind) {
+        if (!facilityKindImages.containsKey(kind)) {
+            FileHandle f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + kind.getId() + ".png");
+            if (!f.exists()) {
+                f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + kind.getId() + ".png");
+            }
+
+            Texture t = new Texture(f);
+            facilityKindImages.put(kind, t);
+        }
+        return facilityKindImages.get(kind);
     }
 
     private Texture getArchitectureImage(String resSet, ArchitectureKind kind, ArchitectureImageQuantifier quantifier) {
