@@ -547,33 +547,33 @@ public class MapLayer extends WidgetGroup {
             } else if (keycode == Input.Keys.Q) {
                 GlobalVariables.showGrid = !GlobalVariables.showGrid;
             } else if (keycode == Input.Keys.NUM_1) {
-                screen.runDays(1);
+                screen.getDayRunner().runDays(1);
             } else if (keycode == Input.Keys.NUM_2) {
-                screen.runDays(2);
+                screen.getDayRunner().runDays(2);
             } else if (keycode == Input.Keys.NUM_3) {
-                screen.runDays(3);
+                screen.getDayRunner().runDays(3);
             } else if (keycode == Input.Keys.NUM_4) {
-                screen.runDays(4);
+                screen.getDayRunner().runDays(4);
             } else if (keycode == Input.Keys.NUM_5) {
-                screen.runDays(5);
+                screen.getDayRunner().runDays(5);
             } else if (keycode == Input.Keys.NUM_6) {
-                screen.runDays(6);
+                screen.getDayRunner().runDays(6);
             } else if (keycode == Input.Keys.NUM_7) {
-                screen.runDays(7);
+                screen.getDayRunner().runDays(7);
             } else if (keycode == Input.Keys.NUM_8) {
-                screen.runDays(8);
+                screen.getDayRunner().runDays(8);
             } else if (keycode == Input.Keys.NUM_9) {
-                screen.runDays(9);
+                screen.getDayRunner().runDays(9);
             } else if (keycode == Input.Keys.NUM_0) {
-                screen.runDays(10);
+                screen.getDayRunner().runDays(10);
             } else if (keycode == Input.Keys.F1) {
-                screen.runDays(30);
+                screen.getDayRunner().runDays(30);
             } else if (keycode == Input.Keys.F2) {
-                screen.runDays(60);
+                screen.getDayRunner().runDays(60);
             } else if (keycode == Input.Keys.F3) {
-                screen.runDays(90);
+                screen.getDayRunner().runDays(90);
             } else if (keycode == Input.Keys.SPACE) {
-                screen.continueRunDays();
+                screen.getDayRunner().continueRunDays();
             }
 
             return true;

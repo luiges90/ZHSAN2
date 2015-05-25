@@ -114,7 +114,7 @@ public class DateRunner extends WidgetGroup {
 
         this.addListener(new Listener());
 
-        screen.addRunningDaysListener(new GameScreen.RunningDaysListener() {
+        screen.getDayRunner().addRunningDaysListener(new GameScreen.RunningDaysListener() {
             @Override
             public void started(int i) {
                 daysLeft = i;
@@ -155,7 +155,7 @@ public class DateRunner extends WidgetGroup {
         daysToGoText2.draw(batch, parentAlpha);
 
         // controls
-        batch.draw(screen.isDayRunning() ? pause.get() : play.get(), playPos.x + getX(), playPos.y + getY(), playPos.width, playPos.height);
+        batch.draw(screen.getDayRunner().isDayRunning() ? pause.get() : play.get(), playPos.x + getX(), playPos.y + getY(), playPos.width, playPos.height);
         batch.draw(stop.get(), stopPos.x + getX(), stopPos.y + getY(), stopPos.width, stopPos.height);
 
         // days left
@@ -265,16 +265,16 @@ public class DateRunner extends WidgetGroup {
             if (playPos.contains(x, y)) {
                 play.setState(StateTexture.State.NORMAL);
                 pause.setState(StateTexture.State.NORMAL);
-                if (!screen.isDayRunning()) {
-                    screen.runDays(daysLeft == 0 ? daysToGo : 0);
+                if (!screen.getDayRunner().isDayRunning()) {
+                    screen.getDayRunner().runDays(daysLeft == 0 ? daysToGo : 0);
                 } else {
-                    screen.pauseRunDays();
+                    screen.getDayRunner().pauseRunDays();
                 }
             }
 
             if (stopPos.contains(x, y)) {
                 stop.setState(StateTexture.State.NORMAL);
-                screen.stopRunDays();
+                screen.getDayRunner().stopRunDays();
             }
 
             return true;

@@ -50,11 +50,12 @@ public class GameScreen extends WidgetGroup {
 
     private ScreenBlind screenBlind;
 
-    private List<RunningDaysListener> runningDaysListeners = new ArrayList<>();
+    private DayRunner dayRunner;
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
         this.controller = new GameController(scen);
+        this.dayRunner = new DayRunner();
 
         toolBar = new ToolBar(this);
         toolBar.setPosition(0, 0);
@@ -175,105 +176,115 @@ public class GameScreen extends WidgetGroup {
         return mapLayer;
     }
 
-    public void addRunningDaysListener(RunningDaysListener l) {
-        runningDaysListeners.add(l);
+    public DayRunner getDayRunner() {
+        return dayRunner;
     }
 
-    private Thread dayRunner;
-    private AtomicBoolean pauseDayRunner = new AtomicBoolean(false);
-    private AtomicBoolean stopDayRunner = new AtomicBoolean(false);
-    private volatile boolean dayRunning = false;
-    private volatile int moreDays;
-    private final Object dayPauseLock = new Object();
+    public class DayRunner {
 
-    public void continueRunDays() {
-        if (dayRunning) {
-            pauseRunDays();
-        } else {
-            runDays(dayRunner != null && dayRunner.isAlive() ? 0 : getDaysOnDateRunner());
+        private List<RunningDaysListener> runningDaysListeners = new ArrayList<>();
+
+        public void addRunningDaysListener(RunningDaysListener l) {
+            runningDaysListeners.add(l);
         }
-    }
 
-    public void runDays(int days) {
-        if (dayRunner != null && dayRunner.isAlive()) {
-            synchronized (GameScreen.this) {
-                moreDays = days;
+        private Thread dayRunner;
+        private AtomicBoolean pauseDayRunner = new AtomicBoolean(false);
+        private AtomicBoolean stopDayRunner = new AtomicBoolean(false);
+        private volatile boolean dayRunning = false;
+        private volatile int moreDays;
+        private final Object dayPauseLock = new Object();
+
+        public void continueRunDays() {
+            if (dayRunning) {
+                pauseRunDays();
+            } else {
+                runDays(dayRunner != null && dayRunner.isAlive() ? 0 : getDaysOnDateRunner());
             }
+        }
+
+        public void runDays(int days) {
+            if (dayRunner != null && dayRunner.isAlive()) {
+                synchronized (GameScreen.this) {
+                    moreDays = days;
+                }
+                pauseDayRunner.set(false);
+                synchronized (dayPauseLock) {
+                    dayPauseLock.notifyAll();
+                }
+                return;
+            }
+
+            Runnable dayRunnable = () -> {
+                for (RunningDaysListener x : runningDaysListeners) {
+                    x.started(days);
+                }
+
+                for (int i = 0; i < days; ++i) {
+                    dayRunning = true;
+
+                    controller.runDay();
+                    getScenario().advanceDay();
+
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
+
+                    synchronized (GameScreen.this) {
+                        i -= moreDays;
+                        if (days - i - 1 > GlobalVariables.maxRunningDays) {
+                            i += days - i - GlobalVariables.maxRunningDays - 1;
+                        }
+                        moreDays = 0;
+                    }
+
+                    for (RunningDaysListener x : runningDaysListeners) {
+                        x.passed(days - i - 1);
+                    }
+
+                    while (pauseDayRunner.get()) {
+                        synchronized (dayPauseLock) {
+                            try {
+                                dayRunning = false;
+                                dayPauseLock.wait();
+                            } catch (InterruptedException e) {
+                                // ignore
+                            }
+                        }
+                    }
+
+                    if (stopDayRunner.compareAndSet(true, false)) {
+                        break;
+                    }
+                }
+
+                dayRunning = false;
+                for (RunningDaysListener x : runningDaysListeners) {
+                    x.stopped();
+                }
+            };
+            dayRunner = new Thread(dayRunnable, "Day runner");
+            dayRunner.start();
+        }
+
+        public void pauseRunDays() {
+            pauseDayRunner.set(true);
+        }
+
+        public void stopRunDays() {
             pauseDayRunner.set(false);
+            stopDayRunner.set(true);
             synchronized (dayPauseLock) {
                 dayPauseLock.notifyAll();
             }
-            return;
         }
 
-        Runnable dayRunnable = () -> {
-            for (RunningDaysListener x : runningDaysListeners) {
-                x.started(days);
-            }
-
-            for (int i = 0; i < days; ++i) {
-                dayRunning = true;
-
-                controller.runDay();
-                getScenario().advanceDay();
-
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
-
-                synchronized (GameScreen.this) {
-                    i -= moreDays;
-                    if (days - i - 1 > GlobalVariables.maxRunningDays) {
-                        i += days - i - GlobalVariables.maxRunningDays - 1;
-                    }
-                    moreDays = 0;
-                }
-
-                for (RunningDaysListener x : runningDaysListeners) {
-                    x.passed(days - i - 1);
-                }
-
-                while (pauseDayRunner.get()) {
-                    synchronized (dayPauseLock) {
-                        try {
-                            dayRunning = false;
-                            dayPauseLock.wait();
-                        } catch (InterruptedException e) {
-                            // ignore
-                        }
-                    }
-                }
-
-                if (stopDayRunner.compareAndSet(true, false)) {
-                    break;
-                }
-            }
-
-            dayRunning = false;
-            for (RunningDaysListener x : runningDaysListeners) {
-                x.stopped();
-            }
-        };
-        dayRunner = new Thread(dayRunnable, "Day runner");
-        dayRunner.start();
-    }
-
-    public void pauseRunDays() {
-        pauseDayRunner.set(true);
-    }
-
-    public void stopRunDays() {
-        pauseDayRunner.set(false);
-        stopDayRunner.set(true);
-        synchronized (dayPauseLock) {
-            dayPauseLock.notifyAll();
+        public boolean isDayRunning() {
+            return dayRunning;
         }
-    }
 
-    public boolean isDayRunning() {
-        return dayRunning;
     }
 
     private int getDaysOnDateRunner() {

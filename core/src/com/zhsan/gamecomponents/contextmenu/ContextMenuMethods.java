@@ -36,23 +36,23 @@ public final class ContextMenuMethods {
     }
 
     public static void MapRightClick_DateGo_1Day(GameScreen screen, Object object) {
-        screen.runDays(1);
+        screen.getDayRunner().runDays(1);
     }
 
     public static void MapRightClick_DateGo_2Days(GameScreen screen, Object object) {
-        screen.runDays(2);
+        screen.getDayRunner().runDays(2);
     }
 
     public static void MapRightClick_DateGo_5Days(GameScreen screen, Object object) {
-        screen.runDays(5);
+        screen.getDayRunner().runDays(5);
     }
 
     public static void MapRightClick_DateGo_10Days(GameScreen screen, Object object) {
-        screen.runDays(10);
+        screen.getDayRunner().runDays(10);
     }
 
     public static void MapRightClick_DateGo_30Days(GameScreen screen, Object object) {
-        screen.runDays(30);
+        screen.getDayRunner().runDays(30);
     }
 
     public static void MapRightClick_Information_AllArchitectures(GameScreen screen, Object object) {
