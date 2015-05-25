@@ -94,19 +94,24 @@ public final class Point {
                     i = 0;
                     layer++;
                 }
+
+                Point result;
                 if (i >= 0 && i < layer) {
                     int p = i;
-                    return new Point(x + layer - p, y + p);
+                    result = new Point(x + layer - p, y + p);
                 } else if (i >= layer && i < layer * 2) {
                     int p = i - layer;
-                    return new Point(x - p, y + layer - p);
+                    result = new Point(x - p, y + layer - p);
                 } else if (i >= layer * 2 && i < layer * 3) {
                     int p = i - layer * 2;
-                    return new Point(x - (layer - p), y - p);
+                    result = new Point(x - (layer - p), y - p);
                 } else {
                     int p = i - layer * 3;
-                    return new Point(x + p, y - (layer - p));
+                    result = new Point(x + p, y - (layer - p));
                 }
+
+                i++;
+                return result;
             }
         };
     }

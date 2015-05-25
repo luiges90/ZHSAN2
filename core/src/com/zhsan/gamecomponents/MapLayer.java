@@ -528,6 +528,7 @@ public class MapLayer extends WidgetGroup {
         mapTiles.values().forEach(Texture::dispose);
         architectureImages.values().forEach(Texture::dispose);
         architectureNameImages.values().forEach(Texture::dispose);
+        facilityKindImages.values().forEach(Texture::dispose);
     }
 
     private class InputEventListener extends InputListener {
