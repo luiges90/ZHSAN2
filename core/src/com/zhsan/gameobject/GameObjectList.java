@@ -1,5 +1,7 @@
 package com.zhsan.gameobject;
 
+import com.zhsan.gamecomponents.common.XmlHelper;
+
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collector;
@@ -66,6 +68,15 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public int getFreeId() {
         return content.isEmpty() ? 1 : content.lastKey() + 1;
+    }
+
+    public GameObjectList<T> getItemsFromCSV(String s) {
+        List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
+        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
+    }
+
+    public String toCSV() {
+        return content.keySet().stream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
     /**

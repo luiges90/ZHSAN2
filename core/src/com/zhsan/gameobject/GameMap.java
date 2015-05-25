@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.resources.GlobalStrings;
@@ -171,6 +172,10 @@ public class GameMap {
         } else {
             return null;
         }
+    }
+
+    public TerrainDetail getTerrainAt(Point p) {
+        return getTerrainAt(p.x, p.y);
     }
 
     private static class GameMapBuilder {

@@ -141,15 +141,17 @@ public class GameScenario {
                 while (iterator.hasNext()) {
                     Point p = iterator.next();
                     if (a.getLocation().contains(p)) continue;
-                    if (getFacilityAt(p) == null) {
-                        Facility f = new Facility.FacilityBuilder()
-                                .setId(facilities.getFreeId())
-                                .setBelongedArchitecture(a)
-                                .setKind(kind)
-                                .setLocation(p)
-                                .createFacility();
-                        facilities.add(f);
-                        break;
+                    if (kind.getCanBuildAtTerrain().contains(gameMap.getTerrainAt(p))) {
+                        if (getFacilityAt(p) == null) {
+                            Facility f = new Facility.FacilityBuilder()
+                                    .setId(facilities.getFreeId())
+                                    .setBelongedArchitecture(a)
+                                    .setKind(kind)
+                                    .setLocation(p)
+                                    .createFacility();
+                            facilities.add(f);
+                            break;
+                        }
                     }
                 }
             }
