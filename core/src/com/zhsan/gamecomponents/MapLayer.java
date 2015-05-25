@@ -369,9 +369,9 @@ public class MapLayer extends WidgetGroup {
                             mainSizeYNoOffset = zoom * image.getLeft().size;
                             break;
                         case DIAGONAL_SQUARE:
-                            mainSizeX = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeY = (int) (zoom * (image.getLeft().size * 2 + 1 + a.getKind().getDrawOffsetLength()));
-                            mainSizeYNoOffset = zoom * (image.getLeft().size * 2 + 1);
+                            mainSizeX = (int) (zoom * (image.getLeft().size * 2 - 1 + a.getKind().getDrawOffsetWidth()));
+                            mainSizeY = (int) (zoom * (image.getLeft().size * 2 - 1 + a.getKind().getDrawOffsetLength()));
+                            mainSizeYNoOffset = zoom * (image.getLeft().size * 2 - 1);
                             break;
                         default:
                             mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
