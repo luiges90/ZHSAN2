@@ -70,9 +70,9 @@ public final class Point {
 
     /**
      * Return an iterator which returns points further and further than this point, starting
-     * at the right and travel at CCW direction
+     * at the right and travel at CW direction
      * i.e. For point (0,0), it will returns
-     * (0,0), (1,0), (0,1), (-1,0), (0,-1), (2,0), (1,1), (0,2), (-1,1), (-2,0), ...
+     * (0,0), (1,0), (0,-1), (-1,0), (0,1), (2,0), (1,-1), (0,-2), (-1,-1), (-2,0), ...
      *
      * This iterator never ends. So when done with it use `break` to leave the loop.
      *

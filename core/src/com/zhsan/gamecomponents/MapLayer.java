@@ -55,6 +55,7 @@ public class MapLayer extends WidgetGroup {
 
     public static final String MAP_ROOT_PATH = Paths.RESOURCES + "Map" + File.separator;
     public static final String ARCHITECTURE_RES_PATH = Paths.RESOURCES + "Architecture" + File.separator;
+    public static final String FACILITY_RES_PATH = Paths.RESOURCES + "Facility" + File.separator;
 
     public static final String DATA_PATH = MAP_ROOT_PATH + "Data" + File.separator;
 
@@ -325,8 +326,16 @@ public class MapLayer extends WidgetGroup {
         }
 
         String resPack = screen.getScenario().getGameSurvey().getResourcePackName();
-        Function<Integer, Integer> drawPosX = x -> (x - xLo * map.getTileInEachImage()) * zoom - offsetX + zoom / 2;
-        Function<Integer, Integer> drawPosY = y -> ((map.getHeight() - 1 - y) - yLo * map.getTileInEachImage()) * zoom - offsetY + zoom / 2;
+        Function<Integer, Integer> drawPosX = x -> (x - xLo * map.getTileInEachImage()) * zoom - offsetX;
+        Function<Integer, Integer> drawPosY = y -> ((map.getHeight() - 1 - y) - yLo * map.getTileInEachImage()) * zoom - offsetY;
+
+        {
+            // draw facilities
+            for (Facility f : screen.getScenario().getFacilities()) {
+                Texture facilityImage = getFacilityImage(resPack, f.getKind());
+                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
+            }
+        }
 
         {
             // draw architectures
@@ -339,8 +348,8 @@ public class MapLayer extends WidgetGroup {
                     Pair<ArchitectureImageQuantifier, Texture> image =
                             getArchitectureImage(resPack, a.getKind(), a.getLocation());
 
-                    int mainX = drawPosX.apply(mapCenter.x);
-                    int mainY = drawPosY.apply(mapCenter.y);
+                    int mainX = drawPosX.apply(mapCenter.x) + zoom / 2;
+                    int mainY = drawPosY.apply(mapCenter.y) + zoom / 2;
                     int mainSizeX, mainSizeY;
                     int mainSizeYNoOffset;
                     switch (image.getLeft().quantifier) {
@@ -392,23 +401,15 @@ public class MapLayer extends WidgetGroup {
             }
         }
 
-        {
-            // draw facilities
-            for (Facility f : screen.getScenario().getFacilities()) {
-                Texture facilityImage = getFacilityImage(resPack, f.getKind());
-                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
-            }
-        }
-
         // draw childrens
         super.draw(batch, parentAlpha);
     }
 
     private Texture getFacilityImage(String resSet, FacilityKind kind) {
         if (!facilityKindImages.containsKey(kind)) {
-            FileHandle f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + kind.getId() + ".png");
+            FileHandle f = Gdx.files.external(FACILITY_RES_PATH + resSet + File.separator + kind.getId() + ".png");
             if (!f.exists()) {
-                f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + kind.getId() + ".png");
+                f = Gdx.files.external(FACILITY_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + kind.getId() + ".png");
             }
 
             Texture t = new Texture(f);

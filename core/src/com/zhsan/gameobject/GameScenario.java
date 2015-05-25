@@ -140,6 +140,7 @@ public class GameScenario {
                 Iterator<Point> iterator = a.getLocation().get(0).spiralOutIterator();
                 while (iterator.hasNext()) {
                     Point p = iterator.next();
+                    if (a.getLocation().contains(p)) continue;
                     if (getFacilityAt(p) == null) {
                         Facility f = new Facility.FacilityBuilder()
                                 .setId(facilities.getFreeId())
