@@ -115,18 +115,22 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showTabList(TabListGameFrame.ListKindType type, GameObjectList<?> showingData) {
+        dayRunner.pauseRunDays();
         tabListGameFrame.show(type, showingData);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
+        dayRunner.pauseRunDays();
         contextMenu.show(type, scen, position);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Object item, Point position) {
+        dayRunner.pauseRunDays();
         contextMenu.show(type, item, position);
     }
 
     public void showSaveGameFrame() {
+        dayRunner.pauseRunDays();
         if (saveGameFrame == null) {
             saveGameFrame = new FileGameFrame(FileGameFrame.Usage.SAVE, scen::save);
             this.addActor(saveGameFrame);
@@ -136,6 +140,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showLoadGameFrame() {
+        dayRunner.pauseRunDays();
         if (loadGameFrame == null) {
             loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> scen = new GameScenario(file, -1));
             this.addActor(loadGameFrame);
@@ -149,18 +154,22 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showTextDialog(String content, TextDialog.OnDismissListener onDismissListener) {
+        dayRunner.pauseRunDays();
         textDialog.show(content, onDismissListener);
     }
 
     public void showTextDialog(TextDialog.TextKeys key, TextDialog.OnDismissListener onDismissListener) {
+        dayRunner.pauseRunDays();
         textDialog.show(key, onDismissListener);
     }
 
     public void showConfirmationDialog(String content, ConfirmationDialog.OnDismissListener onDismissListener) {
+        dayRunner.pauseRunDays();
         confirmationDialog.show(content, onDismissListener);
     }
 
     public void showConfirmationDialog(TextDialog.TextKeys key, ConfirmationDialog.OnDismissListener onDismissListener) {
+        dayRunner.pauseRunDays();
         confirmationDialog.show(key, onDismissListener);
     }
 
