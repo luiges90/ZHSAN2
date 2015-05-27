@@ -22,6 +22,7 @@ import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameScenario;
+import com.zhsan.gameobject.GameSurvey;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -128,8 +129,11 @@ public class ContextMenu extends WidgetGroup {
         return items;
     }
 
-    private void loadXml() {
-        FileHandle f = Gdx.files.external(RES_PATH + "ContextMenuData.xml");
+    private void loadXml(String resPack) {
+        FileHandle f = Gdx.files.external(RES_PATH + resPack + File.separator + "ContextMenuData.xml");
+        if (!f.exists()) {
+            f = Gdx.files.external(RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + "ContextMenuData.xml");
+        }
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -197,7 +201,7 @@ public class ContextMenu extends WidgetGroup {
         this.setVisible(false);
         this.addListener(new ScreenClickListener());
 
-        loadXml();
+        loadXml(screen.getScenario().getGameSurvey().getResourcePackName());
     }
 
     public void resize(int width, int height) {
