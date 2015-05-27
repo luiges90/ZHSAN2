@@ -118,8 +118,11 @@ public class GameScenario {
 
         facilities = Facility.fromCSV(file, this);
 
-        Faction playerFaction = factions.get(playerFactionId);
-        gameData.setCurrentPlayer(playerFaction);
+        if (playerFactionId > 0) {
+            Faction playerFaction = factions.get(playerFactionId);
+            gameData.setCurrentPlayer(playerFaction);
+            gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocation().get(0));
+        }
 
         setupFacilities();
     }
