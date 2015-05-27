@@ -19,10 +19,7 @@ import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import com.zhsan.gameobject.Architecture;
-import com.zhsan.gameobject.GameObject;
-import com.zhsan.gameobject.GameScenario;
-import com.zhsan.gameobject.GameSurvey;
+import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -42,27 +39,22 @@ import java.util.List;
 public class ContextMenu extends WidgetGroup {
 
     public enum MenuKindType {
-        SYSTEM_MENU("SystemMenu", GameScenario.class),
-        ARCHITECTURE_LEFT_MENU("ArchitectureLeftClick", Architecture.class),
-        ARCHITECTURE_RIGHT_MENU("ArchitectureRightClick", Architecture.class),
-        MAP_RIGHT_MENU("MapRightClick", GameScenario.class)
+        SYSTEM_MENU("SystemMenu", GameScenario.class, false),
+        ARCHITECTURE_LEFT_MENU("ArchitectureLeftClick", Architecture.class, false),
+        ARCHITECTURE_RIGHT_MENU("ArchitectureRightClick", Architecture.class, false),
+        MAP_RIGHT_MENU("MapRightClick", GameScenario.class, false),
+        FACILITY_LEFT_MENU("FacilityLeftClick", Facility.class, true)
         ;
 
         public final String xmlName;
         public final Class<?> carryingObj;
-        MenuKindType(String xmlName, Class<?> carryingObj) {
+        public final boolean prefix;
+        MenuKindType(String xmlName, Class<?> carryingObj, boolean prefix) {
             this.xmlName = xmlName;
             this.carryingObj = carryingObj;
+            this.prefix = prefix;
         }
 
-        public static final MenuKindType fromXmlName(String name) {
-            for (MenuKindType type : MenuKindType.values()) {
-                if (type.xmlName.equals(name)) {
-                    return type;
-                }
-            }
-            return null;
-        }
     }
 
     public static final String RES_PATH = Paths.RESOURCES + "ContextMenu" + File.separator;
@@ -92,7 +84,7 @@ public class ContextMenu extends WidgetGroup {
 
     private Sound clickSound, expandSound, collapseSound;
 
-    private EnumMap<MenuKindType, MenuKind> menuKinds = new EnumMap<>(MenuKindType.class);
+    private Map<String, MenuKind> menuKinds = new HashMap<>();
 
     private GameScreen screen;
 
@@ -100,6 +92,7 @@ public class ContextMenu extends WidgetGroup {
     private boolean centerAtScreen;
 
     private MenuKindType showingType;
+    private int showingTypeId;
 
     private Object currentObject;
 
@@ -181,10 +174,7 @@ public class ContextMenu extends WidgetGroup {
                     menuKind.items = loadMenuItem(kindNode, menuKind.name, menuRight, menuRightText, 1);
                 }
 
-                MenuKindType type = MenuKindType.fromXmlName(name);
-                if (type != null) {
-                    menuKinds.put(type, menuKind);
-                }
+                menuKinds.put(name, menuKind);
             }
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ContextMenuData.xml", e);
@@ -214,13 +204,19 @@ public class ContextMenu extends WidgetGroup {
     }
 
     public void show(MenuKindType type, Object object, Point position) {
+        show(type, -1, object, position);
+    }
+
+    public void show(MenuKindType type, int xmlId, Object object, Point position) {
         if (!type.carryingObj.isAssignableFrom(object.getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
                 + type.carryingObj + ". " + object.getClass() + " received.");
         }
+
         dismiss();
         this.currentObject = object;
         this.showingType = type;
+        this.showingTypeId = xmlId;
         this.position = position == null ? null : new Point((int)(position.x + getX()), (int)(position.y + getY()));
         this.setVisible(true);
         if (showingType != null) {
@@ -253,10 +249,20 @@ public class ContextMenu extends WidgetGroup {
         }
     }
 
+    private MenuKind getCurrentMenuKind() {
+        MenuKind kind;
+        if (showingType.prefix) {
+            kind = menuKinds.get(showingType.xmlName + showingTypeId);
+        } else {
+            kind = menuKinds.get(showingType.xmlName);
+        }
+        return kind;
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         if (showingType != null) {
-            MenuKind kind = menuKinds.get(showingType);
+            MenuKind kind = getCurrentMenuKind();
 
             boolean hasShowingItem = false;
 
@@ -357,8 +363,8 @@ public class ContextMenu extends WidgetGroup {
     }
 
     private void collapse() {
-        if (menuKinds != null && showingType != null && menuKinds.get(showingType) != null) {
-            menuKinds.get(showingType).items.forEach(this::collapse_r);
+        if (menuKinds != null && showingType != null && getCurrentMenuKind() != null) {
+            getCurrentMenuKind().items.forEach(this::collapse_r);
         }
     }
 
@@ -411,7 +417,7 @@ public class ContextMenu extends WidgetGroup {
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (button == Input.Buttons.LEFT) {
                 if (this.widget.getExtra().children.size() > 0) {
-                    MenuKind kind = menuKinds.get(showingType);
+                    MenuKind kind = getCurrentMenuKind();
                     for (MenuItem item : kind.items) {
                         MenuItem r = getExpandedItem(item, this.widget.getExtra().depth, 1);
                         if (r != null && !containDescendent(r, this.widget.getExtra())) {
@@ -447,7 +453,7 @@ public class ContextMenu extends WidgetGroup {
             if (button == Input.Buttons.RIGHT) {
                 collapseSound.play();
 
-                MenuKind kind = menuKinds.get(showingType);
+                MenuKind kind = getCurrentMenuKind();
                 for (MenuItem item : kind.items) {
                     MenuItem r = getExpandedItem(item, Integer.MAX_VALUE, 1);
                     if (r != null) {

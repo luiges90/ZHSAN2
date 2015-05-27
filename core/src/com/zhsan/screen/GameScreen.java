@@ -120,13 +120,16 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
-        dayRunner.pauseRunDays();
         contextMenu.show(type, scen, position);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Object item, Point position) {
+        showContextMenu(type, -1, item, position);
+    }
+
+    public void showContextMenu(ContextMenu.MenuKindType type, int xmlId, Object item, Point position) {
         dayRunner.pauseRunDays();
-        contextMenu.show(type, item, position);
+        contextMenu.show(type, xmlId, item, position);
     }
 
     public void showSaveGameFrame() {

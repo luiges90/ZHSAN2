@@ -87,5 +87,14 @@ public final class ContextMenuMethods {
         screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getBelongedFaction().getPersons());
     }
 
+    public static void FacilityLeftClick1_Agriculture(GameScreen screen, Object object) {
+        System.out.println("agriculture");
+        // assign person to agriculture
+    }
+
+    public static void FacilityLeftClick2_Commerce(GameScreen screen, Object object) {
+        System.out.println("commerce");
+        // assign person to commerce
+    }
 
 }

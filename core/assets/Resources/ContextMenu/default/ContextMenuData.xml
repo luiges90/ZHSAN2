@@ -31,6 +31,12 @@
         <MenuKind ID="2" Name="ArchitectureLeftClick" IsLeft="true" Width="100" Height="25">
 
         </MenuKind>
+        <MenuKind ID="101" Name="FacilityLeftClick1" IsLeft="true" Width="100" Height="25">
+            <MenuItem ID="1" Name="Agriculture" DisplayName="農業"/>
+        </MenuKind>
+        <MenuKind ID="101" Name="FacilityLeftClick2" IsLeft="true" Width="100" Height="25">
+            <MenuItem ID="1" Name="Commerce" DisplayName="商業"/>
+        </MenuKind>
         <MenuKind ID="3" Name="MapRightClick" IsLeft="false" Width="130" Height="25">
             <MenuItem ID="1" Name="DateGo" DisplayName="进行">
                 <MenuItem ID="1" Name="1Day" DisplayName="进行一天" />

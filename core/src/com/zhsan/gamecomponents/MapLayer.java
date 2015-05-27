@@ -546,12 +546,17 @@ public class MapLayer extends WidgetGroup {
 
             Point pos = mouseOnMapPosition();
             Architecture a = screen.getScenario().getArchitectureAt(pos);
+            Facility f = screen.getScenario().getFacilityAt(pos);
 
             if (a != null) {
                 if (button == Input.Buttons.LEFT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_LEFT_MENU, a, new Point(mousePosition));
                 } else if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_RIGHT_MENU, a, new Point(mousePosition));
+                }
+            } else if (f !=  null) {
+                if (button == Input.Buttons.LEFT) {
+                    screen.showContextMenu(ContextMenu.MenuKindType.FACILITY_LEFT_MENU, f.getKind().getId(), f, new Point(mousePosition));
                 }
             } else {
                 if (button == Input.Buttons.RIGHT) {
