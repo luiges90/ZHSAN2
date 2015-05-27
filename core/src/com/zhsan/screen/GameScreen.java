@@ -145,7 +145,7 @@ public class GameScreen extends WidgetGroup {
     public void showLoadGameFrame() {
         dayRunner.pauseRunDays();
         if (loadGameFrame == null) {
-            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> scen = new GameScenario(file, -1));
+            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> scen = new GameScenario(file, false, -1));
             this.addActor(loadGameFrame);
         } else {
             loadGameFrame.show();

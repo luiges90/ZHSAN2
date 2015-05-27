@@ -53,7 +53,7 @@ public class ZHSan2 extends ApplicationAdapter {
             startScreen = null;
             startStage = null;
 
-            GameScenario scen = new GameScenario(file, factionId);
+            GameScenario scen = new GameScenario(file, true, factionId);
 
             gameScreen = new GameScreen(scen);
 

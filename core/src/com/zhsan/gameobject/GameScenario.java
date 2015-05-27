@@ -62,7 +62,7 @@ public class GameScenario {
         return addingFaction;
     }
 
-    public GameScenario(FileHandle file, int playerFactionId) {
+    public GameScenario(FileHandle file, boolean newGame, int playerFactionId) {
         gameSurvey = GameSurvey.fromCSV(file);
 
         // load common data
@@ -118,7 +118,7 @@ public class GameScenario {
 
         facilities = Facility.fromCSV(file, this);
 
-        if (playerFactionId > 0) {
+        if (newGame) {
             Faction playerFaction = factions.get(playerFactionId);
             gameData.setCurrentPlayer(playerFaction);
             gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocation().get(0));
