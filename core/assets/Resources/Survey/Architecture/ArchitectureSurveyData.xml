@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <BackgroundTextureFile FileName="ArchitectureSurvey.png"></BackgroundTextureFile>
+  <FactionTextureFile FileName="Faction.png" X="149" Y="97" ></FactionTextureFile>
+  <NameText X="65" Y="46"
+            FontName="方正隶变_GBK" 
+            FontSize="15" 
+            FontStyle="Regular" 
+            FontColor="4278255615" 
+            Align="Middle">
+  </NameText>
+  <KindText X="65" Y="71"
+            FontName="方正隶变_GBK" 
+            FontSize="15" 
+            FontStyle="Regular" 
+            FontColor="4294967295" 
+            Align="Middle">
+  </KindText>
+  <FactionText X="65" Y="95"
+               FontName="方正隶变_GBK" 
+               FontSize="15" 
+               FontStyle="Regular" 
+               FontColor="4294967295" 
+               Align="Middle">
+  </FactionText>
+  <PopulationText X="63" Y="123"
+                  FontName="方正隶变_GBK" 
+                  FontSize="15" 
+                  FontStyle="Regular" 
+                  FontColor="4294967295" 
+                  Align="Right">
+  </PopulationText>
+  <ArmyText X="63" Y="149"
+            FontName="方正隶变_GBK" 
+            FontSize="15" 
+            FontStyle="Regular" 
+            FontColor="4294967295" 
+            Align="Right">
+  </ArmyText>
+  <EnduranceText X="63" Y="199"
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </EnduranceText>
+  <ControllingBackgroundTextureFile FileName="ArchitectureSurveyControlling.png" Width="388" Height="273"></ControllingBackgroundTextureFile>
+  <FundText X="255" Y="39" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </FundText>
+  <FoodText X="255" Y="62" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </FoodText>
+  <PersonCountText X="255" Y="84" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </PersonCountText>
+  <NoFactionPersonCountText X="255" Y="107" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </NoFactionPersonCountText>
+  <TechnologyText X="255" Y="177" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </TechnologyText>
+  <MoraleText X="255" Y="200" 
+            FontName="方正隶变_GBK"
+            FontSize="15"
+            FontStyle="Regular"
+            FontColor="4294967295"
+            Align="Right">
+  </MoraleText>
+  <MilitaryPopulationText X="63" Y="224" 
+                FontName="方正隶变_GBK"
+                FontSize="15"
+                FontStyle="Regular"
+                FontColor="4294967295"
+                Align="Right">
+  </MilitaryPopulationText>
+  <FacilityCountText X="255" Y="224" 
+          FontName="方正隶变_GBK"
+          FontSize="14"
+          FontStyle="Regular"
+          FontColor="4294967295"
+          Align="Right">
+  </FacilityCountText>
+</Root>
