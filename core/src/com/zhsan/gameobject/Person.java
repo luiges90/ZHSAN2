@@ -81,7 +81,7 @@ public class Person extends GameObject {
 
     private LocationType location;
 
-    private int command, strength, inteligence, politics, glamour;
+    private int command, strength, intelligence, politics, glamour;
 
     private int movingDays = 0;
 
@@ -95,7 +95,7 @@ public class Person extends GameObject {
         this.state = from.getState();
         this.command = from.getCommand();
         this.strength = from.getStrength();
-        this.inteligence = from.getInteligence();
+        this.intelligence = from.getInteligence();
         this.politics = from.getPolitics();
         this.glamour = from.getGlamour();
 
@@ -122,7 +122,7 @@ public class Person extends GameObject {
                         String.valueOf(d.movingDays),
                         String.valueOf(d.command),
                         String.valueOf(d.strength),
-                        String.valueOf(d.inteligence),
+                        String.valueOf(d.intelligence),
                         String.valueOf(d.politics),
                         String.valueOf(d.glamour)
                 });
@@ -173,8 +173,8 @@ public class Person extends GameObject {
         return strength;
     }
 
-    public int getInteligence() {
-        return inteligence;
+    public int getIntelligence() {
+        return intelligence;
     }
 
     public int getPolitics() {
