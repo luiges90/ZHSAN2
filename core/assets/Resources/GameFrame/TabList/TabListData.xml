@@ -50,10 +50,45 @@
                       FontColor="4294967295"
                       Align="Middle">
               </Column>
+              <Column ID="5" Name="Command" IsNumber="true" DisplayName="统率" MinWidth="50" DetailLevel="2"
+                      FontName="方正隶变_GBK"
+                      FontSize="14"
+                      FontStyle="Regular"
+                      FontColor="4294967295"
+                      Align="Right">
+              </Column>
+              <Column ID="6" Name="Strength" IsNumber="true" DisplayName="武勇" MinWidth="50" DetailLevel="2"
+                      FontName="方正隶变_GBK"
+                      FontSize="14"
+                      FontStyle="Regular"
+                      FontColor="4294967295"
+                      Align="Right">
+              </Column>
+              <Column ID="7" Name="Intelligence" IsNumber="true" DisplayName="智谋" MinWidth="50" DetailLevel="2"
+                      FontName="方正隶变_GBK"
+                      FontSize="14"
+                      FontStyle="Regular"
+                      FontColor="4294967295"
+                      Align="Right">
+              </Column>
+              <Column ID="8" Name="Politics" IsNumber="true" DisplayName="政治" MinWidth="50" DetailLevel="2"
+                      FontName="方正隶变_GBK"
+                      FontSize="14"
+                      FontStyle="Regular"
+                      FontColor="4294967295"
+                      Align="Right">
+              </Column>
+              <Column ID="9" Name="Glamour" IsNumber="true" DisplayName="魅力" MinWidth="50" DetailLevel="2"
+                      FontName="方正隶变_GBK"
+                      FontSize="14"
+                      FontStyle="Regular"
+                      FontColor="4294967295"
+                      Align="Right">
+              </Column>
           </Columns>
           <Tabs Margin="5">
-              <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4">
-              </Tab>
+              <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4" />
+              <Tab ID="2" Name="Ability" DisplayName="能力" Columns="1 5 6 7 8 9" />
           </Tabs>
       </ListKind>
     <ListKind ID="2" Name="Architecture" DisplayName="建筑列表">

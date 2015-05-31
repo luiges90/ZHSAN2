@@ -81,6 +81,8 @@ public class Person extends GameObject {
 
     private LocationType location;
 
+    private int command, strength, inteligence, politics, glamour;
+
     private int movingDays = 0;
 
     public Person(LoadingPerson from, GameScenario scenario) {
@@ -91,6 +93,11 @@ public class Person extends GameObject {
         this.givenName = from.getGivenName();
         this.calledName = from.getCalledName();
         this.state = from.getState();
+        this.command = from.getCommand();
+        this.strength = from.getStrength();
+        this.inteligence = from.getInteligence();
+        this.politics = from.getPolitics();
+        this.glamour = from.getGlamour();
 
         switch (from.getLoadingLocationType()) {
             case ARHITECTURE:
@@ -112,7 +119,12 @@ public class Person extends GameObject {
                         d.state.toCSV(),
                         d.location.getLoadingLocationType().toCSV(),
                         String.valueOf(d.location.getLoadingLocationId()),
-                        String.valueOf(d.movingDays)
+                        String.valueOf(d.movingDays),
+                        String.valueOf(d.command),
+                        String.valueOf(d.strength),
+                        String.valueOf(d.inteligence),
+                        String.valueOf(d.politics),
+                        String.valueOf(d.glamour)
                 });
             }
         } catch (IOException e) {
@@ -153,4 +165,23 @@ public class Person extends GameObject {
         return movingDays == 0 ? "" : movingDays + GlobalStrings.getString(GlobalStrings.Keys.DAY);
     }
 
+    public int getCommand() {
+        return command;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getInteligence() {
+        return inteligence;
+    }
+
+    public int getPolitics() {
+        return politics;
+    }
+
+    public int getGlamour() {
+        return glamour;
+    }
 }

@@ -22,6 +22,8 @@ class LoadingPerson extends GameObject {
     private LoadingLocationType loadingLocationType = LoadingLocationType.NONE;
     private int locationId = -1;
 
+    private int command, strength, inteligence, politics, glamour;
+
     private int movingDays = 0;
 
     private LoadingPerson(int id) {
@@ -58,6 +60,11 @@ class LoadingPerson extends GameObject {
                     } else {
                         data.state = Person.State.UNDEBUTTED;
                     }
+                    data.strength = Integer.parseInt(line[16]);
+                    data.command = Integer.parseInt(line[17]);
+                    data.inteligence = Integer.parseInt(line[18]);
+                    data.politics = Integer.parseInt(line[19]);
+                    data.glamour = Integer.parseInt(line[20]);
                     data.movingDays = Integer.parseInt(line[62]);
                 } else {
                     data.surname = line[1];
@@ -67,6 +74,11 @@ class LoadingPerson extends GameObject {
                     data.loadingLocationType = LoadingLocationType.fromCSV(line[5]);
                     data.locationId = Integer.parseInt(line[6]);
                     data.movingDays = Integer.parseInt(line[7]);
+                    data.strength = Integer.parseInt(line[8]);
+                    data.command = Integer.parseInt(line[9]);
+                    data.inteligence = Integer.parseInt(line[10]);
+                    data.politics = Integer.parseInt(line[11]);
+                    data.glamour = Integer.parseInt(line[12]);
                 }
 
                 result.add(data);
@@ -120,6 +132,26 @@ class LoadingPerson extends GameObject {
 
     public int getLocationId() {
         return locationId;
+    }
+
+    public int getCommand() {
+        return command;
+    }
+
+    public int getStrength() {
+        return strength;
+    }
+
+    public int getInteligence() {
+        return inteligence;
+    }
+
+    public int getPolitics() {
+        return politics;
+    }
+
+    public int getGlamour() {
+        return glamour;
     }
 
     public enum LoadingLocationType {
