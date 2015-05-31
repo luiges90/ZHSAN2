@@ -5,6 +5,8 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.zhsan.common.exception.FileReadException;
@@ -202,6 +204,7 @@ public class TabListGameFrame extends GameFrame {
                 }
                 tab.columns.add(columns.get(l));
             }
+            tab.tabButton.addListener(new TabButtonListener(tab));
 
             tabs.add(tab);
         }
@@ -249,6 +252,11 @@ public class TabListGameFrame extends GameFrame {
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
         this.showingTab = this.showingListKind.tabs.get(0);
+
+        showingListKind.tabs.forEach(tab -> {
+            addActor(tab.tabButton);
+        });
+
         this.setVisible(true);
     }
 
@@ -311,8 +319,6 @@ public class TabListGameFrame extends GameFrame {
             t.tabButton.setSize(t.tabButton.getBackground().get().getWidth(),
                     t.tabButton.getBackground().get().getHeight());
 
-            t.tabButton.draw(batch, parentAlpha);
-
             x += t.tabButton.getWidth() + showingListKind.tabMargin;
             if (x + t.tabButton.getWidth() > getRightBound() - getLeftBound()) {
                 y += t.tabButton.getHeight() + showingListKind.tabMargin;
@@ -323,28 +329,29 @@ public class TabListGameFrame extends GameFrame {
         return y + showingListKind.tabMargin;
     }
 
+    private void resetContentPane() {
+        contentPane.clear();
+        contentPane = null;
+        showingTextWidgets.forEach(TextWidget::dispose);
+        showingTextWidgets.clear();
+    }
+
     @Override
     protected void dismiss(boolean ok) {
         super.dismiss(ok);
 
+        resetContentPane();
+
         removeActor(contentPane);
-        contentPane = null;
-        showingTextWidgets.forEach(x -> {
-            x.dispose();
-            x.setVisible(false);
+        showingListKind.tabs.forEach(tab -> {
+            removeActor(tab.tabButton);
         });
-        showingTextWidgets.clear();
     }
 
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        contentPane = null;
-        showingTextWidgets.forEach(x -> {
-            x.dispose();
-            x.setVisible(false);
-        });
-        showingTextWidgets.clear();
+        resetContentPane();
     }
 
     public void dispose() {
@@ -355,6 +362,12 @@ public class TabListGameFrame extends GameFrame {
         checkbox.dispose();
         radioButton.dispose();
         selectSound.dispose();
+        listKinds.forEach((listKindType, listKind) -> {
+            listKind.tabs.forEach(tab -> {
+                tab.tabButton.dispose();
+                tab.columns.forEach(column -> column.columnText.dispose());
+            });
+        });
     }
 
     private class ButtonListener implements OnClick {
@@ -367,6 +380,22 @@ public class TabListGameFrame extends GameFrame {
         @Override
         public void onCancelClicked() {
 
+        }
+    }
+
+    private class TabButtonListener extends InputListener {
+
+        private Tab tab;
+
+        public TabButtonListener(Tab tab) {
+            this.tab = tab;
+        }
+
+        @Override
+        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            showingTab = tab;
+            resetContentPane();
+            return true;
         }
     }
 }

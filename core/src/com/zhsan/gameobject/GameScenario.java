@@ -120,8 +120,10 @@ public class GameScenario {
 
         if (newGame) {
             Faction playerFaction = factions.get(playerFactionId);
-            gameData.setCurrentPlayer(playerFaction);
-            gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocation().get(0));
+            if (playerFaction != null) {
+                gameData.setCurrentPlayer(playerFaction);
+                gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocation().get(0));
+            }
         }
 
         setupFacilities();
