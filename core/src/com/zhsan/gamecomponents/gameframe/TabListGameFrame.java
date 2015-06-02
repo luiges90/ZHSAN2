@@ -330,8 +330,10 @@ public class TabListGameFrame extends GameFrame {
     }
 
     private void resetContentPane() {
-        contentPane.clear();
-        contentPane = null;
+        if (contentPane != null) {
+            contentPane.clear();
+            contentPane = null;
+        }
         showingTextWidgets.forEach(TextWidget::dispose);
         showingTextWidgets.clear();
     }

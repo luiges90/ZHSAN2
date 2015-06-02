@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.ScreenBlind;
+import com.zhsan.gamecomponents.commandframe.ArchitectureCommandFrame;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.MapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
@@ -48,6 +49,8 @@ public class GameScreen extends WidgetGroup {
 
     private TabListGameFrame tabListGameFrame;
 
+    private ArchitectureCommandFrame architectureCommandFrame;
+
     private ScreenBlind screenBlind;
 
     private DayRunner dayRunner;
@@ -77,6 +80,10 @@ public class GameScreen extends WidgetGroup {
 
         this.addActor(toolBar);
 
+        architectureCommandFrame = new ArchitectureCommandFrame(this);
+        architectureCommandFrame.setPosition(0, Gdx.graphics.getHeight() - architectureCommandFrame.getHeight());
+        this.addActor(architectureCommandFrame);
+
         textDialog = new TextDialog(this);
         this.addActor(textDialog);
 
@@ -105,6 +112,7 @@ public class GameScreen extends WidgetGroup {
         tabListGameFrame.resize(width, height);
 
         screenBlind.setPosition(0, Gdx.graphics.getHeight() - screenBlind.getHeight());
+        architectureCommandFrame.setPosition(0, Gdx.graphics.getHeight() - architectureCommandFrame.getHeight());
 
         if (saveGameFrame != null) {
             saveGameFrame.resize(width, height);
@@ -311,6 +319,7 @@ public class GameScreen extends WidgetGroup {
         confirmationDialog.dispose();
         tabListGameFrame.dispose();
         screenBlind.dispose();
+        architectureCommandFrame.dispose();
         if (saveGameFrame != null) {
             saveGameFrame.dispose();
         }

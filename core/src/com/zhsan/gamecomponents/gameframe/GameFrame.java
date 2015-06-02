@@ -29,9 +29,10 @@ import java.io.File;
 /**
  * Created by Peter on 7/3/2015.
  */
-public class GameFrame extends WidgetGroup {
+public abstract class GameFrame extends WidgetGroup {
 
     public static final String RES_PATH = Paths.RESOURCES + "GameFrame" + File.separator;
+    public static final String DATA_PATH = RES_PATH + File.separator + "Data" + File.separator;
 
     public interface OnClick {
         public void onOkClicked();
@@ -69,7 +70,6 @@ public class GameFrame extends WidgetGroup {
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "GameFrameData.xml");
-        String dataPath = RES_PATH + File.separator + "Data" + File.separator;
 
         Document dom;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -83,7 +83,7 @@ public class GameFrame extends WidgetGroup {
             bottomEdge = new Edge(dom.getElementsByTagName("BottomEdge").item(0));
 
             FileHandle fh;
-            fh = Gdx.files.external(dataPath +
+            fh = Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("BackGround").item(0), "FileName"));
             background = new Texture(fh);
 
@@ -101,29 +101,29 @@ public class GameFrame extends WidgetGroup {
             cancelRight = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "MarginRight"));
             cancelBottom = Integer.parseInt(XmlHelper.loadAttribute(cancelNode, "MarginBottom"));
 
-            okTexture = StateTexture.fromXml(dataPath, okNode);
-            cancelTexture = StateTexture.fromXml(dataPath, cancelNode);
+            okTexture = StateTexture.fromXml(DATA_PATH, okNode);
+            cancelTexture = StateTexture.fromXml(DATA_PATH, cancelNode);
 
             Node sound = dom.getElementsByTagName("SoundFile").item(0);
-            fh = Gdx.files.external(dataPath + XmlHelper.loadAttribute(sound, "OK"));
+            fh = Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(sound, "OK"));
             okSound = Gdx.audio.newSound(fh);
 
-            fh = Gdx.files.external(dataPath + XmlHelper.loadAttribute(sound, "Cancel"));
+            fh = Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(sound, "Cancel"));
             cancelSound = Gdx.audio.newSound(fh);
 
-            fh = Gdx.files.external(dataPath +
+            fh = Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("TopLeft").item(0), "FileName"));
             topLeft = new Texture(fh);
 
-            fh = Gdx.files.external(dataPath +
+            fh = Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("TopRight").item(0), "FileName"));
             topRight = new Texture(fh);
 
-            fh = Gdx.files.external(dataPath +
+            fh = Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("BottomLeft").item(0), "FileName"));
             bottomLeft = new Texture(fh);
 
-            fh = Gdx.files.external(dataPath +
+            fh = Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(dom.getElementsByTagName("BottomRight").item(0), "FileName"));
             bottomRight = new Texture(fh);
         } catch (Exception e) {
