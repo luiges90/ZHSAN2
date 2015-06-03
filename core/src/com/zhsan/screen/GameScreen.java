@@ -120,6 +120,7 @@ public class GameScreen extends WidgetGroup {
         if (loadGameFrame != null) {
             loadGameFrame.resize(width, height);
         }
+
     }
 
     public void showTabList(TabListGameFrame.ListKindType type, GameObjectList<?> showingData) {

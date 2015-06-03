@@ -65,4 +65,5 @@ public abstract class CommandFrame extends WidgetGroup {
     public void dispose() {
         background.dispose();
     }
+
 }

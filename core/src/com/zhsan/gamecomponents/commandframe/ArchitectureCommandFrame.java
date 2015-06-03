@@ -52,23 +52,18 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 if (n.getNodeName().equals("Internal")) {
                     internal = StateTexture.fromXml(DATA_PATH, n);
                     internalPos = XmlHelper.loadRectangleFromXml(n);
-                    internalPos.y = super.getHeight() - internalPos.y;
                 } else if (n.getNodeName().equals("Military")) {
                     military = StateTexture.fromXml(DATA_PATH, n);
                     militaryPos = XmlHelper.loadRectangleFromXml(n);
-                    militaryPos.y = super.getHeight() - militaryPos.y;
                 } else if (n.getNodeName().equals("Officer")) {
                     officer = StateTexture.fromXml(DATA_PATH, n);
                     officerPos = XmlHelper.loadRectangleFromXml(n);
-                    officerPos.y = super.getHeight() - officerPos.y;
                 } else if (n.getNodeName().equals("Tactics")) {
                     tactics = StateTexture.fromXml(DATA_PATH, n);
                     tacticsPos = XmlHelper.loadRectangleFromXml(n);
-                    tacticsPos.y = super.getHeight() - tacticsPos.y;
                 } else if (n.getNodeName().equals("Facility")) {
                     facility = StateTexture.fromXml(DATA_PATH, n);
                     facilityPos = XmlHelper.loadRectangleFromXml(n);
-                    facilityPos.y = super.getHeight() - facilityPos.y;
                 }
             }
 
@@ -89,15 +84,15 @@ public class ArchitectureCommandFrame extends CommandFrame {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(internal.get(), getX() + internalPos.x, internalPos.y, internalPos.width, internalPos.height);
-        batch.draw(military.get(), getX() + militaryPos.x, militaryPos.y, militaryPos.width, militaryPos.height);
-        batch.draw(officer.get(), getX() + officerPos.x, officerPos.y, officerPos.width, officerPos.height);
-        batch.draw(tactics.get(), getX() + tacticsPos.x, tacticsPos.y, tacticsPos.width, tacticsPos.height);
-        batch.draw(facility.get(), getX() + facilityPos.x, facilityPos.y, facilityPos.width, facilityPos.height);
+        batch.draw(internal.get(), getX() + internalPos.x, getY() + internalPos.y, internalPos.width, internalPos.height);
+        batch.draw(military.get(), getX() + militaryPos.x, getY() + militaryPos.y, militaryPos.width, militaryPos.height);
+        batch.draw(officer.get(), getX() + officerPos.x, getY() + officerPos.y, officerPos.width, officerPos.height);
+        batch.draw(tactics.get(), getX() + tacticsPos.x, getY() + tacticsPos.y, tacticsPos.width, tacticsPos.height);
+        batch.draw(facility.get(), getX() + facilityPos.x, getY() + facilityPos.y, facilityPos.width, facilityPos.height);
     }
 
     public void dispose() {
         super.dispose();
     }
-
+    
 }

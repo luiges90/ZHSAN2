@@ -2,11 +2,11 @@
 <Root>
     <PortraitBorder FileName="Internal/Portrait.png"/>
     <Tabs>
-        <Internal FileName="Internal.png" Selected="InternalSelected.png" X="30" Y="50" Width="39" Height="22"/>
-        <Military FileName="Military.png" Selected="MilitarySelected.png" X="70" Y="50" Width="39" Height="22"/>
-        <Officer FileName="Officer.png" Selected="OfficerSelected.png" X="110" Y="50" Width="39" Height="22"/>
-        <Tactics FileName="Tactics.png" Selected="TacticsSelected.png" X="150" Y="50" Width="39" Height="22"/>
-        <Facility FileName="Facility.png" Selected="FacilitySelected.png" X="190" Y="50" Width="39" Height="22"/>
+        <Internal FileName="Internal.png" Selected="InternalSelected.png" X="30" Y="300" Width="39" Height="22"/>
+        <Military FileName="Military.png" Selected="MilitarySelected.png" X="70" Y="300" Width="39" Height="22"/>
+        <Officer FileName="Officer.png" Selected="OfficerSelected.png" X="110" Y="300" Width="39" Height="22"/>
+        <Tactics FileName="Tactics.png" Selected="TacticsSelected.png" X="150" Y="300" Width="39" Height="22"/>
+        <Facility FileName="Facility.png" Selected="FacilitySelected.png" X="190" Y="300" Width="39" Height="22"/>
     </Tabs>
     <Internal>
         <Background FileName="Internal/Background.png" />
