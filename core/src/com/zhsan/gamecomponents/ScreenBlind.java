@@ -89,7 +89,7 @@ public class ScreenBlind extends WidgetGroup {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(background, getX() + backgroundPos.x, getY() + backgroundPos.y, backgroundPos.width, backgroundPos.height);
+        batch.draw(background, getX() + backgroundPos.x, getY() - backgroundPos.y, backgroundPos.width, backgroundPos.height);
 
         Texture season = null;
         switch (screen.getScenario().getSeason()) {
