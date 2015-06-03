@@ -28,45 +28,6 @@
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將"/>
             </MenuItem>
         </MenuKind>
-        <MenuKind ID="2" Name="ArchitectureLeftClick" IsLeft="true" Width="100" Height="25">
-            <MenuItem ID="1" Name="Government" DisplayName="政廳">
-                <MenuItem ID="1" Name="SetMayor" DisplayName="設置太守" />
-                <MenuItem ID="2" Name="Transport" DisplayName="運送錢糧" />
-                <MenuItem ID="3" Name="BuildFacility" DisplayName="興建設施" />
-            </MenuItem>
-            <MenuItem ID="2" Name="Personnel" DisplayName="吏部" >
-                <MenuItem ID="1" Name="Move" DisplayName="調動" />
-                <MenuItem ID="2" Name="Call" DisplayName="召集" />
-                <MenuItem ID="3" Name="Search" DisplayName="搜索" />
-            </MenuItem>
-            <MenuItem ID="3" Name="Barrack" DisplayName="兵營" >
-                <MenuItem ID="1" Name="New" DisplayName="新編部隊" />
-                <MenuItem ID="2" Name="AssignLeader" DisplayName="編制部曲" />
-                <MenuItem ID="3" Name="Recruit" DisplayName="補充" />
-                <MenuItem ID="4" Name="Train" DisplayName="訓練" />
-                <MenuItem ID="5" Name="NewOperation" DisplayName="出征" />
-                <MenuItem ID="6" Name="AssignPerson" DisplayName="設置副將" />
-                <MenuItem ID="7" Name="Disband" DisplayName="解散" />
-                <MenuItem ID="8" Name="Merge" DisplayName="合併" />
-                <MenuItem ID="9" Name="Upgrade" DisplayName="升級" />
-            </MenuItem>
-            <MenuItem ID="4" Name="CityWall" DisplayName="城牆" >
-                <MenuItem ID="1" Name="Endurance" DisplayName="耐久" />
-            </MenuItem>
-            <MenuItem ID="5" Name="ResearchCenter" DisplayName="技法所" >
-                <MenuItem ID="1" Name="Technology" DisplayName="技術" />
-            </MenuItem>
-            <MenuItem ID="6" Name="Minister" DisplayName="委任">
-                <MenuItem ID="1" Name="Development" DisplayName="內政" />
-            </MenuItem>
-        </MenuKind>
-        <MenuKind ID="101" Name="FacilityLeftClick1" IsLeft="true" Width="100" Height="25">
-            <MenuItem ID="1" Name="Agriculture" DisplayName="農業"/>
-        </MenuKind>
-        <MenuKind ID="101" Name="FacilityLeftClick2" IsLeft="true" Width="100" Height="25">
-            <MenuItem ID="1" Name="Commerce" DisplayName="商業"/>
-            <MenuItem ID="2" Name="TradeFood" DisplayName="買賣糧草" />
-        </MenuKind>
         <MenuKind ID="3" Name="MapRightClick" IsLeft="false" Width="130" Height="25">
             <MenuItem ID="1" Name="DateGo" DisplayName="进行">
                 <MenuItem ID="1" Name="1Day" DisplayName="进行一天" />

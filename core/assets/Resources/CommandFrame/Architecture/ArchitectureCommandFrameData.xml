@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+    <PortraitBorder FileName="Internal/Portrait.png"/>
+    <Tabs>
+        <Internal FileName="Internal.png" Selected="InternalSelected.png" X="30" Y="50" Width="39" Height="22"/>
+        <Military FileName="Military.png" Selected="MilitarySelected.png" X="70" Y="50" Width="39" Height="22"/>
+        <Officer FileName="Officer.png" Selected="OfficerSelected.png" X="110" Y="50" Width="39" Height="22"/>
+        <Tactics FileName="Tactics.png" Selected="TacticsSelected.png" X="150" Y="50" Width="39" Height="22"/>
+        <Facility FileName="Facility.png" Selected="FacilitySelected.png" X="190" Y="50" Width="39" Height="22"/>
+    </Tabs>
+    <Internal>
+        <Background FileName="Internal/Background.png" />
+        <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" />
+        <Agriculture FileName="Internal/Agriculture.png" Selected="Internal/AgricultureSelected.png"/>
+        <Commerce FileName="Internal/Commerce.png" Selected="Internal/CommerceSelected.png" />
+        <Technology FileName="Internal/Technology.png" Selected="Internal/TechnologySelected.png" />
+        <Morale FileName="Internal/Morale.png" Selected="Internal/MoraleSelected.png" />
+        <Endurance FileName="Internal/Endurance.png" Selected="Internal/Endurance.png" />
+    </Internal>
+    <Military>
+        <Background FileName="Military/Background.png" />
+        <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png"/>
+        <New FileName="Military/New.png" Selected="Military/NewSelected.png" />
+        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" />
+        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png"/>
+        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" />
+        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png"/>
+        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png"/>
+    </Military>
+</Root>
