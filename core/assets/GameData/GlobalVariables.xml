@@ -3,4 +3,5 @@
         scrollSpeed="1.0"
         showGrid="true"
         maxRunningDays="99"
+        blankColor="4294967295"
         />

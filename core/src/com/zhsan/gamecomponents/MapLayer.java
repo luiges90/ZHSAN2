@@ -550,7 +550,7 @@ public class MapLayer extends WidgetGroup {
 
             if (a != null) {
                 if (button == Input.Buttons.LEFT) {
-                    screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_LEFT_MENU, a, new Point(mousePosition));
+                    screen.showArchitectureCcommandFrame(a);
                 } else if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_RIGHT_MENU, a, new Point(mousePosition));
                 }

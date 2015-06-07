@@ -16,6 +16,7 @@ import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gamelogic.GameController;
+import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 
@@ -81,6 +82,7 @@ public class GameScreen extends WidgetGroup {
         this.addActor(toolBar);
 
         architectureCommandFrame = new ArchitectureCommandFrame(this);
+        architectureCommandFrame.setVisible(false);
         architectureCommandFrame.setPosition(0, Gdx.graphics.getHeight() - architectureCommandFrame.getHeight());
         this.addActor(architectureCommandFrame);
 
@@ -139,6 +141,10 @@ public class GameScreen extends WidgetGroup {
     public void showContextMenu(ContextMenu.MenuKindType type, int xmlId, Object item, Point position) {
         dayRunner.pauseRunDays();
         contextMenu.show(type, xmlId, item, position);
+    }
+
+    public void showArchitectureCcommandFrame(Architecture architecture) {
+        architectureCommandFrame.show(architecture);
     }
 
     public void showSaveGameFrame() {

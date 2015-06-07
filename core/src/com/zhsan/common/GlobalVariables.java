@@ -2,6 +2,7 @@ package com.zhsan.common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.XmlHelper;
@@ -26,6 +27,7 @@ public class GlobalVariables {
     public static boolean showGrid = true;
 
     public static int maxRunningDays = 99;
+    public static Color blankColor = Color.WHITE;
 
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
@@ -41,6 +43,9 @@ public class GlobalVariables {
             scrollSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "scrollSpeed"));
             showGrid = Boolean.parseBoolean(XmlHelper.loadAttribute(node, "showGrid"));
             maxRunningDays = Integer.parseInt(XmlHelper.loadAttribute(node, "maxRunningDays"));
+            blankColor = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(
+                    XmlHelper.loadAttribute(node, "blankColor")
+            ));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

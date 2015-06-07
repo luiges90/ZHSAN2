@@ -95,4 +95,13 @@ public class Architecture extends GameObject {
         return scenario.getFacilities().filter(f -> f.getBelongedArchitecture() == this);
     }
 
+    public String getFactionName() {
+        return this.getBelongedFaction() == null ? GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT) :
+                this.getBelongedFaction().getName();
+    }
+
+    public String getArchitectureKindName() {
+        return this.getKind().getName();
+    }
+
 }

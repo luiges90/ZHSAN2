@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
-    <PortraitBorder FileName="Internal/Portrait.png"/>
+    <PortraitBorder FileName="Portrait.png"/>
     <Tabs>
         <Internal FileName="Internal.png" Selected="InternalSelected.png" X="30" Y="300" Width="39" Height="22"/>
         <Military FileName="Military.png" Selected="MilitarySelected.png" X="70" Y="300" Width="39" Height="22"/>
@@ -8,16 +8,54 @@
         <Tactics FileName="Tactics.png" Selected="TacticsSelected.png" X="150" Y="300" Width="39" Height="22"/>
         <Facility FileName="Facility.png" Selected="FacilitySelected.png" X="190" Y="300" Width="39" Height="22"/>
     </Tabs>
-    <Internal>
+    <InternalTab>
         <Background FileName="Internal/Background.png" />
-        <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" />
-        <Agriculture FileName="Internal/Agriculture.png" Selected="Internal/AgricultureSelected.png"/>
-        <Commerce FileName="Internal/Commerce.png" Selected="Internal/CommerceSelected.png" />
-        <Technology FileName="Internal/Technology.png" Selected="Internal/TechnologySelected.png" />
-        <Morale FileName="Internal/Morale.png" Selected="Internal/MoraleSelected.png" />
-        <Endurance FileName="Internal/Endurance.png" Selected="Internal/Endurance.png" />
-    </Internal>
-    <Military>
+        <MayorPortrait X="20" Y="226" Width="64" Height="80" />
+        <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="212" Width="39" Height="22"/>
+        <Agriculture FileName="Internal/Agriculture.png" Selected="Internal/AgricultureSelected.png" X="30" Y="60" Width="39" Height="22"/>
+        <Commerce FileName="Internal/Commerce.png" Selected="Internal/CommerceSelected.png" X="70" Y="60" Width="39" Height="22"/>
+        <Technology FileName="Internal/Technology.png" Selected="Internal/TechnologySelected.png" X="110" Y="60" Width="39" Height="22"/>
+        <Morale FileName="Internal/Morale.png" Selected="Internal/MoraleSelected.png" X="150" Y="60" Width="39" Height="22"/>
+        <Endurance FileName="Internal/Endurance.png" Selected="Internal/EnduranceSelected.png" X="190" Y="60" Width="39" Height="22"/>
+        <FactionColor X="240" Y="280" Width="32" Height="32" BorderColor="4294967040"/>
+        <StaticText X="78" Y="280" Text="勢力"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294934528"
+                    Align="Left" />
+        <DetailText X="120" Y="280" Field="FactionName"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294967295"
+                    Align="Left" />
+        <StaticText X="78" Y="250" Text="種類"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294934528"
+                    Align="Left" />
+        <DetailText X="120" Y="250" Field="ArchitectureKindName"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294967295"
+                    Align="Left" />
+        <StaticText X="78" Y="220" Text="太守"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294934528"
+                    Align="Left" />
+        <!--<DetailText X="120" Y="220" Field="MayorName"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294967295"
+                    Align="Left" />-->
+    </InternalTab>
+    <MilitaryTab>
         <Background FileName="Military/Background.png" />
         <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png"/>
         <New FileName="Military/New.png" Selected="Military/NewSelected.png" />
@@ -26,5 +64,5 @@
         <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" />
         <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png"/>
         <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png"/>
-    </Military>
+    </MilitaryTab>
 </Root>
