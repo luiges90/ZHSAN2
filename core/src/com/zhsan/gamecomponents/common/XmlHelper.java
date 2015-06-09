@@ -23,6 +23,15 @@ public class XmlHelper {
         return rect;
     }
 
+    public static Rectangle loadRectangleFromXmlOptSize(Node node) {
+        Rectangle rect = new Rectangle();
+        rect.setX(Integer.parseInt(XmlHelper.loadAttribute(node, "X")));
+        rect.setY(Integer.parseInt(XmlHelper.loadAttribute(node, "Y")));
+        rect.setWidth(Integer.parseInt(XmlHelper.loadAttribute(node, "Width", "0")));
+        rect.setHeight(Integer.parseInt(XmlHelper.loadAttribute(node, "Height", "0")));
+        return rect;
+    }
+
     public static Color loadColorFromXml(int colorCode) {
         Color temp = new Color();
         Color.argb8888ToColor(temp, colorCode);

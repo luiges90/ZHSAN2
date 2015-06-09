@@ -40,13 +40,27 @@ public class ArchitectureCommandFrame extends CommandFrame {
     }
 
     private class TextType {
-        public final Point position;
+        public final Rectangle position;
         public final boolean staticText;
         public final String name;
+        public final Color fallingColor;
 
-        public TextType(Point position, boolean staticText, String name) {
+        public TextType(Rectangle position, boolean staticText, String name, Color fallingColor) {
             this.position = position;
             this.staticText = staticText;
+            this.name = name;
+            this.fallingColor = fallingColor;
+        }
+    }
+
+    private class InternalPortraitType {
+        public final Rectangle position;
+        public final Color borderColor;
+        public final String name;
+
+        public InternalPortraitType(Rectangle position, Color borderColor, String name) {
+            this.position = position;
+            this.borderColor = borderColor;
             this.name = name;
         }
     }
@@ -70,13 +84,14 @@ public class ArchitectureCommandFrame extends CommandFrame {
     private Color factionBorder;
 
     private List<TextWidget<TextType>> textWidgets = new ArrayList<>();
+    private List<InternalPortraitType> internalPortraits = new ArrayList<>();
 
     private EnumMap<TabType, Texture> backgrounds = new EnumMap<>(TabType.class);
     private TabType currentTab = TabType.INTERNAL;
 
     private Architecture currentArchitecture;
 
-    private ShapeRenderer shapeRenderer = new ShapeRenderer(4);
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "ArchitectureCommandFrameData.xml");
@@ -145,19 +160,39 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 } else if (n.getNodeName().equals("StaticText")) {
                     TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
                     widget.setExtra(new TextType(
-                            Point.fromXml(n),
+                            XmlHelper.loadRectangleFromXmlOptSize(n),
                             true,
-                            XmlHelper.loadAttribute(n, "Text")
+                            XmlHelper.loadAttribute(n, "Text"),
+                            widget.getColor()
                     ));
+                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
                     textWidgets.add(widget);
                 } else if (n.getNodeName().equals("DetailText")) {
                     TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
                     widget.setExtra(new TextType(
-                            Point.fromXml(n),
+                            XmlHelper.loadRectangleFromXmlOptSize(n),
                             false,
+                            XmlHelper.loadAttribute(n, "Field"),
+                            widget.getColor()
+                    ));
+                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
+                    textWidgets.add(widget);
+                } else if (n.getNodeName().equals("InternalDevelopRate")) {
+                    TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
+                    widget.setExtra(new TextType(
+                            XmlHelper.loadRectangleFromXmlOptSize(n),
+                            false,
+                            XmlHelper.loadAttribute(n, "Field"),
+                            XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "FallingFontColor")))
+                    ));
+                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
+                    textWidgets.add(widget);
+                } else if (n.getNodeName().equals("InternalPortrait")) {
+                    internalPortraits.add(new InternalPortraitType(
+                            XmlHelper.loadRectangleFromXml(n),
+                            XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "BorderColor"))),
                             XmlHelper.loadAttribute(n, "Field")
                     ));
-                    textWidgets.add(widget);
                 }
             }
         } catch (Exception e) {
@@ -229,6 +264,20 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 textWidget.setText(String.valueOf(currentArchitecture.getField(textWidget.getExtra().name)));
             }
             textWidget.draw(batch, parentAlpha);
+        }
+
+        for (InternalPortraitType internalPortraitType : internalPortraits) {
+            batch.end();
+
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+            shapeRenderer.setColor(internalPortraitType.borderColor);
+            shapeRenderer.rect(getX() + internalPortraitType.position.x, getY() + internalPortraitType.position.y,
+                    internalPortraitType.position.width, internalPortraitType.position.height);
+
+            shapeRenderer.end();
+
+            batch.begin();
         }
     }
 
