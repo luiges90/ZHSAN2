@@ -271,6 +271,8 @@ public class ArchitectureCommandFrame extends CommandFrame {
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
+            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
             shapeRenderer.setColor(internalPortraitType.borderColor);
             shapeRenderer.rect(getX() + internalPortraitType.position.x, getY() + internalPortraitType.position.y,
                     internalPortraitType.position.width, internalPortraitType.position.height);
