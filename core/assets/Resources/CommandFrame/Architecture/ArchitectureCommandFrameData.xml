@@ -48,12 +48,12 @@
                     FontStyle="Bold"
                     FontColor="4294934528"
                     Align="Left" />
-        <!--<DetailText X="120" Y="220" Field="MayorName"
+        <DetailText X="120" Y="220" Field="MayorName"
                     FontName="方正隶变_GBK"
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294967295"
-                    Align="Left" />-->
+                    Align="Left" />
     </InternalTab>
     <MilitaryTab>
         <Background FileName="Military/Background.png" />

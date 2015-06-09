@@ -34,7 +34,7 @@ public abstract class GameObject {
                     Method m = this.getClass().getMethod("get" + fname);
                     return m.invoke(this);
                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                    return null;
+                    return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
                 }
         }
     }
