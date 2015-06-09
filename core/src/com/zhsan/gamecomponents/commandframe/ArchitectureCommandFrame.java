@@ -237,24 +237,28 @@ public class ArchitectureCommandFrame extends CommandFrame {
         batch.draw(morale.get(), getX() + moralePos.x, getY() + moralePos.y, moralePos.width, moralePos.height);
         batch.draw(endurance.get(), getX() + endurancePos.x, getY() + endurancePos.y, endurancePos.width, endurancePos.height);
 
-//        batch.end();
-//
-//        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-//
-//        Faction f = currentArchitecture.getBelongedFaction();
-//        shapeRenderer.setColor(f == null ? GlobalVariables.blankColor : f.getColor());
-//        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
-//                factionColor.getWidth(), factionColor.getHeight());
-//
-//        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-//
-//        shapeRenderer.setColor(factionBorder);
-//        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
-//                factionColor.getWidth(), factionColor.getHeight());
-//
-//        shapeRenderer.end();
-//
-//        batch.begin();
+        batch.end();
+
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.begin();
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
+        Faction f = currentArchitecture.getBelongedFaction();
+        shapeRenderer.setColor(f == null ? GlobalVariables.blankColor : f.getColor());
+        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
+                factionColor.getWidth(), factionColor.getHeight());
+
+        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+
+        shapeRenderer.setColor(factionBorder);
+        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
+                factionColor.getWidth(), factionColor.getHeight());
+
+        shapeRenderer.end();
+
+        batch.begin();
 
         for (TextWidget<TextType> textWidget : textWidgets) {
             textWidget.setPosition(textWidget.getExtra().position.x + getX(), textWidget.getExtra().position.y + getY());

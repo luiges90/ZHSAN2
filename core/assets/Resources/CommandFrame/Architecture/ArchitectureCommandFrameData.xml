@@ -12,7 +12,7 @@
         <Background FileName="Internal/Background.png" />
         <MayorPortrait X="20" Y="246" Width="64" Height="80" />
         <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="232" Width="39" Height="22"/>
-        <FactionColor X="200" Y="280" Width="32" Height="32" BorderColor="4294967040"/>
+        <FactionColor X="200" Y="298" Width="16" Height="16" BorderColor="4294967040"/>
         <StaticText X="78" Y="300" Text="勢力"
                     FontName="方正隶变_GBK"
                     FontSize="16"
