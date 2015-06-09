@@ -3,6 +3,9 @@ package com.zhsan.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
@@ -56,6 +59,16 @@ public class GameScreen extends WidgetGroup {
 
     private DayRunner dayRunner;
 
+    private void addOverlayedMapLayerScrollListener(WidgetGroup widget) {
+        widget.addListener(new InputListener(){
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                mapLayer.handleMouseMoved(event, widget.getX() + x , widget.getY() + y);
+                return false;
+            }
+        });
+    }
+
     public GameScreen(GameScenario scen) {
         this.scen = scen;
         this.controller = new GameController(scen);
@@ -72,6 +85,7 @@ public class GameScreen extends WidgetGroup {
 
         screenBlind = new ScreenBlind(this);
         screenBlind.setPosition(0, Gdx.graphics.getHeight() - screenBlind.getHeight());
+        addOverlayedMapLayerScrollListener(screenBlind);
         this.addActor(screenBlind);
 
         contextMenu = new ContextMenu(this);
@@ -84,6 +98,7 @@ public class GameScreen extends WidgetGroup {
         architectureCommandFrame = new ArchitectureCommandFrame(this);
         architectureCommandFrame.setVisible(false);
         architectureCommandFrame.setPosition(0, Gdx.graphics.getHeight() - architectureCommandFrame.getHeight());
+        addOverlayedMapLayerScrollListener(architectureCommandFrame);
         this.addActor(architectureCommandFrame);
 
         textDialog = new TextDialog(this);

@@ -77,6 +77,16 @@ public class ToolBar extends WidgetGroup {
         }
     }
 
+    private void addOverlayedScrollListenerToMap() {
+        smallMap.addListener(new InputListener(){
+            @Override
+            public boolean mouseMoved(InputEvent event, float x, float y) {
+                screen.getMapLayer().handleMouseMoved(event, smallMap.getX() + x, smallMap.getY() + y);
+                return false;
+            }
+        });
+    }
+
     public ToolBar(GameScreen screen) {
         this.screen = screen;
 
@@ -86,6 +96,8 @@ public class ToolBar extends WidgetGroup {
 
         smallMap = new SmallMap(screen, smallMapAlign, backgroundHeight);
         smallMap.setVisible(false);
+
+        addOverlayedScrollListenerToMap();
 
         this.addActor(smallMap);
 

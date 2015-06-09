@@ -637,22 +637,7 @@ public class MapLayer extends WidgetGroup {
 
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
-            mousePosition.set(x, y);
-
-            // decide scroll
-            moveStateX = MoveStateX.IDLE;
-            moveStateY = MoveStateY.IDLE;
-
-            if (x < mapScrollBoundary) {
-                moveStateX = MoveStateX.LEFT;
-            } else if (x > getWidth() - mapScrollBoundary) {
-                moveStateX = MoveStateX.RIGHT;
-            }
-            if (y < mapScrollBoundary) {
-                moveStateY = MoveStateY.BOTTOM;
-            } else if (y > getHeight() - mapScrollBoundary) {
-                moveStateY = MoveStateY.TOP;
-            }
+            handleMouseMoved(event, x, y);
             return true;
         }
 
@@ -660,6 +645,25 @@ public class MapLayer extends WidgetGroup {
         public boolean scrolled(InputEvent event, float x, float y, int amount) {
             adjustZoom(-amount);
             return true;
+        }
+    }
+
+    public void handleMouseMoved(InputEvent event, float x, float y) {
+        mousePosition.set(x, y);
+
+        // decide scroll
+        moveStateX = MoveStateX.IDLE;
+        moveStateY = MoveStateY.IDLE;
+
+        if (x < mapScrollBoundary) {
+            moveStateX = MoveStateX.LEFT;
+        } else if (x > getWidth() - mapScrollBoundary) {
+            moveStateX = MoveStateX.RIGHT;
+        }
+        if (y < mapScrollBoundary) {
+            moveStateY = MoveStateY.BOTTOM;
+        } else if (y > getHeight() - mapScrollBoundary) {
+            moveStateY = MoveStateY.TOP;
         }
     }
 
