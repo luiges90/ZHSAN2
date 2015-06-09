@@ -330,14 +330,6 @@ public class MapLayer extends WidgetGroup {
         Function<Integer, Integer> drawPosY = y -> ((map.getHeight() - 1 - y) - yLo * map.getTileInEachImage()) * zoom - offsetY;
 
         {
-            // draw facilities
-            for (Facility f : screen.getScenario().getFacilities()) {
-                Texture facilityImage = getFacilityImage(resPack, f.getKind());
-                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
-            }
-        }
-
-        {
             // draw architectures
             for (Architecture a : screen.getScenario().getArchitectures()) {
                 Point mapCenter = Point.getCenter(a.getLocation());
@@ -398,6 +390,14 @@ public class MapLayer extends WidgetGroup {
                             nameImageWidth, nameImageHeight);
                 }
 
+            }
+        }
+
+        {
+            // draw facilities
+            for (Facility f : screen.getScenario().getFacilities()) {
+                Texture facilityImage = getFacilityImage(resPack, f.getKind());
+                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
             }
         }
 
