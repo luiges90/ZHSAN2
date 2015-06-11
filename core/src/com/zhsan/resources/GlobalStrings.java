@@ -33,7 +33,9 @@ public class GlobalStrings {
         FACILITY_KIND_SAVE_HEADER("facilityKindSaveHeader"),
         FACILITY_SAVE_HEADER("facilitySaveHeader"),
         NO_CONTENT("noContent"),
-        DAY("day")
+        DAY("day"),
+        FOOD_UNIT("foodUnit"),
+        FOOD_UNIT_STRING("foodUnitString")
         ;
 
         private final String xmlName;

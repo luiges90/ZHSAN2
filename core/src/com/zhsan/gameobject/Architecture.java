@@ -27,6 +27,10 @@ public class Architecture extends GameObject {
     private ArchitectureKind architectureKind;
     private Section belongedSection;
 
+    private int population;
+    private int fund, food;
+    private int agriculture, commerce, technology, endurance, morale;
+
     public Architecture(LoadingArchitecture from, GameScenario scenario) {
         super(from.getId());
         this.scenario = scenario;
@@ -36,6 +40,15 @@ public class Architecture extends GameObject {
         this.location = from.getLocation();
         this.architectureKind = scenario.getArchitectureKinds().get(from.getArchitectureKindId());
         this.belongedSection = scenario.getSections().get(from.getBelongedSectionId());
+
+        this.population = from.getPopulation();
+        this.fund = from.getFund();
+        this.food = from.getFood();
+        this.agriculture = from.getAgriculture();
+        this.commerce = from.getCommerce();
+        this.technology = from.getTechnology();
+        this.endurance = from.getEndurance();
+        this.morale = from.getMorale();
     }
 
     public static final void toCSV(FileHandle root, GameObjectList<Architecture> data) {
@@ -49,7 +62,15 @@ public class Architecture extends GameObject {
                         d.getName(),
                         String.valueOf(d.architectureKind.getId()),
                         Point.toCSVList(d.location),
-                        String.valueOf(d.belongedSection.getId())
+                        String.valueOf(d.belongedSection.getId()),
+                        String.valueOf(d.population),
+                        String.valueOf(d.fund),
+                        String.valueOf(d.food),
+                        String.valueOf(d.agriculture),
+                        String.valueOf(d.commerce),
+                        String.valueOf(d.technology),
+                        String.valueOf(d.endurance),
+                        String.valueOf(d.morale),
                 });
             }
         } catch (IOException e) {
@@ -104,4 +125,40 @@ public class Architecture extends GameObject {
         return this.getKind().getName();
     }
 
+    public int getPopulation() {
+        return population;
+    }
+
+    public int getFund() {
+        return fund;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public String getFoodString() {
+        return food / Integer.parseInt(GlobalStrings.getString(GlobalStrings.Keys.FOOD_UNIT)) +
+                GlobalStrings.getString(GlobalStrings.Keys.FOOD_UNIT_STRING);
+    }
+
+    public int getAgriculture() {
+        return agriculture;
+    }
+
+    public int getCommerce() {
+        return commerce;
+    }
+
+    public int getTechnology() {
+        return technology;
+    }
+
+    public int getEndurance() {
+        return endurance;
+    }
+
+    public int getMorale() {
+        return morale;
+    }
 }

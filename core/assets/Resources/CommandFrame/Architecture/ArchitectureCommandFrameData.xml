@@ -103,7 +103,7 @@
                     FontStyle="Bold"
                     FontColor="4294934528"
                     Align="Left" />
-        <DetailText X="80" Y="150" Field="Food"
+        <DetailText X="80" Y="150" Field="FoodString"
                     FontName="方正隶变_GBK"
                     FontSize="16"
                     FontStyle="Regular"

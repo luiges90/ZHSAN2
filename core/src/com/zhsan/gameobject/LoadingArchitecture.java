@@ -31,6 +31,10 @@ class LoadingArchitecture extends GameObject {
     private Set<Integer> unhiredPersons = new HashSet<>();
     private Set<Integer> unhiredMovingPersons = new HashSet<>();
 
+    private int population;
+    private int fund, food;
+    private int agriculture, commerce, technology, endurance, morale;
+
     private LoadingArchitecture(int id) {
         super(id);
     }
@@ -60,12 +64,28 @@ class LoadingArchitecture extends GameObject {
                     data.movingPersons = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[9]));
                     data.unhiredPersons = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[10]));
                     data.unhiredMovingPersons = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[11]));
+                    data.population = Integer.parseInt(line[12]);
+                    data.fund = Integer.parseInt(line[13]);
+                    data.food = Integer.parseInt(line[14]);
+                    data.agriculture = Integer.parseInt(line[15]);
+                    data.commerce = Integer.parseInt(line[16]);
+                    data.technology = Integer.parseInt(line[17]);
+                    data.morale = Integer.parseInt(line[19]);
+                    data.endurance = Integer.parseInt(line[20]);
                 } else {
                     data.nameImageName = line[1];
                     data.setName(line[2]);
                     data.architectureKindId = Integer.parseInt(line[3]);
                     data.location = Point.fromCSVList(line[4]);
                     data.belongedSectionId = Integer.parseInt(line[5]);
+                    data.population = Integer.parseInt(line[6]);
+                    data.fund = Integer.parseInt(line[7]);
+                    data.food = Integer.parseInt(line[8]);
+                    data.agriculture = Integer.parseInt(line[9]);
+                    data.commerce = Integer.parseInt(line[10]);
+                    data.technology = Integer.parseInt(line[11]);
+                    data.morale = Integer.parseInt(line[12]);
+                    data.endurance = Integer.parseInt(line[13]);
                 }
 
                 result.add(data);
@@ -144,5 +164,37 @@ class LoadingArchitecture extends GameObject {
 
     public int getArchitectureKindId() {
         return architectureKindId;
+    }
+
+    public int getPopulation() {
+        return population;
+    }
+
+    public int getFund() {
+        return fund;
+    }
+
+    public int getFood() {
+        return food;
+    }
+
+    public int getAgriculture() {
+        return agriculture;
+    }
+
+    public int getCommerce() {
+        return commerce;
+    }
+
+    public int getTechnology() {
+        return technology;
+    }
+
+    public int getEndurance() {
+        return endurance;
+    }
+
+    public int getMorale() {
+        return morale;
     }
 }
