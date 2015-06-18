@@ -4,7 +4,7 @@
   <ColumnHeader Height="24" FileName="ColumnHeader.jpg"/>
   <ScrollButton Width="16" FileName="ScrollButton.jpg"/>
   <Arrows LeftFileName="LeftArrow.png" RightFileName="RightArrow.png"/>
-  <CheckBox Name="Selected" DisplayName="选择" Width="18" FileName="CheckBox.png" Selected="CheckBoxSelected.png"
+  <CheckBox Name="Selected" DisplayName="选择" Width="30" FileName="CheckBox.png" Selected="CheckBoxSelected.png"
             RoundFileName="RoundCheckBox.png" RoundSelected="RoundCheckBoxSelected.png"/>
   <TabText FontName="方正隶变_GBK"
            FontSize="13"

@@ -2,6 +2,7 @@ package com.zhsan.gamecomponents.common.textwidget;
 
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -9,13 +10,13 @@ import java.util.Set;
  */
 public class RadioButtonWidget<ExtraType> extends CheckboxWidget<ExtraType> {
 
-    private Set<RadioButtonWidget<?>> radioGroup;
+    private Collection<RadioButtonWidget<?>> radioGroup;
 
     public RadioButtonWidget(Setting setting, String text, Texture checkedImage, Texture uncheckedImage) {
         super(setting, text, checkedImage, uncheckedImage);
     }
 
-    public void setGroup(Set<RadioButtonWidget<?>> radioGroup) {
+    public void setGroup(Collection<RadioButtonWidget<?>> radioGroup) {
         this.radioGroup = radioGroup;
     }
 

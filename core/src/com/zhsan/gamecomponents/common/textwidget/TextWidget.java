@@ -46,6 +46,10 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
 
             return new Setting(fontName, fontSize, fontStyle, fontColor, align);
         }
+
+        public static Setting empty() {
+            return new Setting(Fonts.getDefaultFontName(), 1, Fonts.Style.REGULAR, 0, BitmapFont.HAlignment.LEFT);
+        }
     }
 
     private Setting setting;

@@ -31,6 +31,8 @@ public class Fonts {
     private static Map<String, EnumMap<Style, String>> fonts = new HashMap<>();
     private static Map<String, BitmapFont> fontFiles = new HashMap<>();
 
+    private static String defName;
+
     private static void loadFontDefinition() {
         FileHandle f = Gdx.files.external(Paths.FONTS + "Fonts.xml");
 
@@ -40,6 +42,8 @@ public class Fonts {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
+
+            defName = dom.getDocumentElement().getAttribute("Default");
 
             NodeList list = dom.getElementsByTagName("Font");
             for (int i = 0; i < list.getLength(); ++i) {
@@ -73,6 +77,10 @@ public class Fonts {
 
     public static BitmapFont get(String name, Style style) {
         return fontFiles.get(fonts.get(name).get(style));
+    }
+
+    public static String getDefaultFontName() {
+        return defName;
     }
 
 }

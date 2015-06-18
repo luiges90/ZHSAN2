@@ -13,9 +13,7 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import com.zhsan.gamecomponents.common.textwidget.BackgroundTextWidget;
-import com.zhsan.gamecomponents.common.textwidget.StateBackgroundTextWidget;
-import com.zhsan.gamecomponents.common.textwidget.TextWidget;
+import com.zhsan.gamecomponents.common.textwidget.*;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameObjectList;
@@ -35,7 +33,11 @@ import java.util.*;
  */
 public class TabListGameFrame extends GameFrame {
 
-    public static enum ListKindType {
+    public enum Selection {
+        NONE, SINGLE, MULTIPLE
+    }
+
+    public enum ListKindType {
         ARCHITECTURE("Architecture", Architecture.class),
         PERSON("Person", Person.class)
         ;
@@ -84,8 +86,9 @@ public class TabListGameFrame extends GameFrame {
 
     private Texture leftArrow, rightArrow;
 
-    private String selectName, selectDisplayName;
-    private StateTexture checkbox, radioButton;
+    private BackgroundTextWidget<Column> selectTextWidget;
+    private int selectWidth;
+    private Texture checkbox, checkboxSelected, radio, radioSelected;
 
     private Sound selectSound;
 
@@ -102,6 +105,11 @@ public class TabListGameFrame extends GameFrame {
 
     private ScrollPane contentPane;
     private List<TextWidget<?>> showingTextWidgets = new ArrayList<>();
+
+    private List<CheckboxWidget<?>> showingCheckboxes = new ArrayList<>();
+    private List<RadioButtonWidget<?>> showingRadioButtons = new ArrayList<>();
+
+    private Selection selection;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -128,10 +136,12 @@ public class TabListGameFrame extends GameFrame {
             rightArrow = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(arrowNode, "RightFileName")));
 
             Node checkboxNode = dom.getElementsByTagName("CheckBox").item(0);
-            selectName = XmlHelper.loadAttribute(checkboxNode, "Name");
-            selectDisplayName = XmlHelper.loadAttribute(checkboxNode, "DisplayName");
-            checkbox = StateTexture.fromXml(DATA_PATH, checkboxNode);
-            radioButton = StateTexture.fromXml(DATA_PATH, checkboxNode, "Round");
+            String selectDisplayName = XmlHelper.loadAttribute(checkboxNode, "DisplayName");
+            selectWidth = Integer.parseInt(XmlHelper.loadAttribute(checkboxNode, "Width"));
+            checkbox = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "FileName")));
+            checkboxSelected = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "Selected")));
+            radio = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "RoundFileName")));
+            radioSelected = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "RoundSelected")));
 
             StateTexture tabButton = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("TabButton").item(0));
             TextWidget<Tab> tabText = new TextWidget<>(
@@ -139,6 +149,9 @@ public class TabListGameFrame extends GameFrame {
 
             BackgroundTextWidget<Column> columnText = new BackgroundTextWidget<>(
                     new TextWidget<>(TextWidget.Setting.fromXml(dom.getElementsByTagName("ColumnText").item(0))), columnHeader);
+
+            selectTextWidget = new BackgroundTextWidget<>(columnText, columnHeader);
+            selectTextWidget.setText(selectDisplayName);
 
             selectSound = Gdx.audio.newSound(Gdx.files.external(DATA_PATH +
                             XmlHelper.loadAttribute(dom.getElementsByTagName("SoundFile").item(0), "Select")
@@ -243,12 +256,17 @@ public class TabListGameFrame extends GameFrame {
     }
 
     public void show(ListKindType type, GameObjectList<?> showingData) {
+        show(type, showingData, Selection.NONE);
+    }
+
+    public void show(ListKindType type, GameObjectList<?> showingData, Selection selection) {
         if (showingData.size() == 0) return;
         if (!type.carryingObj.isAssignableFrom(showingData.getFirst().getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
                     + type.carryingObj + ". " + showingData.getFirst().getClass() + " received.");
         }
 
+        this.selection = selection;
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
         this.showingTab = this.showingListKind.tabs.get(0);
@@ -264,13 +282,30 @@ public class TabListGameFrame extends GameFrame {
         Table contentTable = new Table();
 
         // header
+        if (selection != Selection.NONE) {
+            contentTable.add(selectTextWidget).width(selectWidth).height(columnHeaderHeight);
+        }
         for (Column c : showingTab.columns) {
             contentTable.add(c.columnText).width(c.width).height(columnHeaderHeight);
         }
         contentTable.row();
 
         // content
+
         for (GameObject o : showingData) {
+            if (selection == Selection.SINGLE) {
+                RadioButtonWidget<GameObject> widget = new RadioButtonWidget<>(TextWidget.Setting.empty(), "", radioSelected, radio);
+                widget.setExtra(o);
+
+                showingRadioButtons.add(widget);
+                contentTable.add(widget).width(selectWidth).height(columnHeaderHeight);
+            } else if (selection == Selection.MULTIPLE) {
+                CheckboxWidget<GameObject> widget = new CheckboxWidget<>(TextWidget.Setting.empty(), "", checkboxSelected, checkbox);
+                widget.setExtra(o);
+
+                showingCheckboxes.add(widget);
+                contentTable.add(widget).width(selectWidth).height(columnHeaderHeight);
+            }
             for (Column c : showingTab.columns) {
                 TextWidget<GameObject> widget = new TextWidget<>(c.contentTemplate);
                 widget.setExtra(o);
@@ -281,6 +316,12 @@ public class TabListGameFrame extends GameFrame {
                 contentTable.add(widget).width(c.width).height(columnHeaderHeight);
             }
             contentTable.row().height(rowHeight);
+        }
+
+        if (selection == Selection.SINGLE) {
+            for (RadioButtonWidget<?> widget : showingRadioButtons) {
+                widget.setGroup(showingRadioButtons);
+            }
         }
 
         contentTable.top().left();
@@ -336,6 +377,10 @@ public class TabListGameFrame extends GameFrame {
         }
         showingTextWidgets.forEach(TextWidget::dispose);
         showingTextWidgets.clear();
+        showingCheckboxes.forEach(TextWidget::dispose);
+        showingCheckboxes.clear();
+        showingRadioButtons.forEach(TextWidget::dispose);
+        showingRadioButtons.clear();
     }
 
     @Override
@@ -362,8 +407,11 @@ public class TabListGameFrame extends GameFrame {
         leftArrow.dispose();
         rightArrow.dispose();
         checkbox.dispose();
-        radioButton.dispose();
+        checkboxSelected.dispose();
+        radio.dispose();
+        radioSelected.dispose();
         selectSound.dispose();
+        selectTextWidget.dispose();
         listKinds.forEach((listKindType, listKind) -> {
             listKind.tabs.forEach(tab -> {
                 tab.tabButton.dispose();
