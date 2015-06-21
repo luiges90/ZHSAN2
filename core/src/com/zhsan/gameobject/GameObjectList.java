@@ -87,7 +87,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return new GameObjectList<>(this, true);
     }
 
-    public class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
+    private class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
 
         @Override
         public Supplier<GameObjectList<T>> supplier() {
