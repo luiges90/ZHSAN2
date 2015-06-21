@@ -3,7 +3,6 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.zhsan.common.exception.FileReadException;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,7 +21,7 @@ class LoadingPerson extends GameObject {
     private LoadingLocationType loadingLocationType = LoadingLocationType.NONE;
     private int locationId = -1;
 
-    private int command, strength, inteligence, politics, glamour;
+    private int command, strength, intelligence, politics, glamour;
 
     private int movingDays = 0;
 
@@ -62,7 +61,7 @@ class LoadingPerson extends GameObject {
                     }
                     data.strength = Integer.parseInt(line[16]);
                     data.command = Integer.parseInt(line[17]);
-                    data.inteligence = Integer.parseInt(line[18]);
+                    data.intelligence = Integer.parseInt(line[18]);
                     data.politics = Integer.parseInt(line[19]);
                     data.glamour = Integer.parseInt(line[20]);
                     data.movingDays = Integer.parseInt(line[62]);
@@ -76,7 +75,7 @@ class LoadingPerson extends GameObject {
                     data.movingDays = Integer.parseInt(line[7]);
                     data.strength = Integer.parseInt(line[8]);
                     data.command = Integer.parseInt(line[9]);
-                    data.inteligence = Integer.parseInt(line[10]);
+                    data.intelligence = Integer.parseInt(line[10]);
                     data.politics = Integer.parseInt(line[11]);
                     data.glamour = Integer.parseInt(line[12]);
                 }
@@ -94,11 +93,11 @@ class LoadingPerson extends GameObject {
         for (LoadingPerson p : persons) {
             for (LoadingArchitecture a : architectures) {
                 if (a.getPersons().contains(p.getId()) || a.getMovingPersons().contains(p.getId())) {
-                    p.loadingLocationType = LoadingLocationType.ARHITECTURE;
+                    p.loadingLocationType = LoadingLocationType.ARCHITECTURE;
                     p.locationId = a.getId();
                     p.state = Person.State.NORMAL;
                 } else if (a.getUnhiredPersons().contains(p.getId()) || a.getUnhiredMovingPersons().contains(p.getId())) {
-                    p.loadingLocationType = LoadingLocationType.ARHITECTURE;
+                    p.loadingLocationType = LoadingLocationType.ARCHITECTURE;
                     p.locationId = a.getId();
                     p.state = Person.State.UNHIRED;
                 }
@@ -142,8 +141,8 @@ class LoadingPerson extends GameObject {
         return strength;
     }
 
-    public int getInteligence() {
-        return inteligence;
+    public int getIntelligence() {
+        return intelligence;
     }
 
     public int getPolitics() {
@@ -155,12 +154,12 @@ class LoadingPerson extends GameObject {
     }
 
     public enum LoadingLocationType {
-        NONE, ARHITECTURE;
+        NONE, ARCHITECTURE;
 
         public static LoadingLocationType fromCSV(String s) {
             switch (Integer.parseInt(s)) {
                 case -1: return NONE;
-                case 1: return ARHITECTURE;
+                case 1: return ARCHITECTURE;
             }
             assert false;
             return null;
@@ -169,7 +168,7 @@ class LoadingPerson extends GameObject {
         public String toCSV() {
             switch (this) {
                 case NONE: return "-1";
-                case ARHITECTURE: return "1";
+                case ARCHITECTURE: return "1";
             }
             assert false;
             return null;

@@ -58,7 +58,7 @@ public class Person extends GameObject {
 
         public LoadingPerson.LoadingLocationType getLoadingLocationType() {
             if (architecture != null) {
-                return LoadingPerson.LoadingLocationType.ARHITECTURE;
+                return LoadingPerson.LoadingLocationType.ARCHITECTURE;
             }
             return LoadingPerson.LoadingLocationType.NONE;
         }
@@ -95,12 +95,12 @@ public class Person extends GameObject {
         this.state = from.getState();
         this.command = from.getCommand();
         this.strength = from.getStrength();
-        this.intelligence = from.getInteligence();
+        this.intelligence = from.getIntelligence();
         this.politics = from.getPolitics();
         this.glamour = from.getGlamour();
 
         switch (from.getLoadingLocationType()) {
-            case ARHITECTURE:
+            case ARCHITECTURE:
                 this.location = new LocationType(scenario.getArchitectures().get(from.getLocationId()));
         }
     }

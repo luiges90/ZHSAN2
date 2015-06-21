@@ -5,7 +5,6 @@ import com.opencsv.CSVReader;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -107,7 +106,7 @@ class LoadingArchitecture extends GameObject {
                 }
             }
             for (LoadingPerson p : persons) {
-                if (p.getLoadingLocationType() == LoadingPerson.LoadingLocationType.ARHITECTURE &&
+                if (p.getLoadingLocationType() == LoadingPerson.LoadingLocationType.ARCHITECTURE &&
                         p.getLocationId() == a.getId() &&
                         p.getState() == Person.State.NORMAL) {
                     if (p.getMovingDays() > 0) {
@@ -115,7 +114,7 @@ class LoadingArchitecture extends GameObject {
                     } else {
                         a.persons.add(p.getId());
                     }
-                } else if (p.getLoadingLocationType() == LoadingPerson.LoadingLocationType.ARHITECTURE &&
+                } else if (p.getLoadingLocationType() == LoadingPerson.LoadingLocationType.ARCHITECTURE &&
                         p.getLocationId() == a.getId() &&
                         p.getState() == Person.State.UNHIRED) {
                     if (p.getMovingDays() > 0) {
