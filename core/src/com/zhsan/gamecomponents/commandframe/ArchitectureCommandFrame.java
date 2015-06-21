@@ -18,6 +18,7 @@ import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
+import com.zhsan.resources.GlobalStrings;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
@@ -358,7 +359,8 @@ public class ArchitectureCommandFrame extends CommandFrame {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (agriculturePos.contains(x, y)) {
-                screen.showTabList(TabListGameFrame.ListKindType.PERSON, currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
+                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
                         selectedItems -> {
                             System.out.println(selectedItems);
                         });

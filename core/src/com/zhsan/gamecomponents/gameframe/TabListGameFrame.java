@@ -120,6 +120,8 @@ public class TabListGameFrame extends GameFrame {
     private Selection selection;
     private OnItemSelectedListener onItemSelected;
 
+    private String title;
+
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
 
@@ -266,16 +268,17 @@ public class TabListGameFrame extends GameFrame {
     }
 
     public void show(ListKindType type, GameObjectList<?> showingData) {
-        show(type, showingData, Selection.NONE, null);
+        show(null, type, showingData, Selection.NONE, null);
     }
 
-    public void show(ListKindType type, GameObjectList<?> showingData, Selection selection, OnItemSelectedListener onItemSelected) {
+    public void show(String title, ListKindType type, GameObjectList<?> showingData, Selection selection, OnItemSelectedListener onItemSelected) {
         if (showingData.size() == 0) return;
         if (!type.carryingObj.isAssignableFrom(showingData.getFirst().getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
                     + type.carryingObj + ". " + showingData.getFirst().getClass() + " received.");
         }
 
+        this.title = title;
         this.selection = selection;
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
@@ -352,7 +355,7 @@ public class TabListGameFrame extends GameFrame {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.setTitle(showingListKind.title);
+        super.setTitle(this.title == null ? showingListKind.title : this.title);
 
         super.draw(batch, parentAlpha);
 

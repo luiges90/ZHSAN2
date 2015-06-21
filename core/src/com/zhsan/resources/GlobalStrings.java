@@ -35,7 +35,8 @@ public class GlobalStrings {
         NO_CONTENT("noContent"),
         DAY("day"),
         FOOD_UNIT("foodUnit"),
-        FOOD_UNIT_STRING("foodUnitString")
+        FOOD_UNIT_STRING("foodUnitString"),
+        AGRICULTURE("Agriculture")
         ;
 
         private final String xmlName;

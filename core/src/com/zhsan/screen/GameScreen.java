@@ -145,10 +145,10 @@ public class GameScreen extends WidgetGroup {
         tabListGameFrame.show(type, showingData);
     }
 
-    public void showTabList(TabListGameFrame.ListKindType type, GameObjectList<?> showingData,
+    public void showTabList(String title, TabListGameFrame.ListKindType type, GameObjectList<?> showingData,
                             TabListGameFrame.Selection selection, TabListGameFrame.OnItemSelectedListener onItemSelectedListener) {
         dayRunner.pauseRunDays();
-        tabListGameFrame.show(type, showingData, selection, onItemSelectedListener);
+        tabListGameFrame.show(title, type, showingData, selection, onItemSelectedListener);
     }
 
     public void showContextMenu(ContextMenu.MenuKindType type, Point position) {
