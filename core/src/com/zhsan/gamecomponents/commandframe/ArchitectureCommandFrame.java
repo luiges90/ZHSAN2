@@ -305,61 +305,63 @@ public class ArchitectureCommandFrame extends CommandFrame {
     public class Listener extends InputListener {
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
-            if (internalPos.contains(x, y)) {
-                internal.setState(StateTexture.State.SELECTED);
-            } else {
-                internal.setState(currentTab == TabType.INTERNAL ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
-            }
-            if (militaryPos.contains(x, y)) {
-                military.setState(StateTexture.State.SELECTED);
-            } else {
-                military.setState(currentTab == TabType.MILITARY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
-            }
-            if (officerPos.contains(x, y)) {
-                officer.setState(StateTexture.State.SELECTED);
-            } else {
-                officer.setState(currentTab == TabType.OFFICER ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
-            }
-            if (tacticsPos.contains(x, y)) {
-                tactics.setState(StateTexture.State.SELECTED);
-            } else {
-                tactics.setState(currentTab == TabType.TACTICS ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
-            }
-            if (facilityPos.contains(x, y)) {
-                facility.setState(StateTexture.State.SELECTED);
-            } else {
-                facility.setState(currentTab == TabType.FACILITY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
-            }
+            if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
+                if (internalPos.contains(x, y)) {
+                    internal.setState(StateTexture.State.SELECTED);
+                } else {
+                    internal.setState(currentTab == TabType.INTERNAL ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
+                }
+                if (militaryPos.contains(x, y)) {
+                    military.setState(StateTexture.State.SELECTED);
+                } else {
+                    military.setState(currentTab == TabType.MILITARY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
+                }
+                if (officerPos.contains(x, y)) {
+                    officer.setState(StateTexture.State.SELECTED);
+                } else {
+                    officer.setState(currentTab == TabType.OFFICER ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
+                }
+                if (tacticsPos.contains(x, y)) {
+                    tactics.setState(StateTexture.State.SELECTED);
+                } else {
+                    tactics.setState(currentTab == TabType.TACTICS ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
+                }
+                if (facilityPos.contains(x, y)) {
+                    facility.setState(StateTexture.State.SELECTED);
+                } else {
+                    facility.setState(currentTab == TabType.FACILITY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
+                }
 
-            if (assignPos.contains(x, y)) {
-                assign.setState(StateTexture.State.SELECTED);
-            } else {
-                assign.setState(StateTexture.State.NORMAL);
-            }
-            if (agriculturePos.contains(x, y)) {
-                agriculture.setState(StateTexture.State.SELECTED);
-            } else {
-                agriculture.setState(StateTexture.State.NORMAL);
-            }
-            if (commercePos.contains(x, y)) {
-                commerce.setState(StateTexture.State.SELECTED);
-            } else {
-                commerce.setState(StateTexture.State.NORMAL);
-            }
-            if (technologyPos.contains(x, y)) {
-                technology.setState(StateTexture.State.SELECTED);
-            } else {
-                technology.setState(StateTexture.State.NORMAL);
-            }
-            if (endurancePos.contains(x, y)) {
-                endurance.setState(StateTexture.State.SELECTED);
-            } else {
-                endurance.setState(StateTexture.State.NORMAL);
-            }
-            if (moralePos.contains(x, y)) {
-                morale.setState(StateTexture.State.SELECTED);
-            } else {
-                morale.setState(StateTexture.State.NORMAL);
+                if (assignPos.contains(x, y)) {
+                    assign.setState(StateTexture.State.SELECTED);
+                } else {
+                    assign.setState(StateTexture.State.NORMAL);
+                }
+                if (agriculturePos.contains(x, y)) {
+                    agriculture.setState(StateTexture.State.SELECTED);
+                } else {
+                    agriculture.setState(StateTexture.State.NORMAL);
+                }
+                if (commercePos.contains(x, y)) {
+                    commerce.setState(StateTexture.State.SELECTED);
+                } else {
+                    commerce.setState(StateTexture.State.NORMAL);
+                }
+                if (technologyPos.contains(x, y)) {
+                    technology.setState(StateTexture.State.SELECTED);
+                } else {
+                    technology.setState(StateTexture.State.NORMAL);
+                }
+                if (endurancePos.contains(x, y)) {
+                    endurance.setState(StateTexture.State.SELECTED);
+                } else {
+                    endurance.setState(StateTexture.State.NORMAL);
+                }
+                if (moralePos.contains(x, y)) {
+                    morale.setState(StateTexture.State.SELECTED);
+                } else {
+                    morale.setState(StateTexture.State.NORMAL);
+                }
             }
 
             return false;
@@ -367,56 +369,58 @@ public class ArchitectureCommandFrame extends CommandFrame {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-            if (agriculturePos.contains(x, y)) {
-                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
-                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
-                        selectedItems -> {
-                            for (GameObject i : selectedItems) {
-                                Person p = (Person) i;
-                                p.setDoingWork(Person.DoingWork.AGRICULTURE);
-                            }
-                        });
-                agriculture.setState(StateTexture.State.NORMAL);
-            } else if (commercePos.contains(x, y)) {
-                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.COMMERCE), TabListGameFrame.ListKindType.PERSON,
-                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
-                        selectedItems -> {
-                            for (GameObject i : selectedItems) {
-                                Person p = (Person) i;
-                                p.setDoingWork(Person.DoingWork.COMMERCE);
-                            }
-                        });
-                commerce.setState(StateTexture.State.NORMAL);
-            } else if (technologyPos.contains(x, y)) {
-                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY), TabListGameFrame.ListKindType.PERSON,
-                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
-                        selectedItems -> {
-                            for (GameObject i : selectedItems) {
-                                Person p = (Person) i;
-                                p.setDoingWork(Person.DoingWork.TECHNOLOGY);
-                            }
-                        });
-                technology.setState(StateTexture.State.NORMAL);
-            } else if (moralePos.contains(x, y)) {
-                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE), TabListGameFrame.ListKindType.PERSON,
-                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
-                        selectedItems -> {
-                            for (GameObject i : selectedItems) {
-                                Person p = (Person) i;
-                                p.setDoingWork(Person.DoingWork.MORALE);
-                            }
-                        });
-                morale.setState(StateTexture.State.NORMAL);
-            } else if (endurancePos.contains(x, y)) {
-                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE), TabListGameFrame.ListKindType.PERSON,
-                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
-                        selectedItems -> {
-                            for (GameObject i : selectedItems) {
-                                Person p = (Person) i;
-                                p.setDoingWork(Person.DoingWork.ENDURANCE);
-                            }
-                        });
-                endurance.setState(StateTexture.State.NORMAL);
+            if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
+                if (agriculturePos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            selectedItems -> {
+                                for (GameObject i : selectedItems) {
+                                    Person p = (Person) i;
+                                    p.setDoingWork(Person.DoingWork.AGRICULTURE);
+                                }
+                            });
+                    agriculture.setState(StateTexture.State.NORMAL);
+                } else if (commercePos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.COMMERCE), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            selectedItems -> {
+                                for (GameObject i : selectedItems) {
+                                    Person p = (Person) i;
+                                    p.setDoingWork(Person.DoingWork.COMMERCE);
+                                }
+                            });
+                    commerce.setState(StateTexture.State.NORMAL);
+                } else if (technologyPos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            selectedItems -> {
+                                for (GameObject i : selectedItems) {
+                                    Person p = (Person) i;
+                                    p.setDoingWork(Person.DoingWork.TECHNOLOGY);
+                                }
+                            });
+                    technology.setState(StateTexture.State.NORMAL);
+                } else if (moralePos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            selectedItems -> {
+                                for (GameObject i : selectedItems) {
+                                    Person p = (Person) i;
+                                    p.setDoingWork(Person.DoingWork.MORALE);
+                                }
+                            });
+                    morale.setState(StateTexture.State.NORMAL);
+                } else if (endurancePos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            selectedItems -> {
+                                for (GameObject i : selectedItems) {
+                                    Person p = (Person) i;
+                                    p.setDoingWork(Person.DoingWork.ENDURANCE);
+                                }
+                            });
+                    endurance.setState(StateTexture.State.NORMAL);
+                }
             }
 
             return false;

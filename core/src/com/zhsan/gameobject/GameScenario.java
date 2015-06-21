@@ -221,6 +221,10 @@ public class GameScenario {
         return gameData;
     }
 
+    public Faction getCurrentPlayer() {
+        return gameData.getCurrentPlayer();
+    }
+
     public LocalDate getGameDate() {
         return gameSurvey.getStartDate().plusDays(gameData.getDayPassed());
     }
