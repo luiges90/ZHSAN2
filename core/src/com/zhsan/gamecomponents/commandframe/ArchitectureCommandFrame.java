@@ -370,6 +370,46 @@ public class ArchitectureCommandFrame extends CommandFrame {
                             }
                         });
                 agriculture.setState(StateTexture.State.NORMAL);
+            } else if (commercePos.contains(x, y)) {
+                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.COMMERCE), TabListGameFrame.ListKindType.PERSON,
+                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                        selectedItems -> {
+                            for (GameObject i : selectedItems) {
+                                Person p = (Person) i;
+                                p.setDoingWork(Person.DoingWork.COMMERCE);
+                            }
+                        });
+                commerce.setState(StateTexture.State.NORMAL);
+            } else if (technologyPos.contains(x, y)) {
+                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY), TabListGameFrame.ListKindType.PERSON,
+                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                        selectedItems -> {
+                            for (GameObject i : selectedItems) {
+                                Person p = (Person) i;
+                                p.setDoingWork(Person.DoingWork.TECHNOLOGY);
+                            }
+                        });
+                technology.setState(StateTexture.State.NORMAL);
+            } else if (moralePos.contains(x, y)) {
+                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE), TabListGameFrame.ListKindType.PERSON,
+                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                        selectedItems -> {
+                            for (GameObject i : selectedItems) {
+                                Person p = (Person) i;
+                                p.setDoingWork(Person.DoingWork.MORALE);
+                            }
+                        });
+                morale.setState(StateTexture.State.NORMAL);
+            } else if (endurancePos.contains(x, y)) {
+                screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE), TabListGameFrame.ListKindType.PERSON,
+                        currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                        selectedItems -> {
+                            for (GameObject i : selectedItems) {
+                                Person p = (Person) i;
+                                p.setDoingWork(Person.DoingWork.ENDURANCE);
+                            }
+                        });
+                endurance.setState(StateTexture.State.NORMAL);
             }
 
             return false;

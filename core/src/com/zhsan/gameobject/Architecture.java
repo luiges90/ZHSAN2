@@ -162,8 +162,8 @@ public class Architecture extends GameObject {
         return morale;
     }
 
-    public GameObjectList<Person> getAgricultureWorkingPersons() {
-        return this.getPersons().filter(person -> person.getDoingWork() == Person.DoingWork.AGRICULTURE);
+    public GameObjectList<Person> getWorkingPersons(Person.DoingWork doingWork) {
+        return this.getPersons().filter(person -> person.getDoingWork() == doingWork);
     }
 
 }
