@@ -293,6 +293,13 @@ public class ArchitectureCommandFrame extends CommandFrame {
 
     public void dispose() {
         super.dispose();
+        internal.dispose();
+        military.dispose();
+        officer.dispose();
+        tactics.dispose();
+        endurance.dispose();
+        textWidgets.forEach(TextWidget::dispose);
+        backgrounds.values().forEach(Texture::dispose);
     }
 
     public class Listener extends InputListener {
