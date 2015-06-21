@@ -364,6 +364,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                         selectedItems -> {
                             System.out.println(selectedItems);
                         });
+                agriculture.setState(StateTexture.State.NORMAL);
             }
 
             return false;
