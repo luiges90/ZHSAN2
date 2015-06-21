@@ -129,6 +129,7 @@ public class Person extends GameObject {
         this.intelligence = from.getIntelligence();
         this.politics = from.getPolitics();
         this.glamour = from.getGlamour();
+        this.doingWork = from.getDoingWork();
 
         switch (from.getLoadingLocationType()) {
             case ARCHITECTURE:
