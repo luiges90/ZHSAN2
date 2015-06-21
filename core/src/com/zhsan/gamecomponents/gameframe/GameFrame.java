@@ -165,22 +165,27 @@ public abstract class GameFrame extends WidgetGroup {
         titleWidget.setText(title);
     }
 
+    private boolean defaultListenerAdded = false;
     public final void addOnClickListener(@NotNull OnClick buttonListener) {
         this.buttonListener = buttonListener;
-        this.addListener(new InputListener() {
-            @Override
-            public boolean mouseMoved(InputEvent event, float x, float y) {
-                handleMouseMove(x, y);
-                event.stop();
-                return false;
-            }
 
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                handleTouchDown(button, x, y);
-                event.stop();
-                return false;
-            }
-        });
+        if (!defaultListenerAdded) {
+            defaultListenerAdded = true;
+            this.addListener(new InputListener() {
+                @Override
+                public boolean mouseMoved(InputEvent event, float x, float y) {
+                    handleMouseMove(x, y);
+                    event.stop();
+                    return false;
+                }
+
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    handleTouchDown(button, x, y);
+                    event.stop();
+                    return false;
+                }
+            });
+        }
     }
 
     @Override
