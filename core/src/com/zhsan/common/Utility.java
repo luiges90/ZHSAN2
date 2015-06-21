@@ -35,8 +35,8 @@ public class Utility {
     }
 
     public static float diminishingGrowth(float original, float growth, float factor) {
-        if (original <= 0) return original + growth * GlobalVariables.diminishingGrowthMaxFactor;
-        return original + growth * Math.min(factor / original, GlobalVariables.diminishingGrowthMaxFactor);
+        if (original <= 0) return original + growth * (float) Math.pow(GlobalVariables.diminishingGrowthMaxFactor, GlobalVariables.diminishingGrowthPower);
+        return original + growth * (float) Math.pow(Math.min(factor / original, GlobalVariables.diminishingGrowthMaxFactor), GlobalVariables.diminishingGrowthPower);
     }
 
     public static Collector<Float, List<Float>, Float> diminishingSum(float factor) {

@@ -29,7 +29,8 @@ public class GlobalVariables {
     public static int maxRunningDays = 99;
     public static Color blankColor = Color.WHITE;
 
-    public static float diminishingGrowthMaxFactor = 2.0f;
+    public static float diminishingGrowthMaxFactor = 1.5f;
+    public static float diminishingGrowthPower = 2.0f;
 
     public static float internalPersonDiminishingFactor = 0.8f;
     public static float internalGrowthFactor = 0.01f;
@@ -51,6 +52,10 @@ public class GlobalVariables {
             blankColor = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(
                     XmlHelper.loadAttribute(node, "blankColor")
             ));
+            diminishingGrowthMaxFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "diminishingGrowthMaxFactor"));
+            diminishingGrowthPower = Float.parseFloat(XmlHelper.loadAttribute(node, "diminishingGrowthPower"));
+            internalPersonDiminishingFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "internalPersonDiminishingFactor"));
+            internalGrowthFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "internalGrowthFactor"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

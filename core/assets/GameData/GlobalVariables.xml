@@ -4,4 +4,8 @@
         showGrid="true"
         maxRunningDays="99"
         blankColor="4294967295"
+        diminishingGrowthMaxFactor="1.25"
+        diminishingGrowthPower="3.0"
+        internalPersonDiminishingFactor="0.8"
+        internalGrowthFactor="0.01"
         />
