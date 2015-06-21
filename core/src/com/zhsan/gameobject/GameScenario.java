@@ -227,6 +227,7 @@ public class GameScenario {
 
     public void advanceDay() {
         gameData.advanceDay();
+        architectures.forEach(Architecture::advanceDay);
     }
 
     public enum Season {

@@ -44,6 +44,10 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.isEmpty() ? null : content.get(content.firstKey());
     }
 
+    public Collection<T> getAll() {
+        return content.values();
+    }
+
     public boolean contains(T t) {
         return content.containsValue(t);
     }

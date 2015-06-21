@@ -247,6 +247,26 @@ public class Person extends GameObject {
         }
     }
 
+    public int getAgricultureAbility() {
+        return 2 * getPolitics() + 2 * getGlamour();
+    }
+
+    public int getCommerceAbility() {
+        return getIntelligence() + 2 * getPolitics() + getGlamour();
+    }
+
+    public int getTechnologyAbility() {
+        return 2 * getIntelligence() + 2 * getPolitics();
+    }
+
+    public int getMoraleAbility() {
+        return getCommand() + getPolitics() + 2 * getGlamour();
+    }
+
+    public int getEnduranceAbility() {
+        return getStrength() + getCommand() + getIntelligence() + getPolitics();
+    }
+
     @Override
     public String toString() {
         return "Person{" +

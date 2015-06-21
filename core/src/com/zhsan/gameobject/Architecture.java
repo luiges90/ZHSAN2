@@ -2,13 +2,16 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
+import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.resources.GlobalStrings;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -167,7 +170,39 @@ public class Architecture extends GameObject {
     }
 
     public void advanceDay() {
+        developInternal();
+    }
 
+    private void developInternal() {
+        float agricultureAbility =
+                getWorkingPersons(Person.DoingWork.AGRICULTURE).getAll().stream()
+                .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        this.agriculture = Utility.diminishingGrowth(
+                this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
+
+        float commerceAbility =
+                getWorkingPersons(Person.DoingWork.COMMERCE).getAll().stream()
+                        .map(p -> (float) p.getCommerceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        this.commerce = Utility.diminishingGrowth(
+                this.commerce, commerceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getCommerce());
+
+        float technologyAbility =
+                getWorkingPersons(Person.DoingWork.TECHNOLOGY).getAll().stream()
+                        .map(p -> (float) p.getTechnologyAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        this.technology = Utility.diminishingGrowth(
+                this.technology, technologyAbility * GlobalVariables.internalGrowthFactor, this.getKind().getTechnology());
+
+        float moraleAbility =
+                getWorkingPersons(Person.DoingWork.MORALE).getAll().stream()
+                        .map(p -> (float) p.getMoraleAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        this.morale = Utility.diminishingGrowth(
+                this.morale, moraleAbility * GlobalVariables.internalGrowthFactor, this.getKind().getMorale());
+
+        float enduranceAbility =
+                getWorkingPersons(Person.DoingWork.ENDURANCE).getAll().stream()
+                        .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        this.endurance = Utility.diminishingGrowth(
+                this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
     }
 
 }

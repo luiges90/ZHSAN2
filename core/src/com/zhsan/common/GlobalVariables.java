@@ -29,6 +29,11 @@ public class GlobalVariables {
     public static int maxRunningDays = 99;
     public static Color blankColor = Color.WHITE;
 
+    public static float diminishingGrowthMaxFactor = 2.0f;
+
+    public static float internalPersonDiminishingFactor = 0.8f;
+    public static float internalGrowthFactor = 0.01f;
+
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
 

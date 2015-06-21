@@ -6,8 +6,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import org.w3c.dom.Node;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collector;
 
 /**
  * Created by Peter on 7/3/2015.
@@ -28,6 +32,61 @@ public class Utility {
                 break;
         }
         return out;
+    }
+
+    public static float diminishingGrowth(float original, float growth, float factor) {
+        if (original <= 0) return original + growth * GlobalVariables.diminishingGrowthMaxFactor;
+        return original + growth * Math.min(factor / original, GlobalVariables.diminishingGrowthMaxFactor);
+    }
+
+    public static Collector<Float, List<Float>, Float> diminishingSum(float factor) {
+        return new DiminishingSum(factor);
+    }
+
+    private static class DiminishingSum implements Collector<Float, List<Float>, Float> {
+
+        private final float factor;
+
+        public DiminishingSum(float f) {
+            factor = f;
+        }
+
+        @Override
+        public Supplier<List<Float>> supplier() {
+            return ArrayList::new;
+        }
+
+        @Override
+        public BiConsumer<List<Float>, Float> accumulator() {
+            return List::add;
+        }
+
+        @Override
+        public BinaryOperator<List<Float>> combiner() {
+            return (x, y) -> {
+                x.addAll(y);
+                return x;
+            };
+        }
+
+        @Override
+        public Function<List<Float>, Float> finisher() {
+            return (list) -> {
+                list.sort(Float::compare);
+                float result = 0;
+                for (Float f : list) {
+                    result += factor * f;
+                }
+                return result;
+            };
+        }
+
+        @Override
+        public Set<Characteristics> characteristics() {
+            return Collections.unmodifiableSet(EnumSet.of(
+                    Characteristics.CONCURRENT,
+                    Characteristics.UNORDERED));
+        }
     }
 
 }
