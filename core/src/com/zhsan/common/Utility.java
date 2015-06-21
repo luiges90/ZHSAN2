@@ -75,7 +75,7 @@ public class Utility {
                 list.sort(Float::compare);
                 float result = 0;
                 for (Float f : list) {
-                    result += factor * f;
+                    result = result * factor + f;
                 }
                 return result;
             };
