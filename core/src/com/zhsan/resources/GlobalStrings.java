@@ -36,7 +36,11 @@ public class GlobalStrings {
         DAY("day"),
         FOOD_UNIT("foodUnit"),
         FOOD_UNIT_STRING("foodUnitString"),
-        AGRICULTURE("Agriculture")
+        AGRICULTURE("Agriculture"),
+        COMMERCE("Commerce"),
+        TECHNOLOGY("Technology"),
+        ARCHITECTURE_MORALE("ArchitectureMorale"),
+        ARCHITECTURE_ENDURANCE("ArchitectureEndurance")
         ;
 
         private final String xmlName;

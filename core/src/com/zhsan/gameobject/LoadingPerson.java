@@ -17,6 +17,7 @@ class LoadingPerson extends GameObject {
     private String calledName;
 
     private Person.State state;
+    private Person.DoingWork doingWork;
 
     private LoadingLocationType loadingLocationType = LoadingLocationType.NONE;
     private int locationId = -1;
@@ -78,6 +79,7 @@ class LoadingPerson extends GameObject {
                     data.intelligence = Integer.parseInt(line[10]);
                     data.politics = Integer.parseInt(line[11]);
                     data.glamour = Integer.parseInt(line[12]);
+                    data.doingWork = Person.DoingWork.fromCSV(line[13]);
                 }
 
                 result.add(data);
@@ -101,6 +103,9 @@ class LoadingPerson extends GameObject {
                     p.locationId = a.getId();
                     p.state = Person.State.UNHIRED;
                 }
+            }
+            if (p.loadingLocationType != LoadingLocationType.ARCHITECTURE) {
+                p.doingWork = Person.DoingWork.NONE;
             }
         }
     }
@@ -151,6 +156,10 @@ class LoadingPerson extends GameObject {
 
     public int getGlamour() {
         return glamour;
+    }
+
+    public Person.DoingWork getDoingWork() {
+        return doingWork;
     }
 
     public enum LoadingLocationType {

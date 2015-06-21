@@ -18,6 +18,8 @@ import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
+import com.zhsan.gameobject.GameObject;
+import com.zhsan.gameobject.Person;
 import com.zhsan.resources.GlobalStrings;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.NotNull;
@@ -362,7 +364,10 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
                         currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
                         selectedItems -> {
-                            System.out.println(selectedItems);
+                            for (GameObject i : selectedItems) {
+                                Person p = (Person) i;
+                                p.setDoingWork(Person.DoingWork.AGRICULTURE);
+                            }
                         });
                 agriculture.setState(StateTexture.State.NORMAL);
             }

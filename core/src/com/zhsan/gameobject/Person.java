@@ -71,6 +71,36 @@ public class Person extends GameObject {
         }
     }
 
+    public enum DoingWork {
+        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE;
+
+        public static DoingWork fromCSV(String s) {
+            switch (Integer.parseInt(s)) {
+                case 0: return NONE;
+                case 1: return AGRICULTURE;
+                case 2: return COMMERCE;
+                case 3: return TECHNOLOGY;
+                case 4: return MORALE;
+                case 5: return ENDURANCE;
+            }
+            assert false;
+            return null;
+        }
+
+        public String toCSV() {
+            switch (this) {
+                case NONE: return "0";
+                case AGRICULTURE: return "1";
+                case COMMERCE: return "2";
+                case TECHNOLOGY: return "3";
+                case MORALE: return "4";
+                case ENDURANCE: return "5";
+            }
+            assert false;
+            return null;
+        }
+    }
+
     private GameScenario scenario;
 
     private String surname;
@@ -78,6 +108,7 @@ public class Person extends GameObject {
     private String calledName;
 
     private Person.State state;
+    private DoingWork doingWork;
 
     private LocationType location;
 
@@ -124,7 +155,8 @@ public class Person extends GameObject {
                         String.valueOf(d.strength),
                         String.valueOf(d.intelligence),
                         String.valueOf(d.politics),
-                        String.valueOf(d.glamour)
+                        String.valueOf(d.glamour),
+                        d.doingWork.toCSV()
                 });
             }
         } catch (IOException e) {
@@ -183,5 +215,54 @@ public class Person extends GameObject {
 
     public int getGlamour() {
         return glamour;
+    }
+
+    public DoingWork getDoingWork() {
+        if (location.get() instanceof Architecture && this.state == State.NORMAL) {
+            return doingWork;
+        } else {
+            return DoingWork.NONE;
+        }
+    }
+
+    public void setDoingWork(DoingWork work) {
+        if (location.get() instanceof Architecture && this.state == State.NORMAL) {
+            this.doingWork = work;
+        } else {
+            throw new IllegalStateException("Person should be in an architecture, hired, if he is doing work. Person state = " + this);
+        }
+    }
+
+    public String getDoingWorkString() {
+        switch (getDoingWork()) {
+            case NONE: return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
+            case AGRICULTURE: return GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE);
+            case COMMERCE: return GlobalStrings.getString(GlobalStrings.Keys.COMMERCE);
+            case TECHNOLOGY: return GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY);
+            case MORALE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE);
+            case ENDURANCE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE);
+            default:
+                assert false;
+                return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "scenario=" + scenario +
+                ", surname='" + surname + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", calledName='" + calledName + '\'' +
+                ", state=" + state +
+                ", doingWork=" + doingWork +
+                ", location=" + location +
+                ", command=" + command +
+                ", strength=" + strength +
+                ", intelligence=" + intelligence +
+                ", politics=" + politics +
+                ", glamour=" + glamour +
+                ", movingDays=" + movingDays +
+                "} " + super.toString();
     }
 }
