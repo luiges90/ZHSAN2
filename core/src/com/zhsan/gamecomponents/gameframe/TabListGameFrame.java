@@ -5,10 +5,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
@@ -93,6 +95,7 @@ public class TabListGameFrame extends GameFrame {
 
     private BackgroundTextWidget<Column> selectTextWidget;
     private int selectWidth;
+    private BitmapFont.HAlignment selectAlign;
     private Texture checkbox, checkboxSelected, radio, radioSelected;
 
     private Sound selectSound;
@@ -144,6 +147,7 @@ public class TabListGameFrame extends GameFrame {
             Node checkboxNode = dom.getElementsByTagName("CheckBox").item(0);
             String selectDisplayName = XmlHelper.loadAttribute(checkboxNode, "DisplayName");
             selectWidth = Integer.parseInt(XmlHelper.loadAttribute(checkboxNode, "Width"));
+            selectAlign = XmlHelper.loadHAlignmentFromXml(checkboxNode);
             checkbox = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "FileName")));
             checkboxSelected = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "Selected")));
             radio = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(checkboxNode, "RoundFileName")));
@@ -290,7 +294,13 @@ public class TabListGameFrame extends GameFrame {
 
         // header
         if (selection != Selection.NONE) {
-            contentTable.add(selectTextWidget).width(selectWidth).height(columnHeaderHeight);
+            int align;
+            switch (selectAlign) {
+                case LEFT: align = Align.left; break;
+                case RIGHT: align = Align.right; break;
+                case CENTER:default: align = Align.center; break;
+            }
+            contentTable.add(selectTextWidget).width(selectWidth).height(columnHeaderHeight).align(align);
         }
         for (Column c : showingTab.columns) {
             contentTable.add(c.columnText).width(c.width).height(columnHeaderHeight);
