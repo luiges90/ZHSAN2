@@ -10,13 +10,13 @@ import java.util.Set;
  */
 public class RadioButtonWidget<ExtraType> extends CheckboxWidget<ExtraType> {
 
-    private Collection<RadioButtonWidget<?>> radioGroup;
+    private Collection<RadioButtonWidget<ExtraType>> radioGroup;
 
     public RadioButtonWidget(Setting setting, String text, Texture checkedImage, Texture uncheckedImage) {
         super(setting, text, checkedImage, uncheckedImage);
     }
 
-    public void setGroup(Collection<RadioButtonWidget<?>> radioGroup) {
+    public void setGroup(Collection<RadioButtonWidget<ExtraType>> radioGroup) {
         this.radioGroup = radioGroup;
     }
 

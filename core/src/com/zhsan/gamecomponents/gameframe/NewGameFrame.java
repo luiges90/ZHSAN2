@@ -15,10 +15,7 @@ import com.zhsan.gamecomponents.common.textwidget.CheckboxWidget;
 import com.zhsan.gamecomponents.common.textwidget.RadioButtonWidget;
 import com.zhsan.gamecomponents.common.textwidget.SelectableTextWidget;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
-import com.zhsan.gameobject.Faction;
-import com.zhsan.gameobject.GameObjectList;
-import com.zhsan.gameobject.GameScenario;
-import com.zhsan.gameobject.GameSurvey;
+import com.zhsan.gameobject.*;
 import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -198,7 +195,7 @@ public class NewGameFrame extends GameFrame {
             VerticalGroup group = (VerticalGroup) factionPane.getWidget();
             group.clear();
 
-            Set<RadioButtonWidget<?>> allRadioButtons = new HashSet<>();
+            Set<RadioButtonWidget<Faction>> allRadioButtons = new HashSet<>();
             for (Faction i : factions) {
                 RadioButtonWidget<Faction> widget = new RadioButtonWidget<>(factionStyle, i.getName(), checkboxChecked, checkbox);
                 widget.setTouchable(Touchable.enabled);
@@ -208,7 +205,7 @@ public class NewGameFrame extends GameFrame {
                 group.addActor(widget);
                 allRadioButtons.add(widget);
             }
-            for (RadioButtonWidget<?> i : allRadioButtons) {
+            for (RadioButtonWidget<Faction> i : allRadioButtons) {
                 i.setGroup(allRadioButtons);
             }
 

@@ -27,11 +27,16 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 5/5/2015.
  */
 public class TabListGameFrame extends GameFrame {
+
+    public interface OnItemSelectedListener {
+        public void onItemSelected(List<GameObject> selectedItems);
+    }
 
     public enum Selection {
         NONE, SINGLE, MULTIPLE
@@ -104,12 +109,13 @@ public class TabListGameFrame extends GameFrame {
     private Tab showingTab;
 
     private ScrollPane contentPane;
-    private List<TextWidget<?>> showingTextWidgets = new ArrayList<>();
+    private List<TextWidget<GameObject>> showingTextWidgets = new ArrayList<>();
 
-    private List<CheckboxWidget<?>> showingCheckboxes = new ArrayList<>();
-    private List<RadioButtonWidget<?>> showingRadioButtons = new ArrayList<>();
+    private List<CheckboxWidget<GameObject>> showingCheckboxes = new ArrayList<>();
+    private List<RadioButtonWidget<GameObject>> showingRadioButtons = new ArrayList<>();
 
     private Selection selection;
+    private OnItemSelectedListener onItemSelected;
 
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
@@ -256,10 +262,10 @@ public class TabListGameFrame extends GameFrame {
     }
 
     public void show(ListKindType type, GameObjectList<?> showingData) {
-        show(type, showingData, Selection.NONE);
+        show(type, showingData, Selection.NONE, null);
     }
 
-    public void show(ListKindType type, GameObjectList<?> showingData, Selection selection) {
+    public void show(ListKindType type, GameObjectList<?> showingData, Selection selection, OnItemSelectedListener onItemSelected) {
         if (showingData.size() == 0) return;
         if (!type.carryingObj.isAssignableFrom(showingData.getFirst().getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
@@ -270,6 +276,7 @@ public class TabListGameFrame extends GameFrame {
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
         this.showingTab = this.showingListKind.tabs.get(0);
+        this.onItemSelected = onItemSelected;
 
         showingListKind.tabs.forEach(tab -> {
             addActor(tab.tabButton);
@@ -319,7 +326,7 @@ public class TabListGameFrame extends GameFrame {
         }
 
         if (selection == Selection.SINGLE) {
-            for (RadioButtonWidget<?> widget : showingRadioButtons) {
+            for (RadioButtonWidget<GameObject> widget : showingRadioButtons) {
                 widget.setGroup(showingRadioButtons);
             }
         }
@@ -424,7 +431,17 @@ public class TabListGameFrame extends GameFrame {
 
         @Override
         public void onOkClicked() {
-
+            List<GameObject> selected = null;
+            if (selection == Selection.SINGLE) {
+                selected = showingRadioButtons.stream().filter(RadioButtonWidget::isChecked)
+                        .map(RadioButtonWidget::getExtra).collect(Collectors.toList());
+            } else if (selection == Selection.MULTIPLE) {
+                selected = showingCheckboxes.stream().filter(CheckboxWidget::isChecked)
+                        .map(CheckboxWidget::getExtra).collect(Collectors.toList());
+            }
+            if (selected != null) {
+                onItemSelected.onItemSelected(selected);
+            }
         }
 
         @Override
