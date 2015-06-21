@@ -29,7 +29,7 @@ public class Architecture extends GameObject {
 
     private int population;
     private int fund, food;
-    private int agriculture, commerce, technology, endurance, morale;
+    private float agriculture, commerce, technology, endurance, morale;
 
     public Architecture(LoadingArchitecture from, GameScenario scenario) {
         super(from.getId());
@@ -142,28 +142,32 @@ public class Architecture extends GameObject {
                 GlobalStrings.getString(GlobalStrings.Keys.FOOD_UNIT_STRING);
     }
 
-    public int getAgriculture() {
+    public float getAgriculture() {
         return agriculture;
     }
 
-    public int getCommerce() {
+    public float getCommerce() {
         return commerce;
     }
 
-    public int getTechnology() {
+    public float getTechnology() {
         return technology;
     }
 
-    public int getEndurance() {
+    public float getEndurance() {
         return endurance;
     }
 
-    public int getMorale() {
+    public float getMorale() {
         return morale;
     }
 
     public GameObjectList<Person> getWorkingPersons(Person.DoingWork doingWork) {
         return this.getPersons().filter(person -> person.getDoingWork() == doingWork);
+    }
+
+    public void advanceDay() {
+
     }
 
 }

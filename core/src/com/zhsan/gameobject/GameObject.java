@@ -43,6 +43,8 @@ public abstract class GameObject {
         Object o = getField(name);
         if (o == null) {
             return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
+        } else if (o instanceof Float) {
+            return Long.toString(Math.round((float) o));
         } else if (o instanceof GameObject) {
             return ((GameObject) o).getName();
         } else {

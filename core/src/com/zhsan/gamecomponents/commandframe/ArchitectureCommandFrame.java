@@ -269,7 +269,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
             if (textWidget.getExtra().staticText) {
                 textWidget.setText(textWidget.getExtra().name);
             } else {
-                textWidget.setText(String.valueOf(currentArchitecture.getField(textWidget.getExtra().name)));
+                textWidget.setText(currentArchitecture.getFieldString(textWidget.getExtra().name));
             }
             textWidget.draw(batch, parentAlpha);
         }

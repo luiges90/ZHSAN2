@@ -32,7 +32,7 @@ class LoadingArchitecture extends GameObject {
 
     private int population;
     private int fund, food;
-    private int agriculture, commerce, technology, endurance, morale;
+    private float agriculture, commerce, technology, endurance, morale;
 
     private LoadingArchitecture(int id) {
         super(id);
@@ -80,11 +80,11 @@ class LoadingArchitecture extends GameObject {
                     data.population = Integer.parseInt(line[6]);
                     data.fund = Integer.parseInt(line[7]);
                     data.food = Integer.parseInt(line[8]);
-                    data.agriculture = Integer.parseInt(line[9]);
-                    data.commerce = Integer.parseInt(line[10]);
-                    data.technology = Integer.parseInt(line[11]);
-                    data.morale = Integer.parseInt(line[12]);
-                    data.endurance = Integer.parseInt(line[13]);
+                    data.agriculture = Float.parseFloat(line[9]);
+                    data.commerce = Float.parseFloat(line[10]);
+                    data.technology = Float.parseFloat(line[11]);
+                    data.morale = Float.parseFloat(line[12]);
+                    data.endurance = Float.parseFloat(line[13]);
                 }
 
                 result.add(data);
@@ -177,23 +177,23 @@ class LoadingArchitecture extends GameObject {
         return food;
     }
 
-    public int getAgriculture() {
+    public float getAgriculture() {
         return agriculture;
     }
 
-    public int getCommerce() {
+    public float getCommerce() {
         return commerce;
     }
 
-    public int getTechnology() {
+    public float getTechnology() {
         return technology;
     }
 
-    public int getEndurance() {
+    public float getEndurance() {
         return endurance;
     }
 
-    public int getMorale() {
+    public float getMorale() {
         return morale;
     }
 }
