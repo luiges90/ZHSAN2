@@ -27,6 +27,8 @@ public class ArchitectureKind extends GameObject {
     private String name;
     private float drawOffsetL, drawOffsetW;
 
+    private int agriculture, commerce, technology, endurance, morale, population;
+
     private ArchitectureKind(int id) {
         super(id);
     }
@@ -54,6 +56,13 @@ public class ArchitectureKind extends GameObject {
 
                 kind.drawOffsetL = Float.parseFloat(line[2]);
                 kind.drawOffsetW = Float.parseFloat(line[3]);
+
+                kind.agriculture = Integer.parseInt(line[4]);
+                kind.commerce = Integer.parseInt(line[5]);
+                kind.technology = Integer.parseInt(line[6]);
+                kind.morale = Integer.parseInt(line[7]);
+                kind.endurance = Integer.parseInt(line[8]);
+                kind.population = Integer.parseInt(line[9]);
 
                 result.add(kind);
             }
@@ -97,5 +106,29 @@ public class ArchitectureKind extends GameObject {
 
     public float getDrawOffsetWidth() {
         return drawOffsetW;
+    }
+
+    public int getAgriculture() {
+        return agriculture;
+    }
+
+    public int getCommerce() {
+        return commerce;
+    }
+
+    public int getTechnology() {
+        return technology;
+    }
+
+    public int getEndurance() {
+        return endurance;
+    }
+
+    public int getMorale() {
+        return morale;
+    }
+
+    public int getPopulation() {
+        return population;
     }
 }
