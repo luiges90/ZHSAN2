@@ -18,7 +18,6 @@ import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
-import com.zhsan.gamelogic.GameController;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
@@ -41,7 +40,6 @@ public class GameScreen extends WidgetGroup {
     }
 
     private GameScenario scen;
-    private GameController controller;
 
     private MapLayer mapLayer;
     private ContextMenu contextMenu;
@@ -71,7 +69,6 @@ public class GameScreen extends WidgetGroup {
 
     public GameScreen(GameScenario scen) {
         this.scen = scen;
-        this.controller = new GameController(scen);
         this.dayRunner = new DayRunner();
 
         toolBar = new ToolBar(this);
@@ -271,7 +268,6 @@ public class GameScreen extends WidgetGroup {
                 for (int i = 0; i < days; ++i) {
                     dayRunning = true;
 
-                    controller.runDay();
                     getScenario().advanceDay();
 
                     try {

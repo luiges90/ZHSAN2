@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import com.zhsan.gamelogic.FactionOrder;
 import com.zhsan.resources.GlobalStrings;
 
 import java.io.IOException;
@@ -22,7 +21,6 @@ public class Faction extends GameObject {
     private String name;
 
     private GameScenario scenario;
-    private List<FactionOrder> orders = new ArrayList<>();
 
     private Color color;
 
@@ -58,18 +56,6 @@ public class Faction extends GameObject {
 
     public Color getColor() {
         return color;
-    }
-
-    public void addOrder(FactionOrder order) {
-        orders.add(order);
-    }
-
-    public List<FactionOrder> getOrders() {
-        return new ArrayList<>(orders);
-    }
-
-    public void clearOrders() {
-        orders.clear();
     }
 
     public GameObjectList<Person> getPersons() {
