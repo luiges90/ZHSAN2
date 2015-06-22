@@ -46,6 +46,7 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.opencsv:opencsv:3.3"
+        compile "org.luaj:luaj-jse:3.0.1"
         compile "org.jetbrains:annotations:13.0"
     }
 }

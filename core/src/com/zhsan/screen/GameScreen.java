@@ -268,13 +268,13 @@ public class GameScreen extends WidgetGroup {
                 for (int i = 0; i < days; ++i) {
                     dayRunning = true;
 
-                    getScenario().advanceDay();
-
                     try {
                         Thread.sleep(100);
                     } catch (InterruptedException e) {
                         // ignore
                     }
+
+                    getScenario().advanceDay();
 
                     synchronized (GameScreen.this) {
                         i -= moreDays;
