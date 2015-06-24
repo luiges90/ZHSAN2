@@ -370,9 +370,14 @@ public class ArchitectureCommandFrame extends CommandFrame {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
-                if (agriculturePos.contains(x, y)) {
+                if (assignPos.contains(x, y)) {
+                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
+                            currentArchitecture.getPersons(), TabListGameFrame.Selection.SINGLE,
+                            selectedItems -> currentArchitecture.changeMayor((Person) selectedItems.get(0)));
+                    assign.setState(StateTexture.State.NORMAL);
+                } else if (agriculturePos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                             selectedItems -> {
                                 for (GameObject i : selectedItems) {
                                     Person p = (Person) i;
@@ -382,7 +387,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     agriculture.setState(StateTexture.State.NORMAL);
                 } else if (commercePos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.COMMERCE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                             selectedItems -> {
                                 for (GameObject i : selectedItems) {
                                     Person p = (Person) i;
@@ -392,7 +397,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     commerce.setState(StateTexture.State.NORMAL);
                 } else if (technologyPos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                             selectedItems -> {
                                 for (GameObject i : selectedItems) {
                                     Person p = (Person) i;
@@ -402,7 +407,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     technology.setState(StateTexture.State.NORMAL);
                 } else if (moralePos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                             selectedItems -> {
                                 for (GameObject i : selectedItems) {
                                     Person p = (Person) i;
@@ -412,7 +417,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     morale.setState(StateTexture.State.NORMAL);
                 } else if (endurancePos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.MULTIPLE,
+                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                             selectedItems -> {
                                 for (GameObject i : selectedItems) {
                                     Person p = (Person) i;

@@ -111,6 +111,10 @@ public class Architecture extends GameObject {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNHIRED);
     }
 
+    public GameObjectList<Person> getPersonsExcludingMayor() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getDoingWork() != Person.DoingWork.MAYOR);
+    }
+
     public boolean hasFaction() {
         return getBelongedFaction() != null;
     }
@@ -165,6 +169,40 @@ public class Architecture extends GameObject {
         return morale;
     }
 
+    Person pickMayor() {
+        return this.getPersons().sort((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum())).getFirst();
+    }
+
+    GameObjectList<Person> getMayorUnchecked() {
+        return this.getPersons().filter(person -> person.getDoingWork() == Person.DoingWork.MAYOR);
+    }
+
+    public Person getMayor() {
+        if (this.getPersons().size() == 0) return null;
+        GameObjectList<Person> p = this.getPersons().filter(person -> person.getDoingWork() == Person.DoingWork.MAYOR);
+        if (p.size() != 1) {
+            throw new IllegalStateException("There should be one and only one mayor in every architecture");
+        }
+        return p.getFirst();
+    }
+
+    public void changeMayor(Person newMayor) {
+        if (newMayor.getLocation() != this) {
+            throw new IllegalStateException("The new mayor must be in the architecture");
+        }
+        newMayor.setDoingWork(Person.DoingWork.MAYOR);
+    }
+
+    public void addMayor(Person newMayor) {
+        if (getMayorUnchecked().size() > 0) {
+            throw new IllegalStateException("addMayor may only be used when there is no mayor at all");
+        }
+        if (newMayor.getLocation() != this) {
+            throw new IllegalStateException("The new mayor must be in the architecture");
+        }
+        newMayor.setDoingWorkUnchecked(Person.DoingWork.MAYOR);
+    }
+
     public GameObjectList<Person> getWorkingPersons(Person.DoingWork doingWork) {
         return this.getPersons().filter(person -> person.getDoingWork() == doingWork);
     }
@@ -174,31 +212,33 @@ public class Architecture extends GameObject {
     }
 
     private void developInternal() {
-        float agricultureAbility =
+        Person mayor = this.getMayor();
+
+        float agricultureAbility = (mayor == null ? 0 : mayor.getAgricultureAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 getWorkingPersons(Person.DoingWork.AGRICULTURE).getAll().stream()
                 .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.agriculture = Utility.diminishingGrowth(
                 this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
 
-        float commerceAbility =
+        float commerceAbility = (mayor == null ? 0 : mayor.getCommerceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 getWorkingPersons(Person.DoingWork.COMMERCE).getAll().stream()
                         .map(p -> (float) p.getCommerceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.commerce = Utility.diminishingGrowth(
                 this.commerce, commerceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getCommerce());
 
-        float technologyAbility =
+        float technologyAbility = (mayor == null ? 0 : mayor.getTechnologyAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 getWorkingPersons(Person.DoingWork.TECHNOLOGY).getAll().stream()
                         .map(p -> (float) p.getTechnologyAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.technology = Utility.diminishingGrowth(
                 this.technology, technologyAbility * GlobalVariables.internalGrowthFactor, this.getKind().getTechnology());
 
-        float moraleAbility =
+        float moraleAbility = (mayor == null ? 0 : mayor.getMoraleAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 getWorkingPersons(Person.DoingWork.MORALE).getAll().stream()
                         .map(p -> (float) p.getMoraleAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.morale = Utility.diminishingGrowth(
                 this.morale, moraleAbility * GlobalVariables.internalGrowthFactor, this.getKind().getMorale());
 
-        float enduranceAbility =
+        float enduranceAbility = (mayor == null ? 0 : mayor.getEnduranceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 getWorkingPersons(Person.DoingWork.ENDURANCE).getAll().stream()
                         .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.endurance = Utility.diminishingGrowth(

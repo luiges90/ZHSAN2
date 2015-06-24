@@ -66,6 +66,10 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.values().stream().filter(predicate).collect(new ToGameObjectList<>());
     }
 
+    public GameObjectList<T> sort(Comparator<T> comparator) {
+        return content.values().stream().sorted(comparator).collect(new ToGameObjectList<>());
+    }
+
     public int size() {
         return content.size();
     }

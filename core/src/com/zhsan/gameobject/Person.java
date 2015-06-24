@@ -72,7 +72,7 @@ public class Person extends GameObject {
     }
 
     public enum DoingWork {
-        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE;
+        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR;
 
         public static DoingWork fromCSV(String s) {
             switch (Integer.parseInt(s)) {
@@ -82,6 +82,7 @@ public class Person extends GameObject {
                 case 3: return TECHNOLOGY;
                 case 4: return MORALE;
                 case 5: return ENDURANCE;
+                case 6: return MAYOR;
             }
             assert false;
             return null;
@@ -95,6 +96,7 @@ public class Person extends GameObject {
                 case TECHNOLOGY: return "3";
                 case MORALE: return "4";
                 case ENDURANCE: return "5";
+                case MAYOR: return "6";
             }
             assert false;
             return null;
@@ -218,6 +220,10 @@ public class Person extends GameObject {
         return glamour;
     }
 
+    public int getAbilitySum() {
+        return command + strength + intelligence + politics + glamour;
+    }
+
     public DoingWork getDoingWork() {
         if (location.get() instanceof Architecture && this.state == State.NORMAL) {
             return doingWork;
@@ -226,9 +232,22 @@ public class Person extends GameObject {
         }
     }
 
+    void setDoingWorkUnchecked(DoingWork work) {
+        this.doingWork = work;
+    }
+
     public void setDoingWork(DoingWork work) {
         if (location.get() instanceof Architecture && this.state == State.NORMAL) {
-            this.doingWork = work;
+            if (work == DoingWork.MAYOR) {
+                ((Architecture) this.getLocation()).getMayor().doingWork = DoingWork.NONE;
+                this.doingWork = DoingWork.MAYOR;
+            } else {
+                if (this.doingWork != DoingWork.MAYOR) {
+                    this.doingWork = work;
+                } else {
+                    throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first.");
+                }
+            }
         } else {
             throw new IllegalStateException("Person should be in an architecture, hired, if he is doing work. Person state = " + this);
         }
@@ -242,6 +261,7 @@ public class Person extends GameObject {
             case TECHNOLOGY: return GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY);
             case MORALE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE);
             case ENDURANCE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE);
+            case MAYOR: return GlobalStrings.getString(GlobalStrings.Keys.MAYOR);
             default:
                 assert false;
                 return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);

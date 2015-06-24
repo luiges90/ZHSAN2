@@ -8,4 +8,5 @@
         diminishingGrowthPower="3.0"
         internalPersonDiminishingFactor="0.8"
         internalGrowthFactor="0.01"
+        mayorInternalWorkEfficiency="0.3"
         />

@@ -40,7 +40,8 @@ public class GlobalStrings {
         COMMERCE("Commerce"),
         TECHNOLOGY("Technology"),
         ARCHITECTURE_MORALE("ArchitectureMorale"),
-        ARCHITECTURE_ENDURANCE("ArchitectureEndurance")
+        ARCHITECTURE_ENDURANCE("ArchitectureEndurance"),
+        MAYOR("Mayor")
         ;
 
         private final String xmlName;

@@ -126,7 +126,20 @@ public class GameScenario {
             }
         }
 
+        setupMayors();
         setupFacilities();
+    }
+
+    private final void setupMayors() {
+        architectures.forEach(a -> {
+            if (a.getPersons().size() > 0) {
+                GameObjectList<Person> mayors = a.getMayorUnchecked();
+                if (mayors.size() != 1) {
+                    a.getPersons().filter(p -> p.getDoingWork() == Person.DoingWork.MAYOR).forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+                    a.addMayor(a.pickMayor());
+                }
+            }
+        });
     }
 
     private final void setupFacilities() {
