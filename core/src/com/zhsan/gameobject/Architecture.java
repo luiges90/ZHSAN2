@@ -170,6 +170,9 @@ public class Architecture extends GameObject {
     }
 
     Person pickMayor() {
+        if (this.getBelongedFaction() != null && this.getPersons().contains(this.getBelongedFaction().getLeader())) {
+            return this.getBelongedFaction().getLeader();
+        }
         return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()), null);
     }
 
