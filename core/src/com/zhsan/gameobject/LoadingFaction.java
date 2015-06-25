@@ -23,6 +23,8 @@ class LoadingFaction extends GameObject {
     private Set<Integer> sectionIds = new HashSet<>();
     private Color color;
 
+    private int leaderId;
+
     private LoadingFaction(int id) {
         super(id);
     }
@@ -88,9 +90,11 @@ class LoadingFaction extends GameObject {
                     t.setName(line[3]);
                     t.color = colors.get(Integer.parseInt(line[2]));
                     t.sectionIds = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[9]));
+                    t.leaderId = Integer.parseInt(line[1]);
                 } else {
                     t.setName(line[1]);
                     t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
+                    t.leaderId = Integer.parseInt(line[3]);
                 }
 
                 result.add(t);
@@ -127,5 +131,9 @@ class LoadingFaction extends GameObject {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getLeaderId() {
+        return leaderId;
     }
 }

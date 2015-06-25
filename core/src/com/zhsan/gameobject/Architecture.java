@@ -170,7 +170,7 @@ public class Architecture extends GameObject {
     }
 
     Person pickMayor() {
-        return this.getPersons().sort((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum())).getFirst();
+        return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()), null);
     }
 
     GameObjectList<Person> getMayorUnchecked() {

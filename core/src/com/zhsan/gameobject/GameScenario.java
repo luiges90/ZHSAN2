@@ -86,7 +86,7 @@ public class GameScenario {
         gameData = GameData.fromCSV(file, this);
 
         for (int i = 0; i < 2; ++i) {
-            LoadingPerson.setup(loadingPersons, loadingArchitectures);
+            LoadingPerson.setup(loadingPersons, loadingArchitectures, loadingFactions);
             LoadingArchitecture.setup(loadingArchitectures, loadingPersons, loadingSections);
             LoadingSection.setup(loadingSections, loadingArchitectures, loadingFactions);
             LoadingFaction.setup(loadingFactions, loadingSections);
@@ -126,8 +126,18 @@ public class GameScenario {
             }
         }
 
+        setupLeaders();
         setupMayors();
         setupFacilities();
+    }
+
+    private final void setupLeaders() {
+        factions.remove(f -> f.getPersons().size() == 0);
+        factions.forEach(f -> {
+            if (f.getLeaderUnchecked() == null) {
+                f.setLeader(f.pickLeader());
+            }
+        });
     }
 
     private final void setupMayors() {

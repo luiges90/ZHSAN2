@@ -26,6 +26,8 @@ class LoadingPerson extends GameObject {
 
     private int movingDays = 0;
 
+    private int leaderFactionId = -1;
+
     private LoadingPerson(int id) {
         super(id);
     }
@@ -91,7 +93,7 @@ class LoadingPerson extends GameObject {
         return result;
     }
 
-    public static final void setup(GameObjectList<LoadingPerson> persons, GameObjectList<LoadingArchitecture> architectures) {
+    public static final void setup(GameObjectList<LoadingPerson> persons, GameObjectList<LoadingArchitecture> architectures, GameObjectList<LoadingFaction> factions) {
         for (LoadingPerson p : persons) {
             for (LoadingArchitecture a : architectures) {
                 if (a.getPersons().contains(p.getId()) || a.getMovingPersons().contains(p.getId())) {
@@ -106,6 +108,11 @@ class LoadingPerson extends GameObject {
             }
             if (p.loadingLocationType != LoadingLocationType.ARCHITECTURE) {
                 p.doingWork = Person.DoingWork.NONE;
+            }
+            for (LoadingFaction f : factions) {
+                if (f.getLeaderId() == p.getId()) {
+                    p.leaderFactionId = f.getId();
+                }
             }
         }
     }
@@ -160,6 +167,10 @@ class LoadingPerson extends GameObject {
 
     public Person.DoingWork getDoingWork() {
         return doingWork;
+    }
+
+    public int getLeaderFactionId() {
+        return leaderFactionId;
     }
 
     public enum LoadingLocationType {

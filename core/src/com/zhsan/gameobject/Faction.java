@@ -19,6 +19,7 @@ public class Faction extends GameObject {
     public static final String SAVE_FILE = "Faction.csv";
 
     private String name;
+    private Person leader;
 
     private GameScenario scenario;
 
@@ -40,7 +41,8 @@ public class Faction extends GameObject {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
                         d.getName(),
-                        XmlHelper.saveColorToXml(d.color)
+                        XmlHelper.saveColorToXml(d.color),
+                        String.valueOf(d.leader.getId())
                 });
             }
         } catch (IOException e) {
@@ -58,6 +60,17 @@ public class Faction extends GameObject {
         return color;
     }
 
+    public void setLeader(Person p) {
+        if (!this.getPersons().contains(p) || (p.getState() != Person.State.NORMAL && p.getState() != Person.State.CAPTIVE)) {
+            throw new IllegalArgumentException("The leader must be in this faction");
+        }
+        this.leader = p;
+    }
+
+    void setLeaderUnchecked(Person p) {
+        this.leader = p;
+    }
+
     public GameObjectList<Person> getPersons() {
         return scenario.getPersons().filter(p -> p.getBelongedFaction() == this);
     }
@@ -66,4 +79,18 @@ public class Faction extends GameObject {
         return scenario.getArchitectures().filter(a -> a.getBelongedFaction() == this);
     }
 
+    Person pickLeader() {
+        return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()));
+    }
+
+    Person getLeaderUnchecked() {
+        return leader;
+    }
+
+    public Person getLeader() {
+        if (leader == null) {
+            throw new IllegalStateException("Every faction must have a leader");
+        }
+        return leader;
+    }
 }

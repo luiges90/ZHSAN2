@@ -137,8 +137,12 @@ public class Person extends GameObject {
             case ARCHITECTURE:
                 this.location = new LocationType(scenario.getArchitectures().get(from.getLocationId()));
         }
-    }
 
+        if (this.getBelongedFaction() != null && from.getLeaderFactionId() == this.getBelongedFaction().getId() &&
+                (this.getState() == State.NORMAL || this.getState() == State.CAPTIVE)) {
+            this.getBelongedFaction().setLeaderUnchecked(this);
+        }
+    }
 
     public static final void toCSV(FileHandle root, GameObjectList<Person> data) {
         FileHandle f = root.child(SAVE_FILE);
