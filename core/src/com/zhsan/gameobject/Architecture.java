@@ -218,31 +218,31 @@ public class Architecture extends GameObject {
         Person mayor = this.getMayor();
 
         float agricultureAbility = (mayor == null ? 0 : mayor.getAgricultureAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.AGRICULTURE).getAll().stream()
+                getWorkingPersons(Person.DoingWork.AGRICULTURE).getAll().parallelStream()
                 .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.agriculture = Utility.diminishingGrowth(
                 this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
 
         float commerceAbility = (mayor == null ? 0 : mayor.getCommerceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.COMMERCE).getAll().stream()
+                getWorkingPersons(Person.DoingWork.COMMERCE).getAll().parallelStream()
                         .map(p -> (float) p.getCommerceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.commerce = Utility.diminishingGrowth(
                 this.commerce, commerceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getCommerce());
 
         float technologyAbility = (mayor == null ? 0 : mayor.getTechnologyAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.TECHNOLOGY).getAll().stream()
+                getWorkingPersons(Person.DoingWork.TECHNOLOGY).getAll().parallelStream()
                         .map(p -> (float) p.getTechnologyAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.technology = Utility.diminishingGrowth(
                 this.technology, technologyAbility * GlobalVariables.internalGrowthFactor, this.getKind().getTechnology());
 
         float moraleAbility = (mayor == null ? 0 : mayor.getMoraleAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.MORALE).getAll().stream()
+                getWorkingPersons(Person.DoingWork.MORALE).getAll().parallelStream()
                         .map(p -> (float) p.getMoraleAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.morale = Utility.diminishingGrowth(
                 this.morale, moraleAbility * GlobalVariables.internalGrowthFactor, this.getKind().getMorale());
 
         float enduranceAbility = (mayor == null ? 0 : mayor.getEnduranceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.ENDURANCE).getAll().stream()
+                getWorkingPersons(Person.DoingWork.ENDURANCE).getAll().parallelStream()
                         .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.endurance = Utility.diminishingGrowth(
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());

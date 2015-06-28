@@ -63,7 +63,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> filter(Predicate<T> predicate) {
-        return content.values().stream().filter(predicate).collect(new ToGameObjectList<>());
+        return content.values().parallelStream().filter(predicate).collect(new ToGameObjectList<>());
     }
 
     public boolean remove(Predicate<T> predicate) {
@@ -71,15 +71,15 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> sort(Comparator<T> comparator) {
-        return content.values().stream().sorted(comparator).collect(new ToGameObjectList<>());
+        return content.values().parallelStream().sorted(comparator).collect(new ToGameObjectList<>());
     }
 
     public T max(Comparator<T> comparator) {
-        return content.values().stream().max(comparator).get();
+        return content.values().parallelStream().max(comparator).get();
     }
 
     public T max(Comparator<T> comparator, T def) {
-        return content.values().stream().max(comparator).orElse(def);
+        return content.values().parallelStream().max(comparator).orElse(def);
     }
 
     public int size() {
@@ -92,11 +92,11 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList<T> getItemsFromCSV(String s) {
         List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
-        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
+        return content.values().parallelStream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
     }
 
     public String toCSV() {
-        return content.keySet().stream().map(String::valueOf).collect(Collectors.joining(" "));
+        return content.keySet().parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
     /**
@@ -136,8 +136,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         public Set<Characteristics> characteristics() {
             return Collections.unmodifiableSet(EnumSet.of(
                     Characteristics.IDENTITY_FINISH,
-                    Characteristics.CONCURRENT,
-                    Characteristics.UNORDERED));
+                    Characteristics.CONCURRENT));
         }
     }
 

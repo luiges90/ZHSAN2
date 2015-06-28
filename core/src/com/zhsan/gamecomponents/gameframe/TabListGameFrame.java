@@ -446,10 +446,10 @@ public class TabListGameFrame extends GameFrame {
         public void onOkClicked() {
             List<GameObject> selected = null;
             if (selection == Selection.SINGLE) {
-                selected = showingRadioButtons.stream().filter(RadioButtonWidget::isChecked)
+                selected = showingRadioButtons.parallelStream().filter(RadioButtonWidget::isChecked)
                         .map(RadioButtonWidget::getExtra).collect(Collectors.toList());
             } else if (selection == Selection.MULTIPLE) {
-                selected = showingCheckboxes.stream().filter(CheckboxWidget::isChecked)
+                selected = showingCheckboxes.parallelStream().filter(CheckboxWidget::isChecked)
                         .map(CheckboxWidget::getExtra).collect(Collectors.toList());
             }
             if (selected != null) {
