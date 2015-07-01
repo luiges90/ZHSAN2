@@ -211,7 +211,16 @@ public class Architecture extends GameObject {
     }
 
     public void advanceDay() {
+        loseInternal();
         developInternal();
+    }
+
+    private void loseInternal() {
+        this.agriculture -= GlobalVariables.internalDrop;
+        this.commerce -= GlobalVariables.internalDrop;
+        this.technology -= GlobalVariables.internalDrop;
+        this.endurance -= GlobalVariables.internalDrop;
+        this.morale -= GlobalVariables.internalDrop;
     }
 
     private void developInternal() {

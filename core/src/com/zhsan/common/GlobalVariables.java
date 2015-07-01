@@ -35,6 +35,7 @@ public class GlobalVariables {
     public static float internalPersonDiminishingFactor = 0.8f;
     public static float internalGrowthFactor = 0.01f;
     public static float mayorInternalWorkEfficiency = 0.3f;
+    public static float internalDrop = 0.75f;
 
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
@@ -58,6 +59,7 @@ public class GlobalVariables {
             internalPersonDiminishingFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "internalPersonDiminishingFactor"));
             internalGrowthFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "internalGrowthFactor"));
             mayorInternalWorkEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "mayorInternalWorkEfficiency"));
+            internalDrop = Float.parseFloat(XmlHelper.loadAttribute(node, "internalDrop"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }
