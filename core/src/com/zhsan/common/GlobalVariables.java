@@ -39,8 +39,8 @@ public class GlobalVariables {
 
     public static float gainFund = 1.0f;
     public static float gainFood = 60.0f;
-    public static float gainFundPerPopulation = 0.005f;
-    public static float gainFoodPerPopulation = 0.005f;
+    public static float gainFundPerPopulation = 0.003f;
+    public static float gainFoodPerPopulation = 0.003f;
 
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
@@ -65,6 +65,10 @@ public class GlobalVariables {
             internalGrowthFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "internalGrowthFactor"));
             mayorInternalWorkEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "mayorInternalWorkEfficiency"));
             internalDrop = Float.parseFloat(XmlHelper.loadAttribute(node, "internalDrop"));
+            gainFund = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFund"));
+            gainFood = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFood"));
+            gainFundPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFundPerPopulation"));
+            gainFoodPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFoodPerPopulation"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }
