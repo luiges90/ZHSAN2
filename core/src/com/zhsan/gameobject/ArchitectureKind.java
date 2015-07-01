@@ -28,6 +28,7 @@ public class ArchitectureKind extends GameObject {
     private float drawOffsetL, drawOffsetW;
 
     private int agriculture, commerce, technology, endurance, morale, population;
+    private long maxFund, maxFood;
 
     private ArchitectureKind(int id) {
         super(id);
@@ -63,6 +64,8 @@ public class ArchitectureKind extends GameObject {
                 kind.morale = Integer.parseInt(line[7]);
                 kind.endurance = Integer.parseInt(line[8]);
                 kind.population = Integer.parseInt(line[9]);
+                kind.maxFund = Long.parseLong(line[10]);
+                kind.maxFood = Long.parseLong(line[11]);
 
                 result.add(kind);
             }
@@ -82,7 +85,15 @@ public class ArchitectureKind extends GameObject {
                         String.valueOf(detail.getId()),
                         detail.getName(),
                         String.valueOf(detail.getDrawOffsetLength()),
-                        String.valueOf(detail.getDrawOffsetWidth())
+                        String.valueOf(detail.getDrawOffsetWidth()),
+                        String.valueOf(detail.agriculture),
+                        String.valueOf(detail.commerce),
+                        String.valueOf(detail.technology),
+                        String.valueOf(detail.morale),
+                        String.valueOf(detail.endurance),
+                        String.valueOf(detail.population),
+                        String.valueOf(detail.maxFund),
+                        String.valueOf(detail.maxFood)
                 });
             }
         } catch (IOException e) {
@@ -130,5 +141,13 @@ public class ArchitectureKind extends GameObject {
 
     public int getPopulation() {
         return population;
+    }
+
+    public long getMaxFund() {
+        return maxFund;
+    }
+
+    public long getMaxFood() {
+        return maxFood;
     }
 }

@@ -37,6 +37,11 @@ public class GlobalVariables {
     public static float mayorInternalWorkEfficiency = 0.3f;
     public static float internalDrop = 0.75f;
 
+    public static float gainFund = 1.0f;
+    public static float gainFood = 60.0f;
+    public static float gainFundPerPopulation = 0.005f;
+    public static float gainFoodPerPopulation = 0.005f;
+
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
 

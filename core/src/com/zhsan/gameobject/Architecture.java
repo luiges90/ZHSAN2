@@ -1,6 +1,7 @@
 package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.MathUtils;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
@@ -213,14 +214,17 @@ public class Architecture extends GameObject {
     public void advanceDay() {
         loseInternal();
         developInternal();
+        if (scenario.getGameDate().getDayOfMonth() == 1) {
+            gainResources();
+        }
     }
 
     private void loseInternal() {
-        this.agriculture -= GlobalVariables.internalDrop;
-        this.commerce -= GlobalVariables.internalDrop;
-        this.technology -= GlobalVariables.internalDrop;
-        this.endurance -= GlobalVariables.internalDrop;
-        this.morale -= GlobalVariables.internalDrop;
+        this.agriculture = MathUtils.clamp(this.agriculture - GlobalVariables.internalDrop, 0, Float.MAX_VALUE);
+        this.commerce = MathUtils.clamp(this.commerce - GlobalVariables.internalDrop, 0, Float.MAX_VALUE);
+        this.technology = MathUtils.clamp(this.technology - GlobalVariables.internalDrop, 0, Float.MAX_VALUE);
+        this.endurance = MathUtils.clamp(this.endurance - GlobalVariables.internalDrop, 0, Float.MAX_VALUE);
+        this.morale = MathUtils.clamp(this.morale - GlobalVariables.internalDrop, 0, Float.MAX_VALUE);
     }
 
     private void developInternal() {
@@ -255,6 +259,15 @@ public class Architecture extends GameObject {
                         .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.endurance = Utility.diminishingGrowth(
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
+    }
+
+    private void gainResources() {
+        this.fund = (int) MathUtils.clamp(this.fund +
+                        GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation),
+                0, this.getKind().getMaxFood());
+        this.food = (int) MathUtils.clamp(this.food +
+                GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
+                0, this.getKind().getMaxFood());
     }
 
 }
