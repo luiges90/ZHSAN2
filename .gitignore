@@ -66,8 +66,9 @@ build/
 tools
 *.log
 
-## maps are too big to maintain on git
+## maps and person portraits are too big to maintain on git
 core/assets/Resources/Map/kure_2.0/
+core/assets/Resources/PersonPortrait/Default/
 
 ## save files
 core/assets/GameData/Save
