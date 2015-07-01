@@ -1,6 +1,7 @@
 package com.zhsan.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
+import com.zhsan.gamecomponents.PersonPortrait;
 import com.zhsan.gamecomponents.ScreenBlind;
 import com.zhsan.gamecomponents.commandframe.ArchitectureCommandFrame;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
@@ -57,6 +59,8 @@ public class GameScreen extends WidgetGroup {
 
     private DayRunner dayRunner;
 
+    private PersonPortrait personPortrait;
+
     private void addOverlayedMapLayerScrollListener(WidgetGroup widget) {
         widget.addListener(new InputListener(){
             @Override
@@ -70,6 +74,8 @@ public class GameScreen extends WidgetGroup {
     public GameScreen(GameScenario scen) {
         this.scen = scen;
         this.dayRunner = new DayRunner();
+
+        personPortrait = new PersonPortrait(scen.getGameSurvey().getResourcePackName());
 
         toolBar = new ToolBar(this);
         toolBar.setPosition(0, 0);
@@ -225,6 +231,14 @@ public class GameScreen extends WidgetGroup {
         return dayRunner;
     }
 
+    public Texture getPortrait(int id) {
+        return personPortrait.getPortrait(id);
+    }
+
+    public Texture getSmallPortrait(int id) {
+        return personPortrait.getSmallPortrait(id);
+    }
+
     public class DayRunner {
 
         private List<RunningDaysListener> runningDaysListeners = new ArrayList<>();
@@ -336,6 +350,7 @@ public class GameScreen extends WidgetGroup {
     }
 
     public void dispose() {
+        personPortrait.dispose();
         toolBar.dispose();
         mapLayer.dispose();
         contextMenu.dispose();

@@ -10,7 +10,7 @@
  architectureSaveHeader="ID,名称编号,名称,种类,位置,所屬軍區,人口,资金,粮草,农业,商业,技术,民心,耐久"
  sectionSaveHeader="ID,名稱,所屬勢力"
  factionSaveHeader="ID,名稱,顏色"
- personSaveHeader="ID,姓,名,字,狀態,位置類,位置,正移動日數,统率,武勇,智谋,政治,魅力,內政工作"
+ personSaveHeader="ID,头像序号,姓,名,字,狀態,位置類,位置,正移動日數,统率,武勇,智谋,政治,魅力,內政工作"
  gameDataSaveHeader="当前玩家,劇本自今天數"
  facilityKindSaveHeader="ID,名稱,耐久,不可被破壞,必須存在"
  facilitySaveHeader="ID,類型,位置,所屬建築,耐久"

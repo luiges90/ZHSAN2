@@ -27,6 +27,7 @@ class LoadingPerson extends GameObject {
     private int movingDays = 0;
 
     private int leaderFactionId = -1;
+    private int portraitId;
 
     private LoadingPerson(int id) {
         super(id);
@@ -68,20 +69,22 @@ class LoadingPerson extends GameObject {
                     data.politics = Integer.parseInt(line[19]);
                     data.glamour = Integer.parseInt(line[20]);
                     data.movingDays = Integer.parseInt(line[62]);
+                    data.portraitId = Integer.parseInt(line[7]);
                 } else {
-                    data.surname = line[1];
-                    data.givenName = line[2];
-                    data.calledName = line[3];
-                    data.state = Person.State.fromCSV(line[4]);
-                    data.loadingLocationType = LoadingLocationType.fromCSV(line[5]);
-                    data.locationId = Integer.parseInt(line[6]);
-                    data.movingDays = Integer.parseInt(line[7]);
-                    data.strength = Integer.parseInt(line[8]);
-                    data.command = Integer.parseInt(line[9]);
-                    data.intelligence = Integer.parseInt(line[10]);
-                    data.politics = Integer.parseInt(line[11]);
-                    data.glamour = Integer.parseInt(line[12]);
-                    data.doingWork = Person.DoingWork.fromCSV(line[13]);
+                    data.portraitId = Integer.parseInt(line[1]);
+                    data.surname = line[2];
+                    data.givenName = line[3];
+                    data.calledName = line[4];
+                    data.state = Person.State.fromCSV(line[5]);
+                    data.loadingLocationType = LoadingLocationType.fromCSV(line[6]);
+                    data.locationId = Integer.parseInt(line[7]);
+                    data.movingDays = Integer.parseInt(line[8]);
+                    data.strength = Integer.parseInt(line[9]);
+                    data.command = Integer.parseInt(line[10]);
+                    data.intelligence = Integer.parseInt(line[11]);
+                    data.politics = Integer.parseInt(line[12]);
+                    data.glamour = Integer.parseInt(line[13]);
+                    data.doingWork = Person.DoingWork.fromCSV(line[14]);
                 }
 
                 result.add(data);
@@ -171,6 +174,10 @@ class LoadingPerson extends GameObject {
 
     public int getLeaderFactionId() {
         return leaderFactionId;
+    }
+
+    public int getPortraitId() {
+        return portraitId;
     }
 
     public enum LoadingLocationType {

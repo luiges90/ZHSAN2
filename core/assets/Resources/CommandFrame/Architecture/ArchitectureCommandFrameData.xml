@@ -205,19 +205,24 @@
                              Align="Center" Width="40" />
         <InternalPortrait X="32" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
-                          Field="AgriculturePersons"/>
+                          Field="AgriculturePersons"
+                          FieldFirst="AgricultureAbility"/>
         <InternalPortrait X="72" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
-                          Field="CommercePersons"/>
+                          Field="CommercePersons"
+                          FieldFirst="CommerceAbility"/>
         <InternalPortrait X="112" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
-                          Field="TechnologyPersons"/>
+                          Field="TechnologyPersons"
+                          FieldFirst="TechnologyAbility"/>
         <InternalPortrait X="152" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
-                          Field="MoralePersons"/>
+                          Field="MoralePersons"
+                          FieldFirst="MoraleAbility"/>
         <InternalPortrait X="192" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
-                          Field="EndurancePersons"/>
+                          Field="EndurancePersons"
+                          FieldFirst="EnduranceAbility"/>
     </InternalTab>
     <MilitaryTab>
         <Background FileName="Military/Background.png" />

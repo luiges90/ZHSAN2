@@ -15,10 +15,7 @@ import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
-import com.zhsan.gameobject.Architecture;
-import com.zhsan.gameobject.Faction;
-import com.zhsan.gameobject.GameObject;
-import com.zhsan.gameobject.Person;
+import com.zhsan.gameobject.*;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.screen.GameScreen;
 import org.jetbrains.annotations.NotNull;
@@ -60,11 +57,16 @@ public class ArchitectureCommandFrame extends CommandFrame {
         public final Rectangle position;
         public final Color borderColor;
         public final String name;
+        public final String fieldFirst;
 
-        public InternalPortraitType(Rectangle position, Color borderColor, String name) {
+        public Person leader;
+        public boolean leaderSet;
+
+        public InternalPortraitType(Rectangle position, Color borderColor, String name, String fieldFirst) {
             this.position = position;
             this.borderColor = borderColor;
             this.name = name;
+            this.fieldFirst = fieldFirst;
         }
     }
 
@@ -93,6 +95,9 @@ public class ArchitectureCommandFrame extends CommandFrame {
     private TabType currentTab = TabType.INTERNAL;
 
     private Architecture currentArchitecture;
+
+    private boolean mayorSet;
+    private Person mayor;
 
     private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
@@ -194,7 +199,8 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     internalPortraits.add(new InternalPortraitType(
                             XmlHelper.loadRectangleFromXml(n),
                             XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "BorderColor"))),
-                            XmlHelper.loadAttribute(n, "Field")
+                            XmlHelper.loadAttribute(n, "Field"),
+                            XmlHelper.loadAttribute(n, "FieldFirst")
                     ));
                 }
             }
@@ -219,6 +225,23 @@ public class ArchitectureCommandFrame extends CommandFrame {
         this.setVisible(true);
     }
 
+    private void updateMayor() {
+        mayor = currentArchitecture.getMayor();
+        mayorSet = true;
+    }
+
+    @SuppressWarnings("Unchecked")
+    private void updateInternal(InternalPortraitType type) {
+        type.leader = ((GameObjectList<Person>) currentArchitecture.getField(type.name))
+                .sort((x,y) -> -Integer.compare((int) x.getField(type.fieldFirst), (int) y.getField(type.fieldFirst)))
+                .getFirst();
+        type.leaderSet = true;
+    }
+
+    private void updateInternal() {
+        internalPortraits.forEach(this::updateInternal);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -231,7 +254,15 @@ public class ArchitectureCommandFrame extends CommandFrame {
         batch.draw(tactics.get(), getX() + tacticsPos.x, getY() + tacticsPos.y, tacticsPos.width, tacticsPos.height);
         batch.draw(facility.get(), getX() + facilityPos.x, getY() + facilityPos.y, facilityPos.width, facilityPos.height);
 
-        batch.draw(portraitBorder, getX() + mayorPortraitPos.x, getY() + mayorPortraitPos.y, mayorPortraitPos.width, mayorPortraitPos.height);
+        if (!mayorSet) {
+            updateMayor();
+        }
+        batch.draw(portraitBorder, getX() + mayorPortraitPos.x, getY() + mayorPortraitPos.y,
+                mayorPortraitPos.width, mayorPortraitPos.height);
+        if (mayor != null) {
+            batch.draw(screen.getSmallPortrait(mayor.getPortraitId()), getX() + mayorPortraitPos.x, getY() + mayorPortraitPos.y,
+                    mayorPortraitPos.width, mayorPortraitPos.height);
+        }
 
         batch.draw(assign.get(), getX() + assignPos.x, getY() + assignPos.y, assignPos.width, assignPos.height);
         batch.draw(agriculture.get(), getX() + agriculturePos.x, getY() + agriculturePos.y, agriculturePos.width, agriculturePos.height);
@@ -287,6 +318,15 @@ public class ArchitectureCommandFrame extends CommandFrame {
             shapeRenderer.end();
 
             batch.begin();
+
+            if (!internalPortraitType.leaderSet) {
+                updateInternal(internalPortraitType);
+            }
+            if (internalPortraitType.leader != null) {
+                batch.draw(screen.getSmallPortrait(internalPortraitType.leader.getPortraitId()),
+                        getX() + internalPortraitType.position.x, getY() + internalPortraitType.position.y,
+                        internalPortraitType.position.width, internalPortraitType.position.height);
+            }
         }
     }
 
@@ -372,7 +412,11 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 if (assignPos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
                             currentArchitecture.getPersons(), TabListGameFrame.Selection.SINGLE,
-                            selectedItems -> currentArchitecture.changeMayor((Person) selectedItems.get(0)));
+                            selectedItems -> {
+                                currentArchitecture.changeMayor((Person) selectedItems.get(0));
+                                updateMayor();
+                                updateInternal();
+                            });
                     assign.setState(StateTexture.State.NORMAL);
                 } else if (agriculturePos.contains(x, y)) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
@@ -382,6 +426,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                                     Person p = (Person) i;
                                     p.setDoingWork(Person.DoingWork.AGRICULTURE);
                                 }
+                                updateInternal();
                             });
                     agriculture.setState(StateTexture.State.NORMAL);
                 } else if (commercePos.contains(x, y)) {
@@ -392,6 +437,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                                     Person p = (Person) i;
                                     p.setDoingWork(Person.DoingWork.COMMERCE);
                                 }
+                                updateInternal();
                             });
                     commerce.setState(StateTexture.State.NORMAL);
                 } else if (technologyPos.contains(x, y)) {
@@ -402,6 +448,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                                     Person p = (Person) i;
                                     p.setDoingWork(Person.DoingWork.TECHNOLOGY);
                                 }
+                                updateInternal();
                             });
                     technology.setState(StateTexture.State.NORMAL);
                 } else if (moralePos.contains(x, y)) {
@@ -412,6 +459,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                                     Person p = (Person) i;
                                     p.setDoingWork(Person.DoingWork.MORALE);
                                 }
+                                updateInternal();
                             });
                     morale.setState(StateTexture.State.NORMAL);
                 } else if (endurancePos.contains(x, y)) {
@@ -422,6 +470,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                                     Person p = (Person) i;
                                     p.setDoingWork(Person.DoingWork.ENDURANCE);
                                 }
+                                updateInternal();
                             });
                     endurance.setState(StateTexture.State.NORMAL);
                 }

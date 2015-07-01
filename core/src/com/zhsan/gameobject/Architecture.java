@@ -210,6 +210,26 @@ public class Architecture extends GameObject {
         return this.getPersons().filter(person -> person.getDoingWork() == doingWork);
     }
 
+    public GameObjectList<Person> getAgriculturePersons() {
+        return getWorkingPersons(Person.DoingWork.AGRICULTURE);
+    }
+
+    public GameObjectList<Person> getCommercePersons() {
+        return getWorkingPersons(Person.DoingWork.COMMERCE);
+    }
+
+    public GameObjectList<Person> getTechnologyPersons() {
+        return getWorkingPersons(Person.DoingWork.TECHNOLOGY);
+    }
+
+    public GameObjectList<Person> getEndurancePersons() {
+        return getWorkingPersons(Person.DoingWork.ENDURANCE);
+    }
+
+    public GameObjectList<Person> getMoralePersons() {
+        return getWorkingPersons(Person.DoingWork.MORALE);
+    }
+
     public void advanceDay() {
         loseInternal();
         developInternal();

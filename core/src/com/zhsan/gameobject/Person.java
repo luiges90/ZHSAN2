@@ -105,6 +105,8 @@ public class Person extends GameObject {
 
     private GameScenario scenario;
 
+    private int portraitId;
+
     private String surname;
     private String givenName;
     private String calledName;
@@ -122,6 +124,7 @@ public class Person extends GameObject {
         super(from.getId());
         this.scenario = scenario;
 
+        this.portraitId = from.getPortraitId();
         this.surname = from.getSurname();
         this.givenName = from.getGivenName();
         this.calledName = from.getCalledName();
@@ -151,6 +154,7 @@ public class Person extends GameObject {
             for (Person d : data) {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
+                        String.valueOf(d.portraitId),
                         d.surname,
                         d.givenName,
                         d.calledName,
@@ -238,6 +242,10 @@ public class Person extends GameObject {
 
     void setDoingWorkUnchecked(DoingWork work) {
         this.doingWork = work;
+    }
+
+    public int getPortraitId() {
+        return portraitId;
     }
 
     public void setDoingWork(DoingWork work) {
