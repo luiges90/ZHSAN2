@@ -1,6 +1,5 @@
 package com.zhsan.gameobject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -8,9 +7,8 @@ import com.zhsan.common.Point;
 import com.zhsan.common.exception.EmptyFileException;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;

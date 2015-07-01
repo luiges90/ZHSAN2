@@ -7,12 +7,11 @@ import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 24/5/2015.

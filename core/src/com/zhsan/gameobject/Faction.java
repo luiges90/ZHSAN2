@@ -5,11 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Peter on 24/5/2015.

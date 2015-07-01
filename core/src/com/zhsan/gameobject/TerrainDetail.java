@@ -5,7 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;

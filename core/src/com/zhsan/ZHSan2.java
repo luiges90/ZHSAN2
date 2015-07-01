@@ -11,7 +11,7 @@ import com.zhsan.common.Fonts;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.gamecomponents.gameframe.NewGameFrame;
 import com.zhsan.gameobject.GameScenario;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.screen.GameScreen;
 import com.zhsan.screen.StartScreen;
 

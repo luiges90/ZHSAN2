@@ -1,6 +1,6 @@
 package com.zhsan.gameobject;
 
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

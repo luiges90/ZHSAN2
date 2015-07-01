@@ -1,21 +1,15 @@
 package com.zhsan.gameobject;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.zhsan.common.Paths;
-import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
 
 /**
  * Created by Peter on 7/4/2015.

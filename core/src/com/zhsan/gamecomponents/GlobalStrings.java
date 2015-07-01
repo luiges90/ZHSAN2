@@ -1,4 +1,4 @@
-package com.zhsan.resources;
+package com.zhsan.gamecomponents;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

@@ -3,7 +3,7 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
-import com.zhsan.resources.GlobalStrings;
+import com.zhsan.gamecomponents.GlobalStrings;
 
 import java.io.IOException;
 
