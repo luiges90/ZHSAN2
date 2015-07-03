@@ -114,6 +114,8 @@ public class GameScreen extends WidgetGroup {
 
         tabListGameFrame = new TabListGameFrame(this);
         this.addActor(tabListGameFrame);
+
+        runAi();
     }
 
     public void resize(int width, int height) {
