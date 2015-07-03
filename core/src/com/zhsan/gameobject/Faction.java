@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 
 import java.io.IOException;
 import java.util.concurrent.RecursiveAction;
@@ -95,6 +96,7 @@ public class Faction extends GameObject {
 
     public void ai() {
         System.out.println("Running AI of Faction " + this.getId() + " on thread " + Thread.currentThread().getName() + " on date " + scenario.getGameDate());
+        LuaAI.runFactionAi(this);
     }
 
 
