@@ -21,11 +21,13 @@ import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.GameScenario;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -239,6 +241,22 @@ public class GameScreen extends WidgetGroup {
         return personPortrait.getSmallPortrait(id);
     }
 
+    private ExecutorService pool = Executors.newCachedThreadPool();
+    private void runAi() {
+        GameObjectList<Faction> factions = scen.getFactions();
+        List<Callable<Void>> runnables = new ArrayList<>();
+        factions.filter(f -> f != scen.getCurrentPlayer()).forEach(f -> runnables.add(() -> {
+            f.ai();
+            return null;
+        }));
+
+        try {
+            pool.invokeAll(runnables);
+        } catch (InterruptedException e) {
+            // should not happen
+        }
+    }
+
     public class DayRunner {
 
         private List<RunningDaysListener> runningDaysListeners = new ArrayList<>();
@@ -282,13 +300,9 @@ public class GameScreen extends WidgetGroup {
                 for (int i = 0; i < days; ++i) {
                     dayRunning = true;
 
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        // ignore
-                    }
-
                     getScenario().advanceDay();
+
+                    runAi();
 
                     synchronized (GameScreen.this) {
                         i -= moreDays;

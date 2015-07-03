@@ -8,6 +8,7 @@ import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.GlobalStrings;
 
 import java.io.IOException;
+import java.util.concurrent.RecursiveAction;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -91,4 +92,10 @@ public class Faction extends GameObject {
         }
         return leader;
     }
+
+    public void ai() {
+
+    }
+
+
 }
