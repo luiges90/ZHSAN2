@@ -4,6 +4,7 @@ import com.zhsan.common.Paths;
 import com.zhsan.gameobject.Faction;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.File;
@@ -18,8 +19,26 @@ public class LuaAI {
 
     public static void runFactionAi(Faction f) {
         Globals globals = JsePlatform.standardGlobals();
+        initFactionInterface(globals, f);
+
         LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+
         chunk.call();
+    }
+
+    private static void initFactionInterface(Globals globals, Faction f) {
+        LuaValue factionTable = LuaValue.tableOf();
+
+        factionTable.set("id", f.getId());
+        factionTable.set("setName", new OneArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg) {
+                System.out.println("From java, " + arg);
+                return LuaValue.valueOf(true);
+            }
+        });
+
+        globals.set("faction", factionTable);
     }
 
 }

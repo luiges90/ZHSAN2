@@ -1,1 +1,2 @@
-print 'hello, world'
+print("Faction Id = " .. faction.id)
+faction.setName("NBanm")
