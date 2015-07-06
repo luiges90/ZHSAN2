@@ -53,4 +53,9 @@ public class Section extends GameObject {
     public Faction getBelongedFaction() {
         return belongedFaction;
     }
+
+    public GameObjectList<Architecture> getArchitectures() {
+        return scenario.getArchitectures().filter(a -> a.getBelongedSection() == this);
+    }
+
 }

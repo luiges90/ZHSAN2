@@ -1,6 +1,7 @@
 package com.zhsan.lua;
 
 import com.zhsan.common.Paths;
+import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.Section;
 import org.luaj.vm2.Globals;
@@ -50,8 +51,18 @@ public class LuaAI {
         LuaTable sectionTable = LuaValue.tableOf();
 
         sectionTable.set("id", s.getId());
+        sectionTable.set("architectures", s.getArchitectures().getAll().stream().map(LuaAI::createArchitectureTable).collect(new LuaTableCollector()));
 
         return sectionTable;
+    }
+
+    private static LuaTable createArchitectureTable(Architecture a) {
+        LuaTable architectureTable = LuaValue.tableOf();
+
+        architectureTable.set("id", a.getId());
+        architectureTable.set("name", a.getName());
+
+        return architectureTable;
     }
 
     private static class LuaTableCollector implements Collector<LuaTable, LuaTable, LuaTable> {

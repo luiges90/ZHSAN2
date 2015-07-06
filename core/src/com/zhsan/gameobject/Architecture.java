@@ -99,6 +99,10 @@ public class Architecture extends GameObject {
         return architectureKind;
     }
 
+    public Section getBelongedSection() {
+        return belongedSection;
+    }
+
     public Faction getBelongedFaction() {
         return belongedSection == null ? null : belongedSection.getBelongedFaction();
     }
