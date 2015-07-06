@@ -5,12 +5,13 @@ import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.Section;
 import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
-import java.io.File;
+import java.io.*;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
@@ -27,15 +28,54 @@ public class LuaAI {
 
     public static final String PATH = Paths.LUA + "Ai" + File.separator;
     public static final String FACTION_AI = "factionAi.lua";
+    public static final String LOGS = PATH + "logs" + File.separator;
 
     public static void runFactionAi(Faction f) {
-        Globals globals = JsePlatform.standardGlobals();
+        try (PrintWriter logger = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true)) {
+            Globals globals = JsePlatform.standardGlobals();
 
-        globals.set("faction", createFactionTable(f));
+            globals.set("dump", new OneArgFunction() {
 
-        LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+                private String ns(int n, String s) {
+                    return new String(new char[n]).replace("\0", s);
+                }
 
-        chunk.call();
+                private void dump(int indent, LuaValue arg) {
+                    if (arg.istable()) {
+                        LuaTable table = arg.checktable();
+                        for (int i = 0; i < table.keyCount(); ++i) {
+                            LuaValue key = table.keys()[i];
+                            LuaValue value = table.get(key);
+                            if (value.istable()) {
+                                logger.println(ns(indent, " ") + key + " = ");
+                                dump(indent + 4, value.checktable());
+                            } else {
+                                logger.println(ns(indent, " ") + key + " = " + value);
+                            }
+                        }
+                    } else {
+                        logger.println(arg);
+                    }
+                }
+
+                @Override
+                public LuaValue call(LuaValue arg) {
+                    dump(0, arg);
+                    return NIL;
+                }
+            });
+            globals.set("faction", createFactionTable(f));
+
+            LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+
+            try {
+                chunk.call();
+            } catch (LuaError e) {
+                e.printStackTrace(logger);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static LuaTable createFactionTable(Faction f) {
