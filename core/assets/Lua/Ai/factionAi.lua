@@ -1,2 +1,2 @@
 print("Faction Id = " .. faction.id)
-faction.setName("NBanm")
+print("Section Ids = " .. faction.sections[1].id)
