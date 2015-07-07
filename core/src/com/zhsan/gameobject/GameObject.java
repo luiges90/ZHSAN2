@@ -1,6 +1,7 @@
 package com.zhsan.gameobject;
 
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,7 +20,8 @@ public abstract class GameObject {
 
     public abstract String getName();
 
-    public int getId() {
+    @LuaAI.ExportGetterToLua
+    public final int getId() {
         return id;
     }
 

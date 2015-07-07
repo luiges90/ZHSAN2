@@ -8,6 +8,7 @@ import com.zhsan.common.Point;
 import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -83,6 +84,7 @@ public class Architecture extends GameObject {
     }
 
     @Override
+    @LuaAI.ExportGetterToLua
     public String getName() {
         return name;
     }

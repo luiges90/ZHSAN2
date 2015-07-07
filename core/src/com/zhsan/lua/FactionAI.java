@@ -14,7 +14,8 @@ public final class FactionAI {
     static LuaTable createFactionTable(Faction f) {
         LuaTable factionTable = LuaValue.tableOf();
 
-        factionTable.set("id", f.getId());
+        LuaAI.processAnnotations(factionTable, Faction.class, f);
+
         factionTable.set("sections", f.getSections().getAll().stream()
                 .map(SectionAI::createSectionTable).collect(new LuaAI.LuaTableCollector()));
 

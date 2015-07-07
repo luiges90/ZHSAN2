@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 
 import java.io.IOException;
 
@@ -178,6 +179,7 @@ public class Person extends GameObject {
 
 
     @Override
+    @LuaAI.ExportGetterToLua
     public String getName() {
         return surname + givenName;
     }
@@ -208,26 +210,32 @@ public class Person extends GameObject {
         return movingDays == 0 ? "" : movingDays + GlobalStrings.getString(GlobalStrings.Keys.DAY);
     }
 
+    @LuaAI.ExportGetterToLua
     public int getCommand() {
         return command;
     }
 
+    @LuaAI.ExportGetterToLua
     public int getStrength() {
         return strength;
     }
 
+    @LuaAI.ExportGetterToLua
     public int getIntelligence() {
         return intelligence;
     }
 
+    @LuaAI.ExportGetterToLua
     public int getPolitics() {
         return politics;
     }
 
+    @LuaAI.ExportGetterToLua
     public int getGlamour() {
         return glamour;
     }
 
+    @LuaAI.ExportGetterToLua
     public int getAbilitySum() {
         return command + strength + intelligence + politics + glamour;
     }
@@ -280,22 +288,27 @@ public class Person extends GameObject {
         }
     }
 
+    @LuaAI.ExportGetterToLua
     public int getAgricultureAbility() {
         return 2 * getPolitics() + 2 * getGlamour();
     }
 
+    @LuaAI.ExportGetterToLua
     public int getCommerceAbility() {
         return getIntelligence() + 2 * getPolitics() + getGlamour();
     }
 
+    @LuaAI.ExportGetterToLua
     public int getTechnologyAbility() {
         return 2 * getIntelligence() + 2 * getPolitics();
     }
 
+    @LuaAI.ExportGetterToLua
     public int getMoraleAbility() {
         return getCommand() + getPolitics() + 2 * getGlamour();
     }
 
+    @LuaAI.ExportGetterToLua
     public int getEnduranceAbility() {
         return getStrength() + getCommand() + getIntelligence() + getPolitics();
     }

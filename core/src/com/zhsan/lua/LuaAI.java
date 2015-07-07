@@ -10,6 +10,12 @@ import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
@@ -123,5 +129,34 @@ public final class LuaAI {
         }
     }
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    public @interface ExportGetterToLua{}
+
+    static <T> void processAnnotations(LuaTable table, Class<T> klass, T obj) {
+        for (Method m : klass.getMethods()) {
+           if (m.isAnnotationPresent(ExportGetterToLua.class)) {
+               String name = m.getName();
+               if (!name.startsWith("get")) {
+                   throw new IllegalArgumentException("ExportGetterToLua can only apply to getters");
+               }
+               name = name.substring(3, 4).toLowerCase() + name.substring(4);
+               try {
+                   Object r = m.invoke(obj);
+                   if (r instanceof Double) {
+                       table.set(name, (Double) r);
+                   } else if (r instanceof Integer) {
+                       table.set(name, (Integer) r);
+                   } else if (r instanceof String) {
+                       table.set(name, (String) r);
+                   } else {
+                       throw new IllegalArgumentException("ExportGetterToLua can only apply to double, integer or string returns");
+                   }
+               } catch (IllegalAccessException | InvocationTargetException e) {
+                   throw new RuntimeException(e);
+               }
+           }
+        }
+    }
 
 }

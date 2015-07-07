@@ -14,8 +14,10 @@ public final class ArchitectureAI {
     static LuaTable createArchitectureTable(Architecture a) {
         LuaTable architectureTable = LuaValue.tableOf();
 
-        architectureTable.set("id", a.getId());
-        architectureTable.set("name", a.getName());
+        LuaAI.processAnnotations(architectureTable, Architecture.class, a);
+
+        architectureTable.set("persons", a.getPersons().getAll()
+                .stream().map(PersonAI::createPersonTable).collect(new LuaAI.LuaTableCollector()));
 
         return architectureTable;
     }

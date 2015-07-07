@@ -4,6 +4,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 
 import java.io.IOException;
 
@@ -46,6 +47,7 @@ public class Section extends GameObject {
     }
 
     @Override
+    @LuaAI.ExportGetterToLua
     public String getName() {
         return name;
     }

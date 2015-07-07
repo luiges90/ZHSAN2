@@ -14,7 +14,8 @@ public final class SectionAI {
     static LuaTable createSectionTable(Section s) {
         LuaTable sectionTable = LuaValue.tableOf();
 
-        sectionTable.set("id", s.getId());
+        LuaAI.processAnnotations(sectionTable, Section.class, s);
+
         sectionTable.set("architectures", s.getArchitectures().getAll()
                 .stream().map(ArchitectureAI::createArchitectureTable).collect(new LuaAI.LuaTableCollector()));
 

@@ -52,6 +52,7 @@ public class Faction extends GameObject {
     }
 
     @Override
+    @LuaAI.ExportGetterToLua
     public String getName() {
         return name;
     }

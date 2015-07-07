@@ -1,5 +1,3 @@
-
-
 function architectureAI(architecture)
-    print(architecture.name)
+   dump(architecture)
 end
