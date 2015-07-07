@@ -24,11 +24,13 @@ import java.util.stream.Collector;
 /**
  * Created by Peter on 3/7/2015.
  */
-public class LuaAI {
+public final class LuaAI {
 
     public static final String PATH = Paths.LUA + "Ai" + File.separator;
     public static final String FACTION_AI = "factionAi.lua";
     public static final String LOGS = PATH + "logs" + File.separator;
+
+    private LuaAI(){}
 
     public static void runFactionAi(Faction f) {
         try (PrintWriter logger = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true)) {
@@ -64,7 +66,15 @@ public class LuaAI {
                     return NIL;
                 }
             });
-            globals.set("faction", createFactionTable(f));
+            globals.set("print", new OneArgFunction() {
+                @Override
+                public LuaValue call(LuaValue arg) {
+                    logger.println(arg);
+                    return NIL;
+                }
+            });
+
+            globals.set("faction", FactionAI.createFactionTable(f));
 
             LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
 
@@ -78,34 +88,7 @@ public class LuaAI {
         }
     }
 
-    private static LuaTable createFactionTable(Faction f) {
-        LuaTable factionTable = LuaValue.tableOf();
-
-        factionTable.set("id", f.getId());
-        factionTable.set("sections", f.getSections().getAll().stream().map(LuaAI::createSectionTable).collect(new LuaTableCollector()));
-
-        return factionTable;
-    }
-
-    private static LuaTable createSectionTable(Section s) {
-        LuaTable sectionTable = LuaValue.tableOf();
-
-        sectionTable.set("id", s.getId());
-        sectionTable.set("architectures", s.getArchitectures().getAll().stream().map(LuaAI::createArchitectureTable).collect(new LuaTableCollector()));
-
-        return sectionTable;
-    }
-
-    private static LuaTable createArchitectureTable(Architecture a) {
-        LuaTable architectureTable = LuaValue.tableOf();
-
-        architectureTable.set("id", a.getId());
-        architectureTable.set("name", a.getName());
-
-        return architectureTable;
-    }
-
-    private static class LuaTableCollector implements Collector<LuaTable, LuaTable, LuaTable> {
+    static class LuaTableCollector implements Collector<LuaTable, LuaTable, LuaTable> {
 
         @Override
         public Supplier<LuaTable> supplier() {
