@@ -193,9 +193,19 @@ public class Architecture extends GameObject {
         return p.getFirst();
     }
 
+    public boolean canChangeMayor() {
+        return this.getPersons().size() > 0 && this.getBelongedFaction() != null && this.getBelongedFaction().getLeader().getLocation() != this;
+    }
+
     public void changeMayor(Person newMayor) {
         if (newMayor.getLocation() != this) {
             throw new IllegalStateException("The new mayor must be in the architecture");
+        }
+        if (this.getBelongedFaction() == null) {
+            throw new IllegalStateException("Empty architectures may not have mayors");
+        }
+        if (this.getBelongedFaction().getLeader().getLocation() == this) {
+            throw new IllegalStateException("May not set mayor if the leader is in architecture");
         }
         newMayor.setDoingWork(Person.DoingWork.MAYOR);
     }

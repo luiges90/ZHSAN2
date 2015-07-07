@@ -371,7 +371,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     facility.setState(currentTab == TabType.FACILITY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
                 }
 
-                if (assignPos.contains(x, y)) {
+                if (assignPos.contains(x, y) && currentArchitecture.canChangeMayor()) {
                     assign.setState(StateTexture.State.SELECTED);
                 } else {
                     assign.setState(StateTexture.State.NORMAL);
@@ -409,7 +409,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
-                if (assignPos.contains(x, y)) {
+                if (assignPos.contains(x, y) && currentArchitecture.canChangeMayor()) {
                     screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
                             currentArchitecture.getPersons(), TabListGameFrame.Selection.SINGLE,
                             selectedItems -> {
