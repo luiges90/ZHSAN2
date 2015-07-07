@@ -27,7 +27,7 @@ public final class LuaAI {
     public static final String PATH = Paths.LUA + "AI" + File.separator;
     public static final String LOGS = PATH + "logs" + File.separator;
 
-    public static final String FACTION_AI = "factionAI.lua";
+    public static final String FACTION_AI = "ZHSanFactionAI.lua";
 
     private LuaAI(){}
 
