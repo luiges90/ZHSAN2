@@ -1,9 +1,7 @@
 package com.zhsan.lua;
 
 import com.zhsan.common.Paths;
-import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
-import com.zhsan.gameobject.Section;
 import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
@@ -26,9 +24,10 @@ import java.util.stream.Collector;
  */
 public final class LuaAI {
 
-    public static final String PATH = Paths.LUA + "Ai" + File.separator;
-    public static final String FACTION_AI = "factionAi.lua";
+    public static final String PATH = Paths.LUA + "AI" + File.separator;
     public static final String LOGS = PATH + "logs" + File.separator;
+
+    public static final String FACTION_AI = "factionAI.lua";
 
     private LuaAI(){}
 
@@ -36,6 +35,7 @@ public final class LuaAI {
         try (PrintWriter logger = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true)) {
             Globals globals = JsePlatform.standardGlobals();
 
+            globals.set("PATH", PATH);
             globals.set("dump", new OneArgFunction() {
 
                 private String ns(int n, String s) {
