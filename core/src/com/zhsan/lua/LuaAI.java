@@ -88,7 +88,7 @@ public final class LuaAI {
             } catch (LuaError e) {
                 e.printStackTrace(logger);
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -127,10 +127,6 @@ public final class LuaAI {
                     Characteristics.CONCURRENT));
         }
     }
-
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target({ElementType.METHOD})
-    public @interface ExportGetterToLua{}
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD})
@@ -180,19 +176,7 @@ public final class LuaAI {
 
     static <T> void processAnnotations(LuaTable table, Class<T> klass, T obj) {
         for (Method m : klass.getMethods()) {
-           if (m.isAnnotationPresent(ExportGetterToLua.class)) {
-               String name = m.getName();
-               if (!name.startsWith("get")) {
-                   throw new IllegalArgumentException("ExportGetterToLua can only apply to getters");
-               }
-               name = name.substring(3, 4).toLowerCase() + name.substring(4);
-               try {
-                    Object r = m.invoke(obj);
-                    table.set(name, toLuaValue(r));
-               } catch (IllegalAccessException | InvocationTargetException e) {
-                   throw new RuntimeException(e);
-               }
-           } else if (m.isAnnotationPresent(ExportToLua.class)) {
+           if (m.isAnnotationPresent(ExportToLua.class)) {
                table.set(m.getName(), new VarArgFunction() {
                    @Override
                    public Varargs invoke(Varargs args) {

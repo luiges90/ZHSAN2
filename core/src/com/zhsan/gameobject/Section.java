@@ -47,7 +47,7 @@ public class Section extends GameObject {
     }
 
     @Override
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public String getName() {
         return name;
     }

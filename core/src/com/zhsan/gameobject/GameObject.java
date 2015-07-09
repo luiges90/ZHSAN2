@@ -20,7 +20,7 @@ public abstract class GameObject {
 
     public abstract String getName();
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public final int getId() {
         return id;
     }

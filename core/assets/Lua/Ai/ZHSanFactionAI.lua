@@ -9,6 +9,6 @@ dofile(PATH .. "sectionAI.lua")
 
 dump(faction)
 
-for i, item in pairs(faction.sections) do
+for i, item in pairs(faction.getSections()) do
     sectionAI(item)
 end

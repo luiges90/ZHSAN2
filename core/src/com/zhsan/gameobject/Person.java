@@ -177,7 +177,7 @@ public class Person extends GameObject {
 
 
     @Override
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public String getName() {
         return surname + givenName;
     }
@@ -208,37 +208,37 @@ public class Person extends GameObject {
         return movingDays == 0 ? "" : movingDays + GlobalStrings.getString(GlobalStrings.Keys.DAY);
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getCommand() {
         return command;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getStrength() {
         return strength;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getIntelligence() {
         return intelligence;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getPolitics() {
         return politics;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getGlamour() {
         return glamour;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getAbilitySum() {
         return command + strength + intelligence + politics + glamour;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public String getDoingWork() {
         return getDoingWorkType().toCSV();
     }
@@ -296,27 +296,27 @@ public class Person extends GameObject {
         }
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getAgricultureAbility() {
         return 2 * getPolitics() + 2 * getGlamour();
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getCommerceAbility() {
         return getIntelligence() + 2 * getPolitics() + getGlamour();
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getTechnologyAbility() {
         return 2 * getIntelligence() + 2 * getPolitics();
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getMoraleAbility() {
         return getCommand() + getPolitics() + 2 * getGlamour();
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public int getEnduranceAbility() {
         return getStrength() + getCommand() + getIntelligence() + getPolitics();
     }

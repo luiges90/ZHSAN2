@@ -84,7 +84,7 @@ public class Architecture extends GameObject {
     }
 
     @Override
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public String getName() {
         return name;
     }
@@ -155,27 +155,27 @@ public class Architecture extends GameObject {
                 GlobalStrings.getString(GlobalStrings.Keys.FOOD_UNIT_STRING);
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public float getAgriculture() {
         return agriculture;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public float getCommerce() {
         return commerce;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public float getTechnology() {
         return technology;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public float getEndurance() {
         return endurance;
     }
 
-    @LuaAI.ExportGetterToLua
+    @LuaAI.ExportToLua
     public float getMorale() {
         return morale;
     }
