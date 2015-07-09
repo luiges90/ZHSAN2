@@ -118,7 +118,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Person> getPersonsExcludingMayor() {
-        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getDoingWork() != Person.DoingWork.MAYOR);
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getDoingWorkType() != Person.DoingWork.MAYOR);
     }
 
     public boolean hasFaction() {
@@ -155,22 +155,27 @@ public class Architecture extends GameObject {
                 GlobalStrings.getString(GlobalStrings.Keys.FOOD_UNIT_STRING);
     }
 
+    @LuaAI.ExportGetterToLua
     public float getAgriculture() {
         return agriculture;
     }
 
+    @LuaAI.ExportGetterToLua
     public float getCommerce() {
         return commerce;
     }
 
+    @LuaAI.ExportGetterToLua
     public float getTechnology() {
         return technology;
     }
 
+    @LuaAI.ExportGetterToLua
     public float getEndurance() {
         return endurance;
     }
 
+    @LuaAI.ExportGetterToLua
     public float getMorale() {
         return morale;
     }
@@ -183,20 +188,26 @@ public class Architecture extends GameObject {
     }
 
     GameObjectList<Person> getMayorUnchecked() {
-        return this.getPersons().filter(person -> person.getDoingWork() == Person.DoingWork.MAYOR);
+        return this.getPersons().filter(person -> person.getDoingWorkType() == Person.DoingWork.MAYOR);
     }
 
     public Person getMayor() {
         if (this.getPersons().size() == 0) return null;
-        GameObjectList<Person> p = this.getPersons().filter(person -> person.getDoingWork() == Person.DoingWork.MAYOR);
+        GameObjectList<Person> p = this.getPersons().filter(person -> person.getDoingWorkType() == Person.DoingWork.MAYOR);
         if (p.size() != 1) {
             throw new IllegalStateException("There should be one and only one mayor in every architecture");
         }
         return p.getFirst();
     }
 
+    @LuaAI.ExportToLua
     public boolean canChangeMayor() {
         return this.getPersons().size() > 0 && this.getBelongedFaction() != null && this.getBelongedFaction().getLeader().getLocation() != this;
+    }
+
+    @LuaAI.ExportToLua
+    public void changeMayor(int id) {
+        changeMayor(scenario.getPerson(id));
     }
 
     public void changeMayor(Person newMayor) {
@@ -223,7 +234,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Person> getWorkingPersons(Person.DoingWork doingWork) {
-        return this.getPersons().filter(person -> person.getDoingWork() == doingWork);
+        return this.getPersons().filter(person -> person.getDoingWorkType() == doingWork);
     }
 
     public GameObjectList<Person> getAgriculturePersons() {

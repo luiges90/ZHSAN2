@@ -145,7 +145,7 @@ public class GameScenario {
             if (a.getPersons().size() > 0) {
                 GameObjectList<Person> mayors = a.getMayorUnchecked();
                 if (mayors.size() != 1) {
-                    a.getPersons().filter(p -> p.getDoingWork() == Person.DoingWork.MAYOR).forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+                    a.getPersons().filter(p -> p.getDoingWorkType() == Person.DoingWork.MAYOR).forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
                     a.addMayor(a.pickMayor());
                 }
             }
@@ -201,6 +201,10 @@ public class GameScenario {
 
     public GameObjectList<Architecture> getArchitectures() {
         return architectures.asUnmodifiable();
+    }
+
+    public Person getPerson(int id) {
+        return persons.filter(p -> p.getId() == id).getFirst();
     }
 
     public GameObjectList<Person> getPersons() {

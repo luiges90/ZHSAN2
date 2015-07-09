@@ -2,11 +2,10 @@ package com.zhsan.lua;
 
 import com.zhsan.common.Paths;
 import com.zhsan.gameobject.Faction;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaError;
-import org.luaj.vm2.LuaTable;
-import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
+import org.luaj.vm2.lib.VarArgFunction;
+import org.luaj.vm2.lib.ZeroArgFunction;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
 import java.io.*;
@@ -133,6 +132,52 @@ public final class LuaAI {
     @Target({ElementType.METHOD})
     public @interface ExportGetterToLua{}
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    public @interface ExportToLua{}
+
+    private static LuaValue toLuaValue(Object obj) {
+        if (obj instanceof Double) {
+            return LuaValue.valueOf((Double) obj);
+        } else if (obj instanceof Float) {
+            return LuaValue.valueOf((Float) obj);
+        } else if (obj instanceof Long) {
+            return LuaValue.valueOf((Long) obj);
+        } else if (obj instanceof Integer) {
+            return LuaValue.valueOf((Integer) obj);
+        } else if (obj instanceof Short) {
+            return LuaValue.valueOf((Short) obj);
+        } else if (obj instanceof Byte) {
+            return LuaValue.valueOf((Byte) obj);
+        } else if (obj instanceof Character) {
+            return LuaValue.valueOf((Character) obj);
+        } else if (obj instanceof Boolean) {
+            return LuaValue.valueOf((Boolean) obj);
+        } else if (obj instanceof String) {
+            return LuaValue.valueOf((String) obj);
+        } else {
+            throw new IllegalArgumentException("toLuaValue only accept strings or primitives.");
+        }
+    }
+
+    private static Object fromLuaValue(LuaValue val) {
+        if (val.isboolean()) {
+            return val.toboolean();
+        } else if (val.isint()){
+            return val.toint();
+        } else if (val.islong()) {
+            return val.tolong();
+        } else if (val.isnumber()) {
+            return val.tonumber();
+        } else if (val.isstring()) {
+            return val.tostring();
+        } else if (val.isnil()) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("fromLuaValue only accept booleans, numbers, strings or NIL.");
+        }
+    }
+
     static <T> void processAnnotations(LuaTable table, Class<T> klass, T obj) {
         for (Method m : klass.getMethods()) {
            if (m.isAnnotationPresent(ExportGetterToLua.class)) {
@@ -142,19 +187,28 @@ public final class LuaAI {
                }
                name = name.substring(3, 4).toLowerCase() + name.substring(4);
                try {
-                   Object r = m.invoke(obj);
-                   if (r instanceof Double) {
-                       table.set(name, (Double) r);
-                   } else if (r instanceof Integer) {
-                       table.set(name, (Integer) r);
-                   } else if (r instanceof String) {
-                       table.set(name, (String) r);
-                   } else {
-                       throw new IllegalArgumentException("ExportGetterToLua can only apply to double, integer or string returns");
-                   }
+                    Object r = m.invoke(obj);
+                    table.set(name, toLuaValue(r));
                } catch (IllegalAccessException | InvocationTargetException e) {
                    throw new RuntimeException(e);
                }
+           } else if (m.isAnnotationPresent(ExportToLua.class)) {
+               table.set(m.getName(), new VarArgFunction() {
+                   @Override
+                   public Varargs invoke(Varargs args) {
+                       Object[] objArgs = new Object[args.narg()];
+                       for (int i = 0; i < args.narg(); ++i) {
+                           objArgs[i] = fromLuaValue(args.arg(i));
+                       }
+                       Object result;
+                       try {
+                           result = m.invoke(obj, objArgs);
+                       } catch (IllegalAccessException | InvocationTargetException e) {
+                           throw new RuntimeException("Exception occurred invoking java method " + m, e);
+                       }
+                       return toLuaValue(result);
+                   }
+               });
            }
         }
     }

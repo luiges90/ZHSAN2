@@ -240,7 +240,12 @@ public class Person extends GameObject {
         return command + strength + intelligence + politics + glamour;
     }
 
-    public DoingWork getDoingWork() {
+    @LuaAI.ExportGetterToLua
+    public String getDoingWork() {
+        return getDoingWorkType().toCSV();
+    }
+
+    public DoingWork getDoingWorkType() {
         if (location.get() instanceof Architecture && this.state == State.NORMAL) {
             return doingWork;
         } else {
@@ -254,6 +259,11 @@ public class Person extends GameObject {
 
     public int getPortraitId() {
         return portraitId;
+    }
+
+    @LuaAI.ExportToLua
+    public void setDoingWork(String work) {
+        setDoingWork(DoingWork.fromCSV(work));
     }
 
     public void setDoingWork(DoingWork work) {
@@ -274,7 +284,7 @@ public class Person extends GameObject {
     }
 
     public String getDoingWorkString() {
-        switch (getDoingWork()) {
+        switch (getDoingWorkType()) {
             case NONE: return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
             case AGRICULTURE: return GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE);
             case COMMERCE: return GlobalStrings.getString(GlobalStrings.Keys.COMMERCE);
