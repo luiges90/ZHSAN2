@@ -20,7 +20,9 @@ function architectureAI(architecture)
 
    -- assign jobs using a greedy algorithm: assign the best person to the lowest-valued task and continue
    for i, v in pairs(architecture.persons) do
-      v.setDoingWork("0")
+      if v.doingWork ~= "mayor" then
+         v.setDoingWork("none")
+      end
    end
 
    local taskValues = {
@@ -36,11 +38,16 @@ function architectureAI(architecture)
          table.sort(architecture.persons, function(p, q) return p.enduranceAbility > q.enduranceAbility end)}
    }
    table.sort(taskValues, function(p, q) return p[1] < q[1] end)
-   for i, v in pairs(taskValues) do
-      for j, w in pairs(v[3]) do
-         if w.doingWork == "0" then
-            w.setDoingWork(v[2])
-            print("Giving " + w.name + " work " + v[2])
+   local everybodyHasWork = false
+   while not everybodyHasWork do
+      for i, v in pairs(taskValues) do
+         for j, w in pairs(v[3]) do
+            if w.doingWork == "none" then
+               w.setDoingWork(v[2])
+               print("Giving " + w.name + " work " + v[2])
+               break
+            end
+            everybodyHasWork = true
          end
       end
    end
