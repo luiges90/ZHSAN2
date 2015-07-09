@@ -116,7 +116,7 @@ class LoadingArchitecture extends GameObject {
                     }
                 } else if (p.getLoadingLocationType() == LoadingPerson.LoadingLocationType.ARCHITECTURE &&
                         p.getLocationId() == a.getId() &&
-                        p.getState() == Person.State.UNHIRED) {
+                        p.getState() == Person.State.UNEMPLOYED) {
                     if (p.getMovingDays() > 0) {
                         a.unhiredMovingPersons.add(p.getId());
                     } else {

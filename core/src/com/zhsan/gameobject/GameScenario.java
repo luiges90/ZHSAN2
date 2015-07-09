@@ -220,7 +220,7 @@ public class GameScenario {
     }
 
     public GameObjectList<Person> getAvailablePersons() {
-        return persons.filter(person -> person.getState() != Person.State.DEAD && person.getState() != Person.State.UNDEBUTTED)
+        return persons.filter(person -> person.getState() != Person.State.DEAD && person.getState() != Person.State.UNAVAILABLE)
                 .asUnmodifiable();
     }
 

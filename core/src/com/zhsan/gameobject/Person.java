@@ -16,27 +16,26 @@ public class Person extends GameObject {
     public static final String SAVE_FILE = "Person.csv";
 
     public enum State {
-        UNDEBUTTED, NORMAL, UNHIRED, CAPTIVE, DEAD;
+        UNAVAILABLE, NORMAL, UNEMPLOYED, CAPTIVE, DEAD;
 
         public static State fromCSV(String s) {
-            switch (Integer.parseInt(s)) {
-                case 1: return UNDEBUTTED;
-                case 2: return NORMAL;
-                case 3: return UNHIRED;
-                case 4: return CAPTIVE;
-                case 5: return DEAD;
+            switch (s) {
+                case "unavailable": return UNAVAILABLE;
+                case "normal": return NORMAL;
+                case "unemployed": return UNEMPLOYED;
+                case "captive": return CAPTIVE;
+                case "dead": return DEAD;
+                default: return UNAVAILABLE;
             }
-            assert false;
-            return null;
         }
 
         public String toCSV() {
             switch (this) {
-                case UNDEBUTTED: return "1";
-                case NORMAL: return "2";
-                case UNHIRED: return "3";
-                case CAPTIVE: return "4";
-                case DEAD: return "5";
+                case UNAVAILABLE: return "unavailable";
+                case NORMAL: return "normal";
+                case UNEMPLOYED: return "unemployed";
+                case CAPTIVE: return "captive";
+                case DEAD: return "dead";
             }
             assert false;
             return null;
@@ -76,28 +75,27 @@ public class Person extends GameObject {
         NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR;
 
         public static DoingWork fromCSV(String s) {
-            switch (Integer.parseInt(s)) {
-                case 0: return NONE;
-                case 1: return AGRICULTURE;
-                case 2: return COMMERCE;
-                case 3: return TECHNOLOGY;
-                case 4: return MORALE;
-                case 5: return ENDURANCE;
-                case 6: return MAYOR;
+            switch (s) {
+                case "none": return NONE;
+                case "agriculture": return AGRICULTURE;
+                case "commerce": return COMMERCE;
+                case "technology": return TECHNOLOGY;
+                case "morale": return MORALE;
+                case "endurance": return ENDURANCE;
+                case "mayor": return MAYOR;
+                default: return NONE;
             }
-            assert false;
-            return null;
         }
 
         public String toCSV() {
             switch (this) {
-                case NONE: return "0";
-                case AGRICULTURE: return "1";
-                case COMMERCE: return "2";
-                case TECHNOLOGY: return "3";
-                case MORALE: return "4";
-                case ENDURANCE: return "5";
-                case MAYOR: return "6";
+                case NONE: return "none";
+                case AGRICULTURE: return "agriculture";
+                case COMMERCE: return "commerce";
+                case TECHNOLOGY: return "technology";
+                case MORALE: return "morale";
+                case ENDURANCE: return "endurance";
+                case MAYOR: return "mayor";
             }
             assert false;
             return null;

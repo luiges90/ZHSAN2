@@ -61,7 +61,7 @@ class LoadingPerson extends GameObject {
                             data.state = Person.State.DEAD;
                         }
                     } else {
-                        data.state = Person.State.UNDEBUTTED;
+                        data.state = Person.State.UNAVAILABLE;
                     }
                     data.strength = Integer.parseInt(line[16]);
                     data.command = Integer.parseInt(line[17]);
@@ -106,7 +106,7 @@ class LoadingPerson extends GameObject {
                 } else if (a.getUnhiredPersons().contains(p.getId()) || a.getUnhiredMovingPersons().contains(p.getId())) {
                     p.loadingLocationType = LoadingLocationType.ARCHITECTURE;
                     p.locationId = a.getId();
-                    p.state = Person.State.UNHIRED;
+                    p.state = Person.State.UNEMPLOYED;
                 }
             }
             if (p.loadingLocationType != LoadingLocationType.ARCHITECTURE) {

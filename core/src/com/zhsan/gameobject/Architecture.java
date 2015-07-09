@@ -114,7 +114,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Person> getUnhiredPersons() {
-        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNHIRED);
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNEMPLOYED);
     }
 
     public GameObjectList<Person> getPersonsExcludingMayor() {
