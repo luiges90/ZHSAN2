@@ -42,6 +42,8 @@ public class GlobalVariables {
     public static float gainFundPerPopulation = 0.003f;
     public static float gainFoodPerPopulation = 0.003f;
 
+    public static long aiTimeout = 20;
+
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
 
@@ -69,6 +71,7 @@ public class GlobalVariables {
             gainFood = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFood"));
             gainFundPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFundPerPopulation"));
             gainFoodPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFoodPerPopulation"));
+            aiTimeout = Long.parseLong(XmlHelper.loadAttribute(node, "aiTimeout"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

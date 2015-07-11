@@ -115,7 +115,7 @@ public class GameScreen extends WidgetGroup {
         tabListGameFrame = new TabListGameFrame(this);
         this.addActor(tabListGameFrame);
 
-        runAi();
+        new Thread(this::runAi).start();
     }
 
     public void resize(int width, int height) {
@@ -253,9 +253,9 @@ public class GameScreen extends WidgetGroup {
         }));
 
         try {
-            pool.invokeAll(runnables);
+            pool.invokeAll(runnables, GlobalVariables.aiTimeout, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
-            // should not happen
+            throw new RuntimeException(e);
         }
     }
 
