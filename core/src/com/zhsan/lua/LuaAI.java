@@ -55,7 +55,19 @@ public final class LuaAI {
                             LuaValue value = table.get(key);
                             if (value.istable()) {
                                 logger.println(ns(indent, " ") + key + " = ");
-                                dump(indent + 4, value.checktable());
+                                dump(indent + 4, value);
+                            } else if (value.isfunction()) {
+                                if (key.tojstring().startsWith("get")) {
+                                    LuaValue result = value.call();
+                                    if (result.istable()) {
+                                        logger.println(ns(indent, " ") + key + " = ");
+                                        dump(indent + 4, result);
+                                    } else {
+                                        logger.println(ns(indent, " ") + key + " = " + result);
+                                    }
+                                } else {
+                                    logger.println(ns(indent, " ") + key + " = " + value);
+                                }
                             } else {
                                 logger.println(ns(indent, " ") + key + " = " + value);
                             }
@@ -151,8 +163,11 @@ public final class LuaAI {
             return LuaValue.valueOf((Boolean) obj);
         } else if (obj instanceof String) {
             return LuaValue.valueOf((String) obj);
+        } else if (obj == null) {
+            return LuaValue.NIL;
         } else {
-            throw new IllegalArgumentException("toLuaValue only accept strings or primitives.");
+            throw new IllegalArgumentException("toLuaValue only accept strings, primitives, or null. " +
+                    obj + "(" + obj.getClass().getName() + ") received.");
         }
     }
 
@@ -163,14 +178,13 @@ public final class LuaAI {
             return val.toint();
         } else if (val.islong()) {
             return val.tolong();
-        } else if (val.isnumber()) {
-            return val.tonumber();
         } else if (val.isstring()) {
-            return val.tostring();
+            return val.tojstring();
         } else if (val.isnil()) {
             return null;
         } else {
-            throw new IllegalArgumentException("fromLuaValue only accept booleans, numbers, strings or NIL.");
+            throw new IllegalArgumentException("fromLuaValue only accept booleans, numbers, strings or NIL. " +
+                    val + " received.");
         }
     }
 
@@ -181,8 +195,12 @@ public final class LuaAI {
                    @Override
                    public Varargs invoke(Varargs args) {
                        Object[] objArgs = new Object[args.narg()];
-                       for (int i = 0; i < args.narg(); ++i) {
-                           objArgs[i] = fromLuaValue(args.arg(i));
+                       if (args.narg() == 1) {
+                            objArgs[0] = fromLuaValue(args.arg1());
+                       } else {
+                           for (int i = 0; i < args.narg(); ++i) {
+                               objArgs[i] = fromLuaValue(args.arg(i));
+                           }
                        }
                        Object result;
                        try {

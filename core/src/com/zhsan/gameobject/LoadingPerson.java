@@ -16,8 +16,8 @@ class LoadingPerson extends GameObject {
     private String givenName;
     private String calledName;
 
-    private Person.State state;
-    private Person.DoingWork doingWork;
+    private Person.State state = Person.State.DEAD;
+    private Person.DoingWork doingWork = Person.DoingWork.NONE;
 
     private LoadingLocationType loadingLocationType = LoadingLocationType.NONE;
     private int locationId = -1;
