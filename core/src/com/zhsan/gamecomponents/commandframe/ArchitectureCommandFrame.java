@@ -39,7 +39,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         INTERNAL, MILITARY, OFFICER, TACTICS, FACILITY
     }
 
-    private class TextType {
+    static class TextType {
         public final Rectangle position;
         public final boolean staticText;
         public final String name;
@@ -53,23 +53,6 @@ public class ArchitectureCommandFrame extends CommandFrame {
         }
     }
 
-    private class InternalPortraitType {
-        public final Rectangle position;
-        public final Color borderColor;
-        public final String name;
-        public final String fieldFirst;
-
-        public Person leader;
-        public boolean leaderSet;
-
-        public InternalPortraitType(Rectangle position, Color borderColor, String name, String fieldFirst) {
-            this.position = position;
-            this.borderColor = borderColor;
-            this.name = name;
-            this.fieldFirst = fieldFirst;
-        }
-    }
-
     public static final String RES_PATH = CommandFrame.RES_PATH + "Architecture" + File.separator;
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
 
@@ -78,28 +61,11 @@ public class ArchitectureCommandFrame extends CommandFrame {
     private StateTexture internal, military, officer, tactics, facility;
     private Rectangle internalPos, militaryPos, officerPos, tacticsPos, facilityPos;
 
-    private Texture portraitBorder;
-
-    private Rectangle mayorPortraitPos;
-
-    private StateTexture assign, commerce, agriculture, technology, morale, endurance;
-    private Rectangle assignPos, commercePos, agriculturePos, technologyPos, moralePos, endurancePos;
-
-    private Rectangle factionColor;
-    private Color factionBorder;
-
-    private List<TextWidget<TextType>> textWidgets = new ArrayList<>();
-    private List<InternalPortraitType> internalPortraits = new ArrayList<>();
-
-    private EnumMap<TabType, Texture> backgrounds = new EnumMap<>(TabType.class);
     private TabType currentTab = TabType.INTERNAL;
 
     private Architecture currentArchitecture;
 
-    private boolean mayorSet;
-    private Person mayor;
-
-    private ShapeRenderer shapeRenderer = new ShapeRenderer();
+    private EnumMap<TabType, CommandTab> tabs = new EnumMap<>(TabType.class);
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "ArchitectureCommandFrameData.xml");
@@ -132,76 +98,10 @@ public class ArchitectureCommandFrame extends CommandFrame {
             }
 
             NodeList internalNodes = dom.getElementsByTagName("InternalTab").item(0).getChildNodes();
-            for (int i = 0; i < internalNodes.getLength(); ++i) {
-                Node n = internalNodes.item(i);
-                if (n.getNodeName().equals("Background")) {
-                    backgrounds.put(TabType.INTERNAL, new Texture(Gdx.files.external(
-                            DATA_PATH + XmlHelper.loadAttribute(n, "FileName")
-                    )));
-                } else if (n.getNodeName().equals("MayorPortrait")) {
-                    mayorPortraitPos = XmlHelper.loadRectangleFromXml(n);
-                    portraitBorder = new Texture(Gdx.files.external
-                            (DATA_PATH + XmlHelper.loadAttribute(n, "Border")));
-                } else if (n.getNodeName().equals("Assign")) {
-                    assign = StateTexture.fromXml(DATA_PATH, n);
-                    assignPos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("Agriculture")) {
-                    agriculture = StateTexture.fromXml(DATA_PATH, n);
-                    agriculturePos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("Commerce")) {
-                    commerce = StateTexture.fromXml(DATA_PATH, n);
-                    commercePos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("Technology")) {
-                    technology = StateTexture.fromXml(DATA_PATH, n);
-                    technologyPos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("Morale")) {
-                    morale = StateTexture.fromXml(DATA_PATH, n);
-                    moralePos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("Endurance")) {
-                    endurance = StateTexture.fromXml(DATA_PATH, n);
-                    endurancePos = XmlHelper.loadRectangleFromXml(n);
-                } else if (n.getNodeName().equals("FactionColor")) {
-                    factionColor = XmlHelper.loadRectangleFromXml(n);
-                    factionBorder = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "BorderColor")));
-                } else if (n.getNodeName().equals("StaticText")) {
-                    TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
-                    widget.setExtra(new TextType(
-                            XmlHelper.loadRectangleFromXmlOptSize(n),
-                            true,
-                            XmlHelper.loadAttribute(n, "Text"),
-                            widget.getColor()
-                    ));
-                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
-                    textWidgets.add(widget);
-                } else if (n.getNodeName().equals("DetailText")) {
-                    TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
-                    widget.setExtra(new TextType(
-                            XmlHelper.loadRectangleFromXmlOptSize(n),
-                            false,
-                            XmlHelper.loadAttribute(n, "Field"),
-                            widget.getColor()
-                    ));
-                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
-                    textWidgets.add(widget);
-                } else if (n.getNodeName().equals("InternalDevelopRate")) {
-                    TextWidget<TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
-                    widget.setExtra(new TextType(
-                            XmlHelper.loadRectangleFromXmlOptSize(n),
-                            false,
-                            XmlHelper.loadAttribute(n, "Field"),
-                            XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "FallingFontColor")))
-                    ));
-                    widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
-                    textWidgets.add(widget);
-                } else if (n.getNodeName().equals("InternalPortrait")) {
-                    internalPortraits.add(new InternalPortraitType(
-                            XmlHelper.loadRectangleFromXml(n),
-                            XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "BorderColor"))),
-                            XmlHelper.loadAttribute(n, "Field"),
-                            XmlHelper.loadAttribute(n, "FieldFirst")
-                    ));
-                }
-            }
+            CommandTab internalTab = new InternalCommandTab(this);
+            internalTab.loadXml(internalNodes);
+            tabs.put(TabType.INTERNAL, internalTab);
+
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ArchitectureCommandFrameData.xml", e);
         }
@@ -223,28 +123,19 @@ public class ArchitectureCommandFrame extends CommandFrame {
         this.setVisible(true);
     }
 
-    private void updateMayor() {
-        mayor = currentArchitecture.getMayor();
-        mayorSet = true;
+    Architecture getCurrentArchitecture() {
+        return currentArchitecture;
     }
 
-    @SuppressWarnings("Unchecked")
-    private void updateInternal(InternalPortraitType type) {
-        type.leader = ((GameObjectList<Person>) currentArchitecture.getField(type.name))
-                .sort((x,y) -> -Integer.compare((int) x.getField(type.fieldFirst), (int) y.getField(type.fieldFirst)))
-                .getFirst();
-        type.leaderSet = true;
-    }
-
-    private void updateInternal() {
-        internalPortraits.forEach(this::updateInternal);
+    GameScreen getScreen() {
+        return screen;
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
 
-        batch.draw(backgrounds.get(currentTab), getX(), getY(), getWidth(), getHeight());
+        tabs.get(currentTab).drawBackground(batch, parentAlpha);
 
         batch.draw(internal.get(), getX() + internalPos.x, getY() + internalPos.y, internalPos.width, internalPos.height);
         batch.draw(military.get(), getX() + militaryPos.x, getY() + militaryPos.y, militaryPos.width, militaryPos.height);
@@ -252,80 +143,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         batch.draw(tactics.get(), getX() + tacticsPos.x, getY() + tacticsPos.y, tacticsPos.width, tacticsPos.height);
         batch.draw(facility.get(), getX() + facilityPos.x, getY() + facilityPos.y, facilityPos.width, facilityPos.height);
 
-        if (!mayorSet) {
-            updateMayor();
-        }
-        batch.draw(portraitBorder, getX() + mayorPortraitPos.x, getY() + mayorPortraitPos.y,
-                mayorPortraitPos.width, mayorPortraitPos.height);
-        if (mayor != null) {
-            batch.draw(screen.getSmallPortrait(mayor.getPortraitId()), getX() + mayorPortraitPos.x, getY() + mayorPortraitPos.y,
-                    mayorPortraitPos.width, mayorPortraitPos.height);
-        }
-
-        batch.draw(assign.get(), getX() + assignPos.x, getY() + assignPos.y, assignPos.width, assignPos.height);
-        batch.draw(agriculture.get(), getX() + agriculturePos.x, getY() + agriculturePos.y, agriculturePos.width, agriculturePos.height);
-        batch.draw(commerce.get(), getX() + commercePos.x, getY() + commercePos.y, commercePos.width, commercePos.height);
-        batch.draw(technology.get(), getX() + technologyPos.x, getY() + technologyPos.y, technologyPos.width, technologyPos.height);
-        batch.draw(morale.get(), getX() + moralePos.x, getY() + moralePos.y, moralePos.width, moralePos.height);
-        batch.draw(endurance.get(), getX() + endurancePos.x, getY() + endurancePos.y, endurancePos.width, endurancePos.height);
-
-        batch.end();
-
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.begin();
-
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-        Faction f = currentArchitecture.getBelongedFaction();
-        shapeRenderer.setColor(f == null ? GlobalVariables.blankColor : f.getColor());
-        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
-                factionColor.getWidth(), factionColor.getHeight());
-
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-
-        shapeRenderer.setColor(factionBorder);
-        shapeRenderer.rect(getX() + factionColor.getX(), getY() + factionColor.getY(),
-                factionColor.getWidth(), factionColor.getHeight());
-
-        shapeRenderer.end();
-
-        batch.begin();
-
-        for (TextWidget<TextType> textWidget : textWidgets) {
-            textWidget.setPosition(textWidget.getExtra().position.x + getX(), textWidget.getExtra().position.y + getY());
-            if (textWidget.getExtra().staticText) {
-                textWidget.setText(textWidget.getExtra().name);
-            } else {
-                textWidget.setText(currentArchitecture.getFieldString(textWidget.getExtra().name));
-            }
-            textWidget.draw(batch, parentAlpha);
-        }
-
-        for (InternalPortraitType internalPortraitType : internalPortraits) {
-            batch.end();
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-            shapeRenderer.setColor(internalPortraitType.borderColor);
-            shapeRenderer.rect(getX() + internalPortraitType.position.x, getY() + internalPortraitType.position.y,
-                    internalPortraitType.position.width, internalPortraitType.position.height);
-
-            shapeRenderer.end();
-
-            batch.begin();
-
-            if (!internalPortraitType.leaderSet) {
-                updateInternal(internalPortraitType);
-            }
-            if (internalPortraitType.leader != null) {
-                batch.draw(screen.getSmallPortrait(internalPortraitType.leader.getPortraitId()),
-                        getX() + internalPortraitType.position.x, getY() + internalPortraitType.position.y,
-                        internalPortraitType.position.width, internalPortraitType.position.height);
-            }
-        }
+        tabs.get(currentTab).draw(batch, parentAlpha);
     }
 
     public void dispose() {
@@ -334,9 +152,8 @@ public class ArchitectureCommandFrame extends CommandFrame {
         military.dispose();
         officer.dispose();
         tactics.dispose();
-        endurance.dispose();
-        textWidgets.forEach(TextWidget::dispose);
-        backgrounds.values().forEach(Texture::dispose);
+        facility.dispose();
+        tabs.values().forEach(CommandTab::dispose);
     }
 
     public class Listener extends InputListener {
@@ -369,36 +186,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     facility.setState(currentTab == TabType.FACILITY ? StateTexture.State.SELECTED : StateTexture.State.NORMAL);
                 }
 
-                if (assignPos.contains(x, y) && currentArchitecture.canChangeMayor()) {
-                    assign.setState(StateTexture.State.SELECTED);
-                } else {
-                    assign.setState(StateTexture.State.NORMAL);
-                }
-                if (agriculturePos.contains(x, y)) {
-                    agriculture.setState(StateTexture.State.SELECTED);
-                } else {
-                    agriculture.setState(StateTexture.State.NORMAL);
-                }
-                if (commercePos.contains(x, y)) {
-                    commerce.setState(StateTexture.State.SELECTED);
-                } else {
-                    commerce.setState(StateTexture.State.NORMAL);
-                }
-                if (technologyPos.contains(x, y)) {
-                    technology.setState(StateTexture.State.SELECTED);
-                } else {
-                    technology.setState(StateTexture.State.NORMAL);
-                }
-                if (endurancePos.contains(x, y)) {
-                    endurance.setState(StateTexture.State.SELECTED);
-                } else {
-                    endurance.setState(StateTexture.State.NORMAL);
-                }
-                if (moralePos.contains(x, y)) {
-                    morale.setState(StateTexture.State.SELECTED);
-                } else {
-                    morale.setState(StateTexture.State.NORMAL);
-                }
+                tabs.get(currentTab).onMouseMove(x, y);
             }
 
             return false;
@@ -407,71 +195,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
-                if (assignPos.contains(x, y) && currentArchitecture.canChangeMayor()) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersons(), TabListGameFrame.Selection.SINGLE,
-                            selectedItems -> {
-                                currentArchitecture.changeMayor((Person) selectedItems.get(0));
-                                updateMayor();
-                                updateInternal();
-                            });
-                    assign.setState(StateTexture.State.NORMAL);
-                } else if (agriculturePos.contains(x, y)) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
-                            selectedItems -> {
-                                for (GameObject i : selectedItems) {
-                                    Person p = (Person) i;
-                                    p.setDoingWork(Person.DoingWork.AGRICULTURE);
-                                }
-                                updateInternal();
-                            });
-                    agriculture.setState(StateTexture.State.NORMAL);
-                } else if (commercePos.contains(x, y)) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.COMMERCE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
-                            selectedItems -> {
-                                for (GameObject i : selectedItems) {
-                                    Person p = (Person) i;
-                                    p.setDoingWork(Person.DoingWork.COMMERCE);
-                                }
-                                updateInternal();
-                            });
-                    commerce.setState(StateTexture.State.NORMAL);
-                } else if (technologyPos.contains(x, y)) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
-                            selectedItems -> {
-                                for (GameObject i : selectedItems) {
-                                    Person p = (Person) i;
-                                    p.setDoingWork(Person.DoingWork.TECHNOLOGY);
-                                }
-                                updateInternal();
-                            });
-                    technology.setState(StateTexture.State.NORMAL);
-                } else if (moralePos.contains(x, y)) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
-                            selectedItems -> {
-                                for (GameObject i : selectedItems) {
-                                    Person p = (Person) i;
-                                    p.setDoingWork(Person.DoingWork.MORALE);
-                                }
-                                updateInternal();
-                            });
-                    morale.setState(StateTexture.State.NORMAL);
-                } else if (endurancePos.contains(x, y)) {
-                    screen.showTabList(GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE), TabListGameFrame.ListKindType.PERSON,
-                            currentArchitecture.getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
-                            selectedItems -> {
-                                for (GameObject i : selectedItems) {
-                                    Person p = (Person) i;
-                                    p.setDoingWork(Person.DoingWork.ENDURANCE);
-                                }
-                                updateInternal();
-                            });
-                    endurance.setState(StateTexture.State.NORMAL);
-                }
+                tabs.get(currentTab).onClick(x, y);
             }
 
             return false;
