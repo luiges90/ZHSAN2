@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
-    <PortraitBorder FileName="Portrait.png"/>
     <Tabs>
         <Internal FileName="Internal.png" Selected="InternalSelected.png" X="30" Y="320" Width="39" Height="22"/>
         <Military FileName="Military.png" Selected="MilitarySelected.png" X="70" Y="320" Width="39" Height="22"/>
@@ -10,7 +9,7 @@
     </Tabs>
     <InternalTab>
         <Background FileName="Internal/Background.png" />
-        <MayorPortrait X="20" Y="246" Width="64" Height="80" />
+        <MayorPortrait X="20" Y="246" Width="64" Height="80" Border="Internal/Portrait.png"/>
         <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="232" Width="39" Height="22"/>
         <FactionColor X="200" Y="298" Width="16" Height="16" BorderColor="4294967040"/>
         <StaticText X="78" Y="300" Text="勢力"

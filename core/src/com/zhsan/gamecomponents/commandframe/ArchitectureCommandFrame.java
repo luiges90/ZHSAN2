@@ -110,10 +110,6 @@ public class ArchitectureCommandFrame extends CommandFrame {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
 
-            portraitBorder = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(
-                dom.getElementsByTagName("PortraitBorder").item(0), "FileName"
-            )));
-
             NodeList tabNodes = dom.getElementsByTagName("Tabs").item(0).getChildNodes();
             for (int i = 0; i < tabNodes.getLength(); ++i) {
                 Node n = tabNodes.item(i);
@@ -144,6 +140,8 @@ public class ArchitectureCommandFrame extends CommandFrame {
                     )));
                 } else if (n.getNodeName().equals("MayorPortrait")) {
                     mayorPortraitPos = XmlHelper.loadRectangleFromXml(n);
+                    portraitBorder = new Texture(Gdx.files.external
+                            (DATA_PATH + XmlHelper.loadAttribute(n, "Border")));
                 } else if (n.getNodeName().equals("Assign")) {
                     assign = StateTexture.fromXml(DATA_PATH, n);
                     assignPos = XmlHelper.loadRectangleFromXml(n);
