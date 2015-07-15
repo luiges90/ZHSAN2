@@ -225,12 +225,25 @@
     </InternalTab>
     <MilitaryTab>
         <Background FileName="Military/Background.png" />
-        <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png"/>
-        <New FileName="Military/New.png" Selected="Military/NewSelected.png" />
-        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" />
-        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png"/>
-        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" />
-        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png"/>
-        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png"/>
+        <Portraits X="32" Y="140" Width="240" Height="160" />
+        <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png" X="30" Y="116" Width="39" Height="22"/>
+        <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="70" Y="116" Width="39" Height="22"/>
+        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" X="110" Y="116" Width="39" Height="22"/>
+        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png" X="150" Y="116" Width="39" Height="22"/>
+        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png" X="190" Y="116" Width="39" Height="22"/>
+        <StaticText X="30" Y="96" Text="兵種"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294934528"
+                    Align="Center" Width="39"/>
+        <StaticText X="70" Y="96" Text="兵數"
+                    FontName="方正隶变_GBK"
+                    FontSize="16"
+                    FontStyle="Bold"
+                    FontColor="4294934528"
+                    Align="Center" Width="80"/>
+        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" X="150" Y="92" Width="39" Height="22"/>
+        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="190" Y="92" Width="39" Height="22"/>
     </MilitaryTab>
 </Root>

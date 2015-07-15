@@ -67,6 +67,30 @@ public class ArchitectureCommandFrame extends CommandFrame {
 
     private EnumMap<TabType, CommandTab> tabs = new EnumMap<>(TabType.class);
 
+    public static final void loadText(Node n, List<TextWidget<ArchitectureCommandFrame.TextType>> textWidgets) {
+        if (n.getNodeName().equals("StaticText")) {
+            TextWidget<ArchitectureCommandFrame.TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
+            widget.setExtra(new ArchitectureCommandFrame.TextType(
+                    XmlHelper.loadRectangleFromXmlOptSize(n),
+                    true,
+                    XmlHelper.loadAttribute(n, "Text"),
+                    widget.getColor()
+            ));
+            widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
+            textWidgets.add(widget);
+        } else if (n.getNodeName().equals("DetailText")) {
+            TextWidget<ArchitectureCommandFrame.TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
+            widget.setExtra(new ArchitectureCommandFrame.TextType(
+                    XmlHelper.loadRectangleFromXmlOptSize(n),
+                    false,
+                    XmlHelper.loadAttribute(n, "Field"),
+                    widget.getColor()
+            ));
+            widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
+            textWidgets.add(widget);
+        }
+    }
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "ArchitectureCommandFrameData.xml");
 
@@ -101,6 +125,11 @@ public class ArchitectureCommandFrame extends CommandFrame {
             CommandTab internalTab = new InternalCommandTab(this);
             internalTab.loadXml(internalNodes);
             tabs.put(TabType.INTERNAL, internalTab);
+
+            NodeList militaryNodes = dom.getElementsByTagName("MilitaryTab").item(0).getChildNodes();
+            CommandTab militaryTab = new MilitaryCommandTab(this);
+            militaryTab.loadXml(militaryNodes);
+            tabs.put(TabType.MILITARY, militaryTab);
 
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ArchitectureCommandFrameData.xml", e);
@@ -192,8 +221,23 @@ public class ArchitectureCommandFrame extends CommandFrame {
             return false;
         }
 
+        private void unselectAllTabs() {
+            internal.setState(StateTexture.State.NORMAL);
+            military.setState(StateTexture.State.NORMAL);
+        }
+
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            if (internalPos.contains(x, y)) {
+                currentTab = TabType.INTERNAL;
+                unselectAllTabs();
+                internal.setState(StateTexture.State.SELECTED);
+            } else if (militaryPos.contains(x, y)){
+                currentTab = TabType.MILITARY;
+                unselectAllTabs();
+                military.setState(StateTexture.State.SELECTED);
+            }
+
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
                 tabs.get(currentTab).onClick(x, y);
             }

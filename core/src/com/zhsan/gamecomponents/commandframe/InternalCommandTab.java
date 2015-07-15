@@ -99,27 +99,7 @@ public class InternalCommandTab implements CommandTab {
             } else if (n.getNodeName().equals("FactionColor")) {
                 factionColor = XmlHelper.loadRectangleFromXml(n);
                 factionBorder = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(n, "BorderColor")));
-            } else if (n.getNodeName().equals("StaticText")) {
-                TextWidget<ArchitectureCommandFrame.TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
-                widget.setExtra(new ArchitectureCommandFrame.TextType(
-                        XmlHelper.loadRectangleFromXmlOptSize(n),
-                        true,
-                        XmlHelper.loadAttribute(n, "Text"),
-                        widget.getColor()
-                ));
-                widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
-                textWidgets.add(widget);
-            } else if (n.getNodeName().equals("DetailText")) {
-                TextWidget<ArchitectureCommandFrame.TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
-                widget.setExtra(new ArchitectureCommandFrame.TextType(
-                        XmlHelper.loadRectangleFromXmlOptSize(n),
-                        false,
-                        XmlHelper.loadAttribute(n, "Field"),
-                        widget.getColor()
-                ));
-                widget.setSize(widget.getExtra().position.width, widget.getExtra().position.height);
-                textWidgets.add(widget);
-            } else if (n.getNodeName().equals("InternalDevelopRate")) {
+            }  else if (n.getNodeName().equals("InternalDevelopRate")) {
                 TextWidget<ArchitectureCommandFrame.TextType> widget = new TextWidget<>(TextWidget.Setting.fromXml(n));
                 widget.setExtra(new ArchitectureCommandFrame.TextType(
                         XmlHelper.loadRectangleFromXmlOptSize(n),
@@ -136,6 +116,8 @@ public class InternalCommandTab implements CommandTab {
                         XmlHelper.loadAttribute(n, "Field"),
                         XmlHelper.loadAttribute(n, "FieldFirst")
                 ));
+            } else {
+                ArchitectureCommandFrame.loadText(n, textWidgets);
             }
         }
 
