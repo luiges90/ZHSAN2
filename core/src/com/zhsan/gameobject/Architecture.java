@@ -2,16 +2,22 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
 import com.zhsan.common.Utility;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.lua.LuaAI;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -35,24 +41,45 @@ public class Architecture extends GameObject {
     private int fund, food;
     private float agriculture, commerce, technology, endurance, morale;
 
-    public Architecture(LoadingArchitecture from, GameScenario scenario) {
-        super(from.getId());
-        this.scenario = scenario;
+    private Architecture(int id) {
+        super(id);
+    }
 
-        this.name = from.getName();
-        this.nameImageName = from.getNameImageName();
-        this.location = from.getLocation();
-        this.architectureKind = scenario.getArchitectureKinds().get(from.getArchitectureKindId());
-        this.belongedSection = scenario.getSections().get(from.getBelongedSectionId());
+    public static final GameObjectList<Architecture> fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        GameObjectList<Architecture> result = new GameObjectList<>();
 
-        this.population = from.getPopulation();
-        this.fund = from.getFund();
-        this.food = from.getFood();
-        this.agriculture = from.getAgriculture();
-        this.commerce = from.getCommerce();
-        this.technology = from.getTechnology();
-        this.endurance = from.getEndurance();
-        this.morale = from.getMorale();
+        FileHandle f = root.child(Architecture.SAVE_FILE);
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
+            String[] line;
+            int index = 0;
+            while ((line = reader.readNext()) != null) {
+                index++;
+                if (index == 1) continue; // skip first line.
+
+                Architecture data = new Architecture(Integer.parseInt(line[0]));
+                data.nameImageName = line[1];
+                data.name = line[2];
+                data.architectureKind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
+                data.location = Point.fromCSVList(line[4]);
+                data.belongedSection = scen.getSections().get(Integer.parseInt(line[5]));
+                data.population = Integer.parseInt(line[6]);
+                data.fund = Integer.parseInt(line[7]);
+                data.food = Integer.parseInt(line[8]);
+                data.agriculture = Float.parseFloat(line[9]);
+                data.commerce = Float.parseFloat(line[10]);
+                data.technology = Float.parseFloat(line[11]);
+                data.morale = Float.parseFloat(line[12]);
+                data.endurance = Float.parseFloat(line[13]);
+
+                data.scenario = scen;
+
+                result.add(data);
+            }
+        } catch (IOException e) {
+            throw new FileReadException(f.path(), e);
+        }
+
+        return result;
     }
 
     public static final void toCSV(FileHandle root, GameObjectList<Architecture> data) {

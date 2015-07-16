@@ -2,13 +2,20 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.lua.LuaAI;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.concurrent.RecursiveAction;
 
 /**
@@ -19,18 +26,66 @@ public class Faction extends GameObject {
     public static final String SAVE_FILE = "Faction.csv";
 
     private String name;
+
+    private int leaderId;
     private Person leader;
 
     private GameScenario scenario;
 
     private Color color;
 
-    public Faction(LoadingFaction from, GameScenario scenario) {
-        super(from.getId());
-        this.scenario = scenario;
+    private Faction(int id) {
+        super(id);
+    }
 
-        this.name = from.getName();
-        this.color = from.getColor();
+    public static final GameObjectList<Faction> fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        GameObjectList<Faction> result = new GameObjectList<>();
+
+        FileHandle f = root.child(Faction.SAVE_FILE);
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
+            String[] line;
+            int index = 0;
+            while ((line = reader.readNext()) != null) {
+                index++;
+                if (index == 1) continue; // skip first line.
+
+                Faction t = new Faction(Integer.parseInt(line[0]));
+                t.name = line[1];
+                t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
+                t.leaderId = Integer.parseInt(line[3]);
+
+                t.scenario = scen;
+
+                result.add(t);
+            }
+
+            return result;
+        } catch (IOException e) {
+            throw new FileReadException(f.path(), e);
+        }
+    }
+
+    public static final GameObjectList<Faction> fromCSVQuick(FileHandle root) {
+        GameObjectList<Faction> result = new GameObjectList<>();
+
+        FileHandle f = root.child(Faction.SAVE_FILE);
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
+            String[] line;
+            int index = 0;
+            while ((line = reader.readNext()) != null) {
+                index++;
+                if (index == 1) continue; // skip first line.
+
+                Faction t = new Faction(Integer.parseInt(line[0]));
+                t.name = line[1];
+ 
+                result.add(t);
+            }
+
+            return result;
+        } catch (IOException e) {
+            throw new FileReadException(f.path(), e);
+        }
     }
 
     public static final void toCSV(FileHandle root, GameObjectList<Faction> data) {
@@ -49,6 +104,10 @@ public class Faction extends GameObject {
             throw new FileWriteException(f.path(), e);
         }
 
+    }
+
+    int getLeaderId() {
+        return leaderId;
     }
 
     @Override

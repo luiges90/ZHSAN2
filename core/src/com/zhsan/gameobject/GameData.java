@@ -44,11 +44,7 @@ public class GameData {
                 } else {
                     data.currentPlayer = null;
                 }
-                if (version == 1) {
-                    data.dayPassed = Integer.parseInt(line[5]);
-                } else {
-                    data.dayPassed = Integer.parseInt(line[1]);
-                }
+                data.dayPassed = Integer.parseInt(line[1]);
 
                 return data;
             }

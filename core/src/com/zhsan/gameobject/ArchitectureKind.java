@@ -28,13 +28,7 @@ public class ArchitectureKind extends GameObject {
         super(id);
     }
 
-    public static final GameObjectList<ArchitectureKind> fromCSV(FileHandle root, @NotNull GameScenario scen, FileHandle defaultRoot, int defaultVersion) {
-        int version = defaultRoot == null ? defaultVersion : scen.getGameSurvey().getVersion();
-
-        if (version == 1) {
-            return fromCSV(defaultRoot, scen, null, defaultVersion);
-        }
-
+    public static final GameObjectList<ArchitectureKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<ArchitectureKind> result = new GameObjectList<>();
 
         FileHandle f = root.child(SAVE_FILE);

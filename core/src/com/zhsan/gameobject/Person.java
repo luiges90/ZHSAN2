@@ -1,12 +1,17 @@
 package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.Pair;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.lua.LuaAI;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -42,7 +47,11 @@ public class Person extends GameObject {
         }
     }
 
-    private class LocationType {
+    private static class LocationType {
+
+        private static final int NONE = -1;
+        private static final int ARCHITECTURE = 1;
+
         private final Architecture architecture;
 
         public LocationType(Architecture architecture) {
@@ -56,18 +65,36 @@ public class Person extends GameObject {
             return null;
         }
 
-        public LoadingPerson.LoadingLocationType getLoadingLocationType() {
-            if (architecture != null) {
-                return LoadingPerson.LoadingLocationType.ARCHITECTURE;
-            }
-            return LoadingPerson.LoadingLocationType.NONE;
-        }
-
-        public int getLoadingLocationId() {
+        public int getLocationId() {
             if (architecture != null) {
                 return architecture.getId();
             }
             return -1;
+        }
+
+        public static LocationType fromCSV(String type, String id, GameScenario scen) {
+            int typeInt = Integer.parseInt(type);
+            if (typeInt == NONE) {
+                return new LocationType(null);
+            } else {
+                return new LocationType(scen.getArchitectures().get(Integer.parseInt(id)));
+            }
+        }
+
+        public Pair<String, String> toCSV() {
+            int type, id;
+            if (architecture != null) {
+                type = ARCHITECTURE;
+                id = architecture.getId();
+            } else {
+                type = NONE;
+                id = -1;
+            }
+            return new Pair<>(String.valueOf(type), String.valueOf(id));
+        }
+
+        public static Pair<String, String> nullToCSV() {
+            return new Pair<>(String.valueOf(NONE), String.valueOf(-1));
         }
     }
 
@@ -119,31 +146,46 @@ public class Person extends GameObject {
 
     private int movingDays = 0;
 
-    public Person(LoadingPerson from, GameScenario scenario) {
-        super(from.getId());
-        this.scenario = scenario;
+    private Person(int id) {
+        super(id);
+    }
 
-        this.portraitId = from.getPortraitId();
-        this.surname = from.getSurname();
-        this.givenName = from.getGivenName();
-        this.calledName = from.getCalledName();
-        this.state = from.getState();
-        this.command = from.getCommand();
-        this.strength = from.getStrength();
-        this.intelligence = from.getIntelligence();
-        this.politics = from.getPolitics();
-        this.glamour = from.getGlamour();
-        this.doingWork = from.getDoingWork();
+    public static final GameObjectList<Person> fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        GameObjectList<Person> result = new GameObjectList<>();
 
-        switch (from.getLoadingLocationType()) {
-            case ARCHITECTURE:
-                this.location = new LocationType(scenario.getArchitectures().get(from.getLocationId()));
+        FileHandle f = root.child(Person.SAVE_FILE);
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
+            String[] line;
+            int index = 0;
+            while ((line = reader.readNext()) != null) {
+                index++;
+                if (index == 1) continue; // skip first line.
+
+                Person data = new Person(Integer.parseInt(line[0]));
+
+                data.portraitId = Integer.parseInt(line[1]);
+                data.surname = line[2];
+                data.givenName = line[3];
+                data.calledName = line[4];
+                data.state = Person.State.fromCSV(line[5]);
+                data.location = LocationType.fromCSV(line[6], line[7], scen);
+                data.movingDays = Integer.parseInt(line[8]);
+                data.strength = Integer.parseInt(line[9]);
+                data.command = Integer.parseInt(line[10]);
+                data.intelligence = Integer.parseInt(line[11]);
+                data.politics = Integer.parseInt(line[12]);
+                data.glamour = Integer.parseInt(line[13]);
+                data.doingWork = Person.DoingWork.fromCSV(line[14]);
+
+                data.scenario = scen;
+
+                result.add(data);
+            }
+        } catch (IOException e) {
+            throw new FileReadException(f.path(), e);
         }
 
-        if (this.getBelongedFaction() != null && from.getLeaderFactionId() == this.getBelongedFaction().getId() &&
-                (this.getState() == State.NORMAL || this.getState() == State.CAPTIVE)) {
-            this.getBelongedFaction().setLeaderUnchecked(this);
-        }
+        return result;
     }
 
     public static final void toCSV(FileHandle root, GameObjectList<Person> data) {
@@ -151,6 +193,7 @@ public class Person extends GameObject {
         try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.PERSON_SAVE_HEADER).split(","));
             for (Person d : data) {
+                Pair<String, String> savedLocation = d.location == null ? LocationType.nullToCSV() : d.location.toCSV();
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
                         String.valueOf(d.portraitId),
@@ -158,8 +201,8 @@ public class Person extends GameObject {
                         d.givenName,
                         d.calledName,
                         d.state.toCSV(),
-                        d.location == null ? "-1" : d.location.getLoadingLocationType().toCSV(),
-                        String.valueOf(d.location == null ? "-1" : d.location.getLoadingLocationId()),
+                        savedLocation.x,
+                        savedLocation.y,
                         String.valueOf(d.movingDays),
                         String.valueOf(d.command),
                         String.valueOf(d.strength),

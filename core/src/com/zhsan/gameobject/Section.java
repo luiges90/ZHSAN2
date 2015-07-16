@@ -1,12 +1,18 @@
 package com.zhsan.gameobject;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.lua.LuaAI;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashSet;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -21,12 +27,34 @@ public class Section extends GameObject {
 
     private Faction belongedFaction;
 
-    public Section(LoadingSection from, GameScenario scenario) {
-        super(from.getId());
-        this.scenario = scenario;
+    private Section(int id) {
+        super(id);
+    }
 
-        this.name = from.getName();
-        this.belongedFaction = scenario.getFactions().get(from.getBelongedFactionId());
+    public static final GameObjectList<Section> fromCSV(FileHandle root, @NotNull GameScenario scen) {
+        GameObjectList<Section> result = new GameObjectList<>();
+
+        FileHandle f = root.child(Section.SAVE_FILE);
+        try (CSVReader reader = new CSVReader(new InputStreamReader(f.read(), "UTF-8"))) {
+            String[] line;
+            int index = 0;
+            while ((line = reader.readNext()) != null) {
+                index++;
+                if (index == 1) continue; // skip first line.
+
+                Section data = new Section(Integer.parseInt(line[0]));
+                data.name = line[1];
+                data.belongedFaction = scen.getFactions().get(Integer.parseInt(line[2]));
+
+                data.scenario = scen;
+
+                result.add(data);
+            }
+        } catch (IOException e) {
+            throw new FileReadException(f.path(), e);
+        }
+
+        return result;
     }
 
     public static final void toCSV(FileHandle root, GameObjectList<Section> data) {

@@ -44,17 +44,10 @@ public final class TerrainDetail extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 TerrainDetailBuilder builder = new TerrainDetailBuilder();
-                if (version == 1) {
-                    builder.setId(Integer.parseInt(line[0]));
-                    builder.setName(line[1]);
-                    builder.setCanBeViewedThrough(Boolean.parseBoolean(line[3]));
-                    builder.setFireDamageRate(Float.parseFloat(line[14]));
-                } else {
-                    builder.setId(Integer.parseInt(line[0]));
-                    builder.setName(line[1]);
-                    builder.setCanBeViewedThrough(Boolean.parseBoolean(line[2]));
-                    builder.setFireDamageRate(Float.parseFloat(line[3]));
-                }
+                builder.setId(Integer.parseInt(line[0]));
+                builder.setName(line[1]);
+                builder.setCanBeViewedThrough(Boolean.parseBoolean(line[2]));
+                builder.setFireDamageRate(Float.parseFloat(line[3]));
 
                 result.add(builder.createTerrainDetail());
             }
