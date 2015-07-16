@@ -93,6 +93,8 @@ public class GameScenario {
     }
 
     private final void setupLeaders() {
+        factions.forEach(f -> f.setLeader(this.getPersons().get(f.getLeaderId())));
+
         factions.remove(f -> f.getPersons().size() == 0);
         factions.forEach(f -> {
             if (f.getLeaderUnchecked() == null) {

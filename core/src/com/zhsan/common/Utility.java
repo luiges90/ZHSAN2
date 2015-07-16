@@ -84,8 +84,7 @@ public class Utility {
         @Override
         public Set<Characteristics> characteristics() {
             return Collections.unmodifiableSet(EnumSet.of(
-                    Characteristics.CONCURRENT,
-                    Characteristics.UNORDERED));
+                    Characteristics.CONCURRENT));
         }
     }
 
