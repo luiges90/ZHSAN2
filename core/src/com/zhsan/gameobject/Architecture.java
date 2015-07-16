@@ -66,7 +66,7 @@ public class Architecture extends GameObject {
                         d.getName(),
                         String.valueOf(d.architectureKind.getId()),
                         Point.toCSVList(d.location),
-                        String.valueOf(d.belongedSection.getId()),
+                        String.valueOf(d.belongedSection == null ? -1 : d.belongedSection.getId()),
                         String.valueOf(d.population),
                         String.valueOf(d.fund),
                         String.valueOf(d.food),
