@@ -64,8 +64,29 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     @Override
     public Iterator<T> iterator() {
-        // TODO make this be unmodifiable
-        return content.values().iterator();
+        return new Iterator<T>() {
+            private Iterator<T> parent = content.values().iterator();
+
+            @Override
+            public boolean hasNext() {
+                return parent.hasNext();
+            }
+
+            @Override
+            public T next() {
+                return parent.next();
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("This list has been made unmodifiable");
+            }
+
+            @Override
+            public void forEachRemaining(Consumer<? super T> action) {
+                parent.forEachRemaining(action);
+            }
+        };
     }
 
     public GameObjectList<T> filter(Predicate<T> predicate) {
