@@ -10,7 +10,7 @@
         internalGrowthFactor="0.01"
         mayorInternalWorkEfficiency="0.3"
         internalDrop="0.75"
-        internalCost="200"
+        internalCost="20"
         gainFund="1.0f"
         gainFood="60.0f"
         gainFundPerPopulation="0.003f"

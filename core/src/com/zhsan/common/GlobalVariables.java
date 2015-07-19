@@ -36,7 +36,7 @@ public final class GlobalVariables {
     public static float internalGrowthFactor = 0.01f;
     public static float mayorInternalWorkEfficiency = 0.3f;
     public static float internalDrop = 0.75f;
-    public static int internalCost = 200;
+    public static int internalCost = 20;
 
     public static float gainFund = 1.0f;
     public static float gainFood = 60.0f;
