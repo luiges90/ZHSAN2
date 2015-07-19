@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-	<StartButton X="463" Y="222" Width="180" Height="40" />
-    <LoadButton X="463" Y="280" Width="180" Height="40" />
-    <SettingButton X="463" Y="338" Width="180" Height="40" />
-    <CreditButton X="463" Y="396" Width="180" Height="40" />
-    <ExitButton X="463" Y="454" Width="180" Height="40" />
+    <StartButton X="463" Y="222" Width="180" Height="40"/>
+    <LoadButton X="463" Y="280" Width="180" Height="40"/>
+    <SettingButton X="463" Y="338" Width="180" Height="40"/>
+    <CreditButton X="463" Y="396" Width="180" Height="40"/>
+    <ExitButton X="463" Y="454" Width="180" Height="40"/>
 </Root>

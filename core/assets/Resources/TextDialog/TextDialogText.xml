@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <TextDialogTexts
-	ExitGame="您确定要退出游戏吗？未保存的游戏内容将会丢失。"
-	ExitSaveGame="您确定要退出游戏吗？游戏内容将会在离开前保存。"
-/>
+        ExitGame="您确定要退出游戏吗？未保存的游戏内容将会丢失。"
+        ExitSaveGame="您确定要退出游戏吗？游戏内容将会在离开前保存。"
+        />
 

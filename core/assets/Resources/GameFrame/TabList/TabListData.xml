@@ -1,160 +1,165 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-  <TabButton FileName="TabButton.png" Selected="TabButtonSelected.png"/>
-  <ColumnHeader Height="24" FileName="ColumnHeader.jpg"/>
-  <ScrollButton Width="16" FileName="ScrollButton.jpg"/>
-  <Arrows LeftFileName="LeftArrow.png" RightFileName="RightArrow.png"/>
-  <CheckBox Name="Selected" DisplayName="选择" Width="30" FileName="CheckBox.png" Selected="CheckBoxSelected.png"
-            RoundFileName="RoundCheckBox.png" RoundSelected="RoundCheckBoxSelected.png" Align="Middle"/>
-  <TabText FontName="方正隶变_GBK"
-           FontSize="13"
-           FontStyle="Bold"
-           FontColor="4290822336"
-           Align="Middle">
-  </TabText>
-  <ColumnText FontName="方正隶变_GBK"
-              FontSize="14"
-              FontStyle="Bold"
-              FontColor="4294967295"
-              Align="Middle">
-  </ColumnText>
-  <SoundFile Select="Select.wav"/>
-  <TabList RowHeight="25">
-      <ListKind ID="1" Name="Person" DisplayName="武將列表">
-          <Columns>
-              <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="姓名" MinWidth="100" DetailLevel="1"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Left">
-              </Column>
-              <Column ID="2" Name="BelongedFaction" IsNumber="false" DisplayName="势力" MinWidth="80" DetailLevel="1"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Middle">
-              </Column>
-              <Column ID="3" Name="Location" IsNumber="false" DisplayName="所在" MinWidth="80" DetailLevel="1"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Middle">
-              </Column>
-              <Column ID="4" Name="MovingDaysString" IsNumber="false" DisplayName="途中" MinWidth="60" DetailLevel="4"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Middle">
-              </Column>
-              <Column ID="10" Name="Command" IsNumber="true" DisplayName="统率" MinWidth="50" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="11" Name="Strength" IsNumber="true" DisplayName="武勇" MinWidth="50" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="12" Name="Intelligence" IsNumber="true" DisplayName="智谋" MinWidth="50" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="13" Name="Politics" IsNumber="true" DisplayName="政治" MinWidth="50" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="14" Name="Glamour" IsNumber="true" DisplayName="魅力" MinWidth="50" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="30" Name="DoingWorkString" IsNumber="false" DisplayName="工作" MinWidth="60" DetailLevel="2"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Middle">
-              </Column>
-              <Column ID="31" Name="AgricultureAbility" IsNumber="true" DisplayName="农业能力" MinWidth="80" DetailLevel="3"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="32" Name="CommerceAbility" IsNumber="true" DisplayName="商业能力" MinWidth="80" DetailLevel="3"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="33" Name="TechnologyAbility" IsNumber="true" DisplayName="技术能力" MinWidth="80" DetailLevel="3"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="34" Name="MoraleAbility" IsNumber="true" DisplayName="民心能力" MinWidth="80" DetailLevel="3"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-              <Column ID="35" Name="EnduranceAbility" IsNumber="true" DisplayName="耐久能力" MinWidth="80" DetailLevel="3"
-                      FontName="方正隶变_GBK"
-                      FontSize="14"
-                      FontStyle="Regular"
-                      FontColor="4294967295"
-                      Align="Right">
-              </Column>
-          </Columns>
-          <Tabs Margin="5">
-              <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4" />
-              <Tab ID="2" Name="Ability" DisplayName="能力" Columns="1 10 11 12 13 14" />
-              <Tab ID="3" Name="Internal" DisplayName="内政" Columns="1 30 31 32 33 34 35" />
-          </Tabs>
-      </ListKind>
-    <ListKind ID="2" Name="Architecture" DisplayName="建筑列表">
-      <Columns>
-        <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="名称" MinWidth="80" DetailLevel="1"
-                FontName="方正隶变_GBK"
+    <TabButton FileName="TabButton.png" Selected="TabButtonSelected.png"/>
+    <ColumnHeader Height="24" FileName="ColumnHeader.jpg"/>
+    <ScrollButton Width="16" FileName="ScrollButton.jpg"/>
+    <Arrows LeftFileName="LeftArrow.png" RightFileName="RightArrow.png"/>
+    <CheckBox Name="Selected" DisplayName="选择" Width="30" FileName="CheckBox.png" Selected="CheckBoxSelected.png"
+              RoundFileName="RoundCheckBox.png" RoundSelected="RoundCheckBoxSelected.png" Align="Middle"/>
+    <TabText FontName="方正隶变_GBK"
+             FontSize="13"
+             FontStyle="Bold"
+             FontColor="4290822336"
+             Align="Middle">
+    </TabText>
+    <ColumnText FontName="方正隶变_GBK"
                 FontSize="14"
-                FontStyle="Regular"
-                FontColor="4294967295"
-                Align="Left">
-        </Column>
-        <Column ID="2" Name="Kind" CountToDisplay="False" IsNumber="false" DisplayName="种类" MinWidth="80" DetailLevel="1"
-                FontName="方正隶变_GBK"
-                FontSize="14"
-                FontStyle="Regular"
+                FontStyle="Bold"
                 FontColor="4294967295"
                 Align="Middle">
-        </Column>
-      </Columns>
-      <Tabs Margin="5">
-        <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2">
-        </Tab>
-      </Tabs>
-    </ListKind>
-  </TabList>
+    </ColumnText>
+    <SoundFile Select="Select.wav"/>
+    <TabList RowHeight="25">
+        <ListKind ID="1" Name="Person" DisplayName="武將列表">
+            <Columns>
+                <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="姓名" MinWidth="100"
+                        DetailLevel="1"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Left">
+                </Column>
+                <Column ID="2" Name="BelongedFaction" IsNumber="false" DisplayName="势力" MinWidth="80" DetailLevel="1"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle">
+                </Column>
+                <Column ID="3" Name="Location" IsNumber="false" DisplayName="所在" MinWidth="80" DetailLevel="1"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle">
+                </Column>
+                <Column ID="4" Name="MovingDaysString" IsNumber="false" DisplayName="途中" MinWidth="60" DetailLevel="4"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle">
+                </Column>
+                <Column ID="10" Name="Command" IsNumber="true" DisplayName="统率" MinWidth="50" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="11" Name="Strength" IsNumber="true" DisplayName="武勇" MinWidth="50" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="12" Name="Intelligence" IsNumber="true" DisplayName="智谋" MinWidth="50" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="13" Name="Politics" IsNumber="true" DisplayName="政治" MinWidth="50" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="14" Name="Glamour" IsNumber="true" DisplayName="魅力" MinWidth="50" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="30" Name="DoingWorkString" IsNumber="false" DisplayName="工作" MinWidth="60" DetailLevel="2"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle">
+                </Column>
+                <Column ID="31" Name="AgricultureAbility" IsNumber="true" DisplayName="农业能力" MinWidth="80"
+                        DetailLevel="3"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="32" Name="CommerceAbility" IsNumber="true" DisplayName="商业能力" MinWidth="80" DetailLevel="3"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="33" Name="TechnologyAbility" IsNumber="true" DisplayName="技术能力" MinWidth="80"
+                        DetailLevel="3"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="34" Name="MoraleAbility" IsNumber="true" DisplayName="民心能力" MinWidth="80" DetailLevel="3"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+                <Column ID="35" Name="EnduranceAbility" IsNumber="true" DisplayName="耐久能力" MinWidth="80" DetailLevel="3"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
+            </Columns>
+            <Tabs Margin="5">
+                <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4"/>
+                <Tab ID="2" Name="Ability" DisplayName="能力" Columns="1 10 11 12 13 14"/>
+                <Tab ID="3" Name="Internal" DisplayName="内政" Columns="1 30 31 32 33 34 35"/>
+            </Tabs>
+        </ListKind>
+        <ListKind ID="2" Name="Architecture" DisplayName="建筑列表">
+            <Columns>
+                <Column ID="1" Name="Name" CountToDisplay="False" IsNumber="false" DisplayName="名称" MinWidth="80"
+                        DetailLevel="1"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Left">
+                </Column>
+                <Column ID="2" Name="Kind" CountToDisplay="False" IsNumber="false" DisplayName="种类" MinWidth="80"
+                        DetailLevel="1"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle">
+                </Column>
+            </Columns>
+            <Tabs Margin="5">
+                <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2">
+                </Tab>
+            </Tabs>
+        </ListKind>
+    </TabList>
 </Root>

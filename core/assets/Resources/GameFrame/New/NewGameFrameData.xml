@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
-	<Title title="选择剧本" />
-	<Margins value="16"/>
-	<Lists padding="8" selectedColor="4294967295"/>
-	<Scroll fileName="ScrollButton.jpg" />
-	<ScenarioList FontName="方正隶变_GBK"
-        FontSize="14"
-        FontStyle="Regular"
-        FontColor="4294967295"
-        Align="Left" />
+    <Title title="选择剧本"/>
+    <Margins value="16"/>
+    <Lists padding="8" selectedColor="4294967295"/>
+    <Scroll fileName="ScrollButton.jpg"/>
+    <ScenarioList FontName="方正隶变_GBK"
+                  FontSize="14"
+                  FontStyle="Regular"
+                  FontColor="4294967295"
+                  Align="Left"/>
     <ScenarioDescription FontName="方正隶变_GBK"
-        FontSize="14"
-        FontStyle="Regular"
-        FontColor="4294967295"
-        Align="Left" />
-	<FactionList FontName="方正隶变_GBK"
-        FontSize="14"
-        FontStyle="Regular"
-        FontColor="4294967295"
-        Align="Left" />
-	<FactionListCheckBox Unchecked="RoundCheckBox.png" Checked="RoundCheckBoxSelected.png" />
+                         FontSize="14"
+                         FontStyle="Regular"
+                         FontColor="4294967295"
+                         Align="Left"/>
+    <FactionList FontName="方正隶变_GBK"
+                 FontSize="14"
+                 FontStyle="Regular"
+                 FontColor="4294967295"
+                 Align="Left"/>
+    <FactionListCheckBox Unchecked="RoundCheckBox.png" Checked="RoundCheckBoxSelected.png"/>
 </Root>

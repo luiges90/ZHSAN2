@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-    <Background FileName="Background.png" />
-	<Margin bottom="16" />
+    <Background FileName="Background.png"/>
+    <Margin bottom="16"/>
     <ContentText X="64" Y="60" Width="470" Height="70"
-            FontName="方正隶变_GBK"
-            FontSize="16"
-            FontStyle="Regular"
-            FontColor="4294967295"
-            Align="Left"/>
-    <PageButton FileName="Page.png" X="648" Y="152" Width="20" Height="20" />
+                 FontName="方正隶变_GBK"
+                 FontSize="16"
+                 FontStyle="Regular"
+                 FontColor="4294967295"
+                 Align="Left"/>
+    <PageButton FileName="Page.png" X="648" Y="152" Width="20" Height="20"/>
 </Root>

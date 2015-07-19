@@ -1,21 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-  <LeftEdge Width="16" FileName="LeftEdge.png"/>
-  <RightEdge Width="16" FileName="RightEdge.png"/>
-  <TopEdge Width="48" FileName="TopEdge.png"/>
-  <BottomEdge Width="30" FileName="BottomEdge.png"/>
-  <BackGround FileName="BackGround.png"/>
-  <OKButton Width="95" Height="32" MarginRight="16" MarginBottom="16" FileName="OKButton.png" Selected="OKButtonSelected.png" Pressed="OKButtonPressed.png" Disabled="OKButtonDisabled.png"/>
-  <CancelButton Width="95" Height="32" MarginRight="127" MarginBottom="16" FileName="CancelButton.png" Selected="CancelButtonSelected.png" Pressed="CancelButtonPressed.png" Disabled="CancelButtonDisabled.png"/>
-  <Title FontName="方正隶变_GBK"
-         FontSize="18"
-         FontStyle="Bold"
-         FontColor="4294238869"
-         Align="Middle">
-  </Title>
-  <SoundFile OK="OK.wav" Cancel="Cancel.wav"/>
-  <TopLeft FileName="TopLeft.png"/>
-  <TopRight FileName="TopRight.png"/>
-  <BottomLeft FileName="BottomLeft.png"/>
-  <BottomRight FileName="BottomRight.png"/>
+    <LeftEdge Width="16" FileName="LeftEdge.png"/>
+    <RightEdge Width="16" FileName="RightEdge.png"/>
+    <TopEdge Width="48" FileName="TopEdge.png"/>
+    <BottomEdge Width="30" FileName="BottomEdge.png"/>
+    <BackGround FileName="BackGround.png"/>
+    <OKButton Width="95" Height="32" MarginRight="16" MarginBottom="16" FileName="OKButton.png"
+              Selected="OKButtonSelected.png" Pressed="OKButtonPressed.png" Disabled="OKButtonDisabled.png"/>
+    <CancelButton Width="95" Height="32" MarginRight="127" MarginBottom="16" FileName="CancelButton.png"
+                  Selected="CancelButtonSelected.png" Pressed="CancelButtonPressed.png"
+                  Disabled="CancelButtonDisabled.png"/>
+    <Title FontName="方正隶变_GBK"
+           FontSize="18"
+           FontStyle="Bold"
+           FontColor="4294238869"
+           Align="Middle">
+    </Title>
+    <SoundFile OK="OK.wav" Cancel="Cancel.wav"/>
+    <TopLeft FileName="TopLeft.png"/>
+    <TopRight FileName="TopRight.png"/>
+    <BottomLeft FileName="BottomLeft.png"/>
+    <BottomRight FileName="BottomRight.png"/>
 </Root>

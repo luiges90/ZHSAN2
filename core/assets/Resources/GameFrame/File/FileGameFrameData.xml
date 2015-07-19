@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root>
-	<Title save="储存游戏" load="读取游戏"/>
-	<Strings newFile="新储档" />
-	<Margins value="16"/>
-	<Lists padding="8" selectedColor="4294967295"/>
-	<Scroll fileName="ScrollButton.jpg" />
-	<FileList FontName="方正隶变_GBK"
-        FontSize="14"
-        FontStyle="Regular"
-        FontColor="4294967295"
-        Align="Left" />
+    <Title save="储存游戏" load="读取游戏"/>
+    <Strings newFile="新储档"/>
+    <Margins value="16"/>
+    <Lists padding="8" selectedColor="4294967295"/>
+    <Scroll fileName="ScrollButton.jpg"/>
+    <FileList FontName="方正隶变_GBK"
+              FontSize="14"
+              FontStyle="Regular"
+              FontColor="4294967295"
+              Align="Left"/>
 </Root>

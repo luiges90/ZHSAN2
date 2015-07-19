@@ -7,7 +7,7 @@
                            FontSize="13"
                            FontStyle="Bold"
                            Align="Center"
-                           FontColor="4288070589" />
+                           FontColor="4288070589"/>
     <ContextMenuLeftClick FileName="ContextMenuLeftClick.png"
                           Selected="ContextMenuLeftClickSelected.png"
                           Disabled="ContextMenuLeftDisabled.png"
@@ -15,14 +15,14 @@
                           FontSize="13"
                           FontStyle="Bold"
                           Align="Center"
-                          FontColor="4288070589" />
+                          FontColor="4288070589"/>
     <HasChildTexture FileName="HasChild.png" Margin="8"/>
-    <SoundFile Click="Click.wav" Open="Open.wav" Fold="Fold.wav" />
+    <SoundFile Click="Click.wav" Open="Open.wav" Fold="Fold.wav"/>
     <MenuKindList>
         <MenuKind ID="1" Name="ArchitectureRightClick" IsLeft="false" Width="120" Height="25">
-            <MenuItem ID="1" Name="Architecture" DisplayName="所屬建築" >
+            <MenuItem ID="1" Name="Architecture" DisplayName="所屬建築">
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" DisplayIfTrue="HasFaction"/>
-                <MenuItem ID="2" Name="AllUnhiredPersons" DisplayName="在野武將" />
+                <MenuItem ID="2" Name="AllUnhiredPersons" DisplayName="在野武將"/>
             </MenuItem>
             <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力" DisplayIfTrue="HasFaction">
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將"/>
@@ -30,25 +30,25 @@
         </MenuKind>
         <MenuKind ID="3" Name="MapRightClick" IsLeft="false" Width="130" Height="25">
             <MenuItem ID="1" Name="DateGo" DisplayName="进行">
-                <MenuItem ID="1" Name="1Day" DisplayName="进行一天" />
-                <MenuItem ID="2" Name="2Days" DisplayName="进行二天" />
-                <MenuItem ID="3" Name="5Days" DisplayName="进行五天" />
-                <MenuItem ID="4" Name="10Days" DisplayName="进行十天" />
-                <MenuItem ID="5" Name="30Days" DisplayName="进行一月" />
+                <MenuItem ID="1" Name="1Day" DisplayName="进行一天"/>
+                <MenuItem ID="2" Name="2Days" DisplayName="进行二天"/>
+                <MenuItem ID="3" Name="5Days" DisplayName="进行五天"/>
+                <MenuItem ID="4" Name="10Days" DisplayName="进行十天"/>
+                <MenuItem ID="5" Name="30Days" DisplayName="进行一月"/>
             </MenuItem>
             <MenuItem ID="4" Name="Information" DisplayName="信息">
-                <MenuItem ID="1" Name="AllArchitectures" DisplayName="所有建筑" />
-                <MenuItem ID="2" Name="AllPersons" DisplayName="所有武將" />
+                <MenuItem ID="1" Name="AllArchitectures" DisplayName="所有建筑"/>
+                <MenuItem ID="2" Name="AllPersons" DisplayName="所有武將"/>
             </MenuItem>
-            <MenuItem ID="5" Name="Save" DisplayName="存储进度" />
-            <MenuItem ID="6" Name="Load" DisplayName="读取进度" />
-            <MenuItem ID="7" Name="System" DisplayName="系统" />
+            <MenuItem ID="5" Name="Save" DisplayName="存储进度"/>
+            <MenuItem ID="6" Name="Load" DisplayName="读取进度"/>
+            <MenuItem ID="7" Name="System" DisplayName="系统"/>
         </MenuKind>
-		<MenuKind ID="10" Name="SystemMenu" IsLeft="true" Width="120" Height="25">
-			<MenuItem ID="1" Name="Save" DisplayName="存储进度" />
-            <MenuItem ID="2" Name="Load" DisplayName="读取进度" />
-			<MenuItem ID="3" Name="Quit" DisplayName="退出游戏"/>
-			<MenuItem ID="4" Name="Continue" DisplayName="继续游戏"/>
-		</MenuKind>
+        <MenuKind ID="10" Name="SystemMenu" IsLeft="true" Width="120" Height="25">
+            <MenuItem ID="1" Name="Save" DisplayName="存储进度"/>
+            <MenuItem ID="2" Name="Load" DisplayName="读取进度"/>
+            <MenuItem ID="3" Name="Quit" DisplayName="退出游戏"/>
+            <MenuItem ID="4" Name="Continue" DisplayName="继续游戏"/>
+        </MenuKind>
     </MenuKindList>
 </Root>

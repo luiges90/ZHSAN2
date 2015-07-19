@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Root>
-	<MapZoom Min="20" Max="100" />
-	<MapScroll Factor="500" MouseFactor="5" Boundary="50" />
-	<MapInfo FontName="方正隶变_GBK"
-        FontSize="24"
-        FontStyle="Bold"
-        FontColor="4278255615"
-        Align="Middle"
-		BottomMargin="16"
-		TextFormat="%s (%d,%d)">
-	</MapInfo>
-	<Caption Size="0.5" />
+    <MapZoom Min="20" Max="100"/>
+    <MapScroll Factor="500" MouseFactor="5" Boundary="50"/>
+    <MapInfo FontName="方正隶变_GBK"
+             FontSize="24"
+             FontStyle="Bold"
+             FontColor="4278255615"
+             Align="Middle"
+             BottomMargin="16"
+             TextFormat="%s (%d,%d)">
+    </MapInfo>
+    <Caption Size="0.5"/>
 </Root>

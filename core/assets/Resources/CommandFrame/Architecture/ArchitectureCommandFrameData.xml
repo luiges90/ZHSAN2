@@ -8,16 +8,17 @@
         <Facility FileName="Facility.png" Selected="FacilitySelected.png" X="190" Y="320" Width="39" Height="22"/>
     </Tabs>
     <InternalTab>
-        <Background FileName="Internal/Background.png" />
+        <Background FileName="Internal/Background.png"/>
         <MayorPortrait X="20" Y="246" Width="64" Height="80" Border="Internal/Portrait.png"/>
-        <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="232" Width="39" Height="22"/>
+        <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="232" Width="39"
+                Height="22"/>
         <FactionColor X="200" Y="298" Width="16" Height="16" BorderColor="4294967040"/>
         <StaticText X="78" Y="300" Text="勢力"
                     FontName="方正隶变_GBK"
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="104" Y="300" Field="FactionName"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -29,7 +30,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="104" Y="270" Field="ArchitectureKindName"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -41,7 +42,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="104" Y="240" Field="MayorName"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -65,7 +66,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="190" Field="Population"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -83,7 +84,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="170" Field="Fund"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -101,7 +102,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="150" Field="FoodString"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -119,7 +120,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="130" Field="Army"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -137,7 +138,7 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="110" Field="Endurance"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -155,53 +156,58 @@
                     FontSize="16"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Left" />
+                    Align="Left"/>
         <DetailText X="80" Y="90" Field="PersonCount"
                     FontName="方正隶变_GBK"
                     FontSize="16"
                     FontStyle="Regular"
                     FontColor="4294967295"
                     Align="Center" Width="80"/>
-        <Agriculture FileName="Internal/Agriculture.png" Selected="Internal/AgricultureSelected.png" X="30" Y="66" Width="39" Height="22"/>
-        <Commerce FileName="Internal/Commerce.png" Selected="Internal/CommerceSelected.png" X="70" Y="66" Width="39" Height="22"/>
-        <Technology FileName="Internal/Technology.png" Selected="Internal/TechnologySelected.png" X="110" Y="66" Width="39" Height="22"/>
-        <Morale FileName="Internal/Morale.png" Selected="Internal/MoraleSelected.png" X="150" Y="66" Width="39" Height="22"/>
-        <Endurance FileName="Internal/Endurance.png" Selected="Internal/EnduranceSelected.png" X="190" Y="66" Width="39" Height="22"/>
+        <Agriculture FileName="Internal/Agriculture.png" Selected="Internal/AgricultureSelected.png" X="30" Y="66"
+                     Width="39" Height="22"/>
+        <Commerce FileName="Internal/Commerce.png" Selected="Internal/CommerceSelected.png" X="70" Y="66" Width="39"
+                  Height="22"/>
+        <Technology FileName="Internal/Technology.png" Selected="Internal/TechnologySelected.png" X="110" Y="66"
+                    Width="39" Height="22"/>
+        <Morale FileName="Internal/Morale.png" Selected="Internal/MoraleSelected.png" X="150" Y="66" Width="39"
+                Height="22"/>
+        <Endurance FileName="Internal/Endurance.png" Selected="Internal/EnduranceSelected.png" X="190" Y="66" Width="39"
+                   Height="22"/>
         <InternalDevelopRate X="30" Y="50" Field="Agriculture"
                              FontName="方正隶变_GBK"
                              FontSize="16"
                              FontStyle="Regular"
                              FontColor="4294901760"
                              FallingFontColor="4278255360"
-                             Align="Center" Width="40" />
+                             Align="Center" Width="40"/>
         <InternalDevelopRate X="70" Y="50" Field="Commerce"
                              FontName="方正隶变_GBK"
                              FontSize="16"
                              FontStyle="Regular"
                              FontColor="4294901760"
                              FallingFontColor="4278255360"
-                             Align="Center" Width="40" />
+                             Align="Center" Width="40"/>
         <InternalDevelopRate X="110" Y="50" Field="Technology"
                              FontName="方正隶变_GBK"
                              FontSize="16"
                              FontStyle="Regular"
                              FontColor="4294901760"
                              FallingFontColor="4278255360"
-                             Align="Center" Width="40" />
+                             Align="Center" Width="40"/>
         <InternalDevelopRate X="150" Y="50" Field="Morale"
                              FontName="方正隶变_GBK"
                              FontSize="16"
                              FontStyle="Regular"
                              FontColor="4294901760"
                              FallingFontColor="4278255360"
-                             Align="Center" Width="40" />
+                             Align="Center" Width="40"/>
         <InternalDevelopRate X="190" Y="50" Field="Endurance"
                              FontName="方正隶变_GBK"
                              FontSize="16"
                              FontStyle="Regular"
                              FontColor="4294901760"
                              FallingFontColor="4278255360"
-                             Align="Center" Width="40" />
+                             Align="Center" Width="40"/>
         <InternalPortrait X="32" Y="-4" Width="36" Height="45"
                           BorderColor="4294967040"
                           Field="AgriculturePersons"
@@ -224,13 +230,17 @@
                           FieldFirst="EnduranceAbility"/>
     </InternalTab>
     <MilitaryTab>
-        <Background FileName="Military/Background.png" />
-        <Portraits X="32" Y="140" Width="240" Height="160" />
-        <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png" X="30" Y="116" Width="39" Height="22"/>
+        <Background FileName="Military/Background.png"/>
+        <Portraits X="32" Y="140" Width="240" Height="160"/>
+        <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png" X="30" Y="116" Width="39"
+                  Height="22"/>
         <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="70" Y="116" Width="39" Height="22"/>
-        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" X="110" Y="116" Width="39" Height="22"/>
-        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png" X="150" Y="116" Width="39" Height="22"/>
-        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png" X="190" Y="116" Width="39" Height="22"/>
+        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" X="110" Y="116" Width="39"
+               Height="22"/>
+        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png" X="150" Y="116" Width="39"
+                 Height="22"/>
+        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png" X="190" Y="116" Width="39"
+                 Height="22"/>
         <StaticText X="30" Y="96" Text="兵種"
                     FontName="方正隶变_GBK"
                     FontSize="16"
@@ -243,7 +253,9 @@
                     FontStyle="Bold"
                     FontColor="4294934528"
                     Align="Center" Width="80"/>
-        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" X="150" Y="92" Width="39" Height="22"/>
-        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="190" Y="92" Width="39" Height="22"/>
+        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" X="150" Y="92" Width="39"
+                 Height="22"/>
+        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="190" Y="92" Width="39"
+                  Height="22"/>
     </MilitaryTab>
 </Root>

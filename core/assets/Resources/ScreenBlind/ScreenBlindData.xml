@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-  <Background FileName="Background.png" X="0" Y="0" Width="342" Height="78" />
-  <Season Spring="Spring.png" Summer="Summer.png" Autumn="Autumn.png" Winter="Winter.png" />
-  <DateClient X="126" Y ="43" Width="150" Height="20"
-               FontName="方正隶变_GBK"
-               FontSize="12"
-               FontStyle="Bold"
-               FontColor="4293647049"
-               Align="Middle"
-			   Pattern="yyy年M月d日"/>
-  <FactionClient X="126" Y ="22" Width="150" Height="18"
+    <Background FileName="Background.png" X="0" Y="0" Width="342" Height="78"/>
+    <Season Spring="Spring.png" Summer="Summer.png" Autumn="Autumn.png" Winter="Winter.png"/>
+    <DateClient X="126" Y="43" Width="150" Height="20"
                 FontName="方正隶变_GBK"
                 FontSize="12"
                 FontStyle="Bold"
                 FontColor="4293647049"
-                Align="Middle" />
-  <SeasonClient X="20" Y="18" Width="51" Height="51" />
+                Align="Middle"
+                Pattern="yyy年M月d日"/>
+    <FactionClient X="126" Y="22" Width="150" Height="18"
+                   FontName="方正隶变_GBK"
+                   FontSize="12"
+                   FontStyle="Bold"
+                   FontColor="4293647049"
+                   Align="Middle"/>
+    <SeasonClient X="20" Y="18" Width="51" Height="51"/>
 </Root>
