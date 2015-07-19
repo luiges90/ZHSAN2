@@ -287,6 +287,7 @@ public class GameScenario {
         FacilityKind.toCSV(result, facilityKinds.asUnmodifiable());
 
         MilitaryType.toCSV(result, militaryTypes.asUnmodifiable());
+        MilitaryKind.toCSV(result, militaryKinds.asUnmodifiable());
 
         GameData.toCSV(result, gameData);
 
