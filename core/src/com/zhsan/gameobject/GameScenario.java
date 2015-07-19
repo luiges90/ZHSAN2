@@ -42,6 +42,7 @@ public class GameScenario {
     private final GameObjectList<Section> sections;
     private final GameObjectList<Faction> factions;
     private final GameObjectList<Person> persons;
+    private final GameObjectList<Military> militaries;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -80,6 +81,7 @@ public class GameScenario {
         sections = Section.fromCSV(file, this);
         architectures = Architecture.fromCSV(file, this);
         persons = Person.fromCSV(file, this);
+        militaries = Military.fromCSV(file, this);
 
         facilities = Facility.fromCSV(file, this);
 
@@ -233,6 +235,25 @@ public class GameScenario {
         return gameSurvey.getStartDate().plusDays(gameData.getDayPassed());
     }
 
+    public GameObjectList<Military> getMilitaries() {
+        return militaries.asUnmodifiable();
+    }
+
+    public boolean createMilitary(Architecture location, MilitaryKind kind) {
+        int cost = kind.getCost(location);
+        if (cost > location.getFund()) return false;
+        location.loseFund(cost);
+
+        Military m = new Military(militaries.getFreeId());
+        m.setKind(kind);
+        m.setName(kind.getName());
+        m.setLocation(location);
+
+        militaries.add(m);
+
+        return true;
+    }
+
     public void advanceDay() {
         gameData.advanceDay();
         architectures.forEach(Architecture::advanceDay);
@@ -295,6 +316,7 @@ public class GameScenario {
         Section.toCSV(result, sections.asUnmodifiable());
         Faction.toCSV(result, factions.asUnmodifiable());
         Person.toCSV(result, persons.asUnmodifiable());
+        Military.toCSV(result, militaries.asUnmodifiable());
     }
 
 }

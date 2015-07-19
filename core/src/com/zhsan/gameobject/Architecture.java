@@ -288,8 +288,16 @@ public class Architecture extends GameObject {
         return getWorkingPersons(Person.DoingWork.MORALE);
     }
 
+    public GameObjectList<Military> getMilitaries() {
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this);
+    }
+
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
         return creatableMilitaryKinds.asUnmodifiable();
+    }
+
+    public boolean createMilitary(MilitaryKind kind) {
+        return scenario.createMilitary(this, kind);
     }
 
     public void advanceDay() {
@@ -349,6 +357,10 @@ public class Architecture extends GameObject {
         this.food = (int) MathUtils.clamp(this.food +
                 GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
                 0, this.getKind().getMaxFood());
+    }
+
+    public void loseFund(int x) {
+        fund = Math.max(fund - x, 0);
     }
 
 }

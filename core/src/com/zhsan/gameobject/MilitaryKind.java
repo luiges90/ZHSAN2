@@ -40,8 +40,8 @@ public class MilitaryKind extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 MilitaryKind kind = new MilitaryKind(Integer.parseInt(line[0]));
-                kind.type = scen.getMilitaryTypes().get(Integer.parseInt(line[1]));
-                kind.name = line[2];
+                kind.name = line[1];
+                kind.type = scen.getMilitaryTypes().get(Integer.parseInt(line[2]));
                 kind.description = line[3];
                 kind.canOnlyCreateAtArchitecture = Boolean.parseBoolean(line[4]);
                 kind.cost = Integer.parseInt(line[5]);
@@ -65,8 +65,8 @@ public class MilitaryKind extends GameObject {
             for (MilitaryKind detail : kinds) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
-                        String.valueOf(detail.type.getId()),
                         detail.name,
+                        String.valueOf(detail.type.getId()),
                         detail.description,
                         String.valueOf(detail.canOnlyCreateAtArchitecture),
                         String.valueOf(detail.cost),
@@ -92,6 +92,10 @@ public class MilitaryKind extends GameObject {
     }
 
     public int getCost() {
+        return cost;
+    }
+
+    public int getCost(Architecture location) {
         return cost;
     }
 

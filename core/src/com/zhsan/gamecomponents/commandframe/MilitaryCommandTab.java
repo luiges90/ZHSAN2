@@ -9,6 +9,7 @@ import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
+import com.zhsan.gameobject.MilitaryKind;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -157,7 +158,8 @@ public class MilitaryCommandTab implements CommandTab {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.NEW_MILITARY), TabListGameFrame.ListKindType.MILITARY_KIND,
                     parent.getCurrentArchitecture().getCreatableMilitaryKinds(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
-
+                        MilitaryKind kind = (MilitaryKind) selectedItems.get(0);
+                        parent.getCurrentArchitecture().createMilitary(kind);
                     });
         }
     }

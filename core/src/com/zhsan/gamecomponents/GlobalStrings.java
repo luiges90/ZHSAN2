@@ -44,6 +44,7 @@ public class GlobalStrings {
         MAYOR("Mayor"),
         MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
         MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader"),
+        MILITARY_SAVE_HEADER("militarySaveHeader"),
         NEW_MILITARY("NewMilitary");
 
         private final String xmlName;
