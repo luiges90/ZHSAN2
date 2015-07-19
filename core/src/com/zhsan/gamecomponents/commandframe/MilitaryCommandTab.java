@@ -151,6 +151,8 @@ public class MilitaryCommandTab implements CommandTab {
 
     @Override
     public void onClick(float x, float y) {
+        if (newMilitaryPos.contains(x, y)) {
 
+        }
     }
 }

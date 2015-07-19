@@ -41,6 +41,8 @@ public class Architecture extends GameObject {
     private int fund, food;
     private float agriculture, commerce, technology, endurance, morale;
 
+    private GameObjectList<MilitaryKind> creatableMilitaryKinds;
+
     private Architecture(int id) {
         super(id);
     }
@@ -70,6 +72,7 @@ public class Architecture extends GameObject {
                 data.technology = Float.parseFloat(line[11]);
                 data.morale = Float.parseFloat(line[12]);
                 data.endurance = Float.parseFloat(line[13]);
+                data.creatableMilitaryKinds = scen.getMilitaryKinds().getItemsFromCSV(line[14]);
 
                 data.scenario = scen;
 
@@ -102,6 +105,7 @@ public class Architecture extends GameObject {
                         String.valueOf(d.technology),
                         String.valueOf(d.endurance),
                         String.valueOf(d.morale),
+                        d.creatableMilitaryKinds.toCSV()
                 });
             }
         } catch (IOException e) {

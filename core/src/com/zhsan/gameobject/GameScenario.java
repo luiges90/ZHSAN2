@@ -35,6 +35,9 @@ public class GameScenario {
     private final GameObjectList<Facility> facilities;
     private final GameObjectList<FacilityKind> facilityKinds;
 
+    private final GameObjectList<MilitaryType> militaryTypes;
+    private final GameObjectList<MilitaryKind> militaryKinds;
+
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
     private final GameObjectList<Faction> factions;
@@ -66,6 +69,9 @@ public class GameScenario {
         architectureKinds = ArchitectureKind.fromCSV(file, this);
 
         facilityKinds = FacilityKind.fromCSV(file, this);
+
+        militaryTypes = MilitaryType.fromCSV(file, this);
+        militaryKinds = MilitaryKind.fromCSV(file, this);
 
         // load game objects
         int version = gameSurvey.getVersion();
@@ -148,6 +154,14 @@ public class GameScenario {
             }
         }
 
+    }
+
+    public GameObjectList<MilitaryType> getMilitaryTypes() {
+        return militaryTypes.asUnmodifiable();
+    }
+
+    public GameObjectList<MilitaryKind> getMilitaryKinds() {
+        return militaryKinds.asUnmodifiable();
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
@@ -271,6 +285,8 @@ public class GameScenario {
         ArchitectureKind.toCSV(result, architectureKinds.asUnmodifiable());
 
         FacilityKind.toCSV(result, facilityKinds.asUnmodifiable());
+
+        MilitaryType.toCSV(result, militaryTypes.asUnmodifiable());
 
         GameData.toCSV(result, gameData);
 

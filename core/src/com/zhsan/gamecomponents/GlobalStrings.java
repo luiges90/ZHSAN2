@@ -41,8 +41,9 @@ public class GlobalStrings {
         TECHNOLOGY("Technology"),
         ARCHITECTURE_MORALE("ArchitectureMorale"),
         ARCHITECTURE_ENDURANCE("ArchitectureEndurance"),
-        MAYOR("Mayor")
-        ;
+        MAYOR("Mayor"),
+        MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
+        MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader");
 
         private final String xmlName;
         Keys(String name) {
