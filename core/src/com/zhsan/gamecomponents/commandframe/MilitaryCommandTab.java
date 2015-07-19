@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
+import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -152,7 +154,11 @@ public class MilitaryCommandTab implements CommandTab {
     @Override
     public void onClick(float x, float y) {
         if (newMilitaryPos.contains(x, y)) {
+            parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.NEW_MILITARY), TabListGameFrame.ListKindType.MILITARY_KIND,
+                    parent.getCurrentArchitecture().getCreatableMilitaryKinds(), TabListGameFrame.Selection.SINGLE,
+                    selectedItems -> {
 
+                    });
         }
     }
 }

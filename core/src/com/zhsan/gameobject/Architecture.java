@@ -288,6 +288,10 @@ public class Architecture extends GameObject {
         return getWorkingPersons(Person.DoingWork.MORALE);
     }
 
+    public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
+        return creatableMilitaryKinds.asUnmodifiable();
+    }
+
     public void advanceDay() {
         loseInternal();
         developInternal();

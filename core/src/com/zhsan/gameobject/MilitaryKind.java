@@ -18,6 +18,8 @@ public class MilitaryKind extends GameObject {
 
     public static final String SAVE_FILE = "MilitaryKind.csv";
 
+    private GameScenario scen;
+
     private MilitaryType type;
 
     private String name;
@@ -44,6 +46,8 @@ public class MilitaryKind extends GameObject {
                 kind.canOnlyCreateAtArchitecture = Boolean.parseBoolean(line[4]);
                 kind.cost = Integer.parseInt(line[5]);
                 kind.transportCost = Float.parseFloat(line[6]);
+
+                kind.scen = scen;
 
                 result.add(kind);
             }
@@ -82,4 +86,13 @@ public class MilitaryKind extends GameObject {
     public String getName() {
         return name;
     }
+
+    public String getTypeName() {
+        return type.getName();
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
 }

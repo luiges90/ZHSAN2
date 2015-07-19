@@ -43,7 +43,8 @@ public class GlobalStrings {
         ARCHITECTURE_ENDURANCE("ArchitectureEndurance"),
         MAYOR("Mayor"),
         MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
-        MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader");
+        MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader"),
+        NEW_MILITARY("NewMilitary");
 
         private final String xmlName;
         Keys(String name) {

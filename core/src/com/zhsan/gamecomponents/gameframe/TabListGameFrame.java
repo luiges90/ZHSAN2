@@ -16,10 +16,7 @@ import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.*;
-import com.zhsan.gameobject.Architecture;
-import com.zhsan.gameobject.GameObject;
-import com.zhsan.gameobject.GameObjectList;
-import com.zhsan.gameobject.Person;
+import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -46,7 +43,8 @@ public class TabListGameFrame extends GameFrame {
 
     public enum ListKindType {
         ARCHITECTURE("Architecture", Architecture.class),
-        PERSON("Person", Person.class)
+        PERSON("Person", Person.class),
+        MILITARY_KIND("MilitaryKind", MilitaryKind.class)
         ;
 
         public final String xmlName;
