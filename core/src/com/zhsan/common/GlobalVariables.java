@@ -19,7 +19,7 @@ import java.util.Map;
 /**
  * Created by Peter on 22/3/2015.
  */
-public class GlobalVariables {
+public final class GlobalVariables {
 
     private GlobalVariables() {}
 
@@ -36,6 +36,7 @@ public class GlobalVariables {
     public static float internalGrowthFactor = 0.01f;
     public static float mayorInternalWorkEfficiency = 0.3f;
     public static float internalDrop = 0.75f;
+    public static int internalCost = 200;
 
     public static float gainFund = 1.0f;
     public static float gainFood = 60.0f;
@@ -71,6 +72,7 @@ public class GlobalVariables {
             gainFood = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFood"));
             gainFundPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFundPerPopulation"));
             gainFoodPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFoodPerPopulation"));
+            internalCost = Integer.parseInt(XmlHelper.loadAttribute(node, "internalCost"));
             aiTimeout = Long.parseLong(XmlHelper.loadAttribute(node, "aiTimeout"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);

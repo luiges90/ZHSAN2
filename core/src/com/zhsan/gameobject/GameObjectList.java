@@ -56,6 +56,12 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.remove(t.getId());
     }
 
+    public List<T> shuffledList() {
+        List<T> result = new ArrayList<>(content.values());
+        Collections.shuffle(result);
+        return result;
+    }
+
     @Override
     public Iterator<T> iterator() {
         // TODO make this be unmodifiable
@@ -140,4 +146,27 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         }
     }
 
+    @Override
+    public String toString() {
+        return "GameObjectList{" +
+                "content=" + content +
+                ", unmodifiable=" + unmodifiable +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GameObjectList<?> that = (GameObjectList<?>) o;
+
+        return content.equals(that.content);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return content.hashCode();
+    }
 }

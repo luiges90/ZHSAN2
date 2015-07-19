@@ -19,6 +19,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -264,8 +265,12 @@ public class Architecture extends GameObject {
         newMayor.setDoingWorkUnchecked(Person.DoingWork.MAYOR);
     }
 
+    public GameObjectList<Person> getWorkingPersons(Predicate<Person.DoingWork> p) {
+        return this.getPersons().filter(person -> p.test(person.getDoingWorkType()));
+    }
+
     public GameObjectList<Person> getWorkingPersons(Person.DoingWork doingWork) {
-        return this.getPersons().filter(person -> person.getDoingWorkType() == doingWork);
+        return getWorkingPersons(x -> x == doingWork);
     }
 
     public GameObjectList<Person> getAgriculturePersons() {
@@ -319,32 +324,62 @@ public class Architecture extends GameObject {
     private void developInternal() {
         Person mayor = this.getMayor();
 
+        GameObjectList<Person> agricultureWorkingPersons = getWorkingPersons(Person.DoingWork.AGRICULTURE);
+        GameObjectList<Person> commerceWorkingPersons = getWorkingPersons(Person.DoingWork.COMMERCE);
+        GameObjectList<Person> technologyWorkingPersons = getWorkingPersons(Person.DoingWork.TECHNOLOGY);
+        GameObjectList<Person> moraleWorkingPersons = getWorkingPersons(Person.DoingWork.MORALE);
+        GameObjectList<Person> enduranceWorkingPersons = getWorkingPersons(Person.DoingWork.ENDURANCE);
+
+        int totalWorkingPersons = (agricultureWorkingPersons.size() + commerceWorkingPersons.size() + technologyWorkingPersons.size() +
+                moraleWorkingPersons.size() + enduranceWorkingPersons.size() + 1); // for extra mayor
+        int totalCost = GlobalVariables.internalCost * totalWorkingPersons;
+
+        if (totalCost > fund) {
+            int affordable = fund / GlobalVariables.internalCost;
+            if (affordable < 1) {
+                return; // skip development entirely - mayor can't do work.
+            }
+            getWorkingPersons(x -> x != Person.DoingWork.NONE && x != Person.DoingWork.MAYOR)
+                    .shuffledList().subList(0, totalWorkingPersons - affordable) // mayor must be working
+                    .forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+
+            agricultureWorkingPersons = getWorkingPersons(Person.DoingWork.AGRICULTURE);
+            commerceWorkingPersons = getWorkingPersons(Person.DoingWork.COMMERCE);
+            technologyWorkingPersons = getWorkingPersons(Person.DoingWork.TECHNOLOGY);
+            moraleWorkingPersons = getWorkingPersons(Person.DoingWork.MORALE);
+            enduranceWorkingPersons = getWorkingPersons(Person.DoingWork.ENDURANCE);
+
+            totalCost = GlobalVariables.internalCost * affordable;
+        }
+
+        loseFund(totalCost);
+
         float agricultureAbility = (mayor == null ? 0 : mayor.getAgricultureAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.AGRICULTURE).getAll().parallelStream()
+                agricultureWorkingPersons.getAll().parallelStream()
                 .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.agriculture = Utility.diminishingGrowth(
                 this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
 
         float commerceAbility = (mayor == null ? 0 : mayor.getCommerceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.COMMERCE).getAll().parallelStream()
+                commerceWorkingPersons.getAll().parallelStream()
                         .map(p -> (float) p.getCommerceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.commerce = Utility.diminishingGrowth(
                 this.commerce, commerceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getCommerce());
 
         float technologyAbility = (mayor == null ? 0 : mayor.getTechnologyAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.TECHNOLOGY).getAll().parallelStream()
+                technologyWorkingPersons.getAll().parallelStream()
                         .map(p -> (float) p.getTechnologyAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.technology = Utility.diminishingGrowth(
                 this.technology, technologyAbility * GlobalVariables.internalGrowthFactor, this.getKind().getTechnology());
 
         float moraleAbility = (mayor == null ? 0 : mayor.getMoraleAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.MORALE).getAll().parallelStream()
+                moraleWorkingPersons.getAll().parallelStream()
                         .map(p -> (float) p.getMoraleAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.morale = Utility.diminishingGrowth(
                 this.morale, moraleAbility * GlobalVariables.internalGrowthFactor, this.getKind().getMorale());
 
         float enduranceAbility = (mayor == null ? 0 : mayor.getEnduranceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                getWorkingPersons(Person.DoingWork.ENDURANCE).getAll().parallelStream()
+                enduranceWorkingPersons.getAll().parallelStream()
                         .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.endurance = Utility.diminishingGrowth(
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
