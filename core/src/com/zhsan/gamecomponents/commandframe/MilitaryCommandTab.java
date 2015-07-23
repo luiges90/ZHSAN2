@@ -37,7 +37,7 @@ public class MilitaryCommandTab implements CommandTab {
     private ArchitectureCommandFrame parent;
 
     private Rectangle militaryListPos;
-    private int listNameWidth, listRecruitWidth, listTrainWidth, listRowHeight;
+    private int listNameWidth, listRecruitWidth, listTrainWidth, listQuantityWidth, listRowHeight;
 
     private ScrollPane militaryListPane;
     private TextWidget<Military> militaryListTextTemplate;
@@ -85,6 +85,7 @@ public class MilitaryCommandTab implements CommandTab {
                 listNameWidth = Integer.parseInt(XmlHelper.loadAttribute(n, "NameWidth"));
                 listRecruitWidth = Integer.parseInt(XmlHelper.loadAttribute(n, "RecruitWidth"));
                 listTrainWidth = Integer.parseInt(XmlHelper.loadAttribute(n, "TrainWidth"));
+                listQuantityWidth = Integer.parseInt(XmlHelper.loadAttribute(n, "QuantityWidth"));
                 listRowHeight = Integer.parseInt(XmlHelper.loadAttribute(n, "RowHeight"));
                 militaryListTextTemplate = new TextWidget<>(TextWidget.Setting.fromXml(n));
             } else {
@@ -140,16 +141,22 @@ public class MilitaryCommandTab implements CommandTab {
             contentTable.add(name).width(listNameWidth).height(listRowHeight);
             showingTextWidgets.add(name);
 
+            TextWidget<Military> quantity = new TextWidget<>(militaryListTextTemplate);
+            quantity.setExtra(m);
+            //quantity.setText(m.getName());
+            contentTable.add(quantity).width(listQuantityWidth).height(listRowHeight).center();
+            showingTextWidgets.add(quantity);
+
             TextWidget<Military> recruit = new TextWidget<>(militaryListTextTemplate);
             recruit.setExtra(m);
             // recruit.setText(m.getName());
-            contentTable.add(recruit).width(listRecruitWidth).height(listRowHeight);
+            contentTable.add(recruit).width(listRecruitWidth).height(listRowHeight).center();
             showingTextWidgets.add(recruit);
 
             TextWidget<Military> train = new TextWidget<>(militaryListTextTemplate);
             train.setExtra(m);
             // train.setText(m.getName());
-            contentTable.add(train).width(listTrainWidth).height(listRowHeight);
+            contentTable.add(train).width(listTrainWidth).height(listRowHeight).center();
             showingTextWidgets.add(train);
 
             contentTable.row().height(listRowHeight);
