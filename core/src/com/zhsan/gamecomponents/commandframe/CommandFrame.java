@@ -28,6 +28,9 @@ public abstract class CommandFrame extends WidgetGroup {
     private Texture background;
     private Rectangle backgroundPos;
 
+    private Texture scrollbar;
+    private int scrollbarWidth;
+
     private void loadXml() {
         FileHandle f = Gdx.files.external(RES_PATH + "CommandFrameData.xml");
 
@@ -38,11 +41,16 @@ public abstract class CommandFrame extends WidgetGroup {
             dom = db.parse(f.read());
 
             Node bgNode = dom.getElementsByTagName("Background").item(0);
-
             background = new Texture(Gdx.files.external(
                 DATA_PATH + XmlHelper.loadAttribute(bgNode, "FileName")
             ));
             backgroundPos = XmlHelper.loadRectangleFromXml(bgNode);
+
+            Node scrollNode = dom.getElementsByTagName("ScrollButton").item(0);
+            scrollbar = new Texture(Gdx.files.external(
+                DATA_PATH + XmlHelper.loadAttribute(scrollNode, "FileName")
+            ));
+            scrollbarWidth = Integer.parseInt(XmlHelper.loadAttribute(scrollNode, "Width"));
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "CommandFrameData.xml", e);
         }
@@ -64,6 +72,10 @@ public abstract class CommandFrame extends WidgetGroup {
 
     public void dispose() {
         background.dispose();
+        scrollbar.dispose();
     }
 
+    protected Texture getScrollbar() {
+        return scrollbar;
+    }
 }

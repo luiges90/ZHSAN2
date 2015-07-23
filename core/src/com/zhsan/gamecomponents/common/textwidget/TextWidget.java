@@ -42,7 +42,7 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
 
             Fonts.Style fontStyle = Fonts.Style.valueOf(fontStyleStr.trim().toUpperCase());
 
-            BitmapFont.HAlignment align = XmlHelper.loadHAlignmentFromXml(node);
+            BitmapFont.HAlignment align = XmlHelper.loadHAlignmentFromXml(node, BitmapFont.HAlignment.LEFT);
 
             return new Setting(fontName, fontSize, fontStyle, fontColor, align);
         }

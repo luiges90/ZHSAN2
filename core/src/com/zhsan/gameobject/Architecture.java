@@ -298,6 +298,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
+        // TODO add and modify costs
         return creatableMilitaryKinds.asUnmodifiable();
     }
 

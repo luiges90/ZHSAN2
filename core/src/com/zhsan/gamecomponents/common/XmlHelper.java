@@ -52,6 +52,21 @@ public class XmlHelper {
         return result;
     }
 
+    public static BitmapFont.HAlignment loadHAlignmentFromXml(Node node, BitmapFont.HAlignment def) {
+        Node node1 = node.getAttributes().getNamedItem("Align");
+        if (node1 == null) {
+            return def;
+        }
+        String alignStr = node1.getNodeValue();
+        BitmapFont.HAlignment align;
+        if (alignStr.trim().equalsIgnoreCase("Middle")) {
+            align = BitmapFont.HAlignment.CENTER;
+        } else {
+            align = BitmapFont.HAlignment.valueOf(alignStr.trim().toUpperCase());
+        }
+        return align;
+    }
+
     public static BitmapFont.HAlignment loadHAlignmentFromXml(Node node) {
         String alignStr = node.getAttributes().getNamedItem("Align").getNodeValue();
         BitmapFont.HAlignment align;

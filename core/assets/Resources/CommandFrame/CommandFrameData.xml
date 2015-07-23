@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
     <Background FileName="background.png" X="0" Y="58" Width="257" Height="480"/>
+    <ScrollButton Width="16" FileName="scrollButton.png"/>
 </Root>
