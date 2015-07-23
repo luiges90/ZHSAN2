@@ -257,8 +257,8 @@
                  Height="22"/>
         <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="190" Y="92" Width="39"
                   Height="22"/>
-        <MilitaryList X="30" Y="0" Width="200" Height="68"
-                      NameWidth="160" RecruitWidth="40" TrainWidth="40"
+        <MilitaryList X="30" Y="0" Width="200" Height="88"
+                      NameWidth="124" RecruitWidth="38" TrainWidth="38"
                       RowHeight="20"
                       FontName="方正隶变_GBK"
                       FontSize="14"

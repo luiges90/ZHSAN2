@@ -65,9 +65,9 @@ public abstract class CommandFrame extends WidgetGroup {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-
         batch.draw(background, getX() + backgroundPos.x, getY() - backgroundPos.y, backgroundPos.width, backgroundPos.height);
+
+        super.draw(batch, parentAlpha);
     }
 
     public void dispose() {
