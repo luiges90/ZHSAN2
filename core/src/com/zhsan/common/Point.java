@@ -72,7 +72,7 @@ public final class Point {
     }
 
     public static double distance(Point p, Point q) {
-        return Math.sqrt((p.x * p.x - q.x * q.x)*(p.x * p.x - q.x * q.x) + (p.y * p.y - q.y * q.y)*(p.y * p.y - q.y * q.y));
+        return Math.sqrt((p.x - q.x)*(p.x - q.x) + (p.y - q.y)*(p.y - q.y));
     }
 
     public double distanceTo(Point q) {

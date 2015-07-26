@@ -308,7 +308,10 @@ public class Architecture extends GameObject {
                 Architecture a = k.getArchitecturesCreatable().min(
                         (x, y) -> Double.compare(this.distanceTo(x), this.distanceTo(y)), null);
                 if (a != null) {
-                    kinds.add(k.setCost((int) Math.round(k.getCost() + k.getTransportCost() * this.distanceTo(a))));
+                    int cost = (int) Math.round(k.getCost() + k.getTransportCost() * this.distanceTo(a));
+                    if (cost <= this.fund) {
+                        kinds.add(k.setCost(cost));
+                    }
                 }
             }
         }
