@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
@@ -149,20 +150,20 @@ public class MilitaryCommandTab implements CommandTab {
 
             TextWidget<Military> quantity = new TextWidget<>(militaryListTextTemplate);
             quantity.setExtra(m);
-            //quantity.setText(m.getName());
-            contentTable.add(quantity).width(listQuantityWidth).height(listRowHeight).center();
+            quantity.setText(String.valueOf(m.getQuantity()));
+            contentTable.add(quantity).width(listQuantityWidth).height(listRowHeight);
             showingTextWidgets.add(quantity);
 
             TextWidget<Military> recruit = new TextWidget<>(militaryListTextTemplate);
             recruit.setExtra(m);
             // recruit.setText(m.getName());
-            contentTable.add(recruit).width(listRecruitWidth).height(listRowHeight).center();
+            contentTable.add(recruit).width(listRecruitWidth).height(listRowHeight);
             showingTextWidgets.add(recruit);
 
             TextWidget<Military> train = new TextWidget<>(militaryListTextTemplate);
             train.setExtra(m);
             // train.setText(m.getName());
-            contentTable.add(train).width(listTrainWidth).height(listRowHeight).center();
+            contentTable.add(train).width(listTrainWidth).height(listRowHeight);
             showingTextWidgets.add(train);
 
             contentTable.row().height(listRowHeight);

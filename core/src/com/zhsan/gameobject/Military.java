@@ -68,6 +68,8 @@ public class Military extends GameObject {
 
     private LocationType location;
 
+    private int quantity;
+
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
 
@@ -79,12 +81,13 @@ public class Military extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Military type = new Military(Integer.parseInt(line[0]));
-                type.name = line[1];
-                type.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[2]));
-                type.location = LocationType.fromCSV(line[3], line[4], scen);
+                Military data = new Military(Integer.parseInt(line[0]));
+                data.name = line[1];
+                data.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[2]));
+                data.location = LocationType.fromCSV(line[3], line[4], scen);
+                data.quantity = Integer.parseInt(line[5]);
 
-                result.add(type);
+                result.add(data);
             }
         } catch (IOException e) {
             throw new FileReadException(f.path(), e);
@@ -105,6 +108,7 @@ public class Military extends GameObject {
                         String.valueOf(detail.kind.getId()),
                         savedLocation.x,
                         savedLocation.y,
+                        String.valueOf(detail.quantity)
                 });
             }
         } catch (IOException e) {
@@ -141,4 +145,7 @@ public class Military extends GameObject {
         return location;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
 }
