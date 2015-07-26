@@ -554,10 +554,6 @@ public class MapLayer extends WidgetGroup {
                 } else if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.ARCHITECTURE_RIGHT_MENU, a, new Point(mousePosition));
                 }
-            } else if (f !=  null) {
-                if (button == Input.Buttons.LEFT) {
-                    screen.showContextMenu(ContextMenu.MenuKindType.FACILITY_LEFT_MENU, f.getKind().getId(), f, new Point(mousePosition));
-                }
             } else {
                 if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.MAP_RIGHT_MENU, screen.getScenario(), new Point(mousePosition));
