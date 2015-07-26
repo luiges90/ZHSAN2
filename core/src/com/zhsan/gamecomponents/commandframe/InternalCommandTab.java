@@ -50,6 +50,7 @@ public class InternalCommandTab implements CommandTab {
 
     private Texture portraitBorder;
     private Rectangle mayorPortraitPos;
+    private int mayorOffsetX, mayorOffsetY;
 
     private List<TextWidget<ArchitectureCommandFrame.TextType>> textWidgets = new ArrayList<>();
     private List<InternalPortraitType> internalPortraits = new ArrayList<>();
@@ -78,6 +79,8 @@ public class InternalCommandTab implements CommandTab {
                 mayorPortraitPos = XmlHelper.loadRectangleFromXml(n);
                 portraitBorder = new Texture(Gdx.files.external
                         (ArchitectureCommandFrame.DATA_PATH + XmlHelper.loadAttribute(n, "Border")));
+                mayorOffsetX = Integer.parseInt(XmlHelper.loadAttribute(n, "OffsetX"));
+                mayorOffsetY = Integer.parseInt(XmlHelper.loadAttribute(n, "OffsetY"));
             } else if (n.getNodeName().equals("Assign")) {
                 assign = StateTexture.fromXml(ArchitectureCommandFrame.DATA_PATH, n);
                 assignPos = XmlHelper.loadRectangleFromXml(n);
@@ -149,13 +152,14 @@ public class InternalCommandTab implements CommandTab {
         if (!mayorSet) {
             updateMayor();
         }
-        
+
+        if (mayor != null) {
+            batch.draw(parent.getScreen().getSmallPortrait(mayor.getPortraitId()),
+                    parent.getX() + mayorPortraitPos.x + mayorOffsetX, parent.getY() + mayorPortraitPos.y + mayorOffsetY,
+                    mayorPortraitPos.width - 2 * mayorOffsetX, mayorPortraitPos.height - 2 * mayorOffsetY);
+        }
         batch.draw(portraitBorder, parent.getX() + mayorPortraitPos.x, parent.getY() + mayorPortraitPos.y,
                 mayorPortraitPos.width, mayorPortraitPos.height);
-        if (mayor != null) {
-            batch.draw(parent.getScreen().getSmallPortrait(mayor.getPortraitId()), parent.getX() + mayorPortraitPos.x, parent.getY() + mayorPortraitPos.y,
-                    mayorPortraitPos.width, mayorPortraitPos.height);
-        }
 
         batch.draw(assign.get(), parent.getX() + assignPos.x, parent.getY() + assignPos.y, assignPos.width, assignPos.height);
         batch.draw(agriculture.get(), parent.getX() + agriculturePos.x, parent.getY() + agriculturePos.y, agriculturePos.width, agriculturePos.height);
@@ -198,6 +202,15 @@ public class InternalCommandTab implements CommandTab {
         }
 
         for (InternalPortraitType internalPortraitType : internalPortraits) {
+            if (!internalPortraitType.leaderSet) {
+                updateInternal(internalPortraitType);
+            }
+            if (internalPortraitType.leader != null) {
+                batch.draw(parent.getScreen().getSmallPortrait(internalPortraitType.leader.getPortraitId()),
+                        parent.getX() + internalPortraitType.position.x, parent.getY() + internalPortraitType.position.y,
+                        internalPortraitType.position.width, internalPortraitType.position.height);
+            }
+
             batch.end();
 
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -211,15 +224,6 @@ public class InternalCommandTab implements CommandTab {
             shapeRenderer.end();
 
             batch.begin();
-
-            if (!internalPortraitType.leaderSet) {
-                updateInternal(internalPortraitType);
-            }
-            if (internalPortraitType.leader != null) {
-                batch.draw(parent.getScreen().getSmallPortrait(internalPortraitType.leader.getPortraitId()),
-                        parent.getX() + internalPortraitType.position.x, parent.getY() + internalPortraitType.position.y,
-                        internalPortraitType.position.width, internalPortraitType.position.height);
-            }
         }
     }
 

@@ -125,7 +125,9 @@ public class MilitaryCommandTab implements CommandTab {
     }
 
     private void invalidateMilitaryListPane() {
-        militaryListPane.clear();
+        if (militaryListPane != null) {
+            militaryListPane.clear();
+        }
         showingTextWidgets.forEach(TextWidget::dispose);
         showingTextWidgets.clear();
         militaryListPane = null;

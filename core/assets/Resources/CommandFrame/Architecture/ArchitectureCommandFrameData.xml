@@ -9,7 +9,7 @@
     </Tabs>
     <InternalTab>
         <Background FileName="Internal/Background.png"/>
-        <MayorPortrait X="20" Y="246" Width="64" Height="80" Border="Internal/Portrait.png"/>
+        <MayorPortrait X="20" Y="246" Width="64" Height="80" Border="Internal/Portrait.png" OffsetX="12" OffsetY="12"/>
         <Assign FileName="Internal/Assign.png" Selected="Internal/AssignSelected.png" X="32" Y="232" Width="39"
                 Height="22"/>
         <FactionColor X="200" Y="298" Width="16" Height="16" BorderColor="4294967040"/>
