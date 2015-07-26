@@ -298,8 +298,29 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
-        // TODO add and modify costs
-        return creatableMilitaryKinds.asUnmodifiable();
+        return creatableMilitaryKinds;
+    }
+
+    public GameObjectList<MilitaryKind> getActualCreatableMilitaryKinds() {
+        GameObjectList<MilitaryKind> kinds = new GameObjectList<>(creatableMilitaryKinds, false);
+        for (MilitaryKind k : scenario.getMilitaryKinds()) {
+            if (!k.isCanOnlyCreateAtArchitecture() && !kinds.contains(k)) {
+                Architecture a = k.getArchitecturesCreatable().min(
+                        (x, y) -> Double.compare(this.distanceTo(x), this.distanceTo(y)), null);
+                if (a != null) {
+                    kinds.add(k.setCost((int) Math.round(k.getCost() + k.getTransportCost() * this.distanceTo(a))));
+                }
+            }
+        }
+        return kinds;
+    }
+
+    public double distanceTo(Architecture a) {
+        return getLocationMidpoint().distanceTo(a.getLocationMidpoint());
+    }
+
+    public Point getLocationMidpoint() {
+        return Point.getCentroid(location);
     }
 
     public boolean createMilitary(MilitaryKind kind) {

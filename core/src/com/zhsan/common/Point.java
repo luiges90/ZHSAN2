@@ -58,14 +58,25 @@ public final class Point {
     }
 
     public static Point getCenter(List<Point> shape) {
-        Point minX = Collections.min(shape, (o1, o2) -> Integer.compare(o1.x, o2.x));
-        Point minY = Collections.min(shape, (o1, o2) -> Integer.compare(o1.y, o2.y));
-        Point maxX = Collections.max(shape, (o1, o2) -> Integer.compare(o1.x, o2.x));
-        Point maxY = Collections.max(shape, (o1, o2) -> Integer.compare(o1.y, o2.y));
-        int cx = (minX.x + maxX.x) / 2;
-        int cy = (minY.y + maxY.y) / 2;
+        int cx = (shape.parallelStream().mapToInt(p -> p.x).min().getAsInt() +
+                shape.parallelStream().mapToInt(p -> p.x).max().getAsInt()) / 2;
+        int cy = (shape.parallelStream().mapToInt(p -> p.y).min().getAsInt() +
+                shape.parallelStream().mapToInt(p -> p.y).max().getAsInt()) / 2;
 
         return new Point(cx, cy);
+    }
+
+    public static Point getCentroid(List<Point> shape) {
+        return new Point((int) Math.round(shape.stream().mapToInt(p -> p.x).average().getAsDouble()),
+                (int) Math.round(shape.stream().mapToInt(p -> p.y).average().getAsDouble()));
+    }
+
+    public static double distance(Point p, Point q) {
+        return Math.sqrt((p.x * p.x - q.x * q.x)*(p.x * p.x - q.x * q.x) + (p.y * p.y - q.y * q.y)*(p.y * p.y - q.y * q.y));
+    }
+
+    public double distanceTo(Point q) {
+        return distance(this, q);
     }
 
     /**

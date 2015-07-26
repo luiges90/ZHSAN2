@@ -235,7 +235,7 @@ public class MilitaryCommandTab implements CommandTab {
     public void onClick(float x, float y) {
         if (newMilitaryPos.contains(x, y)) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.NEW_MILITARY), TabListGameFrame.ListKindType.MILITARY_KIND,
-                    parent.getCurrentArchitecture().getCreatableMilitaryKinds(), TabListGameFrame.Selection.SINGLE,
+                    parent.getCurrentArchitecture().getActualCreatableMilitaryKinds(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
                         MilitaryKind kind = (MilitaryKind) selectedItems.get(0);
                         parent.getCurrentArchitecture().createMilitary(kind);

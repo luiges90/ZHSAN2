@@ -109,6 +109,14 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.values().parallelStream().max(comparator).orElse(def);
     }
 
+    public T min(Comparator<T> comparator) {
+        return content.values().parallelStream().min(comparator).get();
+    }
+
+    public T min(Comparator<T> comparator, T def) {
+        return content.values().parallelStream().min(comparator).orElse(def);
+    }
+
     public int size() {
         return content.size();
     }
