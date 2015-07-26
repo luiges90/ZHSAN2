@@ -20,12 +20,12 @@ public class GameMap {
     public static final String MAP_DATA_FILE = "MapData.txt";
 
     private int zoom;
-    private int width;
-    private int height;
-    private String fileName;
-    private int imageCount;
-    private int tileInEachImage;
-    private TerrainDetail[][] mapData;
+    private final int width;
+    private final int height;
+    private final String fileName;
+    private final int imageCount;
+    private final int tileInEachImage;
+    private final TerrainDetail[][] mapData;
 
     private GameMap(int zoom, int width, int height, String fileName, int imageCount, int tileInEachImage, TerrainDetail[][] mapData) {
         this.zoom = zoom;

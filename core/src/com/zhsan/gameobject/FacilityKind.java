@@ -14,21 +14,26 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 25/5/2015.
  */
-public class FacilityKind extends GameObject {
+public final class FacilityKind extends GameObject {
 
     public static final String SAVE_FILE = "FacilityKind.csv";
 
-    private String name;
+    private final String name;
 
-    private int endurance;
+    private final int endurance;
 
-    private boolean indestructible;
-    private boolean mustHave;
+    private final boolean indestructible;
+    private final boolean mustHave;
 
-    private GameObjectList<TerrainDetail> canBuildAtTerrain = new GameObjectList<>();
+    private final GameObjectList<TerrainDetail> canBuildAtTerrain;
 
-    private FacilityKind(int id) {
+    private FacilityKind(int id, String name, int endurance, boolean indestructible, boolean mustHave, GameObjectList<TerrainDetail> canBuildAtTerrain) {
         super(id);
+        this.name = name;
+        this.endurance = endurance;
+        this.indestructible = indestructible;
+        this.mustHave = mustHave;
+        this.canBuildAtTerrain = canBuildAtTerrain.asUnmodifiable();
     }
 
     public static final GameObjectList<FacilityKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -42,13 +47,13 @@ public class FacilityKind extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                FacilityKind kind = new FacilityKind(Integer.parseInt(line[0]));
-
-                kind.name = line[1];
-                kind.endurance = Integer.parseInt(line[2]);
-                kind.indestructible = Boolean.parseBoolean(line[3]);
-                kind.mustHave = Boolean.parseBoolean(line[4]);
-                kind.canBuildAtTerrain = scen.getTerrainDetails().getItemsFromCSV(line[5]);
+                FacilityKind kind = new FacilityKindBuilder().setId(Integer.parseInt(line[0]))
+                        .setName(line[1])
+                        .setEndurance(Integer.parseInt(line[2]))
+                        .setIndestructible(Boolean.parseBoolean(line[3]))
+                        .setMustHave(Boolean.parseBoolean(line[4]))
+                        .setCanBuildAtTerrain(scen.getTerrainDetails().getItemsFromCSV(line[5]))
+                        .createFacilityKind();
 
                 result.add(kind);
             }
@@ -90,5 +95,48 @@ public class FacilityKind extends GameObject {
 
     public GameObjectList<TerrainDetail> getCanBuildAtTerrain() {
         return canBuildAtTerrain;
+    }
+
+    public static class FacilityKindBuilder {
+        private int id;
+        private String name;
+        private int endurance;
+        private boolean indestructible;
+        private boolean mustHave;
+        private GameObjectList<TerrainDetail> canBuildAtTerrain;
+
+        public FacilityKindBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public FacilityKindBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public FacilityKindBuilder setEndurance(int endurance) {
+            this.endurance = endurance;
+            return this;
+        }
+
+        public FacilityKindBuilder setIndestructible(boolean indestructible) {
+            this.indestructible = indestructible;
+            return this;
+        }
+
+        public FacilityKindBuilder setMustHave(boolean mustHave) {
+            this.mustHave = mustHave;
+            return this;
+        }
+
+        public FacilityKindBuilder setCanBuildAtTerrain(GameObjectList<TerrainDetail> canBuildAtTerrain) {
+            this.canBuildAtTerrain = canBuildAtTerrain;
+            return this;
+        }
+
+        public FacilityKind createFacilityKind() {
+            return new FacilityKind(id, name, endurance, indestructible, mustHave, canBuildAtTerrain);
+        }
     }
 }

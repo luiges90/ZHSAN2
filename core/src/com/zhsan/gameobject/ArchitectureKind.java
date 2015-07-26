@@ -14,18 +14,29 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 7/4/2015.
  */
-public class ArchitectureKind extends GameObject {
+public final class ArchitectureKind extends GameObject {
 
     public static final String SAVE_FILE = "ArchitectureKind.csv";
 
-    private String name;
-    private float drawOffsetL, drawOffsetW;
+    private final String name;
+    private final float drawOffsetL, drawOffsetW;
 
-    private int agriculture, commerce, technology, endurance, morale, population;
-    private long maxFund, maxFood;
+    private final int agriculture, commerce, technology, endurance, morale, population;
+    private final long maxFund, maxFood;
 
-    private ArchitectureKind(int id) {
+    private ArchitectureKind(int id, String name, float drawOffsetL, float drawOffsetW, int agriculture, int commerce, int technology, int endurance, int morale, int population, long maxFund, long maxFood) {
         super(id);
+        this.name = name;
+        this.drawOffsetL = drawOffsetL;
+        this.drawOffsetW = drawOffsetW;
+        this.agriculture = agriculture;
+        this.commerce = commerce;
+        this.technology = technology;
+        this.endurance = endurance;
+        this.morale = morale;
+        this.population = population;
+        this.maxFund = maxFund;
+        this.maxFood = maxFood;
     }
 
     public static final GameObjectList<ArchitectureKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -39,21 +50,18 @@ public class ArchitectureKind extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                ArchitectureKind kind = new ArchitectureKind(Integer.parseInt(line[0]));
-
-                kind.setName(line[1]);
-
-                kind.drawOffsetL = Float.parseFloat(line[2]);
-                kind.drawOffsetW = Float.parseFloat(line[3]);
-
-                kind.agriculture = Integer.parseInt(line[4]);
-                kind.commerce = Integer.parseInt(line[5]);
-                kind.technology = Integer.parseInt(line[6]);
-                kind.morale = Integer.parseInt(line[7]);
-                kind.endurance = Integer.parseInt(line[8]);
-                kind.population = Integer.parseInt(line[9]);
-                kind.maxFund = Long.parseLong(line[10]);
-                kind.maxFood = Long.parseLong(line[11]);
+                ArchitectureKind kind = new ArchitectureKindBuilder().setId(Integer.parseInt(line[0]))
+                        .setName(line[1])
+                        .setDrawOffsetL(Float.parseFloat(line[2]))
+                        .setDrawOffsetW(Float.parseFloat(line[3]))
+                        .setAgriculture(Integer.parseInt(line[4]))
+                        .setCommerce(Integer.parseInt(line[5]))
+                        .setTechnology(Integer.parseInt(line[6]))
+                        .setMorale(Integer.parseInt(line[7]))
+                        .setEndurance(Integer.parseInt(line[8]))
+                        .setPopulation(Integer.parseInt(line[9]))
+                        .setMaxFund(Long.parseLong(line[10]))
+                        .setMaxFood(Long.parseLong(line[11])).createArchitectureKind();
 
                 result.add(kind);
             }
@@ -95,10 +103,6 @@ public class ArchitectureKind extends GameObject {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public float getDrawOffsetLength() {
         return drawOffsetL;
     }
@@ -137,5 +141,84 @@ public class ArchitectureKind extends GameObject {
 
     public long getMaxFood() {
         return maxFood;
+    }
+
+    public static class ArchitectureKindBuilder {
+        private int id;
+        private String name;
+        private float drawOffsetL;
+        private float drawOffsetW;
+        private int agriculture;
+        private int commerce;
+        private int technology;
+        private int endurance;
+        private int morale;
+        private int population;
+        private long maxFund;
+        private long maxFood;
+
+        public ArchitectureKindBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setDrawOffsetL(float drawOffsetL) {
+            this.drawOffsetL = drawOffsetL;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setDrawOffsetW(float drawOffsetW) {
+            this.drawOffsetW = drawOffsetW;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setAgriculture(int agriculture) {
+            this.agriculture = agriculture;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setCommerce(int commerce) {
+            this.commerce = commerce;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setTechnology(int technology) {
+            this.technology = technology;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setEndurance(int endurance) {
+            this.endurance = endurance;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setMorale(int morale) {
+            this.morale = morale;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setPopulation(int population) {
+            this.population = population;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setMaxFund(long maxFund) {
+            this.maxFund = maxFund;
+            return this;
+        }
+
+        public ArchitectureKindBuilder setMaxFood(long maxFood) {
+            this.maxFood = maxFood;
+            return this;
+        }
+
+        public ArchitectureKind createArchitectureKind() {
+            return new ArchitectureKind(id, name, drawOffsetL, drawOffsetW, agriculture, commerce, technology, endurance, morale, population, maxFund, maxFood);
+        }
     }
 }

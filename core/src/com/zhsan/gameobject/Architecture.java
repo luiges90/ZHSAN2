@@ -413,7 +413,7 @@ public class Architecture extends GameObject {
     private void gainResources() {
         this.fund = (int) MathUtils.clamp(this.fund +
                         GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation),
-                0, this.getKind().getMaxFood());
+                0, this.getKind().getMaxFund());
         this.food = (int) MathUtils.clamp(this.food +
                 GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
                 0, this.getKind().getMaxFood());
