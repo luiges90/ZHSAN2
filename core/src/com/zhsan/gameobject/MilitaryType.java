@@ -14,11 +14,16 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 19/7/2015.
  */
-public class MilitaryType extends GameObject {
+public final class MilitaryType extends GameObject {
 
     public static final String SAVE_FILE = "MilitaryType.csv";
 
-    private String name;
+    private final String name;
+
+    private MilitaryType(int id, String name) {
+        super(id);
+        this.name = name;
+    }
 
     public static final GameObjectList<MilitaryType> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<MilitaryType> result = new GameObjectList<>();
@@ -31,8 +36,9 @@ public class MilitaryType extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                MilitaryType type = new MilitaryType(Integer.parseInt(line[0]));
-                type.name = line[1];
+                MilitaryType type = new MilitaryTypeBuilder().setId(Integer.parseInt(line[0]))
+                        .setName(line[1])
+                        .createMilitaryType();
 
                 result.add(type);
             }
@@ -58,12 +64,27 @@ public class MilitaryType extends GameObject {
         }
     }
 
-    protected MilitaryType(int id) {
-        super(id);
-    }
-
     @Override
     public String getName() {
         return name;
+    }
+
+    public static class MilitaryTypeBuilder {
+        private int id;
+        private String name;
+
+        public MilitaryTypeBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public MilitaryTypeBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public MilitaryType createMilitaryType() {
+            return new MilitaryType(id, name);
+        }
     }
 }

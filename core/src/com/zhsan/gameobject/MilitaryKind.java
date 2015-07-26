@@ -10,24 +10,34 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * Created by Peter on 19/7/2015.
  */
-public class MilitaryKind extends GameObject {
+public final class MilitaryKind extends GameObject {
 
     public static final String SAVE_FILE = "MilitaryKind.csv";
 
-    private GameScenario scenario;
+    private final GameScenario scenario;
 
-    private MilitaryType type;
+    private final MilitaryType type;
 
-    private String name;
-    private String description;
-    private boolean canOnlyCreateAtArchitecture;
-    private int cost;
-    private float transportCost;
+    private final String name;
+    private final String description;
+    private final boolean canOnlyCreateAtArchitecture;
+    private final int cost;
+    private final float transportCost;
+
+    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost) {
+        super(id);
+        this.scenario = scenario;
+        this.type = type;
+        this.name = name;
+        this.description = description;
+        this.canOnlyCreateAtArchitecture = canOnlyCreateAtArchitecture;
+        this.cost = cost;
+        this.transportCost = transportCost;
+    }
 
     public static GameObjectList<MilitaryKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<MilitaryKind> result = new GameObjectList<>();
@@ -40,15 +50,15 @@ public class MilitaryKind extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                MilitaryKind kind = new MilitaryKind(Integer.parseInt(line[0]));
-                kind.name = line[1];
-                kind.type = scen.getMilitaryTypes().get(Integer.parseInt(line[2]));
-                kind.description = line[3];
-                kind.canOnlyCreateAtArchitecture = Boolean.parseBoolean(line[4]);
-                kind.cost = Integer.parseInt(line[5]);
-                kind.transportCost = Float.parseFloat(line[6]);
-
-                kind.scenario = scen;
+                MilitaryKind kind = new MilitaryKindBuilder().setId(Integer.parseInt(line[0]))
+                        .setName(line[1])
+                        .setType(scen.getMilitaryTypes().get(Integer.parseInt(line[2])))
+                        .setDescription(line[3])
+                        .setCanOnlyCreateAtArchitecture(Boolean.parseBoolean(line[4]))
+                        .setCost(Integer.parseInt(line[5]))
+                        .setTransportCost(Float.parseFloat(line[6]))
+                        .setScenario(scen)
+                        .createMilitaryKind();
 
                 result.add(kind);
             }
@@ -79,10 +89,6 @@ public class MilitaryKind extends GameObject {
         }
     }
 
-    protected MilitaryKind(int id) {
-        super(id);
-    }
-
     @Override
     public String getName() {
         return name;
@@ -97,8 +103,7 @@ public class MilitaryKind extends GameObject {
     }
 
     public MilitaryKind setCost(int cost) {
-        this.cost = cost;
-        return this;
+        return new MilitaryKindBuilder().from(this).setCost(cost).createMilitaryKind();
     }
 
     public int getCost(Architecture location) {
@@ -117,4 +122,70 @@ public class MilitaryKind extends GameObject {
         return scenario.getArchitectures().filter(a -> a.getCreatableMilitaryKinds().contains(this));
     }
 
+    public static class MilitaryKindBuilder {
+        private int id;
+        private GameScenario scenario;
+        private MilitaryType type;
+        private String name;
+        private String description;
+        private boolean canOnlyCreateAtArchitecture;
+        private int cost;
+        private float transportCost;
+
+        public MilitaryKindBuilder from(MilitaryKind old) {
+            this.id = old.getId();
+            this.scenario = old.scenario;
+            this.type = old.type;
+            this.name = old.name;
+            this.description = old.description;
+            this.canOnlyCreateAtArchitecture = old.canOnlyCreateAtArchitecture;
+            this.cost = old.cost;
+            this.transportCost = old.transportCost;
+            return this;
+        }
+
+        public MilitaryKindBuilder setId(int id) {
+            this.id = id;
+            return this;
+        }
+
+        public MilitaryKindBuilder setScenario(GameScenario scenario) {
+            this.scenario = scenario;
+            return this;
+        }
+
+        public MilitaryKindBuilder setType(MilitaryType type) {
+            this.type = type;
+            return this;
+        }
+
+        public MilitaryKindBuilder setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public MilitaryKindBuilder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public MilitaryKindBuilder setCanOnlyCreateAtArchitecture(boolean canOnlyCreateAtArchitecture) {
+            this.canOnlyCreateAtArchitecture = canOnlyCreateAtArchitecture;
+            return this;
+        }
+
+        public MilitaryKindBuilder setCost(int cost) {
+            this.cost = cost;
+            return this;
+        }
+
+        public MilitaryKindBuilder setTransportCost(float transportCost) {
+            this.transportCost = transportCost;
+            return this;
+        }
+
+        public MilitaryKind createMilitaryKind() {
+            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost);
+        }
+    }
 }
