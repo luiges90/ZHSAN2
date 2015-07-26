@@ -20,4 +20,6 @@ public interface CommandTab {
 
     public void onClick(float x, float y);
 
+    public void invalidate();
+
 }

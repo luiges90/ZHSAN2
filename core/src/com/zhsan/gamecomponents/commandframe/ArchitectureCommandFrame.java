@@ -149,6 +149,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
 
     public void show(@NotNull Architecture architecture) {
         currentArchitecture = architecture;
+        tabs.values().forEach(CommandTab::invalidate);
         this.setVisible(true);
     }
 

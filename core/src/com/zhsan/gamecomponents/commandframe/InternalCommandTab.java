@@ -126,6 +126,11 @@ public class InternalCommandTab implements CommandTab {
 
     }
 
+    public void invalidate() {
+        mayorSet = false;
+        internalPortraits.forEach(t -> t.leaderSet = false);
+    }
+
     private void updateMayor() {
         mayor = parent.getCurrentArchitecture().getMayor();
         mayorSet = true;

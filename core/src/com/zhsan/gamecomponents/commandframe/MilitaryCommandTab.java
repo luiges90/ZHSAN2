@@ -124,6 +124,10 @@ public class MilitaryCommandTab implements CommandTab {
         }
     }
 
+    public void invalidate() {
+        invalidateMilitaryListPane();
+    }
+
     private void invalidateMilitaryListPane() {
         if (militaryListPane != null) {
             militaryListPane.clear();
