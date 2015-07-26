@@ -33,7 +33,7 @@ public final class FacilityKind extends GameObject {
         this.endurance = endurance;
         this.indestructible = indestructible;
         this.mustHave = mustHave;
-        this.canBuildAtTerrain = canBuildAtTerrain.asUnmodifiable();
+        this.canBuildAtTerrain = new GameObjectList<>(canBuildAtTerrain, true);
     }
 
     public static final GameObjectList<FacilityKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {

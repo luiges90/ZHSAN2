@@ -159,15 +159,15 @@ public class GameScenario {
     }
 
     public GameObjectList<MilitaryType> getMilitaryTypes() {
-        return militaryTypes.asUnmodifiable();
+        return new GameObjectList<>(militaryTypes, true);
     }
 
     public GameObjectList<MilitaryKind> getMilitaryKinds() {
-        return militaryKinds.asUnmodifiable();
+        return new GameObjectList<>(militaryKinds, true);
     }
 
     public GameObjectList<TerrainDetail> getTerrainDetails() {
-        return terrainDetails.asUnmodifiable();
+        return new GameObjectList<>(terrainDetails, true);
     }
 
     public GameMap getGameMap() {
@@ -179,7 +179,7 @@ public class GameScenario {
     }
 
     public GameObjectList<Architecture> getArchitectures() {
-        return architectures.asUnmodifiable();
+        return new GameObjectList<>(architectures, true);
     }
 
     public Person getPerson(int id) {
@@ -187,20 +187,20 @@ public class GameScenario {
     }
 
     public GameObjectList<Person> getPersons() {
-        return persons.asUnmodifiable();
+        return new GameObjectList<>(persons, true);
     }
 
     public GameObjectList<Facility> getFacilities() {
-        return facilities.asUnmodifiable();
+        return new GameObjectList<>(facilities, true);
     }
 
     public GameObjectList<FacilityKind> getFacilityKinds() {
-        return facilityKinds.asUnmodifiable();
+        return new GameObjectList<>(facilityKinds, true);
     }
 
     public GameObjectList<Person> getAvailablePersons() {
-        return persons.filter(person -> person.getState() != Person.State.DEAD && person.getState() != Person.State.UNAVAILABLE)
-                .asUnmodifiable();
+        GameObjectList<Person> persons1 = persons.filter(person -> person.getState() != Person.State.DEAD && person.getState() != Person.State.UNAVAILABLE);
+        return new GameObjectList<>(persons1, true);
     }
 
     public Architecture getArchitectureAt(Point p) {
@@ -212,15 +212,15 @@ public class GameScenario {
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {
-        return architectureKinds.asUnmodifiable();
+        return new GameObjectList<>(architectureKinds, true);
     }
 
     public GameObjectList<Section> getSections() {
-        return sections.asUnmodifiable();
+        return new GameObjectList<>(sections, true);
     }
 
     public GameObjectList<Faction> getFactions() {
-        return factions.asUnmodifiable();
+        return new GameObjectList<>(factions, true);
     }
 
     public GameData getGameData() {
@@ -236,7 +236,7 @@ public class GameScenario {
     }
 
     public GameObjectList<Military> getMilitaries() {
-        return militaries.asUnmodifiable();
+        return new GameObjectList<>(militaries, true);
     }
 
     public boolean createMilitary(Architecture location, MilitaryKind kind) {
@@ -303,20 +303,20 @@ public class GameScenario {
 
         TerrainDetail.toCSV(result, terrainDetails);
         GameMap.toCSV(result, gameMap);
-        ArchitectureKind.toCSV(result, architectureKinds.asUnmodifiable());
+        ArchitectureKind.toCSV(result, new GameObjectList<>(architectureKinds, true));
 
-        FacilityKind.toCSV(result, facilityKinds.asUnmodifiable());
+        FacilityKind.toCSV(result, new GameObjectList<>(facilityKinds, true));
 
-        MilitaryType.toCSV(result, militaryTypes.asUnmodifiable());
-        MilitaryKind.toCSV(result, militaryKinds.asUnmodifiable());
+        MilitaryType.toCSV(result, new GameObjectList<>(militaryTypes, true));
+        MilitaryKind.toCSV(result, new GameObjectList<>(militaryKinds, true));
 
         GameData.toCSV(result, gameData);
 
-        Architecture.toCSV(result, architectures.asUnmodifiable());
-        Section.toCSV(result, sections.asUnmodifiable());
-        Faction.toCSV(result, factions.asUnmodifiable());
-        Person.toCSV(result, persons.asUnmodifiable());
-        Military.toCSV(result, militaries.asUnmodifiable());
+        Architecture.toCSV(result, new GameObjectList<>(architectures, true));
+        Section.toCSV(result, new GameObjectList<>(sections, true));
+        Faction.toCSV(result, new GameObjectList<>(factions, true));
+        Person.toCSV(result, new GameObjectList<>(persons, true));
+        Military.toCSV(result, new GameObjectList<>(militaries, true));
     }
 
 }

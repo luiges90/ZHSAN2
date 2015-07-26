@@ -134,14 +134,6 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.keySet().parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
-    /**
-     * Return a new GameObjectList that is not modifiable
-     * @return
-     */
-    public GameObjectList<T> asUnmodifiable() {
-        return new GameObjectList<>(this, true);
-    }
-
     private class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
 
         @Override
