@@ -17,5 +17,5 @@
         gainFoodPerPopulation="0.003"
         aiTimeout="20"
         recruitCostFactor="0.1"
-        recruitEfficiency="1.0"
+        recruitEfficiency="0.005"
         />

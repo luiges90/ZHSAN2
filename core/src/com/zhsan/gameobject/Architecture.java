@@ -395,7 +395,7 @@ public class Architecture extends GameObject {
 
         float agricultureAbility = (mayor == null ? 0 : mayor.getAgricultureAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
                 agricultureWorkingPersons.getAll().parallelStream()
-                .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+                        .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.agriculture = Utility.diminishingGrowth(
                 this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
 
@@ -429,7 +429,7 @@ public class Architecture extends GameObject {
                         GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation),
                 0, this.getKind().getMaxFund());
         this.food = (int) MathUtils.clamp(this.food +
-                GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
+                        GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
                 0, this.getKind().getMaxFood());
     }
 
@@ -455,7 +455,7 @@ public class Architecture extends GameObject {
             Person p = recruitWorkingPersons.get(personIndex % recruitWorkingPersons.size());
             personIndex++;
 
-            int recruited = Math.round(p.getRecruitAbility() * GlobalVariables.recruitEfficiency);
+            int recruited = Math.round(p.getRecruitAbility() * m.getKind().getUnitQuantity() * GlobalVariables.recruitEfficiency);
             m.increaseQuantity(Math.min(population, recruited));
             this.losePopulation(recruited);
 
