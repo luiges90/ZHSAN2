@@ -159,7 +159,6 @@ public class Faction extends GameObject {
     }
 
     public void ai() {
-        System.out.println("Running AI of Faction " + this.getId() + " on thread " + Thread.currentThread().getName() + " on date " + scenario.getGameDate());
         LuaAI.runFactionAi(this);
     }
 
