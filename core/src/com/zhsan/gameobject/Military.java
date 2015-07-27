@@ -148,4 +148,9 @@ public class Military extends GameObject {
     public int getQuantity() {
         return quantity;
     }
+
+    public void increaseQuantity(int x) {
+        quantity = Math.min(quantity + x, getKind().getQuantity());
+    }
+
 }

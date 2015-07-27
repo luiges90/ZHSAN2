@@ -27,8 +27,9 @@ public final class MilitaryKind extends GameObject {
     private final boolean canOnlyCreateAtArchitecture;
     private final int cost;
     private final float transportCost;
+    private final int quantity;
 
-    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost) {
+    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity) {
         super(id);
         this.scenario = scenario;
         this.type = type;
@@ -37,6 +38,7 @@ public final class MilitaryKind extends GameObject {
         this.canOnlyCreateAtArchitecture = canOnlyCreateAtArchitecture;
         this.cost = cost;
         this.transportCost = transportCost;
+        this.quantity = quantity;
     }
 
     public static GameObjectList<MilitaryKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -57,6 +59,7 @@ public final class MilitaryKind extends GameObject {
                         .setCanOnlyCreateAtArchitecture(Boolean.parseBoolean(line[4]))
                         .setCost(Integer.parseInt(line[5]))
                         .setTransportCost(Float.parseFloat(line[6]))
+                        .setQuantity(Integer.parseInt(line[7]))
                         .setScenario(scen)
                         .createMilitaryKind();
 
@@ -81,7 +84,8 @@ public final class MilitaryKind extends GameObject {
                         detail.description,
                         String.valueOf(detail.canOnlyCreateAtArchitecture),
                         String.valueOf(detail.cost),
-                        String.valueOf(detail.transportCost)
+                        String.valueOf(detail.transportCost),
+                        String.valueOf(detail.quantity)
                 });
             }
         } catch (IOException e) {
@@ -104,6 +108,10 @@ public final class MilitaryKind extends GameObject {
 
     public MilitaryKind setCost(int cost) {
         return new MilitaryKindBuilder().from(this).setCost(cost).createMilitaryKind();
+    }
+
+    public int getQuantity() {
+        return quantity;
     }
 
     public int getCost(Architecture location) {
@@ -131,6 +139,7 @@ public final class MilitaryKind extends GameObject {
         private boolean canOnlyCreateAtArchitecture;
         private int cost;
         private float transportCost;
+        private int quantity;
 
         public MilitaryKindBuilder from(MilitaryKind old) {
             this.id = old.getId();
@@ -141,6 +150,7 @@ public final class MilitaryKind extends GameObject {
             this.canOnlyCreateAtArchitecture = old.canOnlyCreateAtArchitecture;
             this.cost = old.cost;
             this.transportCost = old.transportCost;
+            this.quantity = old.quantity;
             return this;
         }
 
@@ -184,8 +194,13 @@ public final class MilitaryKind extends GameObject {
             return this;
         }
 
+        public MilitaryKindBuilder setQuantity(int quantity) {
+            this.quantity = quantity;
+            return this;
+        }
+
         public MilitaryKind createMilitaryKind() {
-            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost);
+            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity);
         }
     }
 }

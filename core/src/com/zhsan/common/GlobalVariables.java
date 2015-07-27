@@ -43,6 +43,9 @@ public final class GlobalVariables {
     public static float gainFundPerPopulation = 0.003f;
     public static float gainFoodPerPopulation = 0.003f;
 
+    public static float recruitCostFactor = 0.1f;
+    public static float recruitEfficiency = 1.0f;
+
     public static long aiTimeout = 20;
 
     public static void load() {
@@ -74,6 +77,8 @@ public final class GlobalVariables {
             gainFoodPerPopulation = Float.parseFloat(XmlHelper.loadAttribute(node, "gainFoodPerPopulation"));
             internalCost = Integer.parseInt(XmlHelper.loadAttribute(node, "internalCost"));
             aiTimeout = Long.parseLong(XmlHelper.loadAttribute(node, "aiTimeout"));
+            recruitCostFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitCostFactor"));
+            recruitEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitEfficiency"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

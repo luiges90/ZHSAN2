@@ -13,7 +13,9 @@
         internalCost="20"
         gainFund="1.0f"
         gainFood="60.0f"
-        gainFundPerPopulation="0.003f"
-        gainFoodPerPopulation="0.003f"
+        gainFundPerPopulation="0.003"
+        gainFoodPerPopulation="0.003"
         aiTimeout="20"
+        recruitCostFactor="0.1"
+        recruitEfficiency="1.0"
         />

@@ -297,6 +297,10 @@ public class Architecture extends GameObject {
         return scenario.getMilitaries().filter(x -> x.getLocation().get() == this);
     }
 
+    public GameObjectList<Military> getRecruitableMilitaries() {
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() < x.getKind().getQuantity());
+    }
+
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
         return creatableMilitaryKinds;
     }
@@ -330,9 +334,19 @@ public class Architecture extends GameObject {
         return scenario.createMilitary(this, kind);
     }
 
+
+    public void loseFund(int x) {
+        fund = Math.max(fund - x, 0);
+    }
+
+    public void losePopulation(int x) {
+        population = Math.max(population - x, 0);
+    }
+
     public void advanceDay() {
         loseInternal();
         developInternal();
+        recruitMilitaries();
         if (scenario.getGameDate().getDayOfMonth() == 1) {
             gainResources();
         }
@@ -419,8 +433,30 @@ public class Architecture extends GameObject {
                 0, this.getKind().getMaxFood());
     }
 
-    public void loseFund(int x) {
-        fund = Math.max(fund - x, 0);
+    private void recruitMilitaries() {
+        if (this.population <= 0) return;
+
+        List<Person> recruitWorkingPersons = getWorkingPersons(Person.DoingWork.RECRUIT).shuffledList();
+        List<Military> toRecruit = getRecruitableMilitaries().shuffledList();
+
+        if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0) return;
+
+        int personIndex = 0;
+        for (Military m : toRecruit) {
+            int cost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
+            if (cost < this.fund) {
+                break;
+            }
+            loseFund(cost);
+
+            Person p = recruitWorkingPersons.get(personIndex % recruitWorkingPersons.size());
+            personIndex++;
+
+            int recruited = Math.round(p.getRecruitAbility() * GlobalVariables.recruitEfficiency);
+            m.increaseQuantity(Math.min(population, recruited));
+            this.losePopulation(recruited);
+        }
     }
+
 
 }

@@ -99,7 +99,7 @@ public class Person extends GameObject {
     }
 
     public enum DoingWork {
-        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR;
+        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR, RECRUIT;
 
         public static DoingWork fromCSV(String s) {
             switch (s) {
@@ -110,6 +110,7 @@ public class Person extends GameObject {
                 case "morale": return MORALE;
                 case "endurance": return ENDURANCE;
                 case "mayor": return MAYOR;
+                case "recruit": return RECRUIT;
                 default: return NONE;
             }
         }
@@ -123,6 +124,7 @@ public class Person extends GameObject {
                 case MORALE: return "morale";
                 case ENDURANCE: return "endurance";
                 case MAYOR: return "mayor";
+                case RECRUIT: return "recruit";
             }
             assert false;
             return null;
@@ -362,6 +364,11 @@ public class Person extends GameObject {
     @LuaAI.ExportToLua
     public int getEnduranceAbility() {
         return getStrength() + getCommand() + getIntelligence() + getPolitics();
+    }
+
+    @LuaAI.ExportToLua
+    public int getRecruitAbility() {
+        return 2 * getCommand() + 2 * getGlamour();
     }
 
     @Override

@@ -13,8 +13,10 @@ import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
+import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.Military;
 import com.zhsan.gameobject.MilitaryKind;
+import com.zhsan.gameobject.Person;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -240,6 +242,16 @@ public class MilitaryCommandTab implements CommandTab {
                     selectedItems -> {
                         MilitaryKind kind = (MilitaryKind) selectedItems.get(0);
                         parent.getCurrentArchitecture().createMilitary(kind);
+                        invalidateMilitaryListPane();
+                    });
+        } else if (recruitPos.contains(x, y) && parent.getCurrentArchitecture().getRecruitableMilitaries().size() > 0) {
+            parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.RECRUIT_MILITARY), TabListGameFrame.ListKindType.PERSON,
+                    parent.getCurrentArchitecture().getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
+                    selectedItems -> {
+                        for (GameObject i : selectedItems) {
+                            Person p = (Person) i;
+                            p.setDoingWork(Person.DoingWork.RECRUIT);
+                        }
                         invalidateMilitaryListPane();
                     });
         }
