@@ -318,6 +318,8 @@ public class GameScreen extends WidgetGroup {
                         x.passed(days - i - 1);
                     }
 
+                    architectureCommandFrame.invalidateData();
+
                     while (pauseDayRunner.get()) {
                         synchronized (dayPauseLock) {
                             try {

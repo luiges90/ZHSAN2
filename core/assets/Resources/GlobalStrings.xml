@@ -25,6 +25,7 @@
         ArchitectureMorale="民心"
         ArchitectureEndurance="耐久"
         Mayor="太守"
+        ArchitectureRecruit="補充"
         NewMilitary="新編編隊"
         RecruitMilitary="補充編隊"
         />

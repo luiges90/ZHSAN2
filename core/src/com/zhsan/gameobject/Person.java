@@ -334,6 +334,7 @@ public class Person extends GameObject {
             case TECHNOLOGY: return GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY);
             case MORALE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE);
             case ENDURANCE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE);
+            case RECRUIT: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_RECRUIT);
             case MAYOR: return GlobalStrings.getString(GlobalStrings.Keys.MAYOR);
             default:
                 assert false;

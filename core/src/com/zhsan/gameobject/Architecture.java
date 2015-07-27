@@ -439,12 +439,15 @@ public class Architecture extends GameObject {
         List<Person> recruitWorkingPersons = getWorkingPersons(Person.DoingWork.RECRUIT).shuffledList();
         List<Military> toRecruit = getRecruitableMilitaries().shuffledList();
 
-        if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0) return;
+        if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0) {
+            recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+            return;
+        }
 
         int personIndex = 0;
         for (Military m : toRecruit) {
             int cost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
-            if (cost < this.fund) {
+            if (cost > this.fund) {
                 break;
             }
             loseFund(cost);
@@ -455,6 +458,10 @@ public class Architecture extends GameObject {
             int recruited = Math.round(p.getRecruitAbility() * GlobalVariables.recruitEfficiency);
             m.increaseQuantity(Math.min(population, recruited));
             this.losePopulation(recruited);
+
+            if (this.population <= 0) {
+                break;
+            }
         }
     }
 

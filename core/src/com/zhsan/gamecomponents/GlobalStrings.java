@@ -41,6 +41,7 @@ public class GlobalStrings {
         TECHNOLOGY("Technology"),
         ARCHITECTURE_MORALE("ArchitectureMorale"),
         ARCHITECTURE_ENDURANCE("ArchitectureEndurance"),
+        ARCHITECTURE_RECRUIT("ArchitectureRecruit"),
         MAYOR("Mayor"),
         MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
         MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader"),
