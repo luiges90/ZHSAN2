@@ -300,7 +300,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Military> getTrainableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() > 0 &&
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && (x.getQuantity() > 0 || this.getRecruitableMilitaries().size() > 0) &&
                 (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
     }
 
@@ -474,7 +474,7 @@ public class Architecture extends GameObject {
         float recruited = recruitAbility * GlobalVariables.recruitEfficiency;
         for (Military m : actualToRecruit) {
             int thisRecruited = Math.round(recruited / actualToRecruit.size() * m.getKind().getUnitQuantity());
-            thisRecruited = Math.max(population, thisRecruited);
+            thisRecruited = Math.min(population, thisRecruited);
             m.increaseQuantity(thisRecruited, GlobalVariables.recruitMorale, GlobalVariables.recruitCombativity);
             loseFund(Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor));
             losePopulation(thisRecruited);
