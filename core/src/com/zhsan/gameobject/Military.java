@@ -155,6 +155,10 @@ public class Military extends GameObject {
         return quantity;
     }
 
+    public float getUnitCount() {
+        return quantity / getKind().getUnitQuantity();
+    }
+
     public int getMorale() {
         return morale;
     }

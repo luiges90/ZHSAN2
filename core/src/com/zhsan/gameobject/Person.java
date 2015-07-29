@@ -379,6 +379,11 @@ public class Person extends GameObject {
         return 2 * getCommand() + 2 * getGlamour();
     }
 
+    @LuaAI.ExportToLua
+    public int getTrainingAbility() {
+        return 2 * getCommand() + 2 * getStrength();
+    }
+
     @Override
     public String toString() {
         return "Person{" +

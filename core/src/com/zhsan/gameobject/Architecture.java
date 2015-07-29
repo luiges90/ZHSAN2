@@ -10,14 +10,12 @@ import com.zhsan.common.Utility;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
-import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -302,7 +300,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Military> getTrainableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this &&
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() > 0 &&
                 (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
     }
 
@@ -351,6 +349,7 @@ public class Architecture extends GameObject {
         loseInternal();
         developInternal();
         recruitMilitaries();
+        trainMilitaries();
         if (scenario.getGameDate().getDayOfMonth() == 1) {
             gainResources();
         }
@@ -440,34 +439,70 @@ public class Architecture extends GameObject {
     private void recruitMilitaries() {
         if (this.population <= 0) return;
 
-        List<Person> recruitWorkingPersons = getWorkingPersons(Person.DoingWork.RECRUIT).shuffledList();
-        List<Military> toRecruit = getRecruitableMilitaries().shuffledList();
+        GameObjectList<Person> recruitWorkingPersons = getWorkingPersons(Person.DoingWork.RECRUIT);
+        GameObjectList<Military> toRecruit = getRecruitableMilitaries();
 
         if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0) {
             recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
             return;
         }
 
-        int personIndex = 0;
-        for (Military m : toRecruit) {
-            int cost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
-            if (cost > this.fund) {
+        List<Military> costMilitary = toRecruit.sort((a, b) -> {
+            float costA = a.getKind().getCost(this) * GlobalVariables.recruitCostFactor;
+            float costB = b.getKind().getCost(this) * GlobalVariables.recruitCostFactor;
+            return Float.compare(costA, costB);
+        });
+        int runningCost = 0;
+        List<Military> actualToRecruit = new ArrayList<>();
+        for (Military m : costMilitary) {
+            int newCost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
+            if (runningCost + newCost > fund) {
                 break;
+            } else {
+                runningCost += newCost;
+                actualToRecruit.add(m);
             }
-            loseFund(cost);
+        }
 
-            Person p = recruitWorkingPersons.get(personIndex % recruitWorkingPersons.size());
-            personIndex++;
+        if (actualToRecruit.size() == 0) {
+            recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+            return;
+        }
 
-            int recruited = Math.round(p.getRecruitAbility() * m.getKind().getUnitQuantity() * GlobalVariables.recruitEfficiency);
-            m.increaseQuantity(Math.min(population, recruited));
-            this.losePopulation(recruited);
+        float recruitAbility = recruitWorkingPersons.getAll().parallelStream()
+                .map(p -> (float) p.getRecruitAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        float recruited = recruitAbility * GlobalVariables.recruitEfficiency;
+        for (Military m : actualToRecruit) {
+            int thisRecruited = Math.round(recruited / actualToRecruit.size() * m.getKind().getUnitQuantity());
+            thisRecruited = Math.max(population, thisRecruited);
+            m.increaseQuantity(thisRecruited, GlobalVariables.recruitMorale, GlobalVariables.recruitCombativity);
+            loseFund(Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor));
+            losePopulation(thisRecruited);
 
             if (this.population <= 0) {
+                recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
                 break;
             }
         }
     }
 
+    private void trainMilitaries() {
+        GameObjectList<Person> trainWorkingPersons = getWorkingPersons(Person.DoingWork.TRAINING);
+        GameObjectList<Military> toTrain = getTrainableMilitaries();
+
+        if (trainWorkingPersons.size() <= 0 || toTrain.size() <= 0) {
+            trainWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+            return;
+        }
+
+        float trainAbility = trainWorkingPersons.getAll().parallelStream()
+                .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+        float trained = trainAbility * GlobalVariables.trainEfficiency;
+        for (Military m : toTrain) {
+            int thisTrained = Math.round(trained / m.getUnitCount() / toTrain.size());
+            m.increaseCombativity(thisTrained);
+            m.increaseMorale((int) (thisTrained * GlobalVariables.moraleTrainFactor));
+        }
+    }
 
 }
