@@ -46,6 +46,11 @@ public final class GlobalVariables {
     public static float recruitCostFactor = 0.1f;
     public static float recruitEfficiency = 1.0f;
 
+    public static int maxMorale = 100;
+    public static int maxCombativity = 100;
+    public static int recruitMorale = 50;
+    public static int recruitCombativity = 50;
+
     public static long aiTimeout = 20;
 
     public static void load() {
@@ -79,6 +84,10 @@ public final class GlobalVariables {
             aiTimeout = Long.parseLong(XmlHelper.loadAttribute(node, "aiTimeout"));
             recruitCostFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitCostFactor"));
             recruitEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitEfficiency"));
+            maxMorale = Integer.parseInt(XmlHelper.loadAttribute(node, "maxMorale"));
+            maxCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "maxCombativity"));
+            recruitMorale = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitMorale"));
+            recruitCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitCombativity"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

@@ -41,13 +41,15 @@ public class GlobalStrings {
         TECHNOLOGY("Technology"),
         ARCHITECTURE_MORALE("ArchitectureMorale"),
         ARCHITECTURE_ENDURANCE("ArchitectureEndurance"),
-        ARCHITECTURE_RECRUIT("ArchitectureRecruit"),
         MAYOR("Mayor"),
         MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
         MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader"),
         MILITARY_SAVE_HEADER("militarySaveHeader"),
         NEW_MILITARY("NewMilitary"),
-        RECRUIT_MILITARY("RecruitMilitary");
+        RECRUIT_MILITARY("RecruitMilitary"),
+        TRAIN_MILITARY("TrainMilitary"),
+        MILITARY_RECRUIT("MilitaryRecruit"),
+        MILITARY_TRAINING("MilitaryTraining");
 
         private final String xmlName;
         Keys(String name) {

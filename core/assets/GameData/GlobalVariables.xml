@@ -18,4 +18,8 @@
         aiTimeout="20"
         recruitCostFactor="0.1"
         recruitEfficiency="0.005"
+        maxMorale="100"
+        maxCombativity="100"
+        recruitMorale="50"
+        recruitCombativity="50"
         />

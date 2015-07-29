@@ -301,6 +301,11 @@ public class Architecture extends GameObject {
         return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() < x.getKind().getQuantity());
     }
 
+    public GameObjectList<Military> getTrainableMilitaries() {
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this &&
+                (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
+    }
+
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
         return creatableMilitaryKinds;
     }
@@ -333,7 +338,6 @@ public class Architecture extends GameObject {
     public boolean createMilitary(MilitaryKind kind) {
         return scenario.createMilitary(this, kind);
     }
-
 
     public void loseFund(int x) {
         fund = Math.max(fund - x, 0);

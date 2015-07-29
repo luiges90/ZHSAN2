@@ -99,7 +99,7 @@ public class Person extends GameObject {
     }
 
     public enum DoingWork {
-        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR, RECRUIT;
+        NONE, AGRICULTURE, COMMERCE, TECHNOLOGY, MORALE, ENDURANCE, MAYOR, RECRUIT, TRAINING;
 
         public static DoingWork fromCSV(String s) {
             switch (s) {
@@ -111,6 +111,7 @@ public class Person extends GameObject {
                 case "endurance": return ENDURANCE;
                 case "mayor": return MAYOR;
                 case "recruit": return RECRUIT;
+                case "training": return TRAINING;
                 default: return NONE;
             }
         }
@@ -125,9 +126,27 @@ public class Person extends GameObject {
                 case ENDURANCE: return "endurance";
                 case MAYOR: return "mayor";
                 case RECRUIT: return "recruit";
+                case TRAINING: return "training";
             }
             assert false;
             return null;
+        }
+
+        public String toDisplay() {
+            switch (this) {
+                case NONE: return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
+                case AGRICULTURE: return GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE);
+                case COMMERCE: return GlobalStrings.getString(GlobalStrings.Keys.COMMERCE);
+                case TECHNOLOGY: return GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY);
+                case MORALE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE);
+                case ENDURANCE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE);
+                case RECRUIT: return GlobalStrings.getString(GlobalStrings.Keys.MILITARY_RECRUIT);
+                case TRAINING: return GlobalStrings.getString(GlobalStrings.Keys.MILITARY_TRAINING);
+                case MAYOR: return GlobalStrings.getString(GlobalStrings.Keys.MAYOR);
+                default:
+                    assert false;
+                    return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
+            }
         }
     }
 
@@ -327,19 +346,7 @@ public class Person extends GameObject {
     }
 
     public String getDoingWorkString() {
-        switch (getDoingWorkType()) {
-            case NONE: return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
-            case AGRICULTURE: return GlobalStrings.getString(GlobalStrings.Keys.AGRICULTURE);
-            case COMMERCE: return GlobalStrings.getString(GlobalStrings.Keys.COMMERCE);
-            case TECHNOLOGY: return GlobalStrings.getString(GlobalStrings.Keys.TECHNOLOGY);
-            case MORALE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_MORALE);
-            case ENDURANCE: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_ENDURANCE);
-            case RECRUIT: return GlobalStrings.getString(GlobalStrings.Keys.ARCHITECTURE_RECRUIT);
-            case MAYOR: return GlobalStrings.getString(GlobalStrings.Keys.MAYOR);
-            default:
-                assert false;
-                return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
-        }
+        return getDoingWorkType().toDisplay();
     }
 
     @LuaAI.ExportToLua

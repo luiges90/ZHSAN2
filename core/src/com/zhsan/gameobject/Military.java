@@ -3,6 +3,7 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Pair;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
@@ -69,6 +70,7 @@ public class Military extends GameObject {
     private LocationType location;
 
     private int quantity;
+    private int morale, combativity;
 
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
@@ -86,6 +88,8 @@ public class Military extends GameObject {
                 data.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[2]));
                 data.location = LocationType.fromCSV(line[3], line[4], scen);
                 data.quantity = Integer.parseInt(line[5]);
+                data.morale = Integer.parseInt(line[6]);
+                data.combativity = Integer.parseInt(line[7]);
 
                 result.add(data);
             }
@@ -108,7 +112,9 @@ public class Military extends GameObject {
                         String.valueOf(detail.kind.getId()),
                         savedLocation.x,
                         savedLocation.y,
-                        String.valueOf(detail.quantity)
+                        String.valueOf(detail.quantity),
+                        String.valueOf(detail.morale),
+                        String.valueOf(detail.combativity)
                 });
             }
         } catch (IOException e) {
@@ -149,8 +155,26 @@ public class Military extends GameObject {
         return quantity;
     }
 
-    public void increaseQuantity(int x) {
-        quantity = Math.min(quantity + x, getKind().getQuantity());
+    public int getMorale() {
+        return morale;
+    }
+
+    public int getCombativity() {
+        return combativity;
+    }
+
+    public void increaseQuantity(int x, int morale, int combativity) {
+        this.morale = (int) ((float) (quantity * this.morale + x * morale) / (quantity + x));
+        this.combativity = (int) ((float) (quantity * this.combativity + x * combativity) / (quantity + x));
+        this.quantity = Math.min(quantity + x, getKind().getQuantity());
+    }
+
+    public void increaseMorale(int x) {
+        morale = Math.min(morale + x, GlobalVariables.maxMorale);
+    }
+
+    public void increaseCombativity(int x) {
+        combativity = Math.min(combativity + x, GlobalVariables.maxCombativity);
     }
 
 }
