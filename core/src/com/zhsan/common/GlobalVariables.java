@@ -45,7 +45,7 @@ public final class GlobalVariables {
 
     public static float recruitCostFactor = 0.1f;
     public static float recruitEfficiency = 1.0f;
-    public static float trainEfficiency = 1.0f;
+    public static float trainEfficiency = 0.3f;
     public static float moraleTrainFactor = 0.5f;
 
     public static int maxMorale = 100;

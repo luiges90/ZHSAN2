@@ -299,8 +299,13 @@ public class Architecture extends GameObject {
         return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() < x.getKind().getQuantity());
     }
 
-    public GameObjectList<Military> getTrainableMilitaries() {
+    public GameObjectList<Military> getSelectTrainableMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && (x.getQuantity() > 0 || this.getRecruitableMilitaries().size() > 0) &&
+                (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
+    }
+
+    public GameObjectList<Military> getTrainableMilitaries() {
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() > 0 &&
                 (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
     }
 

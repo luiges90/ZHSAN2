@@ -254,7 +254,7 @@ public class MilitaryCommandTab implements CommandTab {
                         }
                         invalidateMilitaryListPane();
                     });
-        } else if (trainingPos.contains(x, y) && parent.getCurrentArchitecture().getTrainableMilitaries().size() > 0) {
+        } else if (trainingPos.contains(x, y) && parent.getCurrentArchitecture().getSelectTrainableMilitaries().size() > 0) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.TRAIN_MILITARY), TabListGameFrame.ListKindType.PERSON,
                     parent.getCurrentArchitecture().getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                     selectedItems -> {
