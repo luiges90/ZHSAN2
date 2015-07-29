@@ -97,8 +97,8 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.values().removeIf(predicate);
     }
 
-    public GameObjectList<T> sort(Comparator<T> comparator) {
-        return content.values().parallelStream().sorted(comparator).collect(new ToGameObjectList<>());
+    public List<T> sort(Comparator<T> comparator) {
+        return content.values().parallelStream().sorted(comparator).collect(Collectors.toList());
     }
 
     public T max(Comparator<T> comparator) {
