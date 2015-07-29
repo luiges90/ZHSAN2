@@ -191,5 +191,43 @@
                 </Tab>
             </Tabs>
         </ListKind>
+        <ListKind ID="4" Name="Military" DisplayName="編隊列表">
+            <Columns>
+                <Column ID="1" Name="Name" IsNumber="false" DisplayName="名稱" MinWidth="80"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Bold"
+                        FontColor="4294967295"
+                        Align="Left" />
+                <Column ID="2" Name="Kind" IsNumber="false" DisplayName="種類" MinWidth="60"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Middle" />
+                <Column ID="3" Name="Quantity" IsNumber="false" DisplayName="士兵數" MinWidth="60"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right" />
+                <Column ID="4" Name="Morale" IsNumber="false" DisplayName="士氣" MinWidth="40"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right" />
+                <Column ID="5" Name="Combativity" IsNumber="false" DisplayName="戰意" MinWidth="40"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right" />
+            </Columns>
+            <Tabs Margin="5">
+                <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4 5">
+                </Tab>
+            </Tabs>
+        </ListKind>
     </TabList>
 </Root>

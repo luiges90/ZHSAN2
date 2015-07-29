@@ -167,6 +167,14 @@ public class Military extends GameObject {
         return combativity;
     }
 
+    public Faction getBelongedFaction() {
+        GameObject t = location.get();
+        if (t instanceof Architecture) {
+            return ((Architecture) t).getBelongedFaction();
+        }
+        return null;
+    }
+
     public void increaseQuantity(int x, int morale, int combativity) {
         this.morale = (int) ((float) (quantity * this.morale + x * morale) / (quantity + x));
         this.combativity = (int) ((float) (quantity * this.combativity + x * combativity) / (quantity + x));

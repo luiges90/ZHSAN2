@@ -22,10 +22,12 @@
         <MenuKind ID="1" Name="ArchitectureRightClick" IsLeft="false" Width="120" Height="25">
             <MenuItem ID="1" Name="Architecture" DisplayName="所屬建築">
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將" DisplayIfTrue="HasFaction"/>
-                <MenuItem ID="2" Name="AllUnhiredPersons" DisplayName="在野武將"/>
+                <MenuItem ID="2" Name="AllMilitaries" DisplayName="所有編隊" DisplayIfTrue="HasFaction"/>
+                <MenuItem ID="3" Name="AllUnhiredPersons" DisplayName="在野武將"/>
             </MenuItem>
             <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力" DisplayIfTrue="HasFaction">
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將"/>
+                <MenuItem ID="2" Name="AllMilitaries" DisplayName="所有編隊"/>
             </MenuItem>
         </MenuKind>
         <MenuKind ID="3" Name="MapRightClick" IsLeft="false" Width="130" Height="25">

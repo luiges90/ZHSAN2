@@ -44,7 +44,8 @@ public class TabListGameFrame extends GameFrame {
     public enum ListKindType {
         ARCHITECTURE("Architecture", Architecture.class),
         PERSON("Person", Person.class),
-        MILITARY_KIND("MilitaryKind", MilitaryKind.class)
+        MILITARY_KIND("MilitaryKind", MilitaryKind.class),
+        MILITARY("Military", Military.class)
         ;
 
         public final String xmlName;

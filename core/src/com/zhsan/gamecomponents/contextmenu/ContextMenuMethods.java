@@ -83,18 +83,16 @@ public final class ContextMenuMethods {
         screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getUnhiredPersons());
     }
 
+    public static void ArchitectureRightClick_Architecture_AllMilitaries(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.MILITARY, ((Architecture) object).getMilitaries());
+    }
+
     public static void ArchitectureRightClick_Faction_AllPersons(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getBelongedFaction().getPersons());
     }
 
-    public static void FacilityLeftClick1_Agriculture(GameScreen screen, Object object) {
-        System.out.println("agriculture");
-        // assign person to agriculture
-    }
-
-    public static void FacilityLeftClick2_Commerce(GameScreen screen, Object object) {
-        System.out.println("commerce");
-        // assign person to commerce
+    public static void ArchitectureRightClick_Faction_AllMilitaries(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.MILITARY, ((Architecture) object).getBelongedFaction().getMilitaries());
     }
 
 }

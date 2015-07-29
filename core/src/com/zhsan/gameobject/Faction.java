@@ -143,6 +143,10 @@ public class Faction extends GameObject {
         return scenario.getArchitectures().filter(a -> a.getBelongedFaction() == this);
     }
 
+    public GameObjectList<Military> getMilitaries() {
+        return scenario.getMilitaries().filter(m -> m.getBelongedFaction() == this);
+    }
+
     Person pickLeader() {
         return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()));
     }
@@ -161,6 +165,5 @@ public class Faction extends GameObject {
     public void ai() {
         LuaAI.runFactionAi(this);
     }
-
 
 }
