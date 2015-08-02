@@ -139,7 +139,7 @@ public class InternalCommandTab implements CommandTab {
     private void updateInternal(InternalPortraitType type) {
         type.leader = ((GameObjectList<Person>) parent.getCurrentArchitecture().getField(type.name)).max(
                 (x, y) -> Integer.compare((int) x.getField(type.fieldFirst), (int) y.getField(type.fieldFirst)
-        ));
+        ), null);
         type.leaderSet = true;
     }
 
