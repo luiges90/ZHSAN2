@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.gamecomponents.common.ImageWidget;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
@@ -212,12 +213,13 @@ public class MilitaryCommandTab implements CommandTab {
             Table item = new Table();
 
             Person leader = m.getLeader();
-            Image portrait;
+            ImageWidget<Military> portrait;
             if (leader != null) {
-                portrait = new Image(parent.getScreen().getSmallPortrait(leader.getPortraitId()));
+                portrait = new ImageWidget<>(parent.getScreen().getSmallPortrait(leader.getPortraitId()), militaryTablePortraitColor);
             } else {
-                portrait = new Image();
+                portrait = new ImageWidget<>(null, militaryTablePortraitColor);
             }
+            portrait.setExtra(m);
             item.add(portrait).width(militaryTablePortraitSize.x).height(militaryTablePortraitSize.y).center().row();
 
             TextWidget<Military> caption = new TextWidget<>(militaryTableCaptionTemplate);
