@@ -49,7 +49,8 @@ public class GlobalStrings {
         RECRUIT_MILITARY("RecruitMilitary"),
         TRAIN_MILITARY("TrainMilitary"),
         MILITARY_RECRUIT("MilitaryRecruit"),
-        MILITARY_TRAINING("MilitaryTraining");
+        MILITARY_TRAINING("MilitaryTraining"),
+        ASSIGN_LEADER("AssignLeader");
 
         private final String xmlName;
         Keys(String name) {

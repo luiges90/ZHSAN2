@@ -175,6 +175,10 @@ public class Military extends GameObject {
         return leader;
     }
 
+    public void setLeader(Person leader) {
+        this.leader = leader;
+    }
+
     public Faction getBelongedFaction() {
         GameObject t = location.get();
         if (t instanceof Architecture) {

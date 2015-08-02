@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -226,6 +228,19 @@ public class MilitaryCommandTab implements CommandTab {
             caption.setExtra(m);
             caption.setText(m.getName());
             item.add(caption).width(militaryTableCaptionSize.x).height(militaryTableCaptionSize.y).center();
+
+            item.addListener(new InputListener(){
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_LEADER), TabListGameFrame.ListKindType.PERSON,
+                            parent.getCurrentArchitecture().getPersonsWithoutLeadingMilitary(), TabListGameFrame.Selection.SINGLE,
+                            selectedItems -> {
+                                caption.getExtra().setLeader((Person) selectedItems.get(0));
+                                invalidateListPanes();
+                            });
+                    return true;
+                }
+            });
 
             contentTable.add(item);
 

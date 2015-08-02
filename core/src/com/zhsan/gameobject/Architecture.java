@@ -148,7 +148,13 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Person> getPersonsExcludingMayor() {
-        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getDoingWorkType() != Person.DoingWork.MAYOR);
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
+                p.getDoingWorkType() != Person.DoingWork.MAYOR);
+    }
+
+    public GameObjectList<Person> getPersonsWithoutLeadingMilitary() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
+                getMilitaries().filter(m -> m.getLeader() == p).size() == 0);
     }
 
     public boolean hasFaction() {

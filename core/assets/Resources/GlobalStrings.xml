@@ -30,4 +30,5 @@
         NewMilitary="新編編隊"
         RecruitMilitary="補充編隊"
         TrainMilitary="訓練編隊"
+        AssignLeader="設置隊長"
         />
