@@ -302,7 +302,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Military> getRecruitableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() < x.getKind().getQuantity());
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.recruitable());
     }
 
     public GameObjectList<Military> getSelectTrainableMilitaries() {
@@ -311,8 +311,7 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Military> getTrainableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.getQuantity() > 0 &&
-                (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
+        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.trainable());
     }
 
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {
@@ -448,15 +447,56 @@ public class Architecture extends GameObject {
     }
 
     private void recruitMilitaries() {
-        if (this.population <= 0) return;
-
         GameObjectList<Person> recruitWorkingPersons = getWorkingPersons(Person.DoingWork.RECRUIT);
         GameObjectList<Military> toRecruit = getRecruitableMilitaries();
 
-        if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0) {
+        if (recruitWorkingPersons.size() <= 0 || toRecruit.size() <= 0 || this.population <= 0) {
             recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
             return;
         }
+
+        GameObjectList<Person> recruitedPersons = new GameObjectList<>();
+        {
+            GameObjectList<Military> toRecruitByLeader = toRecruit.filter(m -> m.getLeader() != null);
+            List<Military> costMilitary = toRecruitByLeader.sort((a, b) -> {
+                float costA = a.getKind().getCost(this) * GlobalVariables.recruitCostFactor;
+                float costB = b.getKind().getCost(this) * GlobalVariables.recruitCostFactor;
+                return Float.compare(costA, costB);
+            });
+            int runningCost = 0;
+            List<Military> actualToRecruit = new ArrayList<>();
+            for (Military m : costMilitary) {
+                if (m.getLeader().getDoingWorkType() != Person.DoingWork.RECRUIT) continue;
+                int newCost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
+                if (runningCost + newCost > fund) {
+                    break;
+                } else {
+                    runningCost += newCost;
+                    actualToRecruit.add(m);
+                }
+            }
+
+            if (actualToRecruit.size() > 0) {
+                for (Military m : actualToRecruit) {
+                    recruitedPersons.add(m.getLeader());
+
+                    float recruited = m.getLeader().getRecruitAbility() * GlobalVariables.recruitByLeaderEfficiency;
+                    int thisRecruited = Math.round(recruited / actualToRecruit.size() * m.getKind().getUnitQuantity());
+                    thisRecruited = Math.min(population, thisRecruited);
+                    m.increaseQuantity(thisRecruited, GlobalVariables.recruitMorale, GlobalVariables.recruitCombativity);
+                    loseFund(Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor));
+                    losePopulation(thisRecruited);
+
+                    if (this.population <= 0) {
+                        recruitWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
+                        return;
+                    }
+                }
+            }
+        }
+
+        recruitWorkingPersons.remove(recruitedPersons::contains);
+        toRecruit.remove(m -> !m.recruitable() || m.getLeader() != null);
 
         List<Military> costMilitary = toRecruit.sort((a, b) -> {
             float costA = a.getKind().getCost(this) * GlobalVariables.recruitCostFactor;
@@ -505,6 +545,22 @@ public class Architecture extends GameObject {
             trainWorkingPersons.forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
             return;
         }
+
+        GameObjectList<Person> trainedPersons = new GameObjectList<>();
+        {
+            GameObjectList<Military> trainByLeader = toTrain.filter(m -> m.getLeader() != null);
+            for (Military m : trainByLeader) {
+                trainedPersons.add(m.getLeader());
+
+                float trained = m.getLeader().getTrainingAbility() * GlobalVariables.trainByLeaderEfficiency;
+                int thisTrained = Math.round(trained / m.getUnitCount() / toTrain.size());
+                m.increaseCombativity(thisTrained);
+                m.increaseMorale((int) (thisTrained * GlobalVariables.moraleTrainFactor));
+            }
+        }
+
+        trainWorkingPersons.remove(trainedPersons::contains);
+        toTrain.remove(m -> !m.trainable() || m.getLeader() != null);
 
         float trainAbility = trainWorkingPersons.getAll().parallelStream()
                 .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));

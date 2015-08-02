@@ -3,18 +3,13 @@ package com.zhsan.common;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Peter on 22/3/2015.
@@ -44,8 +39,10 @@ public final class GlobalVariables {
     public static float gainFoodPerPopulation = 0.003f;
 
     public static float recruitCostFactor = 0.1f;
-    public static float recruitEfficiency = 1.0f;
-    public static float trainEfficiency = 0.3f;
+    public static float recruitEfficiency = 0.6f;
+    public static float recruitByLeaderEfficiency = 1.0f;
+    public static float trainEfficiency = 0.2f;
+    public static float trainByLeaderEfficiency = 0.3f;
     public static float moraleTrainFactor = 0.5f;
 
     public static int maxMorale = 100;
@@ -86,6 +83,10 @@ public final class GlobalVariables {
             aiTimeout = Long.parseLong(XmlHelper.loadAttribute(node, "aiTimeout"));
             recruitCostFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitCostFactor"));
             recruitEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitEfficiency"));
+            recruitByLeaderEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "recruitByLeaderEfficiency"));
+            trainEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "trainEfficiency"));
+            trainByLeaderEfficiency = Float.parseFloat(XmlHelper.loadAttribute(node, "trainByLeaderEfficiency"));
+            moraleTrainFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "moraleTrainFactor"));
             maxMorale = Integer.parseInt(XmlHelper.loadAttribute(node, "maxMorale"));
             maxCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "maxCombativity"));
             recruitMorale = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitMorale"));

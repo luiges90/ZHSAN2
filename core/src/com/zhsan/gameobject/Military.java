@@ -179,6 +179,15 @@ public class Military extends GameObject {
         this.leader = leader;
     }
 
+    public boolean recruitable() {
+        return getQuantity() < getKind().getQuantity();
+    }
+
+    public boolean trainable() {
+        return getQuantity() > 0 &&
+                (getMorale() < GlobalVariables.maxMorale || getCombativity() < GlobalVariables.maxCombativity);
+    }
+
     public Faction getBelongedFaction() {
         GameObject t = location.get();
         if (t instanceof Architecture) {
