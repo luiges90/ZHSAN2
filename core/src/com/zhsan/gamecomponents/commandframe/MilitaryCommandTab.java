@@ -1,12 +1,15 @@
 package com.zhsan.gamecomponents.commandframe;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
@@ -30,8 +33,6 @@ public class MilitaryCommandTab implements CommandTab {
 
     private Texture background;
 
-    private Rectangle portraitPos;
-
     private StateTexture campaign, newMilitary, recruit, training, merge, disband, upgrade;
     private Rectangle campaignPos, newMilitaryPos, recruitPos, trainingPos, mergePos, disbandPos, upgradePos;
 
@@ -39,11 +40,13 @@ public class MilitaryCommandTab implements CommandTab {
 
     private ArchitectureCommandFrame parent;
 
-    private Rectangle militaryListPos;
+    private Rectangle militaryListPos, militaryTablePos;
+    private Point militaryTablePortraitSize, militaryTableCaptionSize;
     private int listNameWidth, listRecruitWidth, listTrainWidth, listQuantityWidth, listRowHeight;
 
-    private ScrollPane militaryListPane;
-    private TextWidget<Military> militaryListTextTemplate;
+    private ScrollPane militaryListPane, militaryTablePane;
+    private Color militaryTablePortraitColor;
+    private TextWidget<Military> militaryListTextTemplate, militaryTableCaptionTemplate;
 
     private List<TextWidget<?>> showingTextWidgets = new ArrayList<>();
 
@@ -60,8 +63,21 @@ public class MilitaryCommandTab implements CommandTab {
                 background = new Texture(Gdx.files.external(
                         ArchitectureCommandFrame.DATA_PATH + XmlHelper.loadAttribute(n, "FileName")
                 ));
-            } else if (n.getNodeName().equals("Portraits")) {
-                portraitPos = XmlHelper.loadRectangleFromXml(n);
+            } else if (n.getNodeName().equals("MilitaryTable")) {
+                militaryTablePos = XmlHelper.loadRectangleFromXml(n);
+                NodeList child = n.getChildNodes();
+                for (int j = 0; j < child.getLength(); ++j) {
+                    Node n2 = child.item(j);
+                    if (n2.getNodeName().equals("Portrait")) {
+                        militaryTablePortraitSize = Point.fromXmlAsSize(n2);
+                        militaryTablePortraitColor = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(
+                                XmlHelper.loadAttribute(n2, "BorderColor")
+                        ));
+                    } else if (n2.getNodeName().equals("Caption")) {
+                        militaryTableCaptionSize = Point.fromXmlAsSize(n2);
+                        militaryTableCaptionTemplate = new TextWidget<>(TextWidget.Setting.fromXml(n2));
+                    }
+                }
             } else if (n.getNodeName().equals("Campaign")) {
                 campaign = StateTexture.fromXml(ArchitectureCommandFrame.DATA_PATH, n);
                 campaignPos = XmlHelper.loadRectangleFromXml(n);
@@ -125,19 +141,26 @@ public class MilitaryCommandTab implements CommandTab {
         if (militaryListPane == null) {
             initMilitaryListPane();
         }
+        if (militaryTablePane == null) {
+            initMilitaryTablePane();
+        }
     }
 
     public void invalidate() {
-        invalidateMilitaryListPane();
+        invalidateListPanes();
     }
 
-    private void invalidateMilitaryListPane() {
+    private void invalidateListPanes() {
         if (militaryListPane != null) {
             militaryListPane.clear();
+        }
+        if (militaryTablePane != null) {
+            militaryTablePane.clear();
         }
         showingTextWidgets.forEach(TextWidget::dispose);
         showingTextWidgets.clear();
         militaryListPane = null;
+        militaryTablePane = null;
     }
 
     private void initMilitaryListPane() {
@@ -180,6 +203,45 @@ public class MilitaryCommandTab implements CommandTab {
         parent.addActor(contentPaneContainer);
     }
 
+    private void initMilitaryTablePane() {
+        Table contentTable = new Table();
+
+        int itemPerRow = (int) (militaryTablePos.width / Math.max(militaryTablePortraitSize.x, militaryTableCaptionSize.x));
+        int index = 0;
+        for (Military m : parent.getCurrentArchitecture().getMilitaries()) {
+            Table item = new Table();
+
+            Person leader = m.getLeader();
+            Image portrait;
+            if (leader != null) {
+                portrait = new Image(parent.getScreen().getSmallPortrait(leader.getPortraitId()));
+            } else {
+                portrait = new Image();
+            }
+            item.add(portrait).width(militaryTablePortraitSize.x).height(militaryTablePortraitSize.y).center().row();
+
+            TextWidget<Military> caption = new TextWidget<>(militaryTableCaptionTemplate);
+            caption.setExtra(m);
+            caption.setText(m.getName());
+            item.add(caption).width(militaryTableCaptionSize.x).height(militaryTableCaptionSize.y).center();
+
+            contentTable.add(item);
+
+            index++;
+            if (index % itemPerRow == 0) {
+                contentTable.row();
+            }
+        }
+
+        contentTable.top().left();
+
+        militaryTablePane = new ScrollPane(contentTable);
+        Table contentPaneContainer = WidgetUtility.setupScrollpane(militaryTablePos.getX(), militaryTablePos.getY(),
+                militaryTablePos.getWidth(), militaryTablePos.getHeight(), militaryTablePane, parent.getScrollbar());
+
+        parent.addActor(contentPaneContainer);
+    }
+
     @Override
     public void dispose() {
         textWidgets.forEach(TextWidget::dispose);
@@ -192,7 +254,7 @@ public class MilitaryCommandTab implements CommandTab {
         disband.dispose();
         upgrade.dispose();
         militaryListTextTemplate.dispose();
-        invalidateMilitaryListPane();
+        invalidateListPanes();
     }
 
     @Override
@@ -242,7 +304,7 @@ public class MilitaryCommandTab implements CommandTab {
                     selectedItems -> {
                         MilitaryKind kind = (MilitaryKind) selectedItems.get(0);
                         parent.getCurrentArchitecture().createMilitary(kind);
-                        invalidateMilitaryListPane();
+                        invalidateListPanes();
                     });
         } else if (recruitPos.contains(x, y) && parent.getCurrentArchitecture().getRecruitableMilitaries().size() > 0) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.RECRUIT_MILITARY), TabListGameFrame.ListKindType.PERSON,
@@ -252,7 +314,7 @@ public class MilitaryCommandTab implements CommandTab {
                             Person p = (Person) i;
                             p.setDoingWork(Person.DoingWork.RECRUIT);
                         }
-                        invalidateMilitaryListPane();
+                        invalidateListPanes();
                     });
         } else if (trainingPos.contains(x, y) && parent.getCurrentArchitecture().getSelectTrainableMilitaries().size() > 0) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.TRAIN_MILITARY), TabListGameFrame.ListKindType.PERSON,
@@ -262,7 +324,7 @@ public class MilitaryCommandTab implements CommandTab {
                             Person p = (Person) i;
                             p.setDoingWork(Person.DoingWork.TRAINING);
                         }
-                        invalidateMilitaryListPane();
+                        invalidateListPanes();
                     });
         }
     }

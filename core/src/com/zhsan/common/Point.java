@@ -160,4 +160,10 @@ public final class Point {
                 Integer.parseInt(XmlHelper.loadAttribute(position, "X")),
                 Integer.parseInt(XmlHelper.loadAttribute(position, "Y")));
     }
+
+    public static Point fromXmlAsSize(Node position) {
+        return new Point(
+                Integer.parseInt(XmlHelper.loadAttribute(position, "Width")),
+                Integer.parseInt(XmlHelper.loadAttribute(position, "Height")));
+    }
 }

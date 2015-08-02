@@ -72,6 +72,8 @@ public class Military extends GameObject {
     private int quantity;
     private int morale, combativity;
 
+    private Person leader;
+
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
 
@@ -90,6 +92,7 @@ public class Military extends GameObject {
                 data.quantity = Integer.parseInt(line[5]);
                 data.morale = Integer.parseInt(line[6]);
                 data.combativity = Integer.parseInt(line[7]);
+                data.leader = scen.getPerson(Integer.parseInt(line[8]));
 
                 result.add(data);
             }
@@ -114,7 +117,8 @@ public class Military extends GameObject {
                         savedLocation.y,
                         String.valueOf(detail.quantity),
                         String.valueOf(detail.morale),
-                        String.valueOf(detail.combativity)
+                        String.valueOf(detail.combativity),
+                        String.valueOf(detail.leader == null ? -1 : detail.leader.getId())
                 });
             }
         } catch (IOException e) {
@@ -165,6 +169,10 @@ public class Military extends GameObject {
 
     public int getCombativity() {
         return combativity;
+    }
+
+    public Person getLeader() {
+        return leader;
     }
 
     public Faction getBelongedFaction() {

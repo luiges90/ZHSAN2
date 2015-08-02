@@ -231,7 +231,15 @@
     </InternalTab>
     <MilitaryTab>
         <Background FileName="Military/Background.png"/>
-        <Portraits X="32" Y="140" Width="240" Height="160"/>
+        <MilitaryTable X="32" Y="140" Width="200" Height="160">
+            <Portrait Width="36" Height="45"
+                    BorderColor="4294967040"/>
+            <Caption Width="60" Height="22"
+                     FontName="方正隶变_GBK"
+                     FontSize="14"
+                     FontStyle="Regular"
+                     FontColor="4294967295"/>
+        </MilitaryTable>
         <Campaign FileName="Military/Campaign.png" Selected="Military/CampaignSelected.png" X="30" Y="116" Width="39"
                   Height="22"/>
         <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="70" Y="116" Width="39" Height="22"/>
