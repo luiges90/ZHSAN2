@@ -298,20 +298,20 @@ public class Architecture extends GameObject {
     }
 
     public GameObjectList<Military> getMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this);
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this);
     }
 
     public GameObjectList<Military> getRecruitableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.recruitable());
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.recruitable());
     }
 
     public GameObjectList<Military> getSelectTrainableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && (x.getQuantity() > 0 || this.getRecruitableMilitaries().size() > 0) &&
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this && (x.getQuantity() > 0 || this.getRecruitableMilitaries().size() > 0) &&
                 (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
     }
 
     public GameObjectList<Military> getTrainableMilitaries() {
-        return scenario.getMilitaries().filter(x -> x.getLocation().get() == this && x.trainable());
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.trainable());
     }
 
     public GameObjectList<MilitaryKind> getCreatableMilitaryKinds() {

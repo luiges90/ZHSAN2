@@ -151,8 +151,8 @@ public class Military extends GameObject {
         this.location = new LocationType(location);
     }
 
-    public LocationType getLocation() {
-        return location;
+    public GameObject getLocation() {
+        return location.get();
     }
 
     public int getQuantity() {
@@ -180,12 +180,29 @@ public class Military extends GameObject {
     }
 
     public boolean recruitable() {
-        return getQuantity() < getKind().getQuantity();
+        return !isFullyRecruited();
     }
 
     public boolean trainable() {
-        return getQuantity() > 0 &&
-                (getMorale() < GlobalVariables.maxMorale || getCombativity() < GlobalVariables.maxCombativity);
+        return getQuantity() > 0 && !isFullyTrained();
+    }
+
+    public boolean isFullyRecruited() {
+        return getQuantity() >= getKind().getQuantity();
+    }
+
+    public boolean isFullyTrained() {
+        return getMorale() >= GlobalVariables.maxMorale && getCombativity() >= GlobalVariables.maxCombativity;
+    }
+
+    public boolean isBeingRecruited() {
+        return this.leader != null ? this.leader.getLocation() == this.getLocation() && this.leader.getDoingWorkType() == Person.DoingWork.RECRUIT :
+                this.getLocation() instanceof Architecture && ((Architecture) this.getLocation()).getWorkingPersons(Person.DoingWork.RECRUIT).size() > 0;
+    }
+
+    public boolean isBeingTrained() {
+        return this.leader != null ? this.leader.getLocation() == this.getLocation() && this.leader.getDoingWorkType() == Person.DoingWork.TRAINING :
+                this.getLocation() instanceof Architecture && ((Architecture) this.getLocation()).getWorkingPersons(Person.DoingWork.TRAINING).size() > 0;
     }
 
     public Faction getBelongedFaction() {

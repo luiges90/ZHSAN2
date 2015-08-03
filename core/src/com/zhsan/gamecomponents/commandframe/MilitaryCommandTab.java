@@ -184,13 +184,25 @@ public class MilitaryCommandTab implements CommandTab {
 
             TextWidget<Military> recruit = new TextWidget<>(militaryListTextTemplate);
             recruit.setExtra(m);
-            // recruit.setText(m.getName());
+            if (m.isFullyRecruited()) {
+                recruit.setText(GlobalStrings.getString(GlobalStrings.Keys.TICK));
+            } else if (m.isBeingRecruited()) {
+                recruit.setText(GlobalStrings.getString(GlobalStrings.Keys.UP_ARROW));
+            } else {
+                recruit.setText("");
+            }
             contentTable.add(recruit).width(listRecruitWidth).height(listRowHeight);
             showingTextWidgets.add(recruit);
 
             TextWidget<Military> train = new TextWidget<>(militaryListTextTemplate);
             train.setExtra(m);
-            // train.setText(m.getName());
+            if (m.isFullyTrained()) {
+                recruit.setText(GlobalStrings.getString(GlobalStrings.Keys.TICK));
+            } else if (m.isBeingTrained()) {
+                recruit.setText(GlobalStrings.getString(GlobalStrings.Keys.UP_ARROW));
+            } else {
+                recruit.setText("");
+            }
             contentTable.add(train).width(listTrainWidth).height(listRowHeight);
             showingTextWidgets.add(train);
 

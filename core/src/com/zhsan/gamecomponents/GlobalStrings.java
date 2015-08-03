@@ -34,6 +34,8 @@ public class GlobalStrings {
         FACILITY_SAVE_HEADER("facilitySaveHeader"),
         NO_CONTENT("noContent"),
         DAY("day"),
+        TICK("tick"),
+        UP_ARROW("upArrow"),
         FOOD_UNIT("foodUnit"),
         FOOD_UNIT_STRING("foodUnitString"),
         AGRICULTURE("Agriculture"),
