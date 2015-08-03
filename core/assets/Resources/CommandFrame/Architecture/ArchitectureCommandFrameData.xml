@@ -272,6 +272,7 @@
                       FontName="方正隶变_GBK"
                       FontSize="14"
                       FontStyle="Regular"
-                      FontColor="4294967295"/>
+                      FontColor="4294967295"
+                      Align="Center"/>
     </MilitaryTab>
 </Root>
