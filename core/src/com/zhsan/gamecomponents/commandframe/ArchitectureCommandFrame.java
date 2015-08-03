@@ -227,6 +227,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         }
 
         private void unselectAllTabs() {
+            tabs.values().forEach(CommandTab::onUnselect);
             internal.setState(StateTexture.State.NORMAL);
             military.setState(StateTexture.State.NORMAL);
         }

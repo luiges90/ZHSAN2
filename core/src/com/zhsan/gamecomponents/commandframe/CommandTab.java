@@ -22,4 +22,5 @@ public interface CommandTab {
 
     public void invalidate();
 
+    public void onUnselect();
 }

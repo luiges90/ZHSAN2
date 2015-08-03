@@ -287,6 +287,11 @@ public class MilitaryCommandTab implements CommandTab {
     }
 
     @Override
+    public void onUnselect() {
+        invalidateListPanes();
+    }
+
+    @Override
     public void onMouseMove(float x, float y) {
         if (campaignPos.contains(x, y)) {
             campaign.setState(StateTexture.State.SELECTED);

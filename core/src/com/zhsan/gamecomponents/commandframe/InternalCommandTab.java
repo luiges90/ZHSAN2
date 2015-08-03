@@ -242,6 +242,10 @@ public class InternalCommandTab implements CommandTab {
         endurance.dispose();
     }
 
+    public void onUnselect() {
+        // no-op
+    }
+
     public void onMouseMove(float x, float y) {
         if (assignPos.contains(x, y) && parent.getCurrentArchitecture().canChangeMayor()) {
             assign.setState(StateTexture.State.SELECTED);
