@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
-import com.zhsan.gamecomponents.MapLayer;
+import com.zhsan.gamecomponents.maplayer.MainMapLayer;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.Faction;
@@ -80,7 +80,7 @@ public class SmallMap extends WidgetGroup {
         loadXml();
 
         GameMap gameMap = screen.getScenario().getGameMap();
-        this.map = new Texture(Gdx.files.external(MapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
+        this.map = new Texture(Gdx.files.external(MainMapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
 
         this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
         int mapWidth = this.tileSize * gameMap.getWidth();

@@ -1,4 +1,4 @@
-package com.zhsan.gamecomponents;
+package com.zhsan.gamecomponents.maplayer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -22,26 +22,21 @@ import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * Created by Peter on 19/3/2015.
  */
-public class MapLayer extends WidgetGroup {
-
-    public static final String CAPTION_FOLDER_NAME = "Caption";
+public class MainMapLayer extends WidgetGroup {
 
     private enum MoveStateX {
         IDLE, LEFT, RIGHT
@@ -54,47 +49,10 @@ public class MapLayer extends WidgetGroup {
     }
 
     public static final String MAP_ROOT_PATH = Paths.RESOURCES + "Map" + File.separator;
-    public static final String ARCHITECTURE_RES_PATH = Paths.RESOURCES + "Architecture" + File.separator;
-    public static final String FACILITY_RES_PATH = Paths.RESOURCES + "Facility" + File.separator;
 
     public static final String DATA_PATH = MAP_ROOT_PATH + "Data" + File.separator;
 
-    private static final class ArchitectureImageQuantifier {
-        private enum Quantifier { DEFAULT, DIAGONAL_SQUARE, HORIZONTAL, VERTICAL }
-
-        public final Quantifier quantifier;
-        public final int size;
-
-        public ArchitectureImageQuantifier(@NotNull Quantifier quantifier, int size) {
-            this.quantifier = quantifier;
-            this.size = size;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            ArchitectureImageQuantifier that = (ArchitectureImageQuantifier) o;
-
-            if (size != that.size) return false;
-            return quantifier == that.quantifier;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = quantifier.hashCode();
-            result = 31 * result + size;
-            return result;
-        }
-    }
-
-    private Map<Pair<ArchitectureKind, ArchitectureImageQuantifier>, Texture> architectureImages = new HashMap<>();
-    private Map<String, Texture> architectureNameImages = new HashMap<>();
     private Map<String, Texture> mapTiles = new HashMap<>();
-
-    private Map<FacilityKind, Texture> facilityKindImages = new HashMap<>();
 
     private int mapZoomMin, mapZoomMax, mapScrollBoundary, mapMouseScrollFactor;
     private float mapScrollFactor;
@@ -113,6 +71,8 @@ public class MapLayer extends WidgetGroup {
     private Texture grid;
 
     private float captionSize;
+
+    private List<MapLayer> mapLayers = new ArrayList<>();
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(MAP_ROOT_PATH + "MapLayerData.xml");
@@ -145,7 +105,7 @@ public class MapLayer extends WidgetGroup {
         }
     }
 
-    public MapLayer(GameScreen screen) {
+    public MainMapLayer(GameScreen screen) {
         this.screen = screen;
 
         // init myself
@@ -164,6 +124,9 @@ public class MapLayer extends WidgetGroup {
         this.addListener(new InputEventListener());
         this.addListener(new GetScrollFocusWhenEntered(this));
         this.addListener(new GetKeyFocusWhenEntered(this));
+
+        mapLayers.add(new ArchitectureLayer());
+        mapLayers.add(new FacilityLayer());
     }
 
     public void resize(int width, int height) {
@@ -248,15 +211,11 @@ public class MapLayer extends WidgetGroup {
         );
     }
 
-    private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
-
-    private Point mouseOnMapPosition() {
-        GameMap map = screen.getScenario().getGameMap();
-
-        int px = (int) (mousePosition.x + getX() + mapDrawOffsetX) / map.getZoom() + imageLoX * map.getTileInEachImage();
-        int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + mapDrawOffsetY) / map.getZoom() + imageLoY * map.getTileInEachImage());
-        return new Point(px, py);
+    public float getCaptionSize() {
+        return captionSize;
     }
+
+    private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
 
     public void draw(Batch batch, float parentAlpha) {
         // draw map tiles
@@ -326,210 +285,40 @@ public class MapLayer extends WidgetGroup {
         }
 
         String resPack = screen.getScenario().getGameSurvey().getResourcePackName();
-        Function<Integer, Integer> drawPosX = x -> (x - xLo * map.getTileInEachImage()) * zoom - offsetX;
-        Function<Integer, Integer> drawPosY = y -> ((map.getHeight() - 1 - y) - yLo * map.getTileInEachImage()) * zoom - offsetY;
-
-        {
-            // draw architectures
-            for (Architecture a : screen.getScenario().getArchitectures()) {
-                Point mapCenter = Point.getCenter(a.getLocation());
-                if (xLo * map.getTileInEachImage() <= mapCenter.x && mapCenter.x <= (xHi + 1) * map.getTileInEachImage() &&
-                        yLo * map.getTileInEachImage() <= (map.getHeight() - mapCenter.y + 1) &&
-                        (map.getHeight() - mapCenter.y + 1) <= (yHi + 1) * map.getTileInEachImage()) {
-                    // draw architecture main
-                    Pair<ArchitectureImageQuantifier, Texture> image =
-                            getArchitectureImage(resPack, a.getKind(), a.getLocation());
-
-                    int mainX = drawPosX.apply(mapCenter.x) + zoom / 2;
-                    int mainY = drawPosY.apply(mapCenter.y) + zoom / 2;
-                    int mainSizeX, mainSizeY;
-                    int mainSizeYNoOffset;
-                    switch (image.getLeft().quantifier) {
-                        case DEFAULT:
-                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
-                            mainSizeYNoOffset = zoom;
-                            break;
-                        case HORIZONTAL:
-                            mainSizeX = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
-                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeYNoOffset = zoom;
-                            break;
-                        case VERTICAL:
-                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeY = (int) (zoom * (image.getLeft().size + a.getKind().getDrawOffsetLength()));
-                            mainSizeYNoOffset = zoom * image.getLeft().size;
-                            break;
-                        case DIAGONAL_SQUARE:
-                            mainSizeX = (int) (zoom * (image.getLeft().size * 2 - 1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeY = (int) (zoom * (image.getLeft().size * 2 - 1 + a.getKind().getDrawOffsetLength()));
-                            mainSizeYNoOffset = zoom * (image.getLeft().size * 2 - 1);
-                            break;
-                        default:
-                            mainSizeX = (int) (zoom * (1 + a.getKind().getDrawOffsetWidth()));
-                            mainSizeY = (int) (zoom * (1 + a.getKind().getDrawOffsetLength()));
-                            mainSizeYNoOffset = zoom;
-                            break;
-                    }
-                    batch.draw(image.getRight(), mainX - mainSizeX / 2, mainY - mainSizeY / 2, mainSizeX, mainSizeY);
-
-                    // draw header
-                    String name = a.getNameImageName();
-                    if (!architectureNameImages.containsKey(name)) {
-                        FileHandle fh = Gdx.files.external(ARCHITECTURE_RES_PATH + resPack + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
-                        if (!fh.exists()) {
-                            fh = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + CAPTION_FOLDER_NAME + File.separator + name + ".png");
-                        }
-                        Texture nameImage = new Texture(fh);
-                        architectureNameImages.put(name, nameImage);
-                    }
-                    Texture nameImage = architectureNameImages.get(name);
-                    int nameImageHeight = (int) (zoom * captionSize);
-                    int nameImageWidth = (int) ((float) nameImage.getWidth() * nameImageHeight / nameImage.getHeight());
-                    batch.draw(nameImage, mainX - nameImageWidth / 2, mainY + mainSizeYNoOffset / 2 - nameImageHeight / 2,
-                            nameImageWidth, nameImageHeight);
-                }
-
+        MapLayer.DrawingHelpers helpers = new MapLayer.DrawingHelpers() {
+            @Override
+            public boolean isMapLocationOnScreen(Point p) {
+                return xLo * map.getTileInEachImage() <= p.x && p.x <= (xHi + 1) * map.getTileInEachImage() &&
+                        yLo * map.getTileInEachImage() <= (map.getHeight() - p.y + 1) &&
+                        (map.getHeight() - p.y + 1) <= (yHi + 1) * map.getTileInEachImage();
             }
-        }
 
-        {
-            // draw facilities
-            for (Facility f : screen.getScenario().getFacilities()) {
-                Texture facilityImage = getFacilityImage(resPack, f.getKind());
-                batch.draw(facilityImage, drawPosX.apply(f.getLocation().x), drawPosY.apply(f.getLocation().y), zoom, zoom);
+            @Override
+            public Point getPixelFromMapLocation(Point p) {
+                return new Point((p.x - xLo * map.getTileInEachImage()) * zoom - offsetX,
+                        ((map.getHeight() - 1 - p.y) - yLo * map.getTileInEachImage()) * zoom - offsetY);
             }
+        };
+
+        for (MapLayer mapLayer : mapLayers) {
+            mapLayer.draw(this, screen, resPack, helpers, zoom, batch, parentAlpha);
         }
 
         // draw childrens
         super.draw(batch, parentAlpha);
     }
 
-    private Texture getFacilityImage(String resSet, FacilityKind kind) {
-        if (!facilityKindImages.containsKey(kind)) {
-            FileHandle f = Gdx.files.external(FACILITY_RES_PATH + resSet + File.separator + kind.getId() + ".png");
-            if (!f.exists()) {
-                f = Gdx.files.external(FACILITY_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + kind.getId() + ".png");
-            }
-
-            Texture t = new Texture(f);
-            facilityKindImages.put(kind, t);
-        }
-        return facilityKindImages.get(kind);
-    }
-
-    private Texture getArchitectureImage(String resSet, ArchitectureKind kind, ArchitectureImageQuantifier quantifier) {
-        if (!architectureImages.containsKey(new ImmutablePair<>(kind, quantifier))) {
-            String name = String.valueOf(kind.getId());
-            String defaultName = name;
-            switch (quantifier.quantifier) {
-                case DIAGONAL_SQUARE:
-                    name += "-d" + quantifier.size;
-                    break;
-                case HORIZONTAL:
-                    name += "-h" + quantifier.size;
-                    break;
-                case VERTICAL:
-                    name += "-v" + quantifier.size;
-                    break;
-                case DEFAULT:
-                    break;
-            }
-            name += ".png";
-            defaultName += ".png";
-            FileHandle f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + name);
-            if (!f.exists()) {
-                f = Gdx.files.external(ARCHITECTURE_RES_PATH + resSet + File.separator + defaultName);
-                if (!f.exists()) {
-                    f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + name);
-                    if (!f.exists()) {
-                        f = Gdx.files.external(ARCHITECTURE_RES_PATH + GameSurvey.DEFAULT_RESOURCE_PACK + File.separator + defaultName);
-                    }
-                }
-            }
-            Texture t = new Texture(f);
-            architectureImages.put(new ImmutablePair<>(kind, quantifier), t);
-        }
-        return architectureImages.get(new ImmutablePair<>(kind, quantifier));
-    }
-
-    private Pair<ArchitectureImageQuantifier, Texture> getArchitectureImage(String resSet, ArchitectureKind kind, List<Point> shape) {
-        if (shape.size() == 1) {
-            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
-            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-        }
-
-        // is horizontal?
-        int h = shape.get(0).y;
-        boolean horizontal = true;
-        for (Point p : shape) {
-            if (p.y != h) {
-                horizontal = false;
-            }
-        }
-        if (horizontal) {
-            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.HORIZONTAL, shape.size());
-            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-        }
-
-        // is vertical?
-        int v = shape.get(0).x;
-        boolean vertical = true;
-        for (Point p : shape) {
-            if (p.x != v) {
-                vertical = false;
-            }
-        }
-        if (vertical) {
-            ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.VERTICAL, shape.size());
-            return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-        }
-
-        // is diagonal square?
-        Point center = Point.getCenter(shape);
-        if (shape.contains(center)) {
-            for (int i = 1; ; ++i) {
-                int count = 0;
-                for (int j = 0; j < i; ++j) {
-                    // bottom to right diagonal
-                    if (shape.contains(new Point(center.x + j, center.y - i + j))) {
-                        count++;
-                    }
-                    // right to top diagonal
-                    if (shape.contains(new Point(center.x + i - j, center.y + j))) {
-                        count++;
-                    }
-                    // top to left diagonal
-                    if (shape.contains(new Point(center.x - j, center.y + i - j))) {
-                        count++;
-                    }
-                    // left to bottom diagonal
-                    if (shape.contains(new Point(center.x - i + j, center.y - j))) {
-                        count++;
-                    }
-                }
-                if (count == 0) {
-                    // all empty, a diagonal square ends.
-                    ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DIAGONAL_SQUARE, i);
-                    return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-                } else if (count < 4 * i) {
-                    // not a diagonal square
-                    ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
-                    return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-                } // else 4 * i == count, diagonal square size increase, next iteration
-            }
-        }
-
-        // no match
-        ArchitectureImageQuantifier q = new ArchitectureImageQuantifier(ArchitectureImageQuantifier.Quantifier.DEFAULT, 0);
-        return new ImmutablePair<>(q, getArchitectureImage(resSet, kind, q));
-    }
-
     public void dispose() {
         mapTiles.values().forEach(Texture::dispose);
-        architectureImages.values().forEach(Texture::dispose);
-        architectureNameImages.values().forEach(Texture::dispose);
-        facilityKindImages.values().forEach(Texture::dispose);
+        mapLayers.forEach(com.zhsan.gamecomponents.maplayer.MapLayer::dispose);
+    }
+
+    private Point mouseOnMapPosition() {
+        GameMap map = screen.getScenario().getGameMap();
+
+        int px = (int) (mousePosition.x + getX() + mapDrawOffsetX) / map.getZoom() + imageLoX * map.getTileInEachImage();
+        int py = map.getHeight() - 1 - ((int) (mousePosition.y + getY() + mapDrawOffsetY) / map.getZoom() + imageLoY * map.getTileInEachImage());
+        return new Point(px, py);
     }
 
     private class InputEventListener extends InputListener {

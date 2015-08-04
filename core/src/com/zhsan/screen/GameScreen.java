@@ -3,10 +3,8 @@ package com.zhsan.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Point;
@@ -14,7 +12,7 @@ import com.zhsan.gamecomponents.PersonPortrait;
 import com.zhsan.gamecomponents.ScreenBlind;
 import com.zhsan.gamecomponents.commandframe.ArchitectureCommandFrame;
 import com.zhsan.gamecomponents.contextmenu.ContextMenu;
-import com.zhsan.gamecomponents.MapLayer;
+import com.zhsan.gamecomponents.maplayer.MainMapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
@@ -45,7 +43,7 @@ public class GameScreen extends WidgetGroup {
 
     private GameScenario scen;
 
-    private MapLayer mapLayer;
+    private MainMapLayer mapLayer;
     private ContextMenu contextMenu;
 
     private FileGameFrame saveGameFrame, loadGameFrame;
@@ -83,7 +81,7 @@ public class GameScreen extends WidgetGroup {
         toolBar.setPosition(0, 0);
         toolBar.setWidth(Gdx.graphics.getWidth());
 
-        mapLayer = new MapLayer(this);
+        mapLayer = new MainMapLayer(this);
         mapLayer.setPosition(0, getToolBarHeight());
         mapLayer.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - getToolBarHeight());
         this.addActor(mapLayer);
@@ -227,7 +225,7 @@ public class GameScreen extends WidgetGroup {
         super.draw(batch, parentAlpha);
     }
 
-    public MapLayer getMapLayer() {
+    public MainMapLayer getMapLayer() {
         return mapLayer;
     }
 
