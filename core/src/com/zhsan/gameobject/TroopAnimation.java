@@ -63,7 +63,7 @@ public final class TroopAnimation extends GameObject {
     public static final void toCSV(FileHandle root, GameObjectList<TroopAnimation> kinds) {
         FileHandle f = root.child(SAVE_FILE);
         try (CSVWriter writer = new CSVWriter(f.writer(false, "UTF-8"))) {
-            writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.FACILITY_KIND_SAVE_HEADER).split(","));
+            writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.TROOP_ANIMATION_SAVE_HEADER).split(","));
             for (TroopAnimation detail : kinds) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
