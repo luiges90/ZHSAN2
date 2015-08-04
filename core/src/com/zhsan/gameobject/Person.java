@@ -351,27 +351,27 @@ public class Person extends GameObject {
 
     @LuaAI.ExportToLua
     public int getAgricultureAbility() {
-        return 2 * getPolitics() + 2 * getGlamour();
+        return getStrength() + 2 * getPolitics() + getGlamour();
     }
 
     @LuaAI.ExportToLua
     public int getCommerceAbility() {
-        return getIntelligence() + 2 * getPolitics() + getGlamour();
+        return 2 * getPolitics() + 2 * getGlamour();
     }
 
     @LuaAI.ExportToLua
     public int getTechnologyAbility() {
-        return 2 * getIntelligence() + 2 * getPolitics();
+        return getIntelligence() + 3 * getPolitics();
     }
 
     @LuaAI.ExportToLua
     public int getMoraleAbility() {
-        return getCommand() + getPolitics() + 2 * getGlamour();
+        return getPolitics() + 3 * getGlamour();
     }
 
     @LuaAI.ExportToLua
     public int getEnduranceAbility() {
-        return getStrength() + getCommand() + getIntelligence() + getPolitics();
+        return 2 * getStrength() + 2 * getPolitics();
     }
 
     @LuaAI.ExportToLua
@@ -381,7 +381,7 @@ public class Person extends GameObject {
 
     @LuaAI.ExportToLua
     public int getTrainingAbility() {
-        return 2 * getCommand() + 2 * getStrength();
+        return 3 * getCommand() + getStrength();
     }
 
     @Override

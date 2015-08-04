@@ -65,14 +65,14 @@
                         FontColor="4294967295"
                         Align="Right">
                 </Column>
-                <Column ID="12" Name="Intelligence" IsNumber="true" DisplayName="智谋" MinWidth="50"
+                <Column ID="12" Name="Intelligence" IsNumber="true" DisplayName="軍略" MinWidth="50"
                         FontName="方正隶变_GBK"
                         FontSize="14"
                         FontStyle="Regular"
                         FontColor="4294967295"
                         Align="Right">
                 </Column>
-                <Column ID="13" Name="Politics" IsNumber="true" DisplayName="政治" MinWidth="50"
+                <Column ID="13" Name="Politics" IsNumber="true" DisplayName="政略" MinWidth="50"
                         FontName="方正隶变_GBK"
                         FontSize="14"
                         FontStyle="Regular"
@@ -135,12 +135,19 @@
                         FontColor="4294967295"
                         Align="Right">
                 </Column>
+                <Column ID="37" Name="TrainingAbility" IsNumber="true" DisplayName="訓練能力" MinWidth="80"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right">
+                </Column>
             </Columns>
             <Tabs Margin="5">
                 <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 2 3 4"/>
                 <Tab ID="2" Name="Ability" DisplayName="能力" Columns="1 10 11 12 13 14"/>
                 <Tab ID="3" Name="Internal" DisplayName="内政" Columns="1 30 31 32 33 34 35"/>
-                <Tab ID="4" Name="Military" DisplayName="軍事" Columns="1 36"/>
+                <Tab ID="4" Name="Military" DisplayName="軍事" Columns="1 30 36 37"/>
             </Tabs>
         </ListKind>
         <ListKind ID="2" Name="Architecture" DisplayName="建筑列表">
