@@ -3,7 +3,6 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.zhsan.common.Pair;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
@@ -12,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.List;
 
 /**
  * Created by Peter on 8/8/2015.
@@ -25,7 +23,7 @@ public class Troop extends GameObject {
 
     private Military military;
 
-    private Point position;
+    private Point location;
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();
@@ -40,7 +38,7 @@ public class Troop extends GameObject {
 
                 Troop data = new Troop(Integer.parseInt(line[0]), scen);
                 data.military = scen.getMilitary(Integer.parseInt(line[1]));
-                data.position = Point.fromCSV(line[2]);
+                data.location = Point.fromCSV(line[2]);
 
                 result.add(data);
             }
@@ -59,7 +57,7 @@ public class Troop extends GameObject {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
                         String.valueOf(detail.military.getId()),
-                        detail.position.toCSV()
+                        detail.location.toCSV()
                 });
             }
         } catch (IOException e) {
@@ -86,12 +84,12 @@ public class Troop extends GameObject {
         return this;
     }
 
-    public Point getPosition() {
-        return position;
+    public Point getLocation() {
+        return location;
     }
 
-    public Troop setPosition(Point position) {
-        this.position = position;
+    public Troop setLocation(Point location) {
+        this.location = location;
         return this;
     }
 }

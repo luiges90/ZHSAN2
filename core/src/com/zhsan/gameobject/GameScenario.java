@@ -216,7 +216,7 @@ public class GameScenario {
     }
 
     public Troop getTroopAt(Point p) {
-        return troops.filter(f -> f.getPosition().equals(p)).getFirst();
+        return troops.filter(f -> f.getLocation().equals(p)).getFirst();
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {

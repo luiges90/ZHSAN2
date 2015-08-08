@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
  */
 public final class TroopAnimation extends GameObject {
 
-    public enum TROOP_ANIMATIONS {
+    public enum TroopAnimationKind {
         IDLE(1),
         MOVE(2),
         ATTACK(3),
@@ -25,7 +25,7 @@ public final class TroopAnimation extends GameObject {
         BE_CASTED(6);
 
         private final int id;
-        TROOP_ANIMATIONS(int id) {
+        TroopAnimationKind(int id) {
             this.id = id;
         }
 
@@ -101,6 +101,22 @@ public final class TroopAnimation extends GameObject {
     @Override
     public String getName() {
         return name;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getFrameCount() {
+        return frameCount;
+    }
+
+    public int getIdleFrame() {
+        return idleFrame;
+    }
+
+    public int getSpriteSize() {
+        return spriteSize;
     }
 
     public static class TroopAnimationBuilder {

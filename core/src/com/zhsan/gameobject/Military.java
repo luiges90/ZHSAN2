@@ -274,7 +274,7 @@ public class Military extends GameObject {
 
         Troop t = new Troop(scenario.getTroops().getFreeId(), scenario)
                 .setMilitary(this)
-                .setPosition(start);
+                .setLocation(start);
         scenario.addTroop(t);
 
         location = new LocationType(t);
