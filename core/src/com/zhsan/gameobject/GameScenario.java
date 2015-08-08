@@ -217,6 +217,10 @@ public class GameScenario {
         return facilities.filter(f -> f.getLocation().equals(p)).getFirst();
     }
 
+    public Troop getTroopAt(Point p) {
+        return troops.filter(f -> f.getPosition().equals(p)).getFirst();
+    }
+
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {
         return new GameObjectList<>(architectureKinds, true);
     }
@@ -249,6 +253,14 @@ public class GameScenario {
         return militaries.filter(x -> x.getId() == id).getFirst();
     }
 
+    public GameObjectList<TroopAnimation> getTroopAnimations() {
+        return new GameObjectList<>(troopAnimations, true);
+    }
+
+    public GameObjectList<Troop> getTroops() {
+        return new GameObjectList<>(troops, true);
+    }
+
     public boolean createMilitary(Architecture location, MilitaryKind kind) {
         int cost = kind.getCost(location);
         if (cost > location.getFund()) return false;
@@ -267,6 +279,10 @@ public class GameScenario {
     public void advanceDay() {
         gameData.advanceDay();
         architectures.forEach(Architecture::advanceDay);
+    }
+
+    public void addTroop(Troop t) {
+        troops.add(t);
     }
 
     public enum Season {

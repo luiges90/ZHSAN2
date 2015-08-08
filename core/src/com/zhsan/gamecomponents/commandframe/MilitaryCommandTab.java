@@ -360,6 +360,13 @@ public class MilitaryCommandTab implements CommandTab {
                         }
                         invalidateListPanes();
                     });
+        } else if (campaignPos.contains(x, y) && parent.getCurrentArchitecture().getCampaignableMilitaries().size() > 0
+                && parent.getCurrentArchitecture().getCampaignPosition() != null) {
+            parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.CAMPAIGN), TabListGameFrame.ListKindType.MILITARY,
+                    parent.getCurrentArchitecture().getCampaignableMilitaries(), TabListGameFrame.Selection.SINGLE,
+                    selectedItems -> {
+                        ((Military) selectedItems.get(0)).startCampaign(parent.getCurrentArchitecture().getCampaignPosition());
+                    });
         }
     }
 }

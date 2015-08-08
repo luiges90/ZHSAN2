@@ -76,4 +76,22 @@ public class Troop extends GameObject {
     public String getName() {
         return military.getName();
     }
+
+    public Military getMilitary() {
+        return military;
+    }
+
+    public Troop setMilitary(Military military) {
+        this.military = military;
+        return this;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public Troop setPosition(Point position) {
+        this.position = position;
+        return this;
+    }
 }

@@ -5,6 +5,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Pair;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
@@ -23,16 +24,27 @@ public class Military extends GameObject {
     public static class LocationType {
 
         private static final int ARCHITECTURE = 1;
+        private static final int TROOP = 2;
 
         private final Architecture architecture;
+        private final Troop troop;
 
         public LocationType(Architecture architecture) {
             this.architecture = architecture;
+            this.troop = null;
+        }
+
+        public LocationType(Troop troop) {
+            this.architecture = null;
+            this.troop = troop;
         }
 
         public GameObject get() {
             if (architecture != null) {
                 return architecture;
+            }
+            if (troop != null) {
+                return troop;
             }
             return null;
         }
@@ -41,12 +53,22 @@ public class Military extends GameObject {
             if (architecture != null) {
                 return architecture.getId();
             }
+            if (troop != null) {
+                return troop.getId();
+            }
             return -1;
         }
 
         public static LocationType fromCSV(String type, String id, GameScenario scen) {
             int typeInt = Integer.parseInt(type);
-            return new LocationType(scen.getArchitectures().get(Integer.parseInt(id)));
+            if (typeInt == ARCHITECTURE) {
+                return new LocationType(scen.getArchitectures().get(Integer.parseInt(id)));
+            } else if (typeInt == TROOP) {
+                return new LocationType(scen.getTroops().get(Integer.parseInt(id)));
+            } else {
+                assert false;
+                return null;
+            }
         }
 
         public Pair<String, String> toCSV() {
@@ -54,6 +76,9 @@ public class Military extends GameObject {
             if (architecture != null) {
                 type = ARCHITECTURE;
                 id = architecture.getId();
+            } else if (troop != null) {
+                type = TROOP;
+                id = troop.getId();
             } else {
                 assert false;
                 return null;
@@ -62,6 +87,8 @@ public class Military extends GameObject {
         }
 
     }
+
+    private GameScenario scen;
 
     private String name;
 
@@ -93,6 +120,8 @@ public class Military extends GameObject {
                 data.morale = Integer.parseInt(line[6]);
                 data.combativity = Integer.parseInt(line[7]);
                 data.leader = scen.getPerson(Integer.parseInt(line[8]));
+
+                data.scen = scen;
 
                 result.add(data);
             }
@@ -209,6 +238,8 @@ public class Military extends GameObject {
         GameObject t = location.get();
         if (t instanceof Architecture) {
             return ((Architecture) t).getBelongedFaction();
+        } else if (t instanceof Troop) {
+            return leader.getBelongedFaction();
         }
         return null;
     }
@@ -225,6 +256,31 @@ public class Military extends GameObject {
 
     public void increaseCombativity(int x) {
         combativity = Math.min(combativity + x, GlobalVariables.maxCombativity);
+    }
+
+    public Troop startCampaign(Point start) {
+        if (!(getLocation() instanceof Architecture)) {
+            throw new IllegalStateException("The troop must be in an architecture in order to leave");
+        }
+        if (this.leader == null) {
+            throw new IllegalStateException("Troop must have a leader before leaving");
+        }
+        if (this.leader.getLocation() != getLocation()) {
+            throw new IllegalStateException("Leader must be in the same location as this military in order to leave");
+        }
+        Architecture a = (Architecture) getLocation();
+        if (a.getBelongedFaction() != this.leader.getBelongedFaction()) {
+            throw new IllegalStateException("Leader must be of same faction to the architecture in order to leave");
+        }
+
+        Troop t = new Troop(scen.getTroops().getFreeId())
+                .setMilitary(this)
+                .setPosition(start);
+        scen.addTroop(t);
+
+        location = new LocationType(t);
+
+        return t;
     }
 
 }

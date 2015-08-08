@@ -90,22 +90,21 @@ public final class Point {
      * @return
      */
     public Iterator<Point> spiralOutIterator() {
+        return spiralOutIterator(Integer.MAX_VALUE);
+    }
+
+    public Iterator<Point> spiralOutIterator(int maxLayer) {
         return new Iterator<Point>() {
             private int i = 0;
             private int layer = 0;
 
             @Override
             public boolean hasNext() {
-                return true;
+                return layer <= maxLayer;
             }
 
             @Override
             public Point next() {
-                if (i > layer * 4) {
-                    i = 0;
-                    layer++;
-                }
-
                 Point result;
                 if (i >= 0 && i < layer) {
                     int p = i;
@@ -122,6 +121,11 @@ public final class Point {
                 }
 
                 i++;
+                if (i > layer * 4) {
+                    i = 0;
+                    layer++;
+                }
+
                 return result;
             }
         };
