@@ -40,7 +40,6 @@ public class ContextMenu extends WidgetGroup {
 
     public enum MenuKindType {
         SYSTEM_MENU("SystemMenu", GameScenario.class, false),
-        ARCHITECTURE_LEFT_MENU("ArchitectureLeftClick", Architecture.class, false),
         ARCHITECTURE_RIGHT_MENU("ArchitectureRightClick", Architecture.class, false),
         MAP_RIGHT_MENU("MapRightClick", GameScenario.class, false);
 
