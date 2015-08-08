@@ -5,7 +5,10 @@ import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.Troop;
 import com.zhsan.screen.GameScreen;
+
+import java.util.Objects;
 
 /**
  * Methods called from ContextMenu left click callbacks. All these methods are called by reflection.
@@ -93,6 +96,9 @@ public final class ContextMenuMethods {
 
     public static void ArchitectureRightClick_Faction_AllMilitaries(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.MILITARY, ((Architecture) object).getBelongedFaction().getMilitaries());
+    }
+
+    public static void TroopLeftClick_Move(GameScreen screen, Objects object) {
     }
 
 }
