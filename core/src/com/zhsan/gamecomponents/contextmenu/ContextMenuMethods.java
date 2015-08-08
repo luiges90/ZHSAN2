@@ -98,7 +98,12 @@ public final class ContextMenuMethods {
         screen.showTabList(TabListGameFrame.ListKindType.MILITARY, ((Architecture) object).getBelongedFaction().getMilitaries());
     }
 
-    public static void TroopLeftClick_Move(GameScreen screen, Objects object) {
+    public static void TroopLeftClick_Move(GameScreen screen, Object object) {
+        screen.getMapLayer().startSelectingLocation(p -> {
+            if (p != null) {
+                ((Troop) object).giveMoveToOrder(p);
+            }
+        });
     }
 
 }

@@ -38,6 +38,10 @@ import java.util.Map;
  */
 public class MainMapLayer extends WidgetGroup {
 
+    public interface LocationSelectionListener {
+        public void onLocationSelected(Point p);
+    }
+
     private enum MoveStateX {
         IDLE, LEFT, RIGHT
     }
@@ -73,6 +77,8 @@ public class MainMapLayer extends WidgetGroup {
     private float captionSize;
 
     private List<MapLayer> mapLayers = new ArrayList<>();
+
+    private LocationSelectionListener locationSelectionListener;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(MAP_ROOT_PATH + "MapLayerData.xml");
@@ -175,6 +181,13 @@ public class MainMapLayer extends WidgetGroup {
         int newZoom = screen.getScenario().getGameMap().getZoom();
         newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
         screen.getScenario().getGameMap().setZoom(newZoom);
+    }
+
+    public void startSelectingLocation(LocationSelectionListener listener) {
+        if (locationSelectionListener != null) {
+            throw new IllegalStateException("Location selection has been started.");
+        }
+        locationSelectionListener = listener;
     }
 
     @Override
@@ -336,9 +349,13 @@ public class MainMapLayer extends WidgetGroup {
 
             Point pos = mouseOnMapPosition();
             Architecture a = screen.getScenario().getArchitectureAt(pos);
-            Facility f = screen.getScenario().getFacilityAt(pos);
+            Troop t = screen.getScenario().getTroopAt(pos);
 
-            if (a != null) {
+             if (t != null) {
+                if (button == Input.Buttons.LEFT) {
+                    screen.showContextMenu(ContextMenu.MenuKindType.TROOP_LEFT_MENU, t, new Point(mousePosition));
+                }
+            } else if (a != null) {
                 if (button == Input.Buttons.LEFT) {
                     screen.showArchitectureCcommandFrame(a);
                 } else if (button == Input.Buttons.RIGHT) {
@@ -348,6 +365,11 @@ public class MainMapLayer extends WidgetGroup {
                 if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.MAP_RIGHT_MENU, screen.getScenario(), new Point(mousePosition));
                 }
+            }
+
+            if (locationSelectionListener != null) {
+                locationSelectionListener.onLocationSelected(button == Input.Buttons.LEFT ? pos : null);
+                locationSelectionListener = null;
             }
 
             return false;
