@@ -148,12 +148,10 @@ public class GameScenario {
                     if (a.getLocation().contains(p)) continue;
                     if (kind.getCanBuildAtTerrain().contains(gameMap.getTerrainAt(p))) {
                         if (getFacilityAt(p) == null) {
-                            Facility f = new Facility.FacilityBuilder()
-                                    .setId(facilities.getFreeId())
-                                    .setBelongedArchitecture(a)
-                                    .setKind(kind)
-                                    .setLocation(p)
-                                    .createFacility();
+                            Facility f = new Facility(facilities.getFreeId(), this);
+                            f.setBelongedArchitecture(a);
+                            f.setKind(kind);
+                            f.setLocation(p);
                             facilities.add(f);
                             break;
                         }
@@ -266,7 +264,7 @@ public class GameScenario {
         if (cost > location.getFund()) return false;
         location.loseFund(cost);
 
-        Military m = new Military(militaries.getFreeId());
+        Military m = new Military(militaries.getFreeId(), this);
         m.setKind(kind);
         m.setName(kind.getName());
         m.setLocation(location);

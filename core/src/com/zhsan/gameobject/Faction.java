@@ -34,8 +34,9 @@ public class Faction extends GameObject {
 
     private Color color;
 
-    private Faction(int id) {
+    private Faction(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     public static final GameObjectList<Faction> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -49,12 +50,10 @@ public class Faction extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Faction t = new Faction(Integer.parseInt(line[0]));
+                Faction t = new Faction(Integer.parseInt(line[0]), scen);
                 t.name = line[1];
                 t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
                 t.leaderId = Integer.parseInt(line[3]);
-
-                t.scenario = scen;
 
                 result.add(t);
             }
@@ -76,7 +75,7 @@ public class Faction extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Faction t = new Faction(Integer.parseInt(line[0]));
+                Faction t = new Faction(Integer.parseInt(line[0]), null);
                 t.name = line[1];
  
                 result.add(t);

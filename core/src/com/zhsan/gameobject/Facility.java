@@ -19,14 +19,17 @@ public class Facility extends GameObject {
 
     public static final String SAVE_FILE = "Facility.csv";
 
+    private GameScenario scenario;
+
     private FacilityKind kind;
     private Point location;
     private int endurance;
 
     private Architecture belongedArchitecture;
 
-    private Facility(int id) {
+    public Facility(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     public static final GameObjectList<Facility> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -46,7 +49,7 @@ public class Facility extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Facility data = new FacilityBuilder().setId(Integer.parseInt(line[0])).createFacility();
+                Facility data = new Facility(Integer.parseInt(line[0]), scen);
 
                 data.kind = scen.getFacilityKinds().get(Integer.parseInt(line[1]));
                 data.location = Point.fromCSV(line[2]);
@@ -98,39 +101,23 @@ public class Facility extends GameObject {
         return location;
     }
 
-    public static class FacilityBuilder {
+    public Facility setKind(FacilityKind kind) {
+        this.kind = kind;
+        return this;
+    }
 
-        private int id;
-        private FacilityKind kind;
-        private Point location;
-        private Architecture belongedArchitecture;
+    public Facility setLocation(Point location) {
+        this.location = location;
+        return this;
+    }
 
-        public FacilityBuilder setId(int id) {
-            this.id = id;
-            return this;
-        }
+    public Facility setEndurance(int endurance) {
+        this.endurance = endurance;
+        return this;
+    }
 
-        public FacilityBuilder setKind(FacilityKind kind) {
-            this.kind = kind;
-            return this;
-        }
-
-        public FacilityBuilder setLocation(Point location) {
-            this.location = location;
-            return this;
-        }
-
-        public FacilityBuilder setBelongedArchitecture(Architecture belongedArchitecture) {
-            this.belongedArchitecture = belongedArchitecture;
-            return this;
-        }
-
-        public Facility createFacility() {
-            Facility f = new Facility(id);
-            f.kind = kind;
-            f.location = location;
-            f.belongedArchitecture = belongedArchitecture;
-            return f;
-        }
+    public Facility setBelongedArchitecture(Architecture belongedArchitecture) {
+        this.belongedArchitecture = belongedArchitecture;
+        return this;
     }
 }

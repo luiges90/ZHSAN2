@@ -88,7 +88,7 @@ public class Military extends GameObject {
 
     }
 
-    private GameScenario scen;
+    private GameScenario scenario;
 
     private String name;
 
@@ -112,7 +112,7 @@ public class Military extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Military data = new Military(Integer.parseInt(line[0]));
+                Military data = new Military(Integer.parseInt(line[0]), scen);
                 data.name = line[1];
                 data.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[2]));
                 data.location = LocationType.fromCSV(line[3], line[4], scen);
@@ -120,8 +120,6 @@ public class Military extends GameObject {
                 data.morale = Integer.parseInt(line[6]);
                 data.combativity = Integer.parseInt(line[7]);
                 data.leader = scen.getPerson(Integer.parseInt(line[8]));
-
-                data.scen = scen;
 
                 result.add(data);
             }
@@ -155,8 +153,9 @@ public class Military extends GameObject {
         }
     }
 
-    public Military(int id) {
+    public Military(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     @Override
@@ -273,10 +272,10 @@ public class Military extends GameObject {
             throw new IllegalStateException("Leader must be of same faction to the architecture in order to leave");
         }
 
-        Troop t = new Troop(scen.getTroops().getFreeId())
+        Troop t = new Troop(scenario.getTroops().getFreeId(), scenario)
                 .setMilitary(this)
                 .setPosition(start);
-        scen.addTroop(t);
+        scenario.addTroop(t);
 
         location = new LocationType(t);
 

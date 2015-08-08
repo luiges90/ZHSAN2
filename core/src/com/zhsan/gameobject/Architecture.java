@@ -43,8 +43,9 @@ public class Architecture extends GameObject {
 
     private GameObjectList<MilitaryKind> creatableMilitaryKinds;
 
-    private Architecture(int id) {
+    private Architecture(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     public static final GameObjectList<Architecture> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -58,7 +59,7 @@ public class Architecture extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Architecture data = new Architecture(Integer.parseInt(line[0]));
+                Architecture data = new Architecture(Integer.parseInt(line[0]), scen);
                 data.nameImageName = line[1];
                 data.name = line[2];
                 data.architectureKind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
@@ -73,8 +74,6 @@ public class Architecture extends GameObject {
                 data.morale = Float.parseFloat(line[12]);
                 data.endurance = Float.parseFloat(line[13]);
                 data.creatableMilitaryKinds = scen.getMilitaryKinds().getItemsFromCSV(line[14]);
-
-                data.scenario = scen;
 
                 result.add(data);
             }

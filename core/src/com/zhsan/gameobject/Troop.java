@@ -38,10 +38,9 @@ public class Troop extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Troop data = new Troop(Integer.parseInt(line[0]));
+                Troop data = new Troop(Integer.parseInt(line[0]), scen);
                 data.military = scen.getMilitary(Integer.parseInt(line[1]));
                 data.position = Point.fromCSV(line[2]);
-                data.scenario = scen;
 
                 result.add(data);
             }
@@ -68,8 +67,9 @@ public class Troop extends GameObject {
         }
     }
 
-    public Troop(int id) {
+    public Troop(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     @Override

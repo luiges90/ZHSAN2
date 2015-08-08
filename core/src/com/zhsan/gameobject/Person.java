@@ -167,8 +167,9 @@ public class Person extends GameObject {
 
     private int movingDays = 0;
 
-    private Person(int id) {
+    private Person(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     public static final GameObjectList<Person> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -182,7 +183,7 @@ public class Person extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Person data = new Person(Integer.parseInt(line[0]));
+                Person data = new Person(Integer.parseInt(line[0]), scen);
 
                 data.portraitId = Integer.parseInt(line[1]);
                 data.surname = line[2];
@@ -197,8 +198,6 @@ public class Person extends GameObject {
                 data.politics = Integer.parseInt(line[12]);
                 data.glamour = Integer.parseInt(line[13]);
                 data.doingWork = Person.DoingWork.fromCSV(line[14]);
-
-                data.scenario = scen;
 
                 result.add(data);
             }

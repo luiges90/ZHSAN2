@@ -27,8 +27,9 @@ public class Section extends GameObject {
 
     private Faction belongedFaction;
 
-    private Section(int id) {
+    private Section(int id, GameScenario scen) {
         super(id);
+        this.scenario = scen;
     }
 
     public static final GameObjectList<Section> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -42,11 +43,9 @@ public class Section extends GameObject {
                 index++;
                 if (index == 1) continue; // skip first line.
 
-                Section data = new Section(Integer.parseInt(line[0]));
+                Section data = new Section(Integer.parseInt(line[0]), scen);
                 data.name = line[1];
                 data.belongedFaction = scen.getFactions().get(Integer.parseInt(line[2]));
-
-                data.scenario = scen;
 
                 result.add(data);
             }
