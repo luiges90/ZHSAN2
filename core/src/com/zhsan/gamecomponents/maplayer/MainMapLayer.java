@@ -127,6 +127,7 @@ public class MainMapLayer extends WidgetGroup {
 
         mapLayers.add(new ArchitectureLayer());
         mapLayers.add(new FacilityLayer());
+        mapLayers.add(new TroopAnimationLayer());
     }
 
     public void resize(int width, int height) {

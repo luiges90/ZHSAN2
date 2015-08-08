@@ -16,6 +16,24 @@ import java.io.InputStreamReader;
  */
 public final class TroopAnimation extends GameObject {
 
+    public enum TROOP_ANIMATIONS {
+        IDLE(1),
+        MOVE(2),
+        ATTACK(3),
+        BE_ATTACKED(4),
+        CAST(5),
+        BE_CASTED(6);
+
+        private final int id;
+        TROOP_ANIMATIONS(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
+
     public static final String SAVE_FILE = "TroopAnimation.csv";
 
     private final String name;

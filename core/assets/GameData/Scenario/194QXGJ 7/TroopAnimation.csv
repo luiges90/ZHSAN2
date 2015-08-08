@@ -1,7 +1,7 @@
 ID,名称,檔案名稱,帧数,停留帧数,每格大小
-0,Idle,Move.png,10,8,128
-1,Move,Move.png,10,4,128
-2,Attack,Attack.png,10,4,128
-3,BeAttacked,BeAttacked.png,10,4,128
-4,Cast,Cast.png,10,4,128
-5,BeCasted,BeCasted.png,10,4,128
+1,Idle,Move.png,10,8,128
+2,Move,Move.png,10,4,128
+3,Attack,Attack.png,10,4,128
+4,BeAttacked,BeAttacked.png,10,4,128
+5,Cast,Cast.png,10,4,128
+6,BeCasted,BeCasted.png,10,4,128
