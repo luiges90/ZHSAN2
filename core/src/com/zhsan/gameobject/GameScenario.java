@@ -38,11 +38,14 @@ public class GameScenario {
     private final GameObjectList<MilitaryType> militaryTypes;
     private final GameObjectList<MilitaryKind> militaryKinds;
 
+    private final GameObjectList<TroopAnimation> troopAnimations;
+
     private final GameObjectList<Architecture> architectures;
     private final GameObjectList<Section> sections;
     private final GameObjectList<Faction> factions;
     private final GameObjectList<Person> persons;
     private final GameObjectList<Military> militaries;
+    private final GameObjectList<Troop> troops;
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -74,6 +77,8 @@ public class GameScenario {
         militaryTypes = MilitaryType.fromCSV(file, this);
         militaryKinds = MilitaryKind.fromCSV(file, this);
 
+        troopAnimations = TroopAnimation.fromCSV(file, this);
+
         // load game objects
         int version = gameSurvey.getVersion();
 
@@ -82,6 +87,7 @@ public class GameScenario {
         architectures = Architecture.fromCSV(file, this);
         persons = Person.fromCSV(file, this);
         militaries = Military.fromCSV(file, this);
+        troops = Troop.fromCSV(file, this);
 
         facilities = Facility.fromCSV(file, this);
 
@@ -239,6 +245,10 @@ public class GameScenario {
         return new GameObjectList<>(militaries, true);
     }
 
+    public Military getMilitary(int id) {
+        return militaries.filter(x -> x.getId() == id).getFirst();
+    }
+
     public boolean createMilitary(Architecture location, MilitaryKind kind) {
         int cost = kind.getCost(location);
         if (cost > location.getFund()) return false;
@@ -310,6 +320,8 @@ public class GameScenario {
         MilitaryType.toCSV(result, new GameObjectList<>(militaryTypes, true));
         MilitaryKind.toCSV(result, new GameObjectList<>(militaryKinds, true));
 
+        TroopAnimation.toCSV(result, new GameObjectList<>(troopAnimations, true));
+
         GameData.toCSV(result, gameData);
 
         Architecture.toCSV(result, new GameObjectList<>(architectures, true));
@@ -317,6 +329,9 @@ public class GameScenario {
         Faction.toCSV(result, new GameObjectList<>(factions, true));
         Person.toCSV(result, new GameObjectList<>(persons, true));
         Military.toCSV(result, new GameObjectList<>(militaries, true));
+        Troop.toCSV(result, new GameObjectList<>(troops, true));
+
+        Facility.toCSV(result, new GameObjectList<>(facilities, true));
     }
 
 }

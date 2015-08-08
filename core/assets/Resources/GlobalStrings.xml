@@ -20,6 +20,7 @@
         militaryKindSaveHeader="ID,名稱,類別,描述,指定建築新編,所需資金,兵裝運送資金,最大士兵數,單位士兵數"
         militarySaveHeader="ID,名稱,種類,位置類,位置,士兵數,士氣,戰意,隊長"
         troopAnimationSaveHeader="ID,名称,檔案名稱,帧数,停留帧数,每格大小"
+        troopSaveHeader="ID,編隊,位置"
         foodUnit="10000"
         foodUnitString="萬"
         Agriculture="農業"
