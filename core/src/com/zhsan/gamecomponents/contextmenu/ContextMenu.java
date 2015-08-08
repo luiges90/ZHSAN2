@@ -42,9 +42,7 @@ public class ContextMenu extends WidgetGroup {
         SYSTEM_MENU("SystemMenu", GameScenario.class, false),
         ARCHITECTURE_LEFT_MENU("ArchitectureLeftClick", Architecture.class, false),
         ARCHITECTURE_RIGHT_MENU("ArchitectureRightClick", Architecture.class, false),
-        MAP_RIGHT_MENU("MapRightClick", GameScenario.class, false),
-        FACILITY_LEFT_MENU("FacilityLeftClick", Facility.class, true)
-        ;
+        MAP_RIGHT_MENU("MapRightClick", GameScenario.class, false);
 
         public final String xmlName;
         public final Class<?> carryingObj;
