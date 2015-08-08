@@ -366,6 +366,7 @@ public class MilitaryCommandTab implements CommandTab {
                     parent.getCurrentArchitecture().getCampaignableMilitaries(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
                         ((Military) selectedItems.get(0)).startCampaign(parent.getCurrentArchitecture().getCampaignPosition());
+                        invalidateListPanes();
                     });
         }
     }
