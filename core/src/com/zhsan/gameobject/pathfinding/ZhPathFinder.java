@@ -110,11 +110,36 @@ public class ZhPathFinder {
 
     public List<Point> findPath(Point from, Point to) {
         GraphPath<Node> out = new DefaultGraphPath<>();
-        pathFinder.searchNodePath(nodes.get(pointToIndex(from.x, from.y)), nodes.get(pointToIndex(to.x, to.y)), new H(), out);
+        boolean found = pathFinder.searchNodePath(nodes.get(pointToIndex(from.x, from.y)), nodes.get(pointToIndex(to.x, to.y)), new H(), out);
+        if (!found) {
+            return null;
+        }
 
         List<Point> result = new ArrayList<>();
         for (Node n : out) {
             result.add(new Point(n.x, n.y));
+        }
+        return result;
+    }
+
+    public List<Point> getPointsWithinCost(Point from, int cost) {
+        // TODO use better algorithm by inspecting the A* algorithm itself
+        List<Point> result = new ArrayList<>();
+        int furthestDistance = cost;
+        for (int x = from.x - furthestDistance; x <= from.x + furthestDistance; ++x) {
+            for (int y = from.y - furthestDistance; y <= from.y + furthestDistance; ++y) {
+                if (x < 0 || y < 0 || x > map.getWidth() || y > map.getHeight()) continue;
+                GraphPath<Connection<Node>> out = new DefaultGraphPath<>();
+                boolean found = pathFinder.searchConnectionPath(nodes.get(pointToIndex(from.x, from.y)), nodes.get(pointToIndex(x, y)), new H(), out);
+                if (!found) continue;
+                int totalCost = 0;
+                for (Connection<Node> i : out) {
+                    totalCost += i.getCost();
+                }
+                if (totalCost <= cost) {
+                    result.add(new Point(x, y));
+                }
+            }
         }
         return result;
     }
