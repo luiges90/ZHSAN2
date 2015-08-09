@@ -207,6 +207,10 @@ public class Military extends GameObject {
         this.leader = leader;
     }
 
+    public String getLeaderName() {
+        return leader == null ? null : leader.getName();
+    }
+
     public boolean recruitable() {
         return !isFullyRecruited();
     }

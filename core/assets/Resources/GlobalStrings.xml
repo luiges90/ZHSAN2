@@ -36,6 +36,5 @@
         TrainMilitary="訓練編隊"
         AssignLeader="設置隊長"
         Campaign="出征"
-        None="無"
         MoveTo="移動至(%d,%d)"
         />

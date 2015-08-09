@@ -153,7 +153,7 @@ public class Troop extends GameObject {
 
     public String getOrderString() {
         if (this.order == null) {
-            return GlobalStrings.getString(GlobalStrings.Keys.NONE);
+            return null;
         }
         switch (this.order.kind) {
             case MOVE:
@@ -173,6 +173,10 @@ public class Troop extends GameObject {
 
     public String getBelongedFactionName() {
         return getBelongedFaction().getName();
+    }
+
+    public String getLeaderName() {
+        return getMilitary().getLeader().getName();
     }
 
     public void giveMoveToOrder(Point location) {
