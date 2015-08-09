@@ -55,7 +55,9 @@ public class GlobalStrings {
         ASSIGN_LEADER("AssignLeader"),
         TROOP_ANIMATION_SAVE_HEADER("troopAnimationSaveHeader"),
         TROOP_SAVE_HEADER("troopSaveHeader"),
-        CAMPAIGN("Campaign");
+        CAMPAIGN("Campaign"),
+        MOVE_TO("MoveTo"),
+        NONE("None");
 
         private final String xmlName;
         Keys(String name) {

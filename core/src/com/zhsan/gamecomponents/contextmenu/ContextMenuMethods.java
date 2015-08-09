@@ -5,6 +5,7 @@ import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gameobject.Architecture;
+import com.zhsan.gameobject.GameObjectList;
 import com.zhsan.gameobject.Troop;
 import com.zhsan.screen.GameScreen;
 
@@ -104,6 +105,14 @@ public final class ContextMenuMethods {
                 ((Troop) object).giveMoveToOrder(p);
             }
         });
+    }
+
+    public static void TroopRightClick_TroopDetail(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.TROOP, GameObjectList.singleton((Troop) object));
+    }
+
+    public static void TroopRightClick_TroopMilitary(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.MILITARY, GameObjectList.singleton(((Troop) object).getMilitary()));
     }
 
 }

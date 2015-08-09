@@ -151,6 +151,22 @@ public class Troop extends GameObject {
         return this;
     }
 
+    public String getOrderString() {
+        if (this.order == null) {
+            return GlobalStrings.getString(GlobalStrings.Keys.NONE);
+        }
+        switch (this.order.kind) {
+            case MOVE:
+                return String.format(GlobalStrings.getString(GlobalStrings.Keys.MOVE_TO), this.order.targetLocation.x, this.order.targetLocation.y);
+        }
+        assert false;
+        return null;
+    }
+
+    public String getKindString() {
+        return this.getMilitary().getKind().getName();
+    }
+
     public void giveMoveToOrder(Point location) {
         this.order = new Order(OrderKind.MOVE, location);
     }

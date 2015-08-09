@@ -52,8 +52,12 @@
             <MenuItem ID="3" Name="Quit" DisplayName="退出游戏"/>
             <MenuItem ID="4" Name="Continue" DisplayName="继续游戏"/>
         </MenuKind>
-        <MenuKind ID="4" Name="TroopLeftClick" IsLeft="true" Width="120" Height="25">
+        <MenuKind ID="4" Name="TroopLeftClick" IsLeft="true" Width="100" Height="25">
             <MenuItem ID="1" Name="Move" DisplayName="移動"/>
+        </MenuKind>
+        <MenuKind ID="" Name="TroopRightClick" IsLeft="false" Width="120" Height="25">
+            <MenuItem ID="1" Name="TroopDetail" DisplayName="部队信息"/>
+            <MenuItem ID="2" Name="TroopMilitary" DisplayName="部队編隊"/>
         </MenuKind>
     </MenuKindList>
 </Root>

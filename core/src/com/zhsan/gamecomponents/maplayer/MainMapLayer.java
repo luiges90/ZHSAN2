@@ -354,6 +354,8 @@ public class MainMapLayer extends WidgetGroup {
              if (t != null) {
                 if (button == Input.Buttons.LEFT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.TROOP_LEFT_MENU, t, new Point(mousePosition));
+                } else if (button == Input.Buttons.RIGHT) {
+                    screen.showContextMenu(ContextMenu.MenuKindType.TROOP_RIGHT_MENU, t, new Point(mousePosition));
                 }
             } else if (a != null) {
                 if (button == Input.Buttons.LEFT) {

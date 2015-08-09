@@ -125,6 +125,12 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.isEmpty() ? 1 : content.lastKey() + 1;
     }
 
+    public static <T extends GameObject> GameObjectList<T> singleton(T item) {
+        GameObjectList<T> r = new GameObjectList<>();
+        r.add(item);
+        return r;
+    }
+
     public GameObjectList<T> getItemsFromCSV(String s) {
         List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
         return content.values().parallelStream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
