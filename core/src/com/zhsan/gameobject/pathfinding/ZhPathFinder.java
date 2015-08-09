@@ -126,11 +126,17 @@ public class ZhPathFinder {
         // TODO use better algorithm by inspecting the A* algorithm itself
         List<Point> result = new ArrayList<>();
         int furthestDistance = cost;
+        Heuristic<Node> nodeHeuristic = new H();
         for (int x = from.x - furthestDistance; x <= from.x + furthestDistance; ++x) {
             for (int y = from.y - furthestDistance; y <= from.y + furthestDistance; ++y) {
                 if (x < 0 || y < 0 || x > map.getWidth() || y > map.getHeight()) continue;
+
+                Node fromNode = nodes.get(pointToIndex(from.x, from.y));
+                Node toNode = nodes.get(pointToIndex(x, y));
+                if (nodeHeuristic.estimate(fromNode, toNode) > cost) continue;
+
                 GraphPath<Connection<Node>> out = new DefaultGraphPath<>();
-                boolean found = pathFinder.searchConnectionPath(nodes.get(pointToIndex(from.x, from.y)), nodes.get(pointToIndex(x, y)), new H(), out);
+                boolean found = pathFinder.searchConnectionPath(fromNode, toNode, nodeHeuristic, out);
                 if (!found) continue;
                 int totalCost = 0;
                 for (Connection<Node> i : out) {
