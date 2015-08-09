@@ -146,6 +146,10 @@ public class Faction extends GameObject {
         return scenario.getMilitaries().filter(m -> m.getBelongedFaction() == this);
     }
 
+    public GameObjectList<Troop> getTroops() {
+        return scenario.getTroops().filter(t -> t.getBelongedFaction() == this);
+    }
+
     Person pickLeader() {
         return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()));
     }

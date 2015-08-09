@@ -167,6 +167,14 @@ public class Troop extends GameObject {
         return this.getMilitary().getKind().getName();
     }
 
+    public Faction getBelongedFaction() {
+        return this.getMilitary().getLeader().getBelongedFaction();
+    }
+
+    public String getBelongedFactionName() {
+        return getBelongedFaction().getName();
+    }
+
     public void giveMoveToOrder(Point location) {
         this.order = new Order(OrderKind.MOVE, location);
     }

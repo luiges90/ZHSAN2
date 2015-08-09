@@ -28,6 +28,7 @@
             <MenuItem ID="2" Name="Faction" DisplayName="所屬勢力" DisplayIfTrue="HasFaction">
                 <MenuItem ID="1" Name="AllPersons" DisplayName="所有武將"/>
                 <MenuItem ID="2" Name="AllMilitaries" DisplayName="所有編隊"/>
+                <MenuItem ID="3" Name="AllTroops" DisplayName="所有部隊"/>
             </MenuItem>
         </MenuKind>
         <MenuKind ID="2" Name="MapRightClick" IsLeft="false" Width="120" Height="25">
