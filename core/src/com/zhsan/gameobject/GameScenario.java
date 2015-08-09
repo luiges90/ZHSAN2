@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
+import com.zhsan.gameobject.pathfinding.ZhPathFinder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -27,6 +28,7 @@ public class GameScenario {
     private final GameSurvey gameSurvey;
     private final GameObjectList<TerrainDetail> terrainDetails;
     private final GameMap gameMap;
+    private final ZhPathFinder pathFinder;
 
     private final GameData gameData;
 
@@ -92,6 +94,9 @@ public class GameScenario {
         facilities = Facility.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
+
+        // init
+        pathFinder = new ZhPathFinder(gameMap);
 
         if (newGame) {
             Faction playerFaction = factions.get(playerFactionId);
