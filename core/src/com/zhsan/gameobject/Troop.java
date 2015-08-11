@@ -21,10 +21,11 @@ public class Troop extends GameObject {
     public static final String SAVE_FILE = "Troop.csv";
 
     private enum OrderKind {
-        MOVE;
+        IDLE, MOVE;
 
         static OrderKind fromCSV(String s) {
             switch (s) {
+                case "idle": return IDLE;
                 case "move": return MOVE;
                 default: assert false; return null;
             }
@@ -32,6 +33,7 @@ public class Troop extends GameObject {
 
         String toCSV() {
             switch (this) {
+                case IDLE: return "idle";
                 case MOVE: return "move";
             }
             assert false;
@@ -52,6 +54,8 @@ public class Troop extends GameObject {
             OrderKind orderKind = OrderKind.fromCSV(kind);
             if (orderKind != null) {
                 switch (orderKind) {
+                    case IDLE:
+                        return new Order(orderKind, null);
                     case MOVE:
                         return new Order(orderKind, Point.fromCSV(target));
                 }
@@ -63,6 +67,8 @@ public class Troop extends GameObject {
         Pair<String, String> toCSV() {
             String orderKind = kind.toCSV();
             switch (kind) {
+                case IDLE:
+                    return new Pair<>(orderKind, "");
                 case MOVE:
                     return new Pair<>(orderKind, targetLocation.toCSV());
             }
@@ -77,7 +83,7 @@ public class Troop extends GameObject {
 
     private Point location;
 
-    private Order order;
+    private Order order = new Order(OrderKind.IDLE, null);
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();
@@ -152,10 +158,9 @@ public class Troop extends GameObject {
     }
 
     public String getOrderString() {
-        if (this.order == null) {
-            return null;
-        }
         switch (this.order.kind) {
+            case IDLE:
+                return null;
             case MOVE:
                 return String.format(GlobalStrings.getString(GlobalStrings.Keys.MOVE_TO), this.order.targetLocation.x, this.order.targetLocation.y);
         }
