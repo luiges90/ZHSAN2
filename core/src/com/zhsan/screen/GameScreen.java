@@ -193,6 +193,12 @@ public class GameScreen extends WidgetGroup {
         }
     }
 
+    public boolean allowMapMove() {
+        return !tabListGameFrame.isVisible() && !contextMenu.isVisible() && !architectureCommandFrame.isVisible() &&
+                (saveGameFrame == null || !saveGameFrame.isVisible()) &&
+                (loadGameFrame == null || !loadGameFrame.isVisible());
+    }
+
     public GameScenario getScenario() {
         return scen;
     }

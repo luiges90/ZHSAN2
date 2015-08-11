@@ -179,9 +179,11 @@ public class MainMapLayer extends WidgetGroup {
     }
 
     private void adjustZoom(int amount) {
-        int newZoom = screen.getScenario().getGameMap().getZoom();
-        newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
-        screen.getScenario().getGameMap().setZoom(newZoom);
+        if (screen.allowMapMove()) {
+            int newZoom = screen.getScenario().getGameMap().getZoom();
+            newZoom = MathUtils.clamp(newZoom + amount * mapMouseScrollFactor, mapZoomMin, mapZoomMax);
+            screen.getScenario().getGameMap().setZoom(newZoom);
+        }
     }
 
     public void startSelectingLocation(Troop troop, LocationSelectionListener listener) {
@@ -376,48 +378,50 @@ public class MainMapLayer extends WidgetGroup {
 
         @Override
         public boolean keyDown(InputEvent event, int keycode) {
-            if (keycode == Input.Keys.MINUS) {
-                zoomState = ZoomState.OUT;
-            } else if (keycode == Input.Keys.EQUALS) {
-                zoomState = ZoomState.IN;
-            } else if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
-                moveStateY = MoveStateY.TOP;
-            } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
-                moveStateX = MoveStateX.LEFT;
-            } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
-                moveStateY = MoveStateY.BOTTOM;
-            } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
-                moveStateX = MoveStateX.RIGHT;
-            } else if (keycode == Input.Keys.Q) {
-                GlobalVariables.showGrid = !GlobalVariables.showGrid;
-            } else if (keycode == Input.Keys.NUM_1) {
-                screen.getDayRunner().runDays(1);
-            } else if (keycode == Input.Keys.NUM_2) {
-                screen.getDayRunner().runDays(2);
-            } else if (keycode == Input.Keys.NUM_3) {
-                screen.getDayRunner().runDays(3);
-            } else if (keycode == Input.Keys.NUM_4) {
-                screen.getDayRunner().runDays(4);
-            } else if (keycode == Input.Keys.NUM_5) {
-                screen.getDayRunner().runDays(5);
-            } else if (keycode == Input.Keys.NUM_6) {
-                screen.getDayRunner().runDays(6);
-            } else if (keycode == Input.Keys.NUM_7) {
-                screen.getDayRunner().runDays(7);
-            } else if (keycode == Input.Keys.NUM_8) {
-                screen.getDayRunner().runDays(8);
-            } else if (keycode == Input.Keys.NUM_9) {
-                screen.getDayRunner().runDays(9);
-            } else if (keycode == Input.Keys.NUM_0) {
-                screen.getDayRunner().runDays(10);
-            } else if (keycode == Input.Keys.F1) {
-                screen.getDayRunner().runDays(30);
-            } else if (keycode == Input.Keys.F2) {
-                screen.getDayRunner().runDays(60);
-            } else if (keycode == Input.Keys.F3) {
-                screen.getDayRunner().runDays(90);
-            } else if (keycode == Input.Keys.SPACE) {
-                screen.getDayRunner().continueRunDays();
+            if (screen.allowMapMove()) {
+                if (keycode == Input.Keys.MINUS) {
+                    zoomState = ZoomState.OUT;
+                } else if (keycode == Input.Keys.EQUALS) {
+                    zoomState = ZoomState.IN;
+                } else if (keycode == Input.Keys.W || keycode == Input.Keys.UP) {
+                    moveStateY = MoveStateY.TOP;
+                } else if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT) {
+                    moveStateX = MoveStateX.LEFT;
+                } else if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN) {
+                    moveStateY = MoveStateY.BOTTOM;
+                } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
+                    moveStateX = MoveStateX.RIGHT;
+                } else if (keycode == Input.Keys.Q) {
+                    GlobalVariables.showGrid = !GlobalVariables.showGrid;
+                } else if (keycode == Input.Keys.NUM_1) {
+                    screen.getDayRunner().runDays(1);
+                } else if (keycode == Input.Keys.NUM_2) {
+                    screen.getDayRunner().runDays(2);
+                } else if (keycode == Input.Keys.NUM_3) {
+                    screen.getDayRunner().runDays(3);
+                } else if (keycode == Input.Keys.NUM_4) {
+                    screen.getDayRunner().runDays(4);
+                } else if (keycode == Input.Keys.NUM_5) {
+                    screen.getDayRunner().runDays(5);
+                } else if (keycode == Input.Keys.NUM_6) {
+                    screen.getDayRunner().runDays(6);
+                } else if (keycode == Input.Keys.NUM_7) {
+                    screen.getDayRunner().runDays(7);
+                } else if (keycode == Input.Keys.NUM_8) {
+                    screen.getDayRunner().runDays(8);
+                } else if (keycode == Input.Keys.NUM_9) {
+                    screen.getDayRunner().runDays(9);
+                } else if (keycode == Input.Keys.NUM_0) {
+                    screen.getDayRunner().runDays(10);
+                } else if (keycode == Input.Keys.F1) {
+                    screen.getDayRunner().runDays(30);
+                } else if (keycode == Input.Keys.F2) {
+                    screen.getDayRunner().runDays(60);
+                } else if (keycode == Input.Keys.F3) {
+                    screen.getDayRunner().runDays(90);
+                } else if (keycode == Input.Keys.SPACE) {
+                    screen.getDayRunner().continueRunDays();
+                }
             }
 
             return true;
@@ -462,15 +466,17 @@ public class MainMapLayer extends WidgetGroup {
         moveStateX = MoveStateX.IDLE;
         moveStateY = MoveStateY.IDLE;
 
-        if (x < mapScrollBoundary) {
-            moveStateX = MoveStateX.LEFT;
-        } else if (x > getWidth() - mapScrollBoundary) {
-            moveStateX = MoveStateX.RIGHT;
-        }
-        if (y < mapScrollBoundary) {
-            moveStateY = MoveStateY.BOTTOM;
-        } else if (y > getHeight() - mapScrollBoundary) {
-            moveStateY = MoveStateY.TOP;
+        if (screen.allowMapMove()) {
+            if (x < mapScrollBoundary) {
+                moveStateX = MoveStateX.LEFT;
+            } else if (x > getWidth() - mapScrollBoundary) {
+                moveStateX = MoveStateX.RIGHT;
+            }
+            if (y < mapScrollBoundary) {
+                moveStateY = MoveStateY.BOTTOM;
+            } else if (y > getHeight() - mapScrollBoundary) {
+                moveStateY = MoveStateY.TOP;
+            }
         }
     }
 
