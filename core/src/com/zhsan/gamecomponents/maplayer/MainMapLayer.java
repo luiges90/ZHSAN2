@@ -189,9 +189,7 @@ public class MainMapLayer extends WidgetGroup {
             throw new IllegalStateException("Location selection has been started.");
         }
         locationSelectionListener = listener;
-        for (MapLayer mapLayer : mapLayers) {
-            mapLayer.onStartSelectingLocation(troop);
-        }
+        mapLayers.forEach(l -> l.onStartSelectingLocation(troop));
     }
 
     @Override
@@ -314,9 +312,7 @@ public class MainMapLayer extends WidgetGroup {
             }
         };
 
-        for (MapLayer mapLayer : mapLayers) {
-            mapLayer.draw(screen, resPack, helpers, zoom, batch, parentAlpha);
-        }
+        mapLayers.forEach(l -> l.draw(screen, resPack, helpers, zoom, batch, parentAlpha));
 
         // draw childrens
         super.draw(batch, parentAlpha);
@@ -372,6 +368,7 @@ public class MainMapLayer extends WidgetGroup {
             if (locationSelectionListener != null) {
                 locationSelectionListener.onLocationSelected(button == Input.Buttons.LEFT ? pos : null);
                 locationSelectionListener = null;
+                mapLayers.forEach(MapLayer::onEndSelectingLocation);
             }
 
             return false;

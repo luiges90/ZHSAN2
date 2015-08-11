@@ -24,4 +24,8 @@ interface MapLayer {
         // no-op
     }
 
+    public default void onEndSelectingLocation() {
+        // no-op
+    }
+
 }
