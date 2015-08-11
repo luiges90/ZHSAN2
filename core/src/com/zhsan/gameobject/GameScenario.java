@@ -39,6 +39,7 @@ public class GameScenario {
 
     private final GameObjectList<MilitaryType> militaryTypes;
     private final GameObjectList<MilitaryKind> militaryKinds;
+    private final GameObjectList<MilitaryTerrain> militaryTerrains;
 
     private final GameObjectList<TroopAnimation> troopAnimations;
 
@@ -78,6 +79,8 @@ public class GameScenario {
 
         militaryTypes = MilitaryType.fromCSV(file, this);
         militaryKinds = MilitaryKind.fromCSV(file, this);
+
+        militaryTerrains = MilitaryTerrain.fromCSV(file, this);
 
         troopAnimations = TroopAnimation.fromCSV(file, this);
 
@@ -262,6 +265,10 @@ public class GameScenario {
 
     public GameObjectList<Troop> getTroops() {
         return new GameObjectList<>(troops, true);
+    }
+
+    public MilitaryTerrain getMilitaryTerrain(MilitaryKind kind, TerrainDetail terrain) {
+        return militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
     }
 
     public boolean createMilitary(Architecture location, MilitaryKind kind) {
