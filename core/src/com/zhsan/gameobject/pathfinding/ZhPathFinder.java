@@ -32,7 +32,7 @@ public class ZhPathFinder {
 
         @Override
         public float getCost() {
-            return 1;
+            return 5;
         }
 
         @Override

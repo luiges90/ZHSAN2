@@ -38,7 +38,7 @@ public class FacilityLayer implements MapLayer {
     }
 
     @Override
-    public void draw(MainMapLayer mapLayer, GameScreen screen, String resPack, DrawingHelpers helpers, int zoom, Batch batch, float parentAlpha) {
+    public void draw(GameScreen screen, String resPack, DrawingHelpers helpers, int zoom, Batch batch, float parentAlpha) {
         for (Facility f : screen.getScenario().getFacilities()) {
             if (helpers.isMapLocationOnScreen(f.getLocation())) {
                 Texture facilityImage = getFacilityImage(resPack, f.getKind());

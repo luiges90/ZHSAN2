@@ -138,6 +138,10 @@ public final class MilitaryKind extends GameObject {
         return transportCost;
     }
 
+    public int getMovability() {
+        return movability;
+    }
+
     public GameObjectList<Architecture> getArchitecturesCreatable() {
         return scenario.getArchitectures().filter(a -> a.getCreatableMilitaryKinds().contains(this));
     }

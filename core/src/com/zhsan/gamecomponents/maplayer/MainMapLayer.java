@@ -131,9 +131,10 @@ public class MainMapLayer extends WidgetGroup {
         this.addListener(new GetScrollFocusWhenEntered(this));
         this.addListener(new GetKeyFocusWhenEntered(this));
 
-        mapLayers.add(new ArchitectureLayer());
+        mapLayers.add(new ArchitectureLayer(captionSize));
         mapLayers.add(new FacilityLayer());
         mapLayers.add(new TroopAnimationLayer());
+        mapLayers.add(new HighlightLayer(screen.getScenario()));
     }
 
     public void resize(int width, int height) {
@@ -183,11 +184,14 @@ public class MainMapLayer extends WidgetGroup {
         screen.getScenario().getGameMap().setZoom(newZoom);
     }
 
-    public void startSelectingLocation(LocationSelectionListener listener) {
+    public void startSelectingLocation(Troop troop, LocationSelectionListener listener) {
         if (locationSelectionListener != null) {
             throw new IllegalStateException("Location selection has been started.");
         }
         locationSelectionListener = listener;
+        for (MapLayer mapLayer : mapLayers) {
+            mapLayer.onStartSelectingLocation(troop);
+        }
     }
 
     @Override
@@ -223,10 +227,6 @@ public class MainMapLayer extends WidgetGroup {
         screen.getScenario().getGameSurvey().setCameraPosition(
                 new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
         );
-    }
-
-    public float getCaptionSize() {
-        return captionSize;
     }
 
     private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
@@ -315,7 +315,7 @@ public class MainMapLayer extends WidgetGroup {
         };
 
         for (MapLayer mapLayer : mapLayers) {
-            mapLayer.draw(this, screen, resPack, helpers, zoom, batch, parentAlpha);
+            mapLayer.draw(screen, resPack, helpers, zoom, batch, parentAlpha);
         }
 
         // draw childrens

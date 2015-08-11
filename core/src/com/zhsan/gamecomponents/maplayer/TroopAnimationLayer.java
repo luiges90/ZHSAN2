@@ -49,7 +49,7 @@ public class TroopAnimationLayer implements MapLayer {
     }
 
     @Override
-    public void draw(MainMapLayer mapLayer, GameScreen screen, String resPack, DrawingHelpers helpers,
+    public void draw(GameScreen screen, String resPack, DrawingHelpers helpers,
                      int zoom, Batch batch, float parentAlpha) {
         for (Troop t : screen.getScenario().getTroops()) {
             if (helpers.isMapLocationOnScreen(t.getLocation())) {

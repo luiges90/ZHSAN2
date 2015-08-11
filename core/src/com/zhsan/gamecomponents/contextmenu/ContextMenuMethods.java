@@ -104,7 +104,7 @@ public final class ContextMenuMethods {
     }
 
     public static void TroopLeftClick_Move(GameScreen screen, Object object) {
-        screen.getMapLayer().startSelectingLocation(p -> {
+        screen.getMapLayer().startSelectingLocation((Troop) object, p -> {
             if (p != null) {
                 ((Troop) object).giveMoveToOrder(p);
             }

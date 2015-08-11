@@ -271,6 +271,10 @@ public class GameScenario {
         return militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
     }
 
+    public ZhPathFinder getPathFinder() {
+        return pathFinder;
+    }
+
     public boolean createMilitary(Architecture location, MilitaryKind kind) {
         int cost = kind.getCost(location);
         if (cost > location.getFund()) return false;

@@ -61,6 +61,12 @@ public class ArchitectureLayer implements MapLayer {
     private Map<Pair<ArchitectureKind, ArchitectureImageQuantifier>, Texture> architectureImages = new HashMap<>();
     private Map<String, Texture> architectureNameImages = new HashMap<>();
 
+    private float captionSize;
+
+    public ArchitectureLayer(float captionSize) {
+        this.captionSize = captionSize;
+    }
+
     private Texture getArchitectureImage(String resSet, ArchitectureKind kind, ArchitectureImageQuantifier quantifier) {
         if (!architectureImages.containsKey(new ImmutablePair<>(kind, quantifier))) {
             String name = String.valueOf(kind.getId());
@@ -169,7 +175,7 @@ public class ArchitectureLayer implements MapLayer {
     }
 
     @Override
-    public void draw(MainMapLayer mapLayer, GameScreen screen, String resPack, DrawingHelpers helpers, int zoom,
+    public void draw(GameScreen screen, String resPack, DrawingHelpers helpers, int zoom,
                      Batch batch, float parentAlpha) {
         for (Architecture a : screen.getScenario().getArchitectures()) {
             Point mapCenter = Point.getCenter(a.getLocation());
@@ -223,7 +229,7 @@ public class ArchitectureLayer implements MapLayer {
                     architectureNameImages.put(name, nameImage);
                 }
                 Texture nameImage = architectureNameImages.get(name);
-                int nameImageHeight = (int) (zoom * mapLayer.getCaptionSize());
+                int nameImageHeight = (int) (zoom * captionSize);
                 int nameImageWidth = (int) ((float) nameImage.getWidth() * nameImageHeight / nameImage.getHeight());
                 batch.draw(nameImage, mainX - nameImageWidth / 2, mainY + mainSizeYNoOffset / 2 - nameImageHeight / 2,
                         nameImageWidth, nameImageHeight);
