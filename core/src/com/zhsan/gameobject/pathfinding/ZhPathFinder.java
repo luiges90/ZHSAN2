@@ -129,7 +129,7 @@ public class ZhPathFinder {
         Heuristic<Node> nodeHeuristic = new H();
         for (int x = from.x - furthestDistance; x <= from.x + furthestDistance; ++x) {
             for (int y = from.y - furthestDistance; y <= from.y + furthestDistance; ++y) {
-                if (x < 0 || y < 0 || x > map.getWidth() || y > map.getHeight()) continue;
+                if (x < 0 || y < 0 || x >= map.getWidth() || y >= map.getHeight()) continue;
 
                 Node fromNode = nodes.get(pointToIndex(from.x, from.y));
                 Node toNode = nodes.get(pointToIndex(x, y));

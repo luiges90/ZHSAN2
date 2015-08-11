@@ -29,7 +29,7 @@ public class HighlightLayer implements MapLayer {
     @Override
     public void draw(GameScreen screen, String resPack, DrawingHelpers helpers,
                      int zoom, Batch batch, float parentAlpha) {
-        moveToHighlight.parallelStream().filter(helpers::isMapLocationOnScreen).forEach(p -> {
+        moveToHighlight.stream().filter(helpers::isMapLocationOnScreen).forEach(p -> {
             Point px = helpers.getPixelFromMapLocation(p);
             batch.draw(moveTo, px.x, px.y, zoom, zoom);
         });

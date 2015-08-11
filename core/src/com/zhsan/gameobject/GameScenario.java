@@ -93,7 +93,7 @@ public class GameScenario {
         persons = Person.fromCSV(file, this);
         troops = Troop.fromCSV(file, this);
         militaries = Military.fromCSV(file, this);
-        
+
         facilities = Facility.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
