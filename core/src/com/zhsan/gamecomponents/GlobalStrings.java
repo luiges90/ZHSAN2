@@ -47,6 +47,7 @@ public class GlobalStrings {
         MILITARY_TYPE_SAVE_HEADER("militaryTypeSaveHeader"),
         MILITARY_KIND_SAVE_HEADER("militaryKindSaveHeader"),
         MILITARY_SAVE_HEADER("militarySaveHeader"),
+        MILITARY_TERRAIN_SAVE_HEADER("militaryTerrainSaveHeader"),
         NEW_MILITARY("NewMilitary"),
         RECRUIT_MILITARY("RecruitMilitary"),
         TRAIN_MILITARY("TrainMilitary"),

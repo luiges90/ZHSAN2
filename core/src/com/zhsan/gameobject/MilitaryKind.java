@@ -7,7 +7,6 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
 import org.jetbrains.annotations.NotNull;
-import org.luaj.vm2.ast.Str;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,8 +29,9 @@ public final class MilitaryKind extends GameObject {
     private final float transportCost;
     private final int quantity;
     private final int unitQuantity;
+    private final int movability;
 
-    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity) {
+    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability) {
         super(id);
         this.scenario = scenario;
         this.type = type;
@@ -42,6 +42,7 @@ public final class MilitaryKind extends GameObject {
         this.transportCost = transportCost;
         this.quantity = quantity;
         this.unitQuantity = unitQuantity;
+        this.movability = movability;
     }
 
     public static GameObjectList<MilitaryKind> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -64,6 +65,7 @@ public final class MilitaryKind extends GameObject {
                         .setTransportCost(Float.parseFloat(line[6]))
                         .setQuantity(Integer.parseInt(line[7]))
                         .setUnitQuantity(Integer.parseInt(line[8]))
+                        .setMovability(Integer.parseInt(line[9]))
                         .setScenario(scen)
                         .createMilitaryKind();
 
@@ -90,7 +92,8 @@ public final class MilitaryKind extends GameObject {
                         String.valueOf(detail.cost),
                         String.valueOf(detail.transportCost),
                         String.valueOf(detail.quantity),
-                        String.valueOf(detail.unitQuantity)
+                        String.valueOf(detail.unitQuantity),
+                        String.valueOf(detail.movability)
                 });
             }
         } catch (IOException e) {
@@ -150,6 +153,7 @@ public final class MilitaryKind extends GameObject {
         private float transportCost;
         private int quantity;
         private int unitQuantity;
+        private int movability;
 
         public MilitaryKindBuilder() {
         }
@@ -165,6 +169,7 @@ public final class MilitaryKind extends GameObject {
             this.transportCost = old.transportCost;
             this.quantity = old.quantity;
             this.unitQuantity = old.unitQuantity;
+            this.movability = old.movability;
             return this;
         }
 
@@ -218,8 +223,13 @@ public final class MilitaryKind extends GameObject {
             return this;
         }
 
+        public MilitaryKindBuilder setMovability(int movability) {
+            this.movability = movability;
+            return this;
+        }
+
         public MilitaryKind createMilitaryKind() {
-            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity);
+            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability);
         }
     }
 }
