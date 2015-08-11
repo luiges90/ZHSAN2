@@ -91,9 +91,9 @@ public class GameScenario {
         sections = Section.fromCSV(file, this);
         architectures = Architecture.fromCSV(file, this);
         persons = Person.fromCSV(file, this);
-        militaries = Military.fromCSV(file, this);
         troops = Troop.fromCSV(file, this);
-
+        militaries = Military.fromCSV(file, this);
+        
         facilities = Facility.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
@@ -349,6 +349,8 @@ public class GameScenario {
 
         MilitaryType.toCSV(result, new GameObjectList<>(militaryTypes, true));
         MilitaryKind.toCSV(result, new GameObjectList<>(militaryKinds, true));
+
+        MilitaryTerrain.toCSV(result, new GameObjectList<>(militaryTerrains, true));
 
         TroopAnimation.toCSV(result, new GameObjectList<>(troopAnimations, true));
 

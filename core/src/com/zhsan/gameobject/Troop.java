@@ -79,8 +79,6 @@ public class Troop extends GameObject {
 
     private GameScenario scenario;
 
-    private Military military;
-
     private Point location;
 
     private Order order = new Order(OrderKind.IDLE, null);
@@ -97,9 +95,8 @@ public class Troop extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Troop data = new Troop(Integer.parseInt(line[0]), scen);
-                data.military = scen.getMilitary(Integer.parseInt(line[1]));
-                data.location = Point.fromCSV(line[2]);
-                data.order = Order.fromCSV(line[3], line[4]);
+                data.location = Point.fromCSV(line[1]);
+                data.order = Order.fromCSV(line[2], line[3]);
 
                 result.add(data);
             }
@@ -118,7 +115,6 @@ public class Troop extends GameObject {
                 Pair<String, String> orderStr = detail.order.toCSV();
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
-                        String.valueOf(detail.military.getId()),
                         detail.location.toCSV(),
                         orderStr.x,
                         orderStr.y
@@ -136,16 +132,11 @@ public class Troop extends GameObject {
 
     @Override
     public String getName() {
-        return military.getName();
+        return getLeaderName();
     }
 
     public Military getMilitary() {
-        return military;
-    }
-
-    public Troop setMilitary(Military military) {
-        this.military = military;
-        return this;
+        return scenario.getMilitaries().filter(m -> m.getLocation() == this).getFirst();
     }
 
     public Point getLocation() {

@@ -21,7 +21,7 @@
         militaryTerrainSaveHeader="兵種,地型,適性,乘數"
         militarySaveHeader="ID,名稱,種類,位置類,位置,士兵數,士氣,戰意,隊長"
         troopAnimationSaveHeader="ID,名称,檔案名稱,帧数,停留帧数,每格大小"
-        troopSaveHeader="ID,編隊,位置,指令,指令內容"
+        troopSaveHeader="ID,位置,指令,指令內容"
         foodUnit="10000"
         foodUnitString="萬"
         Agriculture="農業"
