@@ -262,19 +262,21 @@ public class DateRunner extends WidgetGroup {
 
             daysToGo = MathUtils.clamp(daysToGo, 0, GlobalVariables.maxRunningDays);
 
-            if (playPos.contains(x, y)) {
-                play.setState(StateTexture.State.NORMAL);
-                pause.setState(StateTexture.State.NORMAL);
-                if (!screen.getDayRunner().isDayRunning()) {
-                    screen.getDayRunner().runDays(daysLeft == 0 ? daysToGo : 0);
-                } else {
-                    screen.getDayRunner().pauseRunDays();
+            if (screen.allowRunDays()) {
+                if (playPos.contains(x, y)) {
+                    play.setState(StateTexture.State.NORMAL);
+                    pause.setState(StateTexture.State.NORMAL);
+                    if (!screen.getDayRunner().isDayRunning()) {
+                        screen.getDayRunner().runDays(daysLeft == 0 ? daysToGo : 0);
+                    } else {
+                        screen.getDayRunner().pauseRunDays();
+                    }
                 }
-            }
 
-            if (stopPos.contains(x, y)) {
-                stop.setState(StateTexture.State.NORMAL);
-                screen.getDayRunner().stopRunDays();
+                if (stopPos.contains(x, y)) {
+                    stop.setState(StateTexture.State.NORMAL);
+                    screen.getDayRunner().stopRunDays();
+                }
             }
 
             return true;

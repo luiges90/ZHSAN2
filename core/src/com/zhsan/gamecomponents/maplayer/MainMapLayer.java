@@ -393,9 +393,13 @@ public class MainMapLayer extends WidgetGroup {
                     moveStateY = MoveStateY.BOTTOM;
                 } else if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT) {
                     moveStateX = MoveStateX.RIGHT;
-                } else if (keycode == Input.Keys.Q) {
-                    GlobalVariables.showGrid = !GlobalVariables.showGrid;
-                } else if (keycode == Input.Keys.NUM_1) {
+                }
+            }
+            if (keycode == Input.Keys.Q) {
+                GlobalVariables.showGrid = !GlobalVariables.showGrid;
+            }
+            if (screen.allowRunDays()) {
+                if (keycode == Input.Keys.NUM_1) {
                     screen.getDayRunner().runDays(1);
                 } else if (keycode == Input.Keys.NUM_2) {
                     screen.getDayRunner().runDays(2);

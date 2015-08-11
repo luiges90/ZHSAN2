@@ -203,6 +203,12 @@ public class GameScreen extends WidgetGroup {
                 (loadGameFrame == null || !loadGameFrame.isVisible());
     }
 
+    public boolean allowRunDays() {
+        return !tabListGameFrame.isVisible() && !contextMenu.isVisible() &&
+                (saveGameFrame == null || !saveGameFrame.isVisible()) &&
+                (loadGameFrame == null || !loadGameFrame.isVisible());
+    }
+
     public GameScenario getScenario() {
         return scen;
     }

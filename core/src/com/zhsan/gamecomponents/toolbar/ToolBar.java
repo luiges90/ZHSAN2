@@ -162,23 +162,20 @@ public class ToolBar extends WidgetGroup {
 
         @Override
         public boolean touchDown(InputEvent event, float x, float y, int pointer, int mouseButton) {
-            if (screen.allowMapMove()) {
-                if (actualGameSystemPos.contains(x, y)) {
-                    gameSystem.setState(StateTexture.State.NORMAL);
-                    screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
-                }
-                if (actualSmallMapPos.contains(x, y)) {
-                    if (smallMapButton.getState() == StateTexture.State.NORMAL) {
-                        smallMapButton.setState(StateTexture.State.SELECTED);
-                        smallMap.setVisible(true);
-                    } else {
-                        smallMapButton.setState(StateTexture.State.NORMAL);
-                        smallMap.setVisible(false);
-                    }
-                }
-                return true;
+            if (actualGameSystemPos.contains(x, y)) {
+                gameSystem.setState(StateTexture.State.NORMAL);
+                screen.showContextMenu(ContextMenu.MenuKindType.SYSTEM_MENU, null);
             }
-            return false;
+            if (actualSmallMapPos.contains(x, y)) {
+                if (smallMapButton.getState() == StateTexture.State.NORMAL) {
+                    smallMapButton.setState(StateTexture.State.SELECTED);
+                    smallMap.setVisible(true);
+                } else {
+                    smallMapButton.setState(StateTexture.State.NORMAL);
+                    smallMap.setVisible(false);
+                }
+            }
+            return true;
         }
     }
 
