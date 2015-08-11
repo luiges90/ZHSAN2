@@ -173,6 +173,10 @@ public class GameScreen extends WidgetGroup {
         architectureCommandFrame.show(architecture);
     }
 
+    public void hideArchitectureCommandFrame() {
+        architectureCommandFrame.hide();
+    }
+
     public void showSaveGameFrame() {
         dayRunner.pauseRunDays();
         if (saveGameFrame == null) {

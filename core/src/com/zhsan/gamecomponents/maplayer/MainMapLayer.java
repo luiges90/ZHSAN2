@@ -355,6 +355,7 @@ public class MainMapLayer extends WidgetGroup {
                 } else if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.TROOP_RIGHT_MENU, t, new Point(mousePosition));
                 }
+                screen.hideArchitectureCommandFrame();
             } else if (a != null) {
                 if (button == Input.Buttons.LEFT) {
                     screen.showArchitectureCcommandFrame(a);
@@ -365,6 +366,7 @@ public class MainMapLayer extends WidgetGroup {
                 if (button == Input.Buttons.RIGHT) {
                     screen.showContextMenu(ContextMenu.MenuKindType.MAP_RIGHT_MENU, screen.getScenario(), new Point(mousePosition));
                 }
+                screen.hideArchitectureCommandFrame();
             }
 
             if (locationSelectionListener != null) {

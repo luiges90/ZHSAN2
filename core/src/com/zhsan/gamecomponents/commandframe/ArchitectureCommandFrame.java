@@ -153,6 +153,11 @@ public class ArchitectureCommandFrame extends CommandFrame {
         this.setVisible(true);
     }
 
+    public void hide() {
+        this.setVisible(false);
+        currentArchitecture = null;
+    }
+
     public void invalidateData() {
         tabs.values().forEach(CommandTab::invalidate);
     }
