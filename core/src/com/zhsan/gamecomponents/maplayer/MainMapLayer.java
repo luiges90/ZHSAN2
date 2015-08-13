@@ -151,31 +151,39 @@ public class MainMapLayer extends WidgetGroup {
         return t;
     }
 
-    public void setMapCameraPosition(Point p) {
-        this.mapCameraPosition = new Vector2(p.x * mapZoomMax, (screen.getScenario().getGameMap().getHeight() - 1 - p.y) * mapZoomMax);
+    private void updateSurveyCameraPosition() {
         screen.getScenario().getGameSurvey().setCameraPosition(
                 new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
         );
     }
 
+    public void setMapCameraPosition(Point p) {
+        this.mapCameraPosition = new Vector2(p.x * mapZoomMax, (screen.getScenario().getGameMap().getHeight() - 1 - p.y) * mapZoomMax);
+        updateSurveyCameraPosition();
+    }
+
     private void moveLeft() {
         mapCameraPosition.add(-mapScrollFactor * GlobalVariables.scrollSpeed /
                 screen.getScenario().getGameMap().getZoom(), 0);
+        updateSurveyCameraPosition();
     }
 
     private void moveRight() {
         mapCameraPosition.add(mapScrollFactor * GlobalVariables.scrollSpeed /
                 screen.getScenario().getGameMap().getZoom(), 0);
+        updateSurveyCameraPosition();
     }
 
     private void moveDown() {
         mapCameraPosition.add(0, -mapScrollFactor * GlobalVariables.scrollSpeed /
                 screen.getScenario().getGameMap().getZoom());
+        updateSurveyCameraPosition();
     }
 
     private void moveUp() {
         mapCameraPosition.add(0, mapScrollFactor * GlobalVariables.scrollSpeed /
                 screen.getScenario().getGameMap().getZoom());
+        updateSurveyCameraPosition();
     }
 
     private void adjustZoom(int amount) {
@@ -224,9 +232,7 @@ public class MainMapLayer extends WidgetGroup {
         mapCameraPosition.y = Math.max(getHeight() / 2, mapCameraPosition.y);
         mapCameraPosition.y = Math.min(map.getHeight() * mapZoomMax - getHeight() / 2, mapCameraPosition.y);
 
-        screen.getScenario().getGameSurvey().setCameraPosition(
-                new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
-        );
+        updateSurveyCameraPosition();
     }
 
     private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
