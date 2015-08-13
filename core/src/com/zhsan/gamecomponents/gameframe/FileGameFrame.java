@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.zhsan.common.Paths;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.WidgetUtility;
@@ -26,6 +27,7 @@ import org.w3c.dom.Node;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
@@ -131,7 +133,12 @@ public class FileGameFrame extends GameFrame {
         for (FileHandle fh : saveFiles) {
             if (!fh.isDirectory()) continue;
 
-            GameSurvey survey = GameSurvey.fromCSV(fh);
+            GameSurvey survey;
+            try {
+                survey = GameSurvey.fromCSV(fh);
+            } catch (FileReadException|GdxRuntimeException e) {
+                continue;
+            }
             String description = survey.getTitle() + " " +
                     survey.getSaveDate().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)) + " " +
                     survey.getMessage();
