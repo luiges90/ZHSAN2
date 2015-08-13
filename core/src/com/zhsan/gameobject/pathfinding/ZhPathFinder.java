@@ -10,11 +10,11 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedNode;
 import com.badlogic.gdx.utils.Array;
 import com.zhsan.common.Point;
 import com.zhsan.gameobject.GameMap;
+import com.zhsan.gameobject.GameScenario;
+import com.zhsan.gameobject.MilitaryKind;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Peter on 9/8/2015.
@@ -24,15 +24,17 @@ public class ZhPathFinder {
     private class Conn implements Connection<Node> {
 
         private final Node from, to;
+        private final MilitaryKind kind;
 
-        public Conn(Node from, Node to) {
+        public Conn(Node from, Node to, MilitaryKind kind) {
             this.from = from;
             this.to = to;
+            this.kind = kind;
         }
 
         @Override
         public float getCost() {
-            return 5;
+            return scen.getMilitaryTerrain(kind, map.getTerrainAt(to.x, to.y)).getAdaptability();
         }
 
         @Override
@@ -49,10 +51,12 @@ public class ZhPathFinder {
     private class Node implements IndexedNode<Node> {
 
         private final int x, y;
+        private final MilitaryKind kind;
 
-        public Node(int x, int y) {
+        public Node(int x, int y, MilitaryKind kind) {
             this.x = x;
             this.y = y;
+            this.kind = kind;
         }
 
         @Override
@@ -64,16 +68,28 @@ public class ZhPathFinder {
         public Array<Connection<Node>> getConnections() {
             Array<Connection<Node>> result = new Array<>(4);
             if (x > 0) {
-                result.add(new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x - 1, y))));
+                Conn conn = new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x - 1, y)), kind);
+                if (conn.getCost() != Float.MAX_VALUE) {
+                    result.add(conn);
+                }
             }
             if (y > 0) {
-                result.add(new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x, y - 1))));
+                Conn conn = new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x, y - 1)), kind);
+                if (conn.getCost() != Float.MAX_VALUE) {
+                    result.add(conn);
+                }
             }
             if (x < map.getWidth() - 1) {
-                result.add(new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x + 1, y))));
+                Conn conn = new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x + 1, y)), kind);
+                if (conn.getCost() != Float.MAX_VALUE) {
+                    result.add(conn);
+                }
             }
             if (y < map.getHeight() - 1) {
-                result.add(new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x, y + 1))));
+                Conn conn = new Conn(nodes.get(pointToIndex(x, y)), nodes.get(pointToIndex(x, y + 1)), kind);
+                if (conn.getCost() != Float.MAX_VALUE) {
+                    result.add(conn);
+                }
             }
             return result;
         }
@@ -88,23 +104,25 @@ public class ZhPathFinder {
     }
 
     private GameMap map;
+    private GameScenario scen;
+
     private Array<Node> nodes = new Array<>();
-    private DefaultIndexedGraph<Node> graph;
     private IndexedAStarPathFinder<Node> pathFinder;
 
     private int pointToIndex(int x, int y) {
         return y * map.getWidth() + x;
     }
 
-    public ZhPathFinder(GameMap map) {
+    public ZhPathFinder(GameScenario scen, GameMap map, MilitaryKind kind) {
+        this.scen = scen;
         this.map = map;
 
         for (int y = 0; y < map.getHeight(); ++y) {
             for (int x = 0; x < map.getWidth(); ++x) {
-                nodes.add(new Node(x, y));
+                nodes.add(new Node(x, y, kind));
             }
         }
-        graph = new DefaultIndexedGraph<>(nodes);
+        DefaultIndexedGraph<Node> graph = new DefaultIndexedGraph<>(nodes);
         pathFinder = new IndexedAStarPathFinder<>(graph);
     }
 

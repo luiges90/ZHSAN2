@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,6 @@ public class GameScenario {
     private final GameSurvey gameSurvey;
     private final GameObjectList<TerrainDetail> terrainDetails;
     private final GameMap gameMap;
-    private final ZhPathFinder pathFinder;
 
     private final GameData gameData;
 
@@ -49,6 +49,8 @@ public class GameScenario {
     private final GameObjectList<Person> persons;
     private final GameObjectList<Military> militaries;
     private final GameObjectList<Troop> troops;
+
+    private HashMap<MilitaryKind, ZhPathFinder> pathFinders = new HashMap<>();
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -97,9 +99,6 @@ public class GameScenario {
         facilities = Facility.fromCSV(file, this);
 
         gameData = GameData.fromCSV(file, this);
-
-        // init
-        pathFinder = new ZhPathFinder(gameMap);
 
         if (newGame) {
             Faction playerFaction = factions.get(playerFactionId);
@@ -268,11 +267,24 @@ public class GameScenario {
     }
 
     public MilitaryTerrain getMilitaryTerrain(MilitaryKind kind, TerrainDetail terrain) {
-        return militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
+        MilitaryTerrain mt = militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
+        if (mt == null) {
+            return new MilitaryTerrain.MilitaryTerrainBuilder()
+                    .setId(-1)
+                    .setKind(kind)
+                    .setTerrain(terrain)
+                    .setAdaptability(Float.MAX_VALUE)
+                    .setMultiple(0)
+                    .createMilitaryTerrain();
+        }
+        return mt;
     }
 
-    public ZhPathFinder getPathFinder() {
-        return pathFinder;
+    public ZhPathFinder getPathFinder(MilitaryKind kind) {
+        if (pathFinders.get(kind) == null) {
+            pathFinders.put(kind, new ZhPathFinder(this, gameMap, kind));
+        }
+        return pathFinders.get(kind);
     }
 
     public boolean createMilitary(Architecture location, MilitaryKind kind) {

@@ -83,6 +83,22 @@ public class MilitaryTerrain extends GameObject {
 
     }
 
+    public MilitaryKind getKind() {
+        return kind;
+    }
+
+    public TerrainDetail getTerrain() {
+        return terrain;
+    }
+
+    public float getAdaptability() {
+        return adaptability;
+    }
+
+    public float getMultiple() {
+        return multiple;
+    }
+
     @Override
     public String getName() {
         return kind.getName() + terrain.getName();
