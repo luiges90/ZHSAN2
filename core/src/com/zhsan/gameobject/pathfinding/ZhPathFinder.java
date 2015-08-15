@@ -13,8 +13,7 @@ import com.zhsan.gameobject.GameMap;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.MilitaryKind;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Peter on 9/8/2015.
@@ -46,6 +45,15 @@ public class ZhPathFinder {
         public Node getToNode() {
             return to;
         }
+
+        @Override
+        public String toString() {
+            return "Conn{" +
+                    "from=" + from +
+                    ", to=" + to +
+                    ", kind=" + kind +
+                    '}';
+        }
     }
 
     private class Node implements IndexedNode<Node> {
@@ -53,10 +61,21 @@ public class ZhPathFinder {
         private final int x, y;
         private final MilitaryKind kind;
 
+        private float cost;
+
         public Node(int x, int y, MilitaryKind kind) {
             this.x = x;
             this.y = y;
             this.kind = kind;
+        }
+
+        public float getCost() {
+            return cost;
+        }
+
+        public Node setCost(float cost) {
+            this.cost = cost;
+            return this;
         }
 
         @Override
@@ -91,6 +110,35 @@ public class ZhPathFinder {
                     result.add(conn);
                 }
             }
+            return result;
+        }
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", kind=" + kind +
+                    ", cost=" + cost +
+                    '}';
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Node node = (Node) o;
+
+            if (x != node.x) return false;
+            return y == node.y;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = x;
+            result = 31 * result + y;
             return result;
         }
     }
@@ -140,31 +188,36 @@ public class ZhPathFinder {
         return result;
     }
 
-    public List<Point> getPointsWithinCost(Point from, int cost) {
-        // TODO use better algorithm by inspecting the A* algorithm itself
+    public List<Point> getPointsWithinCost(Point from, int maxCost) {
         List<Point> result = new ArrayList<>();
-        int furthestDistance = cost;
-        Heuristic<Node> nodeHeuristic = new H();
-        for (int x = from.x - furthestDistance; x <= from.x + furthestDistance; ++x) {
-            for (int y = from.y - furthestDistance; y <= from.y + furthestDistance; ++y) {
-                if (x < 0 || y < 0 || x >= map.getWidth() || y >= map.getHeight()) continue;
 
-                Node fromNode = nodes.get(pointToIndex(from.x, from.y));
-                Node toNode = nodes.get(pointToIndex(x, y));
-                if (nodeHeuristic.estimate(fromNode, toNode) > cost) continue;
+        Node start = nodes.get(pointToIndex(from.x, from.y));
 
-                GraphPath<Connection<Node>> out = new DefaultGraphPath<>();
-                boolean found = pathFinder.searchConnectionPath(fromNode, toNode, nodeHeuristic, out);
-                if (!found) continue;
-                int totalCost = 0;
-                for (Connection<Node> i : out) {
-                    totalCost += i.getCost();
-                }
-                if (totalCost <= cost) {
-                    result.add(new Point(x, y));
+        // Uniform cost search getting all nodes within cost
+        PriorityQueue<Node> frontier = new PriorityQueue<>((x, y) -> Float.compare(x.cost, y.cost));
+        frontier.add(start);
+
+        Set<Node> explored = new HashSet<>();
+
+        do {
+            Node n = frontier.poll();
+            explored.add(n);
+            result.add(new Point(n.x, n.y));
+            for (Connection<Node> c : n.getConnections()) {
+                Node target = c.getToNode() == n ? c.getFromNode() : c.getToNode();
+                if (!explored.contains(target)) {
+                    if (!frontier.contains(target)) {
+                        if (n.getCost() + c.getCost() <= maxCost) {
+                            target.setCost(n.getCost() + c.getCost());
+                            frontier.add(target);
+                        }
+                    } else if (target.getCost() > n.getCost() + c.getCost()) {
+                        target.setCost(n.getCost() + c.getCost());
+                    }
                 }
             }
-        }
+        } while (frontier.size() > 0);
+
         return result;
     }
 
