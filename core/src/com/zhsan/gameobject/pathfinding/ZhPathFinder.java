@@ -218,6 +218,8 @@ public class ZhPathFinder {
             }
         } while (frontier.size() > 0);
 
+        explored.forEach(n -> n.setCost(0));
+
         return result;
     }
 

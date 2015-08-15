@@ -3,6 +3,7 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.sun.jmx.remote.internal.ArrayQueue;
 import com.zhsan.common.Pair;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
@@ -12,6 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 /**
  * Created by Peter on 8/8/2015.
@@ -167,6 +172,10 @@ public class Troop extends GameObject {
         return this.getMilitary().getLeader().getBelongedFaction();
     }
 
+    public MilitaryKind getKind() {
+        return getMilitary().getKind();
+    }
+
     public String getBelongedFactionName() {
         return getBelongedFaction().getName();
     }
@@ -177,6 +186,32 @@ public class Troop extends GameObject {
 
     public void giveMoveToOrder(Point location) {
         this.order = new Order(OrderKind.MOVE, location);
+    }
+
+    private Queue<Point> currentPath;
+    private int currentMovability;
+
+    public void initExecuteOrder() {
+        currentMovability = this.getMilitary().getKind().getMovability();
+        currentPath = new ArrayDeque<>(scenario.getPathFinder(this.getKind()).findPath(this.location, this.order.targetLocation));
+        currentPath.poll();
+        System.out.println(currentPath);
+    }
+
+    public boolean stepForward() {
+        Point p = currentPath.poll();
+        if (p == null) return false;
+
+        float cost = scenario.getMilitaryTerrain(this.getKind(), scenario.getTerrainAt(p)).getAdaptability();
+
+        if (cost <= currentMovability) {
+            currentMovability -= cost;
+            location = p;
+        } else {
+            return false;
+        }
+
+        return true;
     }
 
 }

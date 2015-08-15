@@ -181,6 +181,10 @@ public class GameScenario {
         return new GameObjectList<>(terrainDetails, true);
     }
 
+    public TerrainDetail getTerrainAt(Point p) {
+        return gameMap.getTerrainAt(p);
+    }
+
     public GameMap getGameMap() {
         return gameMap;
     }
@@ -304,7 +308,19 @@ public class GameScenario {
 
     public void advanceDay() {
         gameData.advanceDay();
-        architectures.forEach(Architecture::advanceDay);
+        architectures.getAll().parallelStream().forEach(Architecture::advanceDay);
+
+        troops.getAll().parallelStream().forEach(Troop::initExecuteOrder);
+        List<Troop> movingTroops = new ArrayList<>(troops.getAll());
+        do {
+            Iterator<Troop> it = movingTroops.iterator();
+            while (it.hasNext()) {
+                Troop t = it.next();
+                if (!t.stepForward()) {
+                    it.remove();
+                }
+            }
+        } while (movingTroops.size() > 0);
     }
 
     public void addTroop(Troop t) {
