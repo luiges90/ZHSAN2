@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
+import com.zhsan.gamecomponents.maplayer.TroopAnimationLayer;
 import com.zhsan.gameobject.pathfinding.ZhPathFinder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,6 +20,10 @@ import java.util.List;
  * Created by Peter on 8/3/2015.
  */
 public class GameScenario {
+
+    public interface OnTroopDone {
+        public void onTroopStepDone(TroopAnimationLayer.PendingTroopAnimation a);
+    }
 
     public static final int SAVE_VERSION = 2;
 
@@ -306,7 +311,7 @@ public class GameScenario {
         return true;
     }
 
-    public void advanceDay() {
+    public void advanceDay(OnTroopDone onTroopDone) {
         gameData.advanceDay();
         architectures.getAll().parallelStream().forEach(Architecture::advanceDay);
 
@@ -316,8 +321,14 @@ public class GameScenario {
             Iterator<Troop> it = movingTroops.iterator();
             while (it.hasNext()) {
                 Troop t = it.next();
+                Point oldLoc = t.getLocation();
                 if (!t.stepForward()) {
                     it.remove();
+                } else {
+                    Point newLoc = t.getLocation();
+                    onTroopDone.onTroopStepDone(new TroopAnimationLayer.PendingTroopAnimation(
+                            t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
+                            oldLoc, newLoc));
                 }
             }
         } while (movingTroops.size() > 0);

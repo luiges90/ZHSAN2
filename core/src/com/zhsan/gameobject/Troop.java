@@ -195,7 +195,6 @@ public class Troop extends GameObject {
         currentMovability = this.getMilitary().getKind().getMovability();
         currentPath = new ArrayDeque<>(scenario.getPathFinder(this.getKind()).findPath(this.location, this.order.targetLocation));
         currentPath.poll();
-        System.out.println(currentPath);
     }
 
     public boolean stepForward() {
