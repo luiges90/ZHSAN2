@@ -51,6 +51,10 @@ public class TroopAnimationLayer implements MapLayer {
         pendingTroopAnimations.add(animation);
     }
 
+    public boolean isNoPendingTroopAnimations() {
+        return pendingTroopAnimations.size() == 0;
+    }
+
     private TextureRegion getTroopImage(String resSet, Troop t, GameScenario scen) {
         MilitaryKind kind = t.getMilitary().getKind();
         TroopAnimation animation = scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.IDLE.getId());

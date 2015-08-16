@@ -317,6 +317,7 @@ public class GameScreen extends WidgetGroup {
                     dayRunning = true;
 
                     getScenario().advanceDay(mapLayer::addPendingTroopAnimation);
+                    while (!mapLayer.isNoPendingTroopAnimations());
 
                     runAi();
 

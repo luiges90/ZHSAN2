@@ -208,6 +208,10 @@ public class MainMapLayer extends WidgetGroup {
         troopAnimationLayer.addPendingTroopAnimation(animation);
     }
 
+    public boolean isNoPendingTroopAnimations() {
+        return troopAnimationLayer.isNoPendingTroopAnimations();
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
