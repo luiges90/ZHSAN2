@@ -242,11 +242,12 @@ public class MainMapLayer extends WidgetGroup {
     }
 
     private int mapDrawOffsetX, mapDrawOffsetY, imageLoX, imageLoY;
+    private int xLo, xHi, yLo, yHi, zoom, offsetX, offsetY;
 
     public void draw(Batch batch, float parentAlpha) {
         // draw map tiles
         GameMap map = screen.getScenario().getGameMap();
-        int zoom = map.getZoom();
+        zoom = map.getZoom();
 
         int imageSize = map.getZoom() * map.getTileInEachImage();
 
@@ -256,16 +257,16 @@ public class MainMapLayer extends WidgetGroup {
         float scaledCameraPositionX = mapCameraPosition.x / mapZoomMax * zoom;
         float scaledCameraPositionY = mapCameraPosition.y / mapZoomMax * zoom;
 
-        int xLo = MathUtils.floor(mapCameraPosition.x / mapZoomMax / map.getTileInEachImage() - noImagesX / 2 - 1);
-        int xHi = MathUtils.ceil(mapCameraPosition.x / mapZoomMax / map.getTileInEachImage() + noImagesX / 2);
-        int yLo = MathUtils.floor(mapCameraPosition.y / mapZoomMax / map.getTileInEachImage() - noImagesY / 2 - 1);
-        int yHi = MathUtils.ceil(mapCameraPosition.y / mapZoomMax / map.getTileInEachImage() + noImagesY / 2);
+        xLo = MathUtils.floor(mapCameraPosition.x / mapZoomMax / map.getTileInEachImage() - noImagesX / 2 - 1);
+        xHi = MathUtils.ceil(mapCameraPosition.x / mapZoomMax / map.getTileInEachImage() + noImagesX / 2);
+        yLo = MathUtils.floor(mapCameraPosition.y / mapZoomMax / map.getTileInEachImage() - noImagesY / 2 - 1);
+        yHi = MathUtils.ceil(mapCameraPosition.y / mapZoomMax / map.getTileInEachImage() + noImagesY / 2);
 
         int startPointFromCameraX = (int)(scaledCameraPositionX - (imageSize * xLo));
         int startPointFromCameraY = (int)(scaledCameraPositionY - (imageSize * yLo));
 
-        int offsetX = (int) (startPointFromCameraX - this.getWidth() / 2);
-        int offsetY = (int) (startPointFromCameraY - this.getHeight() / 2);
+        offsetX = (int) (startPointFromCameraX - this.getWidth() / 2);
+        offsetY = (int) (startPointFromCameraY - this.getHeight() / 2);
 
         mapDrawOffsetX = offsetX;
         mapDrawOffsetY = offsetY;
