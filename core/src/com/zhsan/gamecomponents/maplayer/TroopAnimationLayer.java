@@ -79,7 +79,8 @@ public class TroopAnimationLayer implements MapLayer {
                      int zoom, Batch batch, float parentAlpha) {
         if (runningAnimator == null) {
             PendingTroopAnimation animation = pendingTroopAnimations.poll();
-            if (animation != null) {
+            if (animation != null &&
+                    (helpers.isMapLocationOnScreen(animation.from) || helpers.isMapLocationOnScreen(animation.to))) {
                 runningAnimator = new TranslateAnimator(helpers, animation);
             }
         }
