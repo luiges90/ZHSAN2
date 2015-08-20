@@ -3,7 +3,6 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
-import com.sun.jmx.remote.internal.ArrayQueue;
 import com.zhsan.common.Pair;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
@@ -14,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 /**
@@ -26,12 +23,15 @@ public class Troop extends GameObject {
     public static final String SAVE_FILE = "Troop.csv";
 
     private enum OrderKind {
-        IDLE, MOVE;
+        IDLE, MOVE, ATTACK_LOCATION, ATTACK_TROOP, ATTACK_ARCH;
 
         static OrderKind fromCSV(String s) {
             switch (s) {
                 case "idle": return IDLE;
                 case "move": return MOVE;
+                case "attackLocation": return ATTACK_LOCATION;
+                case "attackTroop": return ATTACK_TROOP;
+                case "attackArch": return ATTACK_ARCH;
                 default: assert false; return null;
             }
         }
@@ -40,6 +40,9 @@ public class Troop extends GameObject {
             switch (this) {
                 case IDLE: return "idle";
                 case MOVE: return "move";
+                case ATTACK_LOCATION: return "attackLocation";
+                case ATTACK_TROOP: return "attackTroop";
+                case ATTACK_ARCH: return "attackArch";
             }
             assert false;
             return null;
@@ -49,10 +52,18 @@ public class Troop extends GameObject {
     private static class Order {
         public final OrderKind kind;
         public final Point targetLocation;
+        public final int targetId;
 
         private Order(OrderKind kind, Point targetLocation) {
             this.kind = kind;
             this.targetLocation = targetLocation;
+            this.targetId = -1;
+        }
+
+        private Order(OrderKind kind, int targetId) {
+            this.kind = kind;
+            this.targetLocation = null;
+            this.targetId = targetId;
         }
 
         static Order fromCSV(String kind, String target) {
@@ -62,7 +73,11 @@ public class Troop extends GameObject {
                     case IDLE:
                         return new Order(orderKind, null);
                     case MOVE:
+                    case ATTACK_LOCATION:
                         return new Order(orderKind, Point.fromCSV(target));
+                    case ATTACK_TROOP:
+                    case ATTACK_ARCH:
+                        return new Order(orderKind, Integer.parseInt(target));
                 }
             }
             assert false;
@@ -75,7 +90,11 @@ public class Troop extends GameObject {
                 case IDLE:
                     return new Pair<>(orderKind, "");
                 case MOVE:
+                case ATTACK_LOCATION:
                     return new Pair<>(orderKind, targetLocation.toCSV());
+                case ATTACK_TROOP:
+                case ATTACK_ARCH:
+                    return new Pair<>(orderKind, String.valueOf(targetId));
             }
             assert false;
             return null;
@@ -159,6 +178,12 @@ public class Troop extends GameObject {
                 return null;
             case MOVE:
                 return String.format(GlobalStrings.getString(GlobalStrings.Keys.MOVE_TO), this.order.targetLocation.x, this.order.targetLocation.y);
+            case ATTACK_LOCATION:
+                return String.format(GlobalStrings.getString(GlobalStrings.Keys.ATTACK_POINT), this.order.targetLocation.x, this.order.targetLocation.y);
+            case ATTACK_TROOP:
+                return String.format(GlobalStrings.getString(GlobalStrings.Keys.ATTACK_TARGET), scenario.getTroops().get(this.order.targetId).getName());
+            case ATTACK_ARCH:
+                return String.format(GlobalStrings.getString(GlobalStrings.Keys.ATTACK_TARGET), scenario.getArchitectures().get(this.order.targetId).getName());
         }
         assert false;
         return null;
@@ -186,6 +211,18 @@ public class Troop extends GameObject {
 
     public void giveMoveToOrder(Point location) {
         this.order = new Order(OrderKind.MOVE, location);
+    }
+
+    public void giveAttackOrder(Point Location) {
+        this.order = new Order(OrderKind.ATTACK_LOCATION, location);
+    }
+
+    public void giveAttackOrder(Troop troop) {
+        this.order = new Order(OrderKind.ATTACK_TROOP, troop.getId());
+    }
+
+    public void giveAttackOrder(Architecture architecture) {
+        this.order = new Order(OrderKind.ATTACK_ARCH, architecture.getId());
     }
 
     private Queue<Point> currentPath;

@@ -57,7 +57,9 @@ public class GlobalStrings {
         TROOP_ANIMATION_SAVE_HEADER("troopAnimationSaveHeader"),
         TROOP_SAVE_HEADER("troopSaveHeader"),
         CAMPAIGN("Campaign"),
-        MOVE_TO("MoveTo");
+        MOVE_TO("MoveTo"),
+        ATTACK_POINT("AttackPoint"),
+        ATTACK_TARGET("AttackTarget");
 
         private final String xmlName;
         Keys(String name) {

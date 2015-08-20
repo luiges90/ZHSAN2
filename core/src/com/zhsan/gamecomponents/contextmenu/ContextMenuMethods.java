@@ -6,6 +6,7 @@ import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gameobject.Architecture;
 import com.zhsan.gameobject.GameObjectList;
+import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.Troop;
 import com.zhsan.screen.GameScreen;
 
@@ -107,6 +108,28 @@ public final class ContextMenuMethods {
         screen.getMapLayer().startSelectingLocation((Troop) object, p -> {
             if (p != null) {
                 ((Troop) object).giveMoveToOrder(p);
+            }
+        });
+    }
+
+    public static void TroopLeftClick_Attack(GameScreen screen, Object object) {
+        Troop troop = (Troop) object;
+        screen.getMapLayer().startSelectingLocation(troop, p -> {
+            if (p != null) {
+                Architecture a = screen.getScenario().getArchitectureAt(p);
+                Troop t = screen.getScenario().getTroopAt(p);
+                if (a == null && t == null) {
+                    troop.giveAttackOrder(p);
+                } else if (t == null) {
+                    // TODO disambiguate point by another menu
+                    troop.giveAttackOrder(a);
+                } else if (a == null) {
+                    // TODO disambiguate point by another menu
+                    troop.giveAttackOrder(t);
+                } else {
+                    // TODO disambiguate by another menu
+                    troop.giveAttackOrder(t);
+                }
             }
         });
     }
