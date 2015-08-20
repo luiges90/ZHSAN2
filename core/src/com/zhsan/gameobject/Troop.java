@@ -213,7 +213,7 @@ public class Troop extends GameObject {
         this.order = new Order(OrderKind.MOVE, location);
     }
 
-    public void giveAttackOrder(Point Location) {
+    public void giveAttackOrder(Point location) {
         this.order = new Order(OrderKind.ATTACK_LOCATION, location);
     }
 
@@ -229,12 +229,31 @@ public class Troop extends GameObject {
     private int currentMovability;
 
     public void initExecuteOrder() {
-        currentMovability = this.getMilitary().getKind().getMovability();
-        currentPath = new ArrayDeque<>(scenario.getPathFinder(this.getKind()).findPath(this.location, this.order.targetLocation));
-        currentPath.poll();
+        Point targetLocation;
+        if (this.order.targetLocation != null) {
+            targetLocation = this.order.targetLocation;
+        } else if (this.order.kind == OrderKind.ATTACK_ARCH) {
+            targetLocation = scenario.getArchitectures().get(this.order.targetId).getLocationMidpoint();
+        } else if (this.order.kind == OrderKind.ATTACK_TROOP) {
+            targetLocation = scenario.getTroops().get(this.order.targetId).getLocation();
+        } else {
+            targetLocation = null;
+        }
+
+        if (targetLocation != null) {
+            currentMovability = this.getMilitary().getKind().getMovability();
+            currentPath = new ArrayDeque<>(scenario.getPathFinder(this.getKind()).findPath(this.location, targetLocation));
+            currentPath.poll();
+        } else {
+            currentPath = null;
+        }
     }
 
     public boolean stepForward() {
+        if (currentPath == null) {
+            return true;
+        }
+
         Point p = currentPath.poll();
         if (p == null) return false;
 
