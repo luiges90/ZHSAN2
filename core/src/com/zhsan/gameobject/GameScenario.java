@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
-import com.zhsan.gamecomponents.maplayer.TroopAnimationLayer;
 import com.zhsan.gameobject.pathfinding.ZhPathFinder;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,12 +21,13 @@ import java.util.List;
 public class GameScenario {
 
     public interface OnTroopDone {
-        public void onTroopStepDone(TroopAnimationLayer.PendingTroopAnimation a);
+        public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc);
+
+        public void onAttackStepDone(Troop t, Troop target, List<DamagePack> damages);
     }
 
     public static final int SAVE_VERSION = 2;
 
-    public static final String DEFUALT_SCENARIO_DATA_PATH = Paths.DATA + "DefaultScenarioData" + File.separator;
     public static final String SCENARIO_PATH = Paths.DATA + "Scenario" + File.separator;
     public static final String SAVE_PATH = Paths.DATA + "Save" + File.separator;
 
@@ -323,12 +323,12 @@ public class GameScenario {
                 Troop t = it.next();
                 Point oldLoc = t.getLocation();
                 if (!t.stepForward()) {
+                    t.attack();
                     it.remove();
                 } else {
                     Point newLoc = t.getLocation();
-                    onTroopDone.onTroopStepDone(new TroopAnimationLayer.PendingTroopAnimation(
-                            t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
-                            oldLoc, newLoc));
+                    onTroopDone.onTroopStepDone(t, oldLoc, newLoc);
+                    t.attack();
                 }
             }
         } while (movingTroops.size() > 0);

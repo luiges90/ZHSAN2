@@ -79,6 +79,14 @@ public final class Point {
         return distance(this, q);
     }
 
+    public static int taxiDistance(Point p, Point q) {
+        return Math.abs(p.x - q.x) + Math.abs(p.y - q.y);
+    }
+
+    public int taxiDistanceTo(Point q) {
+        return taxiDistance(this, q);
+    }
+
     /**
      * Return an iterator which returns points further and further than this point, starting
      * at the right and travel at CW direction

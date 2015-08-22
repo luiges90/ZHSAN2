@@ -17,7 +17,7 @@
         facilityKindSaveHeader="ID,名稱,耐久,不可被破壞,必須存在"
         facilitySaveHeader="ID,類型,位置,所屬建築,耐久"
         militaryTypeSaveHeader="ID,名稱"
-        militaryKindSaveHeader="ID,名稱,類別,描述,指定建築新編,所需資金,兵裝運送資金,最大士兵數,單位士兵數,移動力"
+        militaryKindSaveHeader="ID,名稱,類別,描述,指定建築新編,所需資金,兵裝運送資金,最大士兵數,單位士兵數,移動力,攻擊力,防禦力,射程下限,射程上限,建築攻擊乘數"
         militaryTerrainSaveHeader="兵種,地型,適性,乘數"
         militarySaveHeader="ID,名稱,種類,位置類,位置,士兵數,士氣,戰意,隊長"
         troopAnimationSaveHeader="ID,名称,檔案名稱,帧数,停留帧数,每格大小"

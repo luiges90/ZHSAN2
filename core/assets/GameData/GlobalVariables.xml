@@ -26,4 +26,8 @@
         maxCombativity="100"
         recruitMorale="50"
         recruitCombativity="50"
+        architectureMinCommand="20"
+        architectureDefenseEndurancePower="0.5"
+        baseDamage="500"
+        reactDamageFactor="0.5"
         />

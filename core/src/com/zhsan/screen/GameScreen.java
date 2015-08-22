@@ -15,13 +15,11 @@ import com.zhsan.gamecomponents.contextmenu.ContextMenu;
 import com.zhsan.gamecomponents.maplayer.MainMapLayer;
 import com.zhsan.gamecomponents.gameframe.FileGameFrame;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
+import com.zhsan.gamecomponents.maplayer.TroopAnimationLayer;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
-import com.zhsan.gameobject.Architecture;
-import com.zhsan.gameobject.Faction;
-import com.zhsan.gameobject.GameObjectList;
-import com.zhsan.gameobject.GameScenario;
+import com.zhsan.gameobject.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -316,8 +314,20 @@ public class GameScreen extends WidgetGroup {
                 for (int i = 0; i < days; ++i) {
                     dayRunning = true;
 
-                    getScenario().advanceDay(mapLayer::addPendingTroopAnimation);
-                    while (!mapLayer.isNoPendingTroopAnimations());
+                    getScenario().advanceDay(new GameScenario.OnTroopDone() {
+                        @Override
+                        public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc) {
+                            mapLayer.addPendingTroopAnimation(
+                                    new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
+                                            oldLoc, newLoc));
+                        }
+
+                        @Override
+                        public void onAttackStepDone(Troop t, Troop target, List<DamagePack> damages) {
+
+                        }
+                    });
+                    while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue
 
                     runAi();
 

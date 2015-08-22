@@ -261,6 +261,10 @@ public class Military extends GameObject {
         combativity = Math.min(combativity + x, GlobalVariables.maxCombativity);
     }
 
+    public void decreaseQuantity(int quantity) {
+        this.quantity = Math.max(0, this.quantity - quantity);
+    }
+
     public Troop startCampaign(Point start) {
         if (!(getLocation() instanceof Architecture)) {
             throw new IllegalStateException("The troop must be in an architecture in order to leave");

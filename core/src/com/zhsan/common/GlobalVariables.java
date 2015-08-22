@@ -50,6 +50,12 @@ public final class GlobalVariables {
     public static int recruitMorale = 50;
     public static int recruitCombativity = 50;
 
+    public static int architectureMinCommand = 20;
+    public static float architectureDefenseEndurancePower = 0.5f;
+
+    public static float baseDamage = 500.0f;
+    public static float reactDamageFactor = 0.5f;
+
     public static long aiTimeout = 20;
 
     public static void load() {
@@ -91,6 +97,10 @@ public final class GlobalVariables {
             maxCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "maxCombativity"));
             recruitMorale = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitMorale"));
             recruitCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitCombativity"));
+            architectureMinCommand = Integer.parseInt(XmlHelper.loadAttribute(node, "architectureMinCommand"));
+            architectureDefenseEndurancePower = Float.parseFloat(XmlHelper.loadAttribute(node, "architectureDefenseEndurancePower"));
+            baseDamage = Float.parseFloat(XmlHelper.loadAttribute(node, "baseDamage"));
+            reactDamageFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "reactDamageFactor"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

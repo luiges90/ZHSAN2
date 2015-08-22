@@ -371,6 +371,11 @@ public class Architecture extends GameObject {
         population = Math.max(population - x, 0);
     }
 
+    public boolean loseEndurance(int quantity) {
+        this.endurance = Math.max(0, this.endurance - quantity);
+        return this.endurance <= 0;
+    }
+
     public void advanceDay() {
         loseInternal();
         developInternal();
@@ -586,6 +591,12 @@ public class Architecture extends GameObject {
             m.increaseCombativity(thisTrained);
             m.increaseMorale((int) (thisTrained * GlobalVariables.moraleTrainFactor));
         }
+    }
+
+    public float getDefense() {
+        return (float) (Math.max(GlobalVariables.architectureMinCommand, getMayor() == null ? 0 : getMayor().getCommand()) / 100.0f
+                        * getMorale()
+                        * Math.pow(getEndurance(), GlobalVariables.architectureDefenseEndurancePower));
     }
 
 }

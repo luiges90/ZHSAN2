@@ -3,6 +3,7 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Pair;
 import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
@@ -12,8 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Created by Peter on 8/8/2015.
@@ -53,31 +53,34 @@ public class Troop extends GameObject {
         public final OrderKind kind;
         public final Point targetLocation;
         public final int targetId;
+        public final GameScenario scenario;
 
-        private Order(OrderKind kind, Point targetLocation) {
+        private Order(GameScenario scenario, OrderKind kind, Point targetLocation) {
+            this.scenario = scenario;
             this.kind = kind;
             this.targetLocation = targetLocation;
             this.targetId = -1;
         }
 
-        private Order(OrderKind kind, int targetId) {
+        private Order(GameScenario scenario, OrderKind kind, int targetId) {
+            this.scenario = scenario;
             this.kind = kind;
             this.targetLocation = null;
             this.targetId = targetId;
         }
 
-        static Order fromCSV(String kind, String target) {
+        static Order fromCSV(GameScenario scenario, String kind, String target) {
             OrderKind orderKind = OrderKind.fromCSV(kind);
             if (orderKind != null) {
                 switch (orderKind) {
                     case IDLE:
-                        return new Order(orderKind, null);
+                        return new Order(scenario, orderKind, null);
                     case MOVE:
                     case ATTACK_LOCATION:
-                        return new Order(orderKind, Point.fromCSV(target));
+                        return new Order(scenario, orderKind, Point.fromCSV(target));
                     case ATTACK_TROOP:
                     case ATTACK_ARCH:
-                        return new Order(orderKind, Integer.parseInt(target));
+                        return new Order(scenario, orderKind, Integer.parseInt(target));
                 }
             }
             assert false;
@@ -99,13 +102,28 @@ public class Troop extends GameObject {
             assert false;
             return null;
         }
+
+        GameObject target() {
+            switch (kind) {
+                case ATTACK_ARCH:
+                    return scenario.getArchitectures().get(targetId);
+                case ATTACK_TROOP:
+                    return scenario.getTroops().get(targetId);
+                case ATTACK_LOCATION:
+                    Architecture a = scenario.getArchitectureAt(targetLocation);
+                    Troop t = scenario.getTroopAt(targetLocation);
+                    return t == null ? a : t;
+                default:
+                    return null;
+            }
+        }
     }
 
     private GameScenario scenario;
 
     private Point location;
 
-    private Order order = new Order(OrderKind.IDLE, null);
+    private Order order = new Order(null, OrderKind.IDLE, null);
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();
@@ -120,7 +138,7 @@ public class Troop extends GameObject {
 
                 Troop data = new Troop(Integer.parseInt(line[0]), scen);
                 data.location = Point.fromCSV(line[1]);
-                data.order = Order.fromCSV(line[2], line[3]);
+                data.order = Order.fromCSV(scen, line[2], line[3]);
 
                 result.add(data);
             }
@@ -205,24 +223,81 @@ public class Troop extends GameObject {
         return getBelongedFaction().getName();
     }
 
+    public Person getLeader() {
+        return getMilitary().getLeader();
+    }
+
     public String getLeaderName() {
-        return getMilitary().getLeader().getName();
+        return getLeader().getName();
+    }
+
+    public int getMorale() {
+        return getMilitary().getMorale();
+    }
+
+    public int getCombativity() {
+        return getMilitary().getCombativity();
+    }
+
+    public int getCommand() {
+        return getLeader().getCommand();
+    }
+
+    public int getStrength() {
+        return getLeader().getStrength();
+    }
+
+    public int getIntelligence() {
+        return getLeader().getIntelligence();
+    }
+
+    public float getOffense() {
+        return (getCommand() * 0.7f + getStrength() * 0.3f) / 100.0f *
+                getMorale() / 100.0f *
+                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
+                getKind().getOffense() * getMilitary().getUnitCount();
+    }
+
+    public float getDefense() {
+        return getCommand() / 100.0f *
+                getMorale() / 100.0f *
+                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
+                getKind().getDefense() * getMilitary().getUnitCount();
+    }
+
+    public int getQuantity() {
+        return getMilitary().getQuantity();
+    }
+
+    public boolean loseQuantity(int quantity) {
+        getMilitary().decreaseQuantity(quantity);
+        boolean destroy = checkDestroy();
+        if (destroy) destroy();
+        return destroy;
+    }
+
+    private boolean checkDestroy() {
+        return this.getQuantity() < 0;
+    }
+
+    private void destroy() {
+
     }
 
     public void giveMoveToOrder(Point location) {
-        this.order = new Order(OrderKind.MOVE, location);
+        this.order = new Order(scenario, OrderKind.MOVE, location);
     }
 
     public void giveAttackOrder(Point location) {
-        this.order = new Order(OrderKind.ATTACK_LOCATION, location);
+        this.order = new Order(scenario, OrderKind.ATTACK_LOCATION, location);
     }
 
     public void giveAttackOrder(Troop troop) {
-        this.order = new Order(OrderKind.ATTACK_TROOP, troop.getId());
+        this.order = new Order(scenario, OrderKind.ATTACK_TROOP, troop.getId());
     }
 
     public void giveAttackOrder(Architecture architecture) {
-        this.order = new Order(OrderKind.ATTACK_ARCH, architecture.getId());
+        this.order = new Order(scenario, OrderKind.ATTACK_ARCH, architecture.getId());
     }
 
     private Queue<Point> currentPath;
@@ -268,5 +343,70 @@ public class Troop extends GameObject {
 
         return true;
     }
+
+    public List<DamagePack> attack() {
+        GameObject target = order.target();
+        if (target instanceof Architecture) {
+            return attackArchitecture((Architecture) target);
+        } else if (target instanceof Troop) {
+            return attackTroop((Troop) target);
+        } else if (target == null) {
+            return null;
+        } else {
+            throw new IllegalStateException("Unknown target");
+        }
+    }
+
+    private boolean isLocationInAttackRange(Point p) {
+        int dist = getLocation().taxiDistanceTo(p);
+        return getKind().getRangeLo() <= dist && dist <= getKind().getRangeHi();
+    }
+    
+    private List<DamagePack> attackArchitecture(Architecture target) {
+        Optional<Point> attackOptPoint = target.getLocation().parallelStream().filter(this::isLocationInAttackRange).findFirst();
+        if (!attackOptPoint.isPresent()) return Collections.emptyList();
+        Point attackPoint = attackOptPoint.get();
+
+        List<DamagePack> damagePacks = new ArrayList<>();
+
+        float offense = this.getOffense();
+        float defense = target.getDefense();
+        float ratio = offense / defense;
+
+        int damage = Math.round(GlobalVariables.baseDamage * ratio);
+        boolean destroy = target.loseEndurance(damage);
+        damagePacks.add(new DamagePack(target, attackPoint, damage, destroy));
+
+        int reactDamage;
+        reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
+        this.loseQuantity(reactDamage);
+        damagePacks.add(new DamagePack(this, this.getLocation(), damage, destroy));
+
+        return damagePacks;
+    }
+
+    private List<DamagePack> attackTroop(Troop target) {
+        if (!isLocationInAttackRange(target.getLocation())) return Collections.emptyList();
+
+        List<DamagePack> damagePacks = new ArrayList<>();
+
+        float offense = this.getOffense();
+        float defense = target.getDefense();
+        float ratio = offense / defense;
+
+        int damage = Math.round(GlobalVariables.baseDamage * ratio);
+        boolean destroy = target.loseQuantity(damage);
+        damagePacks.add(new DamagePack(target, target.getLocation(), damage, destroy));
+
+        int reactDamage;
+        if (target.isLocationInAttackRange(this.getLocation())) {
+            reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
+            destroy = this.loseQuantity(reactDamage);
+            damagePacks.add(new DamagePack(this, this.getLocation(), damage, destroy));
+        }
+
+        return damagePacks;
+    }
+
 
 }
