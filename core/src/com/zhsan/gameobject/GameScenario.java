@@ -10,10 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 8/3/2015.
@@ -55,7 +53,7 @@ public class GameScenario {
     private final GameObjectList<Military> militaries;
     private final GameObjectList<Troop> troops;
 
-    private HashMap<MilitaryKind, ZhPathFinder> pathFinders = new HashMap<>();
+    private HashMap<Troop, ZhPathFinder> pathFinders = new HashMap<>();
 
     public static List<Pair<FileHandle, GameSurvey>> loadAllGameSurveys() {
         List<Pair<FileHandle, GameSurvey>> result = new ArrayList<>();
@@ -97,8 +95,8 @@ public class GameScenario {
         factions = Faction.fromCSV(file, this);
         sections = Section.fromCSV(file, this);
         architectures = Architecture.fromCSV(file, this);
-        persons = Person.fromCSV(file, this);
         troops = Troop.fromCSV(file, this);
+        persons = Person.fromCSV(file, this);
         militaries = Military.fromCSV(file, this);
 
         facilities = Facility.fromCSV(file, this);
@@ -289,7 +287,7 @@ public class GameScenario {
         return mt;
     }
 
-    public ZhPathFinder getPathFinder(MilitaryKind kind) {
+    public ZhPathFinder getPathFinder(Troop kind) {
         if (pathFinders.get(kind) == null) {
             pathFinders.put(kind, new ZhPathFinder(this, gameMap, kind));
         }

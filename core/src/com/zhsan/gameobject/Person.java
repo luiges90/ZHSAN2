@@ -282,6 +282,8 @@ public class Person extends GameObject {
             GameObject t = location.get();
             if (t instanceof Architecture) {
                 return ((Architecture) t).getBelongedFaction();
+            } else if (t instanceof Troop) {
+                return ((Troop) t).getBelongedFaction();
             }
         }
         return null;

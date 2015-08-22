@@ -9,9 +9,7 @@ import com.badlogic.gdx.ai.pfa.indexed.IndexedAStarPathFinder;
 import com.badlogic.gdx.ai.pfa.indexed.IndexedNode;
 import com.badlogic.gdx.utils.Array;
 import com.zhsan.common.Point;
-import com.zhsan.gameobject.GameMap;
-import com.zhsan.gameobject.GameScenario;
-import com.zhsan.gameobject.MilitaryKind;
+import com.zhsan.gameobject.*;
 
 import java.util.*;
 
@@ -20,20 +18,27 @@ import java.util.*;
  */
 public class ZhPathFinder {
 
+    // allow routing into virtual unreachable positions.
+    private static final float VERY_LARGE_COST = 9e9f;
+
     private class Conn implements Connection<Node> {
 
         private final Node from, to;
-        private final MilitaryKind kind;
+        private final Troop troop;
 
-        public Conn(Node from, Node to, MilitaryKind kind) {
+        public Conn(Node from, Node to, Troop kind) {
             this.from = from;
             this.to = to;
-            this.kind = kind;
+            this.troop = kind;
         }
 
         @Override
         public float getCost() {
-            return scen.getMilitaryTerrain(kind, map.getTerrainAt(to.x, to.y)).getAdaptability();
+            Point toPoint = new Point(to.x, to.y);
+            if (!troop.canMoveInto(toPoint)) {
+                return VERY_LARGE_COST;
+            }
+            return scen.getMilitaryTerrain(troop.getKind(), map.getTerrainAt(toPoint)).getAdaptability();
         }
 
         @Override
@@ -51,7 +56,7 @@ public class ZhPathFinder {
             return "Conn{" +
                     "from=" + from +
                     ", to=" + to +
-                    ", kind=" + kind +
+                    ", troop=" + troop +
                     '}';
         }
     }
@@ -59,11 +64,11 @@ public class ZhPathFinder {
     private class Node implements IndexedNode<Node> {
 
         private final int x, y;
-        private final MilitaryKind kind;
+        private final Troop kind;
 
         private float cost;
 
-        public Node(int x, int y, MilitaryKind kind) {
+        public Node(int x, int y, Troop kind) {
             this.x = x;
             this.y = y;
             this.kind = kind;
@@ -118,7 +123,7 @@ public class ZhPathFinder {
             return "Node{" +
                     "x=" + x +
                     ", y=" + y +
-                    ", kind=" + kind +
+                    ", troop=" + kind +
                     ", cost=" + cost +
                     '}';
         }
@@ -161,7 +166,7 @@ public class ZhPathFinder {
         return y * map.getWidth() + x;
     }
 
-    public ZhPathFinder(GameScenario scen, GameMap map, MilitaryKind kind) {
+    public ZhPathFinder(GameScenario scen, GameMap map, Troop kind) {
         this.scen = scen;
         this.map = map;
 

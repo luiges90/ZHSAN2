@@ -110,9 +110,7 @@ public class Troop extends GameObject {
                 case ATTACK_TROOP:
                     return scenario.getTroops().get(targetId);
                 case ATTACK_LOCATION:
-                    Architecture a = scenario.getArchitectureAt(targetLocation);
-                    Troop t = scenario.getTroopAt(targetLocation);
-                    return t == null ? a : t;
+                    return scenario.getTroopAt(targetLocation);
                 default:
                     return null;
             }
@@ -120,6 +118,8 @@ public class Troop extends GameObject {
     }
 
     private GameScenario scenario;
+
+    private Section belongedSection;
 
     private Point location;
 
@@ -139,6 +139,7 @@ public class Troop extends GameObject {
                 Troop data = new Troop(Integer.parseInt(line[0]), scen);
                 data.location = Point.fromCSV(line[1]);
                 data.order = Order.fromCSV(scen, line[2], line[3]);
+                data.belongedSection = scen.getSections().get(Integer.parseInt(line[4]));
 
                 result.add(data);
             }
@@ -159,7 +160,8 @@ public class Troop extends GameObject {
                         String.valueOf(detail.getId()),
                         detail.location.toCSV(),
                         orderStr.x,
-                        orderStr.y
+                        orderStr.y,
+                        String.valueOf(detail.belongedSection.getId())
                 });
             }
         } catch (IOException e) {
@@ -211,8 +213,16 @@ public class Troop extends GameObject {
         return this.getMilitary().getKind().getName();
     }
 
+    public Section getBelongedSection() {
+        return belongedSection;
+    }
+
+    public void setBelongedSection(Section s) {
+        belongedSection = s;
+    }
+
     public Faction getBelongedFaction() {
-        return this.getMilitary().getLeader().getBelongedFaction();
+        return getBelongedSection().getBelongedFaction();
     }
 
     public MilitaryKind getKind() {
@@ -281,7 +291,19 @@ public class Troop extends GameObject {
     }
 
     private void destroy() {
+        // TODO destroy troop
+    }
 
+    public boolean canMoveInto(Point p) {
+        Architecture destArch = scenario.getArchitectureAt(p);
+        if (destArch != null && destArch.getBelongedFaction() != this.getBelongedFaction() && destArch.getEndurance() > 0) {
+            return false;
+        }
+        float val = scenario.getMilitaryTerrain(this.getKind(), scenario.getGameMap().getTerrainAt(p)).getAdaptability();
+        if (val == Float.MAX_VALUE) {
+            return false;
+        }
+        return true;
     }
 
     public void giveMoveToOrder(Point location) {
@@ -317,7 +339,7 @@ public class Troop extends GameObject {
 
         if (targetLocation != null) {
             currentMovability = this.getMilitary().getKind().getMovability();
-            currentPath = new ArrayDeque<>(scenario.getPathFinder(this.getKind()).findPath(this.location, targetLocation));
+            currentPath = new ArrayDeque<>(scenario.getPathFinder(this).findPath(this.location, targetLocation));
             currentPath.poll();
         } else {
             currentPath = null;
@@ -331,6 +353,10 @@ public class Troop extends GameObject {
 
         Point p = currentPath.poll();
         if (p == null) return false;
+
+        if (!canMoveInto(p)) {
+            return false;
+        }
 
         float cost = scenario.getMilitaryTerrain(this.getKind(), scenario.getTerrainAt(p)).getAdaptability();
 

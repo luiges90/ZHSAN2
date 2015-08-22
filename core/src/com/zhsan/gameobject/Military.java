@@ -282,6 +282,7 @@ public class Military extends GameObject {
 
         Troop t = new Troop(scenario.getTroops().getFreeId(), scenario)
                 .setLocation(start);
+        t.setBelongedSection(a.getBelongedSection());
         scenario.addTroop(t);
 
         location = new LocationType(t);
