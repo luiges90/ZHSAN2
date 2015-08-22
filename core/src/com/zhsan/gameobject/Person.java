@@ -365,7 +365,9 @@ public class Person extends GameObject {
         Architecture location = (Architecture) this.getLocation();
 
         if (newMayor != null) {
-            location.changeMayor(newMayor);
+            location.changeMayor(newMayor, true);
+        } else {
+            this.setDoingWork(DoingWork.NONE);
         }
         this.location = newLocation;
     }
@@ -378,9 +380,11 @@ public class Person extends GameObject {
             } else {
                 if (this.doingWork != DoingWork.MAYOR) {
                     this.doingWork = work;
+                } else if (((Architecture) this.location.get()).getPersons().size() <= 1) {
+                    this.doingWork = work;
                 } else {
-                    throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first." +
-                            "Use unsetMayor if there is no one in city");
+                    throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first, " +
+                            "unless there is no one in it");
                 }
             }
         } else {
@@ -396,9 +400,9 @@ public class Person extends GameObject {
         if (this.getDoingWorkType() == DoingWork.MAYOR) {
             this.handoverMayor(((Architecture) this.location.get()).pickMayor(this), new LocationType(t));
         } else {
+            this.setDoingWork(DoingWork.NONE);
             this.location = new LocationType(t);
         }
-        this.setDoingWork(DoingWork.NONE);
     }
 
     public String getDoingWorkString() {

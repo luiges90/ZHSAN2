@@ -285,7 +285,7 @@ public class InternalCommandTab implements CommandTab {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
                     parent.getCurrentArchitecture().getPersons(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
-                        parent.getCurrentArchitecture().changeMayor((Person) selectedItems.get(0));
+                        parent.getCurrentArchitecture().changeMayor((Person) selectedItems.get(0), false);
                         updateMayor();
                         updateInternal();
                     });

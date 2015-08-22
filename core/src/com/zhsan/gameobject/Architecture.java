@@ -222,10 +222,7 @@ public class Architecture extends GameObject {
         }
 
         Person leader = this.getBelongedFaction().getLeader();
-        if (this.getPersons().contains(leader)) {
-            if (exclude == leader) {
-                return null;
-            }
+        if (this.getPersons().contains(leader) && leader != exclude) {
             return this.getBelongedFaction().getLeader();
         }
 
@@ -252,17 +249,17 @@ public class Architecture extends GameObject {
 
     @LuaAI.ExportToLua
     public void changeMayor(int id) {
-        changeMayor(scenario.getPerson(id));
+        changeMayor(scenario.getPerson(id), false);
     }
 
-    public void changeMayor(Person newMayor) {
+    public void changeMayor(Person newMayor, boolean leaderLeaving) {
         if (newMayor.getLocation() != this) {
             throw new IllegalStateException("The new mayor must be in the architecture");
         }
         if (this.getBelongedFaction() == null) {
             throw new IllegalStateException("Empty architectures may not have mayors");
         }
-        if (this.getBelongedFaction().getLeader().getLocation() == this) {
+        if (this.getBelongedFaction().getLeader().getLocation() == this && !leaderLeaving) {
             throw new IllegalStateException("May not set mayor if the leader is in architecture");
         }
         newMayor.setDoingWork(Person.DoingWork.MAYOR);
