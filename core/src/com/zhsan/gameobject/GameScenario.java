@@ -135,7 +135,7 @@ public class GameScenario {
                 GameObjectList<Person> mayors = a.getMayorUnchecked();
                 if (mayors.size() != 1) {
                     a.getPersons().filter(p -> p.getDoingWorkType() == Person.DoingWork.MAYOR).forEach(p -> p.setDoingWork(Person.DoingWork.NONE));
-                    a.addMayor(a.pickMayor());
+                    a.addMayor();
                 }
             }
         });

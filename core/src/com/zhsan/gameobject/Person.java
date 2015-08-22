@@ -47,20 +47,36 @@ public class Person extends GameObject {
         }
     }
 
-    private static class LocationType {
+    public static class LocationType {
 
         private static final int NONE = -1;
         private static final int ARCHITECTURE = 1;
+        private static final int TROOP = 2;
 
         private final Architecture architecture;
+        private final Troop troop;
+
+        public LocationType() {
+            this.architecture = null;
+            this.troop = null;
+        }
 
         public LocationType(Architecture architecture) {
             this.architecture = architecture;
+            this.troop = null;
+        }
+
+        public LocationType(Troop troop) {
+            this.architecture = null;
+            this.troop = troop;
         }
 
         public GameObject get() {
             if (architecture != null) {
                 return architecture;
+            }
+            if (troop != null) {
+                return troop;
             }
             return null;
         }
@@ -69,15 +85,24 @@ public class Person extends GameObject {
             if (architecture != null) {
                 return architecture.getId();
             }
+            if (troop != null) {
+                return troop.getId();
+            }
             return -1;
         }
 
         public static LocationType fromCSV(String type, String id, GameScenario scen) {
             int typeInt = Integer.parseInt(type);
-            if (typeInt == NONE) {
-                return new LocationType(null);
-            } else {
-                return new LocationType(scen.getArchitectures().get(Integer.parseInt(id)));
+            switch (typeInt) {
+                case NONE:
+                    return new LocationType();
+                case ARCHITECTURE:
+                    return new LocationType(scen.getArchitectures().get(Integer.parseInt(id)));
+                case TROOP:
+                    return new LocationType(scen.getTroops().get(Integer.parseInt(id)));
+                default:
+                    assert false;
+                    return null;
             }
         }
 
@@ -86,6 +111,9 @@ public class Person extends GameObject {
             if (architecture != null) {
                 type = ARCHITECTURE;
                 id = architecture.getId();
+            } else if (troop != null) {
+                type = TROOP;
+                id = troop.getId();
             } else {
                 type = NONE;
                 id = -1;
@@ -327,6 +355,21 @@ public class Person extends GameObject {
         setDoingWork(DoingWork.fromCSV(work));
     }
 
+    private void handoverMayor(Person newMayor, LocationType newLocation) {
+        if (!(this.getLocation() instanceof Architecture)) {
+            throw new IllegalStateException("Person must be in architecture in order to unset mayor. state " + this);
+        }
+        if (this.doingWork != DoingWork.MAYOR) {
+            throw new IllegalStateException("Person must be mayor in order to unset mayor. state " + this);
+        }
+        Architecture location = (Architecture) this.getLocation();
+
+        if (newMayor != null) {
+            location.changeMayor(newMayor);
+        }
+        this.location = newLocation;
+    }
+
     public void setDoingWork(DoingWork work) {
         if (location.get() instanceof Architecture && this.state == State.NORMAL) {
             if (work == DoingWork.MAYOR) {
@@ -336,12 +379,26 @@ public class Person extends GameObject {
                 if (this.doingWork != DoingWork.MAYOR) {
                     this.doingWork = work;
                 } else {
-                    throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first.");
+                    throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first." +
+                            "Use unsetMayor if there is no one in city");
                 }
             }
         } else {
             throw new IllegalStateException("Person should be in an architecture, hired, if he is doing work. Person state = " + this);
         }
+    }
+
+    public void joinTroop(Troop t) {
+        if (!(this.location.get() instanceof Architecture)) {
+            throw new IllegalStateException("To join troop, the person must be in architecture. state = " + this);
+        }
+
+        if (this.getDoingWorkType() == DoingWork.MAYOR) {
+            this.handoverMayor(((Architecture) this.location.get()).pickMayor(this), new LocationType(t));
+        } else {
+            this.location = new LocationType(t);
+        }
+        this.setDoingWork(DoingWork.NONE);
     }
 
     public String getDoingWorkString() {

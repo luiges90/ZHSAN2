@@ -285,6 +285,7 @@ public class Military extends GameObject {
         scenario.addTroop(t);
 
         location = new LocationType(t);
+        this.leader.joinTroop(t);
 
         return t;
     }

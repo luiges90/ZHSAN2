@@ -216,11 +216,20 @@ public class Architecture extends GameObject {
         return morale;
     }
 
-    Person pickMayor() {
-        if (this.getBelongedFaction() != null && this.getPersons().contains(this.getBelongedFaction().getLeader())) {
+    Person pickMayor(Person exclude) {
+        if (this.getBelongedFaction() == null) {
+            return null;
+        }
+
+        Person leader = this.getBelongedFaction().getLeader();
+        if (this.getPersons().contains(leader)) {
+            if (exclude == leader) {
+                return null;
+            }
             return this.getBelongedFaction().getLeader();
         }
-        return this.getPersons().max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()), null);
+
+        return this.getPersons().filter(p -> p != exclude).max((p, q) -> Integer.compare(p.getAbilitySum(), q.getAbilitySum()), null);
     }
 
     GameObjectList<Person> getMayorUnchecked() {
@@ -237,7 +246,7 @@ public class Architecture extends GameObject {
     }
 
     @LuaAI.ExportToLua
-    public boolean canChangeMayor() {
+    public boolean canChangeMayorToOther() {
         return this.getPersons().size() > 0 && this.getBelongedFaction() != null && this.getBelongedFaction().getLeader().getLocation() != this;
     }
 
@@ -259,7 +268,10 @@ public class Architecture extends GameObject {
         newMayor.setDoingWork(Person.DoingWork.MAYOR);
     }
 
-    public void addMayor(Person newMayor) {
+    public void addMayor() {
+        Person newMayor = pickMayor(null);
+        if (newMayor == null) return;
+
         if (getMayorUnchecked().size() > 0) {
             throw new IllegalStateException("addMayor may only be used when there is no mayor at all");
         }

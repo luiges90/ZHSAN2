@@ -247,7 +247,7 @@ public class InternalCommandTab implements CommandTab {
     }
 
     public void onMouseMove(float x, float y) {
-        if (assignPos.contains(x, y) && parent.getCurrentArchitecture().canChangeMayor()) {
+        if (assignPos.contains(x, y) && parent.getCurrentArchitecture().canChangeMayorToOther()) {
             assign.setState(StateTexture.State.SELECTED);
         } else {
             assign.setState(StateTexture.State.NORMAL);
@@ -281,7 +281,7 @@ public class InternalCommandTab implements CommandTab {
 
     @Override
     public void onClick(float x, float y) {
-        if (assignPos.contains(x, y) && parent.getCurrentArchitecture().canChangeMayor()) {
+        if (assignPos.contains(x, y) && parent.getCurrentArchitecture().canChangeMayorToOther()) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.MAYOR), TabListGameFrame.ListKindType.PERSON,
                     parent.getCurrentArchitecture().getPersons(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {

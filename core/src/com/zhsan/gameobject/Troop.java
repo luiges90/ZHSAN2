@@ -361,7 +361,7 @@ public class Troop extends GameObject {
         int dist = getLocation().taxiDistanceTo(p);
         return getKind().getRangeLo() <= dist && dist <= getKind().getRangeHi();
     }
-    
+
     private List<DamagePack> attackArchitecture(Architecture target) {
         Optional<Point> attackOptPoint = target.getLocation().parallelStream().filter(this::isLocationInAttackRange).findFirst();
         if (!attackOptPoint.isPresent()) return Collections.emptyList();
