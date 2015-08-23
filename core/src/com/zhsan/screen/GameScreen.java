@@ -371,14 +371,18 @@ public class GameScreen extends WidgetGroup {
         }
 
         public void pauseRunDays() {
-            pauseDayRunner.set(true);
+            if (dayRunning) {
+                pauseDayRunner.set(true);
+            }
         }
 
         public void stopRunDays() {
-            pauseDayRunner.set(false);
-            stopDayRunner.set(true);
-            synchronized (dayPauseLock) {
-                dayPauseLock.notifyAll();
+            if (dayRunning) {
+                pauseDayRunner.set(false);
+                stopDayRunner.set(true);
+                synchronized (dayPauseLock) {
+                    dayPauseLock.notifyAll();
+                }
             }
         }
 
