@@ -155,7 +155,7 @@ public class MainMapLayer extends WidgetGroup {
 
     private void updateSurveyCameraPosition() {
         screen.getScenario().getGameSurvey().setCameraPosition(
-                new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (mapCameraPosition.y / mapZoomMax))
+                new Point((int) (mapCameraPosition.x / mapZoomMax), (int) (screen.getScenario().getGameMap().getHeight() - mapCameraPosition.y / mapZoomMax))
         );
     }
 
