@@ -306,6 +306,14 @@ public class Architecture extends GameObject {
         return getWorkingPersons(Person.DoingWork.MORALE);
     }
 
+    public int getMilitaryCount() {
+        return scenario.getMilitaries().size();
+    }
+
+    public int getMilitaryUnitCount() {
+        return scenario.getMilitaries().getAll().stream().mapToInt(m -> (int) m.getUnitCount()).sum();
+    }
+
     public GameObjectList<Military> getMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this);
     }

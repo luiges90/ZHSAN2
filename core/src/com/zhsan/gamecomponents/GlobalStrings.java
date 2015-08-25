@@ -59,7 +59,8 @@ public class GlobalStrings {
         CAMPAIGN("Campaign"),
         MOVE_TO("MoveTo"),
         ATTACK_POINT("AttackPoint"),
-        ATTACK_TARGET("AttackTarget");
+        ATTACK_TARGET("AttackTarget"),
+        TROOP_NAME("TroopName");
 
         private final String xmlName;
         Keys(String name) {

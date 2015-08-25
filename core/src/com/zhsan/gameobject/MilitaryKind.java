@@ -31,10 +31,11 @@ public final class MilitaryKind extends GameObject {
     private final int unitQuantity;
     private final int movability;
     private final int offense, defense;
+    private final int offensePerUnit, defensePerUnit;
     private final int rangeLo, rangeHi;
     private final float architectureOffense;
 
-    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int rangeLo, int rangeHi, float architectureOffense) {
+    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense) {
         super(id);
         this.scenario = scenario;
         this.type = type;
@@ -48,6 +49,8 @@ public final class MilitaryKind extends GameObject {
         this.movability = movability;
         this.offense = offense;
         this.defense = defense;
+        this.offensePerUnit = offensePerUnit;
+        this.defensePerUnit = defensePerUnit;
         this.rangeLo = rangeLo;
         this.rangeHi = rangeHi;
         this.architectureOffense = architectureOffense;
@@ -76,9 +79,11 @@ public final class MilitaryKind extends GameObject {
                         .setMovability(Integer.parseInt(line[9]))
                         .setOffense(Integer.parseInt(line[10]))
                         .setDefense(Integer.parseInt(line[11]))
-                        .setRangeLo(Integer.parseInt(line[12]))
-                        .setRangeHi(Integer.parseInt(line[13]))
-                        .setArchitectureOffense(Float.parseFloat(line[14]))
+                        .setOffensePerUnit(Integer.parseInt(line[12]))
+                        .setDefensePerUnit(Integer.parseInt(line[13]))
+                        .setRangeLo(Integer.parseInt(line[14]))
+                        .setRangeHi(Integer.parseInt(line[15]))
+                        .setArchitectureOffense(Float.parseFloat(line[16]))
                         .setScenario(scen)
                         .createMilitaryKind();
 
@@ -109,6 +114,8 @@ public final class MilitaryKind extends GameObject {
                         String.valueOf(detail.movability),
                         String.valueOf(detail.offense),
                         String.valueOf(detail.defense),
+                        String.valueOf(detail.offensePerUnit),
+                        String.valueOf(detail.defensePerUnit),
                         String.valueOf(detail.rangeLo),
                         String.valueOf(detail.rangeHi),
                         String.valueOf(detail.architectureOffense)
@@ -164,12 +171,24 @@ public final class MilitaryKind extends GameObject {
         return defense;
     }
 
+    public int getOffensePerUnit() {
+        return offensePerUnit;
+    }
+
+    public int getDefensePerUnit() {
+        return defensePerUnit;
+    }
+
     public int getRangeLo() {
         return rangeLo;
     }
 
     public int getRangeHi() {
         return rangeHi;
+    }
+
+    public float getArchitectureOffense() {
+        return architectureOffense;
     }
 
     public int getMovability() {
@@ -193,6 +212,7 @@ public final class MilitaryKind extends GameObject {
         private int unitQuantity;
         private int movability;
         private int offense, defense;
+        private int offensePerUnit, defensePerUnit;
         private int rangeLo, rangeHi;
         private float architectureOffense;
 
@@ -213,6 +233,8 @@ public final class MilitaryKind extends GameObject {
             this.movability = old.movability;
             this.offense = old.offense;
             this.defense = old.defense;
+            this.offensePerUnit = old.offensePerUnit;
+            this.defensePerUnit = old.defensePerUnit;
             this.rangeLo = old.rangeLo;
             this.rangeHi = old.rangeHi;
             this.architectureOffense = old.architectureOffense;
@@ -299,8 +321,18 @@ public final class MilitaryKind extends GameObject {
             return this;
         }
 
+        public MilitaryKindBuilder setOffensePerUnit(int offensePerUnit) {
+            this.offensePerUnit = offensePerUnit;
+            return this;
+        }
+
+        public MilitaryKindBuilder setDefensePerUnit(int defensePerUnit) {
+            this.defensePerUnit = defensePerUnit;
+            return this;
+        }
+
         public MilitaryKind createMilitaryKind() {
-            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, rangeLo, rangeHi, architectureOffense);
+            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, offensePerUnit, defensePerUnit, rangeLo, rangeHi, architectureOffense);
         }
     }
 }

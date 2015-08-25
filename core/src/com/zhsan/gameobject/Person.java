@@ -277,6 +277,18 @@ public class Person extends GameObject {
         return state;
     }
 
+    public Section getBelongedSection() {
+        if (state == State.NORMAL) {
+            GameObject t = location.get();
+            if (t instanceof Architecture) {
+                return ((Architecture) t).getBelongedSection();
+            } else if (t instanceof Troop) {
+                return ((Troop) t).getBelongedSection();
+            }
+        }
+        return null;
+    }
+
     public Faction getBelongedFaction() {
         if (state == State.NORMAL) {
             GameObject t = location.get();

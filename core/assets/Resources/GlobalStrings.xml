@@ -40,4 +40,5 @@
         MoveTo="移動至(%d,%d)"
         AttackPoint="攻擊(%d,%d)"
         AttackTarget="攻擊%s"
+        TroopName="%s隊"
         />

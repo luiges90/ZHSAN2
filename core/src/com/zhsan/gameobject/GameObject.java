@@ -42,11 +42,15 @@ public abstract class GameObject {
     }
 
     public final String getFieldString(String name) {
+        return getFieldString(name, true);
+    }
+
+    public final String getFieldString(String name, boolean round) {
         Object o = getField(name);
         if (o == null) {
             return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
         } else if (o instanceof Float) {
-            return Long.toString(Math.round((float) o));
+            return round ? Long.toString(Math.round((float) o)) : Float.toString((Float) o);
         } else if (o instanceof GameObject) {
             return ((GameObject) o).getName();
         } else {

@@ -71,6 +71,7 @@ public class TabListGameFrame extends GameFrame {
         TextWidget<GameObject> contentTemplate;
         BackgroundTextWidget<Column> columnText;
         int width;
+        boolean round;
     }
 
     private static class Tab {
@@ -250,6 +251,7 @@ public class TabListGameFrame extends GameFrame {
             column.columnText = new BackgroundTextWidget<>(columnText, columnHeader);
             column.columnText.setText(column.displayName);
             column.width = Integer.parseInt(XmlHelper.loadAttribute(columnNode, "MinWidth"));
+            column.round = Boolean.parseBoolean(XmlHelper.loadAttribute(columnNode, "Round", "True"));
 
             columns.put(Integer.parseInt(XmlHelper.loadAttribute(columnNode, "ID")), column);
         }
@@ -329,7 +331,7 @@ public class TabListGameFrame extends GameFrame {
             for (Column c : showingTab.columns) {
                 TextWidget<GameObject> widget = new TextWidget<>(c.contentTemplate);
                 widget.setExtra(o);
-                widget.setText(o.getFieldString(c.name));
+                widget.setText(o.getFieldString(c.name, c.round));
 
                 showingTextWidgets.add(widget);
 

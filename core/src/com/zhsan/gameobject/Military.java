@@ -237,6 +237,16 @@ public class Military extends GameObject {
                 this.getLocation() instanceof Architecture && ((Architecture) this.getLocation()).getWorkingPersons(Person.DoingWork.TRAINING).size() > 0;
     }
 
+    public Section getBelongedSection() {
+        GameObject t = location.get();
+        if (t instanceof Architecture) {
+            return ((Architecture) t).getBelongedSection();
+        } else if (t instanceof Troop) {
+            return leader.getBelongedSection();
+        }
+        return null;
+    }
+
     public Faction getBelongedFaction() {
         GameObject t = location.get();
         if (t instanceof Architecture) {

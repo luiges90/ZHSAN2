@@ -176,7 +176,7 @@ public class Troop extends GameObject {
 
     @Override
     public String getName() {
-        return getLeaderName();
+        return String.format(GlobalStrings.getString(GlobalStrings.Keys.TROOP_NAME), getLeaderName());
     }
 
     public Military getMilitary() {
@@ -229,10 +229,6 @@ public class Troop extends GameObject {
         return getMilitary().getKind();
     }
 
-    public String getBelongedFactionName() {
-        return getBelongedFaction().getName();
-    }
-
     public Person getLeader() {
         return getMilitary().getLeader();
     }
@@ -265,18 +261,22 @@ public class Troop extends GameObject {
         return (getCommand() * 0.7f + getStrength() * 0.3f) / 100.0f *
                 getMorale() / 100.0f *
                 scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
-                getKind().getOffense() * getMilitary().getUnitCount();
+                (getKind().getOffense() + getKind().getOffensePerUnit() * getMilitary().getUnitCount());
     }
 
     public float getDefense() {
         return getCommand() / 100.0f *
                 getMorale() / 100.0f *
                 scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
-                getKind().getDefense() * getMilitary().getUnitCount();
+                (getKind().getDefense() + getKind().getDefensePerUnit() * getMilitary().getUnitCount());
     }
 
     public int getQuantity() {
         return getMilitary().getQuantity();
+    }
+
+    public float getUnitCount() {
+        return getMilitary().getUnitCount();
     }
 
     public boolean loseQuantity(int quantity) {
@@ -395,7 +395,7 @@ public class Troop extends GameObject {
 
         List<DamagePack> damagePacks = new ArrayList<>();
 
-        float offense = this.getOffense();
+        float offense = this.getOffense() * this.getKind().getArchitectureOffense();
         float defense = target.getDefense();
         float ratio = offense / defense;
 
