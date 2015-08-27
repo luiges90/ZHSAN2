@@ -2,9 +2,9 @@
 <Root>
   <BackgroundFile FileName="Background.png" X="0" Y="0" Width="80" Height="38"/>
   <FactionFile FileName="Faction.png" X="-17" Y="14" Width="17" Height="24"/>
-  <NameText X="26" Y="10" Width="52" Height="30"
+  <NameText X="0" Y="10" Width="52" Height="30"
             FontName="方正隶变_GBK"
-            FontSize="9"
+            FontSize="12"
             FontStyle="Regular"
             FontColor="4294967295"
             Align="Left">
@@ -14,7 +14,7 @@
   <FoodIcon Shortage="FoodShortage.png" X="65" Y="10" Width="14" Height="14"/>
   <Control NoControl="NoControl.png" X="65" Y="24" Width="14" Height="14"/>
   <Stunt Stunt="Stunt.png" X="-14" Y="0" Width="14" Height="14"/>
-  <TroopText X="25" Y="21" Width="43" Height="20"
+  <TroopText X="0" Y="0" Width="43" Height="20"
         FontName="方正隶变_GBK"
         FontSize="11"
         FontStyle="Regular"

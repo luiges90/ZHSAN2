@@ -34,6 +34,7 @@ public class TroopTitleWidget extends WidgetGroup {
         private Rectangle backgroundPos, factionPos;
 
         private TextWidget<Void> nameText;
+        private Rectangle namePos;
 
         private Texture done, undone, autoDone, autoUndone;
         private Rectangle donePos;
@@ -48,6 +49,7 @@ public class TroopTitleWidget extends WidgetGroup {
         private Rectangle stuntPos;
 
         private TextWidget<Void> troopText;
+        private Rectangle troopPos;
 
         private Texture morale, moraleBackground;
         private Rectangle moralePos, moraleBackgroundPos;
@@ -73,7 +75,9 @@ public class TroopTitleWidget extends WidgetGroup {
                 faction = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(factionNode, "FileName")));
                 factionPos = XmlHelper.loadRectangleFromXml(factionNode);
 
-                nameText = new TextWidget<>(TextWidget.Setting.fromXml(dom.getElementsByTagName("NameText").item(0)));
+                Node nameNode = dom.getElementsByTagName("NameText").item(0);
+                nameText = new TextWidget<>(TextWidget.Setting.fromXml(nameNode));
+                namePos = XmlHelper.loadRectangleFromXml(nameNode);
 
                 Node actionNode = dom.getElementsByTagName("ActionIcon").item(0);
                 done = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(actionNode, "Done")));
@@ -94,7 +98,9 @@ public class TroopTitleWidget extends WidgetGroup {
                 stunt = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(stuntNode, "Stunt")));
                 stuntPos = XmlHelper.loadRectangleFromXml(stuntNode);
 
-                troopText = new TextWidget<>(TextWidget.Setting.fromXml(dom.getElementsByTagName("TroopText").item(0)));
+                Node troopNode = dom.getElementsByTagName("TroopText").item(0);
+                troopText = new TextWidget<>(TextWidget.Setting.fromXml(troopNode));
+                troopPos = XmlHelper.loadRectangleFromXml(troopNode);
 
                 Node moraleNode = dom.getElementsByTagName("Morale").item(0);
                 morale = new Texture(Gdx.files.external(DATA_PATH + XmlHelper.loadAttribute(moraleNode, "FileName")));
@@ -142,6 +148,8 @@ public class TroopTitleWidget extends WidgetGroup {
 
         addActor(nameText);
         addActor(troopText);
+
+        troop = t;
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -149,6 +157,14 @@ public class TroopTitleWidget extends WidgetGroup {
                 setting.backgroundPos.width, setting.backgroundPos.height);
         batch.draw(setting.faction, setting.factionPos.x + getX(), setting.factionPos.y + getY(),
                 setting.factionPos.width, setting.factionPos.height);
+
+        nameText.setPosition(setting.namePos.x, setting.namePos.y);
+        nameText.setSize(setting.namePos.width, setting.namePos.height);
+        nameText.setText(troop.getName());
+
+        troopText.setPosition(setting.troopPos.x, setting.troopPos.y);
+        troopText.setSize(setting.troopPos.width, setting.troopPos.height);
+        troopText.setText(String.valueOf(troop.getQuantity()));
 
         super.draw(batch, parentAlpha);
     }
