@@ -47,6 +47,8 @@ public class TroopAnimationLayer implements MapLayer {
     private BlockingQueue<PendingTroopAnimation> pendingTroopAnimations = new ArrayBlockingQueue<>(100);
     private TranslateAnimator runningAnimator;
 
+    private Map<Troop, TroopTitleWidget> troopTitleWidgets = new HashMap<>();
+
     public void addPendingTroopAnimation(TroopAnimationLayer.PendingTroopAnimation animation) {
         pendingTroopAnimations.add(animation);
     }
@@ -84,6 +86,9 @@ public class TroopAnimationLayer implements MapLayer {
                 runningAnimator = new TranslateAnimator(helpers, animation);
             }
         }
+
+        Map<Troop, Point> drawnTroops = new HashMap<>();
+
         Set<Troop> toDraw = new HashSet<>(screen.getScenario().getTroops().getAll());
         if (runningAnimator != null) {
             Troop t = runningAnimator.animation.troop;
@@ -92,6 +97,8 @@ public class TroopAnimationLayer implements MapLayer {
             TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
             Point px = runningAnimator.step();
             batch.draw(image, px.x, px.y, zoom, zoom);
+
+            drawnTroops.put(t, px);
 
             if (runningAnimator.completed) {
                 runningAnimator = null;
@@ -103,14 +110,29 @@ public class TroopAnimationLayer implements MapLayer {
                 TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
                 Point px = helpers.getPixelFromMapLocation(t.getLocation());
                 batch.draw(image, px.x, px.y, zoom, zoom);
+
+                drawnTroops.put(t, px);
             }
         }
+
+        drawnTroops.entrySet().forEach(t -> {
+            TroopTitleWidget widget = troopTitleWidgets.get(t.getKey());
+            if (widget == null) {
+                widget = new TroopTitleWidget(t.getKey());
+                troopTitleWidgets.put(t.getKey(), widget);
+            }
+            widget.setPosition(t.getValue().x, t.getValue().y + zoom);
+            widget.draw(batch, parentAlpha);
+        });
+
         drawFrame++;
     }
 
     @Override
     public void dispose() {
         troopImages.values().forEach(Texture::dispose);
+        troopTitleWidgets.values().forEach(TroopTitleWidget::dispose);
+        TroopTitleWidget.disposeAll();
     }
 
     private static class TranslateAnimator {
