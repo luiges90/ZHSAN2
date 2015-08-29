@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Created by Peter on 8/8/2015.
  */
-public class Troop extends GameObject {
+public class Troop extends GameObject implements HasLocation {
 
     public static final String SAVE_FILE = "Troop.csv";
 
@@ -103,7 +103,7 @@ public class Troop extends GameObject {
             return null;
         }
 
-        GameObject target() {
+        HasLocation target() {
             switch (kind) {
                 case ATTACK_ARCH:
                     return scenario.getArchitectures().get(targetId);
@@ -332,7 +332,7 @@ public class Troop extends GameObject {
         if (this.order.targetLocation != null) {
             targetLocation = this.order.targetLocation;
         } else if (this.order.kind == OrderKind.ATTACK_ARCH) {
-            targetLocation = scenario.getArchitectures().get(this.order.targetId).getLocationMidpoint();
+            targetLocation = scenario.getArchitectures().get(this.order.targetId).getLocation();
         } else if (this.order.kind == OrderKind.ATTACK_TROOP) {
             targetLocation = scenario.getTroops().get(this.order.targetId).getLocation();
         } else {
@@ -374,14 +374,14 @@ public class Troop extends GameObject {
         return true;
     }
 
-    public GameObject getTarget() {
+    public HasLocation getTarget() {
         return order.target();
     }
 
     public List<DamagePack> attack() {
         if (attacked) return Collections.emptyList();
 
-        GameObject target = order.target();
+        HasLocation target = order.target();
         if (target instanceof Architecture) {
             return attackArchitecture((Architecture) target);
         } else if (target instanceof Troop) {
@@ -399,7 +399,7 @@ public class Troop extends GameObject {
     }
 
     private List<DamagePack> attackArchitecture(Architecture target) {
-        Optional<Point> attackOptPoint = target.getLocation().parallelStream().filter(this::isLocationInAttackRange).findFirst();
+        Optional<Point> attackOptPoint = target.getLocations().parallelStream().filter(this::isLocationInAttackRange).findFirst();
         if (!attackOptPoint.isPresent()) return Collections.emptyList();
         Point attackPoint = attackOptPoint.get();
 

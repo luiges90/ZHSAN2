@@ -53,6 +53,7 @@ public class TroopAnimationLayer implements MapLayer {
     private Set<Troop> runningTroops = new HashSet<>();
 
     private Map<Troop, TroopTitleWidget> troopTitleWidgets = new HashMap<>();
+    private Map<Troop, Double> troopDirections = new HashMap<>();
 
     public void addPendingTroopAnimation(TroopAnimationLayer.PendingTroopAnimation animation) {
         pendingTroopAnimations.add(animation);
@@ -62,7 +63,7 @@ public class TroopAnimationLayer implements MapLayer {
         return pendingTroopAnimations.size() == 0;
     }
 
-    private TextureRegion getTroopImage(String resSet, Troop t, TroopAnimation.TroopAnimationKind animationKind, int frame, GameScenario scen) {
+    private TextureRegion getTroopImage(String resSet, Troop t, TroopAnimation.TroopAnimationKind animationKind, int frame, double dir, GameScenario scen) {
         MilitaryKind kind = t.getMilitary().getKind();
         TroopAnimation animation = scen.getTroopAnimations().get(animationKind.getId());
 
@@ -75,7 +76,7 @@ public class TroopAnimationLayer implements MapLayer {
         }
 
         int frameIndex = frame / animation.getIdleFrame() % animation.getFrameCount();
-        int frameDirection = 0; // TODO find the correct frame direction
+        int frameDirection = ((int) ((dir + 22.5) / 45) + 1) % 8;
         int spriteSize = animation.getSpriteSize();
         return new TextureRegion(troopImages.get(pair),
                 frameIndex * spriteSize, frameDirection * spriteSize, spriteSize, spriteSize);
@@ -111,11 +112,13 @@ public class TroopAnimationLayer implements MapLayer {
             toDraw.remove(t);
 
             Point px = animator.step();
+            double direction = Point.getDirection(animator.getAnimation().from, animator.getAnimation().to);
+            troopDirections.put(t, direction);
             if (animator instanceof MoveAnimator) {
-                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, screen.getScenario());
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, direction, screen.getScenario());
                 batch.draw(image, px.x, px.y, zoom, zoom);
             } else if (animator instanceof AttackAnimator) {
-                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.ATTACK, animator.getCurrentFrame(), screen.getScenario());
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.ATTACK, animator.getCurrentFrame(), direction, screen.getScenario());
                 batch.draw(image, px.x, px.y, zoom, zoom);
             }
 
@@ -129,7 +132,14 @@ public class TroopAnimationLayer implements MapLayer {
 
         for (Troop t : toDraw) {
             if (helpers.isMapLocationOnScreen(t.getLocation())) {
-                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, screen.getScenario());
+                double direction;
+                if (troopDirections.containsKey(t)) {
+                    direction = troopDirections.get(t);
+                } else {
+                    direction = 0;
+                }
+
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, direction, screen.getScenario());
                 Point px = helpers.getPixelFromMapLocation(t.getLocation());
                 batch.draw(image, px.x, px.y, zoom, zoom);
 

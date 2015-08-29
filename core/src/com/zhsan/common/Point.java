@@ -87,6 +87,14 @@ public final class Point {
         return taxiDistance(this, q);
     }
 
+    public static double getDirection(Point p, Point q) {
+        return Math.toDegrees(Math.atan2(q.y - p.y, q.x - p.x));
+    }
+
+    public double getDirection(Point q) {
+        return getDirection(this, q);
+    }
+
     /**
      * Return an iterator which returns points further and further than this point, starting
      * at the right and travel at CW direction

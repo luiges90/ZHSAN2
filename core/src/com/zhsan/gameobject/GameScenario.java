@@ -11,7 +11,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 8/3/2015.
@@ -21,7 +20,7 @@ public class GameScenario {
     public interface OnTroopDone {
         public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc);
 
-        public void onAttackStepDone(Troop t, Troop target, List<DamagePack> damages);
+        public void onAttackStepDone(Troop t, HasLocation target, List<DamagePack> damages);
     }
 
     public static final int SAVE_VERSION = 2;
@@ -107,7 +106,7 @@ public class GameScenario {
             Faction playerFaction = factions.get(playerFactionId);
             if (playerFaction != null) {
                 gameData.setCurrentPlayer(playerFaction);
-                gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocation().get(0));
+                gameSurvey.setCameraPosition(playerFaction.getArchitectures().getFirst().getLocations().get(0));
             }
         }
 
@@ -152,10 +151,10 @@ public class GameScenario {
             }
 
             for (FacilityKind kind : missingFacilities) {
-                Iterator<Point> iterator = a.getLocation().get(0).spiralOutIterator();
+                Iterator<Point> iterator = a.getLocations().get(0).spiralOutIterator();
                 while (iterator.hasNext()) {
                     Point p = iterator.next();
-                    if (a.getLocation().contains(p)) continue;
+                    if (a.getLocations().contains(p)) continue;
                     if (kind.getCanBuildAtTerrain().contains(gameMap.getTerrainAt(p))) {
                         if (getFacilityAt(p) == null) {
                             Facility f = new Facility(facilities.getFreeId(), this);
@@ -222,7 +221,7 @@ public class GameScenario {
     }
 
     public Architecture getArchitectureAt(Point p) {
-        return architectures.filter(a -> a.getLocation().contains(p)).getFirst();
+        return architectures.filter(a -> a.getLocations().contains(p)).getFirst();
     }
 
     public Facility getFacilityAt(Point p) {
@@ -322,7 +321,7 @@ public class GameScenario {
                 Point oldLoc = t.getLocation();
 
                 List<DamagePack> damagePacks;
-                GameObject target = t.getTarget();
+                HasLocation target = t.getTarget();
                 if (!t.stepForward()) {
                     damagePacks = t.attack();
                     it.remove();
@@ -332,8 +331,7 @@ public class GameScenario {
                     damagePacks = t.attack();
                 }
                 if (damagePacks.size() > 0) {
-                    Troop targetTroop = target instanceof Troop ? (Troop)target : null;
-                    onTroopDone.onAttackStepDone(t, targetTroop, damagePacks);
+                    onTroopDone.onAttackStepDone(t, target, damagePacks);
                 }
             }
         } while (movingTroops.size() > 0);

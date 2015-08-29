@@ -178,11 +178,11 @@ public class ArchitectureLayer implements MapLayer {
     public void draw(GameScreen screen, String resPack, DrawingHelpers helpers, int zoom,
                      Batch batch, float parentAlpha) {
         for (Architecture a : screen.getScenario().getArchitectures()) {
-            Point mapCenter = Point.getCenter(a.getLocation());
+            Point mapCenter = Point.getCenter(a.getLocations());
             if (helpers.isMapLocationOnScreen(mapCenter)) {
                 // draw architecture main
                 Pair<ArchitectureImageQuantifier, Texture> image =
-                        getArchitectureImage(resPack, a.getKind(), a.getLocation());
+                        getArchitectureImage(resPack, a.getKind(), a.getLocations());
 
                 Point main = helpers.getPixelFromMapLocation(mapCenter);
                 int mainX = main.x + zoom / 2;

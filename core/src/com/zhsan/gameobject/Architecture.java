@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Architecture extends GameObject {
+public class Architecture extends GameObject implements HasLocation{
 
     public static final String SAVE_FILE = "Architecture.csv";
 
@@ -123,7 +123,7 @@ public class Architecture extends GameObject {
         return nameImageName;
     }
 
-    public List<Point> getLocation() {
+    public List<Point> getLocations() {
         return new ArrayList<>(location);
     }
 
@@ -358,7 +358,7 @@ public class Architecture extends GameObject {
     }
 
     public Point getCampaignPosition() {
-        Iterator<Point> it = this.getLocationMidpoint().spiralOutIterator(1);
+        Iterator<Point> it = this.getLocation().spiralOutIterator(1);
         while (it.hasNext()) {
             Point p = it.next();
             if (scenario.getTroopAt(p) == null) {
@@ -369,10 +369,10 @@ public class Architecture extends GameObject {
     }
 
     public double distanceTo(Architecture a) {
-        return getLocationMidpoint().distanceTo(a.getLocationMidpoint());
+        return getLocation().distanceTo(a.getLocation());
     }
 
-    public Point getLocationMidpoint() {
+    public Point getLocation() {
         return Point.getCentroid(location);
     }
 

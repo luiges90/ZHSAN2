@@ -115,7 +115,7 @@ public class SmallMap extends WidgetGroup {
 
         // draw architectures on top of it
         for (Architecture a : screen.getScenario().getArchitectures()) {
-            for (Point p : a.getLocation()) {
+            for (Point p : a.getLocations()) {
                 int size = tileSize * architectureScale;
 
                 Faction f = a.getBelongedFaction();
