@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.zhsan.common.Pair;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
+import com.zhsan.gamecomponents.maplayer.troopanimator.TranslateAnimator;
 import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
 
@@ -98,7 +99,7 @@ public class TroopAnimationLayer implements MapLayer {
         while (animatorIterator.hasNext()) {
             TranslateAnimator animator = animatorIterator.next();
 
-            Troop t = animator.animation.troop;
+            Troop t = animator.getAnimation().troop;
             toDraw.remove(t);
 
             TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
@@ -107,7 +108,7 @@ public class TroopAnimationLayer implements MapLayer {
 
             drawnTroops.put(t, px);
 
-            if (animator.completed) {
+            if (animator.isCompleted()) {
                 animatorIterator.remove();
                 runningTroops.remove(t);
             }
@@ -141,33 +142,6 @@ public class TroopAnimationLayer implements MapLayer {
         troopImages.values().forEach(Texture::dispose);
         troopTitleWidgets.values().forEach(TroopTitleWidget::dispose);
         TroopTitleWidget.disposeAll();
-    }
-
-    private static class TranslateAnimator {
-
-        private final int FRAME_COUNT = 30;
-
-        private boolean completed;
-
-        private DrawingHelpers helpers;
-        private PendingTroopAnimation animation;
-
-        public TranslateAnimator(DrawingHelpers helpers, PendingTroopAnimation animation) {
-            this.helpers = helpers;
-            this.animation = animation;
-        }
-
-        private int step = 0;
-        public Point step() {
-            step++;
-            float ratio = (float) step / FRAME_COUNT;
-
-            Point drawStart = helpers.getPixelFromMapLocation(animation.from);
-            Point drawEnd = helpers.getPixelFromMapLocation(animation.to);
-            Point drawPos = new Point((int) (drawStart.x * (1 - ratio) + drawEnd.x * ratio), (int) (drawStart.y * (1 - ratio) + drawEnd.y * ratio));
-            completed = step == FRAME_COUNT;
-            return drawPos;
-        }
     }
 
 }

@@ -8,7 +8,7 @@ import com.zhsan.screen.GameScreen;
 /**
  * Created by Peter on 4/8/2015.
  */
-interface MapLayer {
+public interface MapLayer {
 
     interface DrawingHelpers {
         boolean isMapLocationOnScreen(Point p);
