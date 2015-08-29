@@ -22,7 +22,7 @@ import java.util.concurrent.BlockingQueue;
 public class TroopAnimationLayer implements MapLayer {
 
     public enum PendingTroopAnimationType {
-        MOVE
+        MOVE, ATTACK
     }
 
     public static class PendingTroopAnimation {
@@ -45,7 +45,9 @@ public class TroopAnimationLayer implements MapLayer {
     private int drawFrame = 0;
 
     private BlockingQueue<PendingTroopAnimation> pendingTroopAnimations = new ArrayBlockingQueue<>(100);
-    private TranslateAnimator runningAnimator;
+
+    private List<TranslateAnimator> runningAnimators = new ArrayList<>();
+    private Set<Troop> runningTroops = new HashSet<>();
 
     private Map<Troop, TroopTitleWidget> troopTitleWidgets = new HashMap<>();
 
@@ -79,29 +81,35 @@ public class TroopAnimationLayer implements MapLayer {
     @Override
     public void draw(GameScreen screen, String resPack, DrawingHelpers helpers,
                      int zoom, Batch batch, float parentAlpha) {
-        if (runningAnimator == null) {
-            PendingTroopAnimation animation = pendingTroopAnimations.poll();
-            if (animation != null &&
-                    (helpers.isMapLocationOnScreen(animation.from) || helpers.isMapLocationOnScreen(animation.to))) {
-                runningAnimator = new TranslateAnimator(helpers, animation);
+        for (PendingTroopAnimation animation : new ArrayList<>(pendingTroopAnimations)) {
+            if (runningTroops.contains(animation.troop)) continue;
+
+            runningTroops.add(animation.troop);
+            pendingTroopAnimations.remove(animation);
+            if (helpers.isMapLocationOnScreen(animation.from) || helpers.isMapLocationOnScreen(animation.to)) {
+                runningAnimators.add(new TranslateAnimator(helpers, animation));
             }
         }
 
         Map<Troop, Point> drawnTroops = new HashMap<>();
 
         Set<Troop> toDraw = new HashSet<>(screen.getScenario().getTroops().getAll());
-        if (runningAnimator != null) {
-            Troop t = runningAnimator.animation.troop;
+        Iterator<TranslateAnimator> animatorIterator = runningAnimators.iterator();
+        while (animatorIterator.hasNext()) {
+            TranslateAnimator animator = animatorIterator.next();
+
+            Troop t = animator.animation.troop;
             toDraw.remove(t);
 
             TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
-            Point px = runningAnimator.step();
+            Point px = animator.step();
             batch.draw(image, px.x, px.y, zoom, zoom);
 
             drawnTroops.put(t, px);
 
-            if (runningAnimator.completed) {
-                runningAnimator = null;
+            if (animator.completed) {
+                animatorIterator.remove();
+                runningTroops.remove(t);
             }
         }
 

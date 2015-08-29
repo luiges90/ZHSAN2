@@ -324,7 +324,9 @@ public class GameScreen extends WidgetGroup {
 
                         @Override
                         public void onAttackStepDone(Troop t, Troop target, List<DamagePack> damages) {
-                            // TODO add attack animation
+                            mapLayer.addPendingTroopAnimation(
+                                    new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.ATTACK,
+                                            null, null));
                         }
                     });
                     while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue
