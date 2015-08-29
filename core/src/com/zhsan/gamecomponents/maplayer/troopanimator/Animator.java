@@ -16,4 +16,8 @@ public interface Animator {
 
     public Point step();
 
+    public default int getCurrentFrame() {
+        return 0;
+    }
+
 }

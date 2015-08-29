@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.zhsan.common.Pair;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
-import com.zhsan.gamecomponents.maplayer.troopanimator.TranslateAnimator;
+import com.zhsan.gamecomponents.maplayer.troopanimator.Animator;
+import com.zhsan.gamecomponents.maplayer.troopanimator.AttackAnimator;
+import com.zhsan.gamecomponents.maplayer.troopanimator.MoveAnimator;
 import com.zhsan.gameobject.*;
 import com.zhsan.screen.GameScreen;
 
@@ -43,11 +45,11 @@ public class TroopAnimationLayer implements MapLayer {
 
     private Map<Pair<MilitaryKind, TroopAnimation>, Texture> troopImages = new HashMap<>();
 
-    private int drawFrame = 0;
+    private int idleFrame = 0;
 
-    private BlockingQueue<PendingTroopAnimation> pendingTroopAnimations = new ArrayBlockingQueue<>(100);
+    private BlockingQueue<PendingTroopAnimation> pendingTroopAnimations = new ArrayBlockingQueue<>(1000);
 
-    private List<TranslateAnimator> runningAnimators = new ArrayList<>();
+    private List<Animator> runningAnimators = new ArrayList<>();
     private Set<Troop> runningTroops = new HashSet<>();
 
     private Map<Troop, TroopTitleWidget> troopTitleWidgets = new HashMap<>();
@@ -60,9 +62,9 @@ public class TroopAnimationLayer implements MapLayer {
         return pendingTroopAnimations.size() == 0;
     }
 
-    private TextureRegion getTroopImage(String resSet, Troop t, GameScenario scen) {
+    private TextureRegion getTroopImage(String resSet, Troop t, TroopAnimation.TroopAnimationKind animationKind, int frame, GameScenario scen) {
         MilitaryKind kind = t.getMilitary().getKind();
-        TroopAnimation animation = scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.IDLE.getId());
+        TroopAnimation animation = scen.getTroopAnimations().get(animationKind.getId());
 
         Pair<MilitaryKind, TroopAnimation> pair = new Pair<>(kind, animation);
 
@@ -72,8 +74,8 @@ public class TroopAnimationLayer implements MapLayer {
             troopImages.put(pair, texture);
         }
 
-        int frameIndex = drawFrame / animation.getIdleFrame() % animation.getFrameCount();
-        int frameDirection = 0;
+        int frameIndex = frame / animation.getIdleFrame() % animation.getFrameCount();
+        int frameDirection = 0; // TODO find the correct frame direction
         int spriteSize = animation.getSpriteSize();
         return new TextureRegion(troopImages.get(pair),
                 frameIndex * spriteSize, frameDirection * spriteSize, spriteSize, spriteSize);
@@ -88,23 +90,34 @@ public class TroopAnimationLayer implements MapLayer {
             runningTroops.add(animation.troop);
             pendingTroopAnimations.remove(animation);
             if (helpers.isMapLocationOnScreen(animation.from) || helpers.isMapLocationOnScreen(animation.to)) {
-                runningAnimators.add(new TranslateAnimator(helpers, animation));
+                if (animation.type == PendingTroopAnimationType.MOVE) {
+                    runningAnimators.add(new MoveAnimator(helpers, animation));
+                } else if (animation.type == PendingTroopAnimationType.ATTACK) {
+                    TroopAnimation ta = screen.getScenario().getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ATTACK.getId());
+                    int frameCount = ta.getFrameCount() * ta.getIdleFrame();
+                    runningAnimators.add(new AttackAnimator(helpers, animation, frameCount));
+                }
             }
         }
 
         Map<Troop, Point> drawnTroops = new HashMap<>();
 
         Set<Troop> toDraw = new HashSet<>(screen.getScenario().getTroops().getAll());
-        Iterator<TranslateAnimator> animatorIterator = runningAnimators.iterator();
+        Iterator<Animator> animatorIterator = runningAnimators.iterator();
         while (animatorIterator.hasNext()) {
-            TranslateAnimator animator = animatorIterator.next();
+            Animator animator = animatorIterator.next();
 
             Troop t = animator.getAnimation().troop;
             toDraw.remove(t);
 
-            TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
             Point px = animator.step();
-            batch.draw(image, px.x, px.y, zoom, zoom);
+            if (animator instanceof MoveAnimator) {
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, screen.getScenario());
+                batch.draw(image, px.x, px.y, zoom, zoom);
+            } else if (animator instanceof AttackAnimator) {
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.ATTACK, animator.getCurrentFrame(), screen.getScenario());
+                batch.draw(image, px.x, px.y, zoom, zoom);
+            }
 
             drawnTroops.put(t, px);
 
@@ -116,7 +129,7 @@ public class TroopAnimationLayer implements MapLayer {
 
         for (Troop t : toDraw) {
             if (helpers.isMapLocationOnScreen(t.getLocation())) {
-                TextureRegion image = getTroopImage(resPack, t, screen.getScenario());
+                TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, screen.getScenario());
                 Point px = helpers.getPixelFromMapLocation(t.getLocation());
                 batch.draw(image, px.x, px.y, zoom, zoom);
 
@@ -134,7 +147,7 @@ public class TroopAnimationLayer implements MapLayer {
             widget.draw(batch, parentAlpha);
         });
 
-        drawFrame++;
+        idleFrame++;
     }
 
     @Override

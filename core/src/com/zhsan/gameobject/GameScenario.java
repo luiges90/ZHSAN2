@@ -320,13 +320,20 @@ public class GameScenario {
             while (it.hasNext()) {
                 Troop t = it.next();
                 Point oldLoc = t.getLocation();
+
+                List<DamagePack> damagePacks;
+                GameObject target = t.getTarget();
                 if (!t.stepForward()) {
-                    t.attack();
+                    damagePacks = t.attack();
                     it.remove();
                 } else {
                     Point newLoc = t.getLocation();
                     onTroopDone.onTroopStepDone(t, oldLoc, newLoc);
-                    t.attack();
+                    damagePacks = t.attack();
+                }
+                if (damagePacks.size() > 0) {
+                    Troop targetTroop = target instanceof Troop ? (Troop)target : null;
+                    onTroopDone.onAttackStepDone(t, targetTroop, damagePacks);
                 }
             }
         } while (movingTroops.size() > 0);

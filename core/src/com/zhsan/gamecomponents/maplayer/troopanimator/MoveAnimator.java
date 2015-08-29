@@ -7,14 +7,14 @@ import com.zhsan.gamecomponents.maplayer.TroopAnimationLayer;
 /**
  * Created by Peter on 29/8/2015.
  */
-public class TranslateAnimator implements Animator {
+public class MoveAnimator implements Animator {
 
     private boolean completed;
 
     private MapLayer.DrawingHelpers helpers;
     private TroopAnimationLayer.PendingTroopAnimation animation;
 
-    public TranslateAnimator(MapLayer.DrawingHelpers helpers, TroopAnimationLayer.PendingTroopAnimation animation) {
+    public MoveAnimator(MapLayer.DrawingHelpers helpers, TroopAnimationLayer.PendingTroopAnimation animation) {
         this.helpers = helpers;
         this.animation = animation;
     }
@@ -39,4 +39,5 @@ public class TranslateAnimator implements Animator {
     public TroopAnimationLayer.PendingTroopAnimation getAnimation() {
         return animation;
     }
+
 }

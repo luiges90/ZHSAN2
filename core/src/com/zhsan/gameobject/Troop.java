@@ -325,6 +325,8 @@ public class Troop extends GameObject {
     private Queue<Point> currentPath;
     private int currentMovability;
 
+    private boolean attacked;
+
     public void initExecuteOrder() {
         Point targetLocation;
         if (this.order.targetLocation != null) {
@@ -344,6 +346,8 @@ public class Troop extends GameObject {
         } else {
             currentPath = null;
         }
+
+        attacked = false;
     }
 
     public boolean stepForward() {
@@ -370,14 +374,20 @@ public class Troop extends GameObject {
         return true;
     }
 
+    public GameObject getTarget() {
+        return order.target();
+    }
+
     public List<DamagePack> attack() {
+        if (attacked) return Collections.emptyList();
+
         GameObject target = order.target();
         if (target instanceof Architecture) {
             return attackArchitecture((Architecture) target);
         } else if (target instanceof Troop) {
             return attackTroop((Troop) target);
         } else if (target == null) {
-            return null;
+            return Collections.emptyList();
         } else {
             throw new IllegalStateException("Unknown target");
         }
@@ -408,6 +418,8 @@ public class Troop extends GameObject {
         this.loseQuantity(reactDamage);
         damagePacks.add(new DamagePack(this, this.getLocation(), damage, destroy));
 
+        attacked = true;
+
         return damagePacks;
     }
 
@@ -430,6 +442,8 @@ public class Troop extends GameObject {
             destroy = this.loseQuantity(reactDamage);
             damagePacks.add(new DamagePack(this, this.getLocation(), damage, destroy));
         }
+
+        attacked = true;
 
         return damagePacks;
     }
