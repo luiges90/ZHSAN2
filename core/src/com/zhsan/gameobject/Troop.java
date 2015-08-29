@@ -299,6 +299,10 @@ public class Troop extends GameObject implements HasPointLocation {
         if (destArch != null && destArch.getBelongedFaction() != this.getBelongedFaction() && destArch.getEndurance() > 0) {
             return false;
         }
+        Troop t = scenario.getTroopAt(p);
+        if (t != null) {
+            return false;
+        }
         float val = scenario.getMilitaryTerrain(this.getKind(), scenario.getGameMap().getTerrainAt(p)).getAdaptability();
         if (val == Float.MAX_VALUE) {
             return false;
