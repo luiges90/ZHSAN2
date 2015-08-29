@@ -18,7 +18,7 @@ import java.util.*;
 /**
  * Created by Peter on 8/8/2015.
  */
-public class Troop extends GameObject implements HasLocation {
+public class Troop extends GameObject implements HasPointLocation {
 
     public static final String SAVE_FILE = "Troop.csv";
 
@@ -103,7 +103,7 @@ public class Troop extends GameObject implements HasLocation {
             return null;
         }
 
-        HasLocation target() {
+        HasPointLocation target() {
             switch (kind) {
                 case ATTACK_ARCH:
                     return scenario.getArchitectures().get(targetId);
@@ -374,14 +374,14 @@ public class Troop extends GameObject implements HasLocation {
         return true;
     }
 
-    public HasLocation getTarget() {
+    public HasPointLocation getTarget() {
         return order.target();
     }
 
     public List<DamagePack> attack() {
         if (attacked) return Collections.emptyList();
 
-        HasLocation target = order.target();
+        HasPointLocation target = order.target();
         if (target instanceof Architecture) {
             return attackArchitecture((Architecture) target);
         } else if (target instanceof Troop) {

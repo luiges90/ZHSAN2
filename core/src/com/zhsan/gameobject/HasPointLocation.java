@@ -5,7 +5,7 @@ import com.zhsan.common.Point;
 /**
  * Created by Peter on 29/8/2015.
  */
-public interface HasLocation {
+public interface HasPointLocation {
 
     public Point getLocation();
 

@@ -20,7 +20,7 @@ public class GameScenario {
     public interface OnTroopDone {
         public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc);
 
-        public void onAttackStepDone(Troop t, HasLocation target, List<DamagePack> damages);
+        public void onAttackStepDone(Troop t, HasPointLocation target, List<DamagePack> damages);
     }
 
     public static final int SAVE_VERSION = 2;
@@ -321,7 +321,7 @@ public class GameScenario {
                 Point oldLoc = t.getLocation();
 
                 List<DamagePack> damagePacks;
-                HasLocation target = t.getTarget();
+                HasPointLocation target = t.getTarget();
                 if (!t.stepForward()) {
                     damagePacks = t.attack();
                     it.remove();
