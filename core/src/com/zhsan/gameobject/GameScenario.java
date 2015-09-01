@@ -333,8 +333,8 @@ public class GameScenario {
                 Troop t = it.next();
                 Point oldLoc = t.getLocation();
 
-                HasPointLocation target = t.canAttackTarget();
                 if (!t.stepForward()) {
+                    HasPointLocation target = t.canAttackTarget();
                     if (target != null) {
                         onTroopDone.onStartAttackStep(t, target, () -> {
                             List<DamagePack> damagePacks = t.attack();
@@ -345,9 +345,10 @@ public class GameScenario {
                 } else {
                     Point newLoc = t.getLocation();
                     onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
-                        if (target != null) {
+                        HasPointLocation newTarget = t.canAttackTarget();
+                        if (newTarget != null) {
                             List<DamagePack> damagePacks = t.attack();
-                            onTroopDone.onAttackDone(t, target, damagePacks);
+                            onTroopDone.onAttackDone(t, newTarget, damagePacks);
                         }
                     });
                 }
