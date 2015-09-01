@@ -127,7 +127,7 @@ public class Troop extends GameObject implements HasPointLocation {
 
     private Order order = new Order(null, OrderKind.IDLE, null);
 
-    private boolean destroyed = false;
+    private volatile boolean destroyed = false;
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();

@@ -153,7 +153,10 @@ public class TroopTitleWidget extends WidgetGroup {
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        if (troop.isDestroyed()) return;
+        if (troop.isDestroyed()) {
+            dispose();
+            return;
+        }
 
         batch.draw(setting.background, setting.backgroundPos.x + getX(), setting.backgroundPos.y + getY(),
                 setting.backgroundPos.width, setting.backgroundPos.height);

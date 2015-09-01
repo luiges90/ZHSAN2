@@ -61,9 +61,7 @@ public class TroopAnimationLayer implements MapLayer {
     public void addPendingTroopAnimation(TroopAnimationLayer.PendingTroopAnimation animation) {
         if (animation.type == PendingTroopAnimationType.DESTROY) {
             // TODO show explosion
-            troopTitleWidgets.get(animation.troop).dispose();
-            troopTitleWidgets.remove(animation.troop);
-            troopDirections.remove(animation.troop);
+
         } else {
             pendingTroopAnimations.add(animation);
         }
@@ -95,8 +93,12 @@ public class TroopAnimationLayer implements MapLayer {
     @Override
     public void draw(GameScreen screen, String resPack, DrawingHelpers helpers,
                      int zoom, Batch batch, float parentAlpha) {
-        for (PendingTroopAnimation animation : new ArrayList<>(pendingTroopAnimations)) {
-            if (runningTroops.contains(animation.troop)) continue;
+        new ArrayList<>(pendingTroopAnimations).forEach(animation -> {
+            if (runningTroops.contains(animation.troop)) return;
+            if (animation.troop.isDestroyed()) {
+                pendingTroopAnimations.remove(animation);
+                return;
+            }
 
             runningTroops.add(animation.troop);
             pendingTroopAnimations.remove(animation);
@@ -109,7 +111,7 @@ public class TroopAnimationLayer implements MapLayer {
                     runningAnimators.add(new AttackAnimator(helpers, animation, frameCount));
                 }
             }
-        }
+        });
 
         Map<Troop, Point> drawnTroops = new HashMap<>();
 
@@ -120,6 +122,12 @@ public class TroopAnimationLayer implements MapLayer {
 
             Troop t = animator.getAnimation().troop;
             toDraw.remove(t);
+
+            if (t.isDestroyed()) {
+                troopDirections.remove(t);
+                animatorIterator.remove();
+                continue;
+            }
 
             Point px = animator.step();
             double direction = Point.getDirection(animator.getAnimation().from, animator.getAnimation().to);
@@ -142,6 +150,9 @@ public class TroopAnimationLayer implements MapLayer {
         }
 
         for (Troop t : toDraw) {
+            if (t.isDestroyed()) {
+                troopDirections.remove(t);
+            }
             if (helpers.isMapLocationOnScreen(t.getLocation())) {
                 double direction;
                 if (troopDirections.containsKey(t)) {
@@ -159,6 +170,9 @@ public class TroopAnimationLayer implements MapLayer {
         }
 
         drawnTroops.entrySet().forEach(t -> {
+            if (t.getKey().isDestroyed()) {
+                troopTitleWidgets.remove(t.getKey());
+            }
             TroopTitleWidget widget = troopTitleWidgets.get(t.getKey());
             if (widget == null) {
                 widget = new TroopTitleWidget(t.getKey());
