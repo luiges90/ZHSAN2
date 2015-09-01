@@ -32,12 +32,15 @@ public class TroopAnimationLayer implements MapLayer {
         public final Troop troop;
         public final PendingTroopAnimationType type;
         public final Point from, to;
+        public final GameScenario.OnTroopAnimationDone onTroopAnimationDone;
 
-        public PendingTroopAnimation(Troop troop, PendingTroopAnimationType type, Point from, Point to) {
+        public PendingTroopAnimation(Troop troop, PendingTroopAnimationType type, Point from, Point to,
+                                     GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
             this.troop = troop;
             this.type = type;
             this.from = from;
             this.to = to;
+            this.onTroopAnimationDone = onTroopAnimationDone;
         }
     }
 
@@ -125,6 +128,7 @@ public class TroopAnimationLayer implements MapLayer {
             drawnTroops.put(t, px);
 
             if (animator.isCompleted()) {
+                animator.getAnimation().onTroopAnimationDone.onTroopAnimationDone();
                 animatorIterator.remove();
                 runningTroops.remove(t);
             }
