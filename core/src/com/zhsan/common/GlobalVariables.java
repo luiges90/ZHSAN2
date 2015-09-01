@@ -58,6 +58,8 @@ public final class GlobalVariables {
 
     public static long aiTimeout = 20;
 
+    public static float personMovingSpeed = 8.0f;
+
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
 
@@ -101,6 +103,7 @@ public final class GlobalVariables {
             architectureDefenseEndurancePower = Float.parseFloat(XmlHelper.loadAttribute(node, "architectureDefenseEndurancePower"));
             baseDamage = Float.parseFloat(XmlHelper.loadAttribute(node, "baseDamage"));
             reactDamageFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "reactDamageFactor"));
+            personMovingSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "personMovingSpeed"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

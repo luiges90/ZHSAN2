@@ -3,7 +3,9 @@ package com.zhsan.gameobject;
 import com.badlogic.gdx.files.FileHandle;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Pair;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
@@ -419,8 +421,22 @@ public class Person extends GameObject {
         }
     }
 
+    public void moveToArchitecture(Point from, Architecture a) {
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from, a.getLocation()) / GlobalVariables.personMovingSpeed));
+        this.location = new LocationType(a);
+    }
+
     public String getDoingWorkString() {
         return getDoingWorkType().toDisplay();
+    }
+
+    public void advanceDay() {
+        if (this.movingDays > 0) {
+            this.movingDays--;
+            if (this.movingDays == 0) {
+                // TODO on arrival
+            }
+        }
     }
 
     @LuaAI.ExportToLua

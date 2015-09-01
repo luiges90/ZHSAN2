@@ -25,6 +25,8 @@ public class GameScenario {
         public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, OnTroopAnimationDone onTroopAnimationDone);
 
         public void onStartAttackStep(Troop t, HasPointLocation target, OnTroopAnimationDone onTroopAnimationDone);
+
+        public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks);
     }
 
     public static final int SAVE_VERSION = 2;
@@ -276,6 +278,11 @@ public class GameScenario {
         return new GameObjectList<>(troops, true);
     }
 
+    public void removeTroop(Troop t) {
+        militaries.remove(t.getMilitary());
+        troops.remove(t);
+    }
+
     public MilitaryTerrain getMilitaryTerrain(MilitaryKind kind, TerrainDetail terrain) {
         MilitaryTerrain mt = militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
         if (mt == null) {
@@ -315,22 +322,23 @@ public class GameScenario {
     public void advanceDay(OnTroopDone onTroopDone) {
         gameData.advanceDay();
         architectures.getAll().parallelStream().forEach(Architecture::advanceDay);
+        persons.getAll().parallelStream().forEach(Person::advanceDay);
 
         troops.getAll().parallelStream().forEach(Troop::initExecuteOrder);
         List<Troop> movingTroops = new ArrayList<>(troops.getAll());
         do {
+            // TODO move all troops in parallel
             Iterator<Troop> it = movingTroops.iterator();
             while (it.hasNext()) {
                 Troop t = it.next();
                 Point oldLoc = t.getLocation();
 
-                List<DamagePack> damagePacks;
                 HasPointLocation target = t.canAttackTarget();
                 if (!t.stepForward()) {
                     if (target != null) {
                         onTroopDone.onStartAttackStep(t, target, () -> {
-                            // damagePacks = t.attack();
-                            t.attack();
+                            List<DamagePack> damagePacks = t.attack();
+                            onTroopDone.onAttackDone(t, target, damagePacks);
                         });
                     }
                     it.remove();
@@ -338,7 +346,8 @@ public class GameScenario {
                     Point newLoc = t.getLocation();
                     onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
                         if (target != null) {
-                            t.attack();
+                            List<DamagePack> damagePacks = t.attack();
+                            onTroopDone.onAttackDone(t, target, damagePacks);
                         }
                     });
                 }

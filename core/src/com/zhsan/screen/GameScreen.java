@@ -328,6 +328,19 @@ public class GameScreen extends WidgetGroup {
                                     new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.ATTACK,
                                             t.getLocation(), target.getLocation(), onTroopAnimationDone));
                         }
+
+                        @Override
+                        public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks) {
+                            damagePacks.parallelStream().filter(d -> d.destroyed).forEach(d -> {
+                                if (d.object instanceof Troop) {
+                                    mapLayer.addPendingTroopAnimation(
+                                            new TroopAnimationLayer.PendingTroopAnimation((Troop) d.object, TroopAnimationLayer.PendingTroopAnimationType.DESTROY,
+                                                    t.getLocation(), t.getLocation(), null)
+                                    );
+                                }
+                            });
+                            // TODO add a new number display and troop destroy maplayer
+                        }
                     });
                     while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue
 

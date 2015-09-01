@@ -123,7 +123,11 @@ public class Troop extends GameObject implements HasPointLocation {
 
     private Point location;
 
+    private Architecture startArchitecture;
+
     private Order order = new Order(null, OrderKind.IDLE, null);
+
+    private boolean destroyed = false;
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();
@@ -140,6 +144,7 @@ public class Troop extends GameObject implements HasPointLocation {
                 data.location = Point.fromCSV(line[1]);
                 data.order = Order.fromCSV(scen, line[2], line[3]);
                 data.belongedSection = scen.getSections().get(Integer.parseInt(line[4]));
+                data.startArchitecture = scen.getArchitectures().get(Integer.parseInt(line[5]));
 
                 result.add(data);
             }
@@ -161,7 +166,8 @@ public class Troop extends GameObject implements HasPointLocation {
                         detail.location.toCSV(),
                         orderStr.x,
                         orderStr.y,
-                        String.valueOf(detail.belongedSection.getId())
+                        String.valueOf(detail.belongedSection.getId()),
+                        String.valueOf(detail.startArchitecture.getId())
                 });
             }
         } catch (IOException e) {
@@ -287,11 +293,17 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     private boolean checkDestroy() {
-        return this.getQuantity() < 0;
+        return this.getQuantity() <= 0;
     }
 
     private void destroy() {
-        // TODO destroy troop
+        destroyed = true;
+        this.getMilitary().getLeader().moveToArchitecture(this.getLocation(), this.startArchitecture);
+        scenario.removeTroop(this);
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     public boolean canMoveInto(Point p) {
