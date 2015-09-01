@@ -382,6 +382,17 @@ public class Troop extends GameObject implements HasPointLocation {
         return order.target();
     }
 
+    public HasPointLocation canAttackTarget() {
+        if (attacked) return null;
+
+        HasPointLocation target = order.target();
+        if ((target instanceof Architecture || target instanceof Troop) && isLocationInAttackRange(target.getLocation())) {
+            return target;
+        } else {
+            return null;
+        }
+    }
+
     public List<DamagePack> attack() {
         if (attacked) return Collections.emptyList();
 
@@ -390,10 +401,8 @@ public class Troop extends GameObject implements HasPointLocation {
             return attackArchitecture((Architecture) target);
         } else if (target instanceof Troop) {
             return attackTroop((Troop) target);
-        } else if (target == null) {
-            return Collections.emptyList();
         } else {
-            throw new IllegalStateException("Unknown target");
+            return Collections.emptyList();
         }
     }
 

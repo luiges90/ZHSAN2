@@ -17,10 +17,14 @@ import java.util.*;
  */
 public class GameScenario {
 
-    public interface OnTroopDone {
-        public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc);
+    public interface OnTroopAnimationDone {
+        public void onTroopAnimationDone();
+    }
 
-        public void onAttackStepDone(Troop t, HasPointLocation target, List<DamagePack> damages);
+    public interface OnTroopDone {
+        public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, OnTroopAnimationDone onTroopAnimationDone);
+
+        public void onStartAttackStep(Troop t, HasPointLocation target, OnTroopAnimationDone onTroopAnimationDone);
     }
 
     public static final int SAVE_VERSION = 2;
@@ -321,17 +325,22 @@ public class GameScenario {
                 Point oldLoc = t.getLocation();
 
                 List<DamagePack> damagePacks;
-                HasPointLocation target = t.getTarget();
+                HasPointLocation target = t.canAttackTarget();
                 if (!t.stepForward()) {
-                    damagePacks = t.attack();
+                    if (target != null) {
+                        onTroopDone.onStartAttackStep(t, target, () -> {
+                            // damagePacks = t.attack();
+                            t.attack();
+                        });
+                    }
                     it.remove();
                 } else {
                     Point newLoc = t.getLocation();
-                    onTroopDone.onTroopStepDone(t, oldLoc, newLoc);
-                    damagePacks = t.attack();
-                }
-                if (damagePacks.size() > 0) {
-                    onTroopDone.onAttackStepDone(t, target, damagePacks);
+                    onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
+                        if (target != null) {
+                            t.attack();
+                        }
+                    });
                 }
             }
         } while (movingTroops.size() > 0);

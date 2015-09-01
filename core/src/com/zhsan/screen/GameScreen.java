@@ -316,17 +316,17 @@ public class GameScreen extends WidgetGroup {
 
                     getScenario().advanceDay(new GameScenario.OnTroopDone() {
                         @Override
-                        public void onTroopStepDone(Troop t, Point oldLoc, Point newLoc) {
+                        public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
                             mapLayer.addPendingTroopAnimation(
                                     new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
-                                            oldLoc, newLoc));
+                                            oldLoc, newLoc, onTroopAnimationDone));
                         }
 
                         @Override
-                        public void onAttackStepDone(Troop t, HasPointLocation target, List<DamagePack> damages) {
+                        public void onStartAttackStep(Troop t, HasPointLocation target, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
                             mapLayer.addPendingTroopAnimation(
                                     new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.ATTACK,
-                                            t.getLocation(), target.getLocation()));
+                                            t.getLocation(), target.getLocation(), onTroopAnimationDone));
                         }
                     });
                     while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue
