@@ -100,9 +100,10 @@ public class DamageLayer implements MapLayer {
         return Utility.reverse(Arrays.copyOfRange(r, 0, digits));
     }
 
-    private void drawDamage(DamagePack pack, DrawingHelpers helpers, Batch batch, float parentAlpha) {
+    private void drawDamage(DamagePack pack, DrawingHelpers helpers, int zoom, Batch batch, float parentAlpha) {
         if (helpers.isMapLocationOnScreen(pack.location)) {
             Point drawAt = helpers.getPixelFromMapLocation(pack.location);
+            drawAt = new Point(drawAt.x, drawAt.y + zoom / 2 - (height / 2));
             int[] digits = extractDigits(pack.quantity);
 
             CombatNumberRow row;
@@ -131,14 +132,19 @@ public class DamageLayer implements MapLayer {
 
     @Override
     public void draw(GameScreen screen, String resPack, DrawingHelpers helpers, int zoom, Batch batch, float parentAlpha) {
-        showingPacks.addAll(pendingPacks.stream().map(pack -> new PackTime(pack, drawTime)).collect(Collectors.toList()));
+        Iterator<DamagePack> itPack = pendingPacks.iterator();
+        while (itPack.hasNext()) {
+            showingPacks.add(new PackTime(itPack.next(), drawTime));
+            itPack.remove();
+        }
+        
         Iterator<PackTime> it = showingPacks.iterator();
         while (it.hasNext()) {
             PackTime pt = it.next();
             if (drawTime - pt.beginTime >= GlobalVariables.damageShowTime) {
                 it.remove();
             } else {
-                drawDamage(pt.pack, helpers, batch, parentAlpha);
+                drawDamage(pt.pack, helpers, zoom, batch, parentAlpha);
             }
         }
         drawTime++;
