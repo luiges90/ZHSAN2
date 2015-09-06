@@ -100,16 +100,24 @@ public class TroopAnimationLayer implements MapLayer {
                 return;
             }
 
-            runningTroops.add(animation.troop);
             pendingTroopAnimations.remove(animation);
+
+            Animator animator;
+            if (animation.type == PendingTroopAnimationType.MOVE) {
+                animator = new MoveAnimator(helpers, animation);
+            } else if (animation.type == PendingTroopAnimationType.ATTACK) {
+                TroopAnimation ta = screen.getScenario().getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ATTACK.getId());
+                int frameCount = ta.getFrameCount() * ta.getIdleFrame();
+                animator = new AttackAnimator(helpers, animation, frameCount);
+            } else {
+                throw new IllegalArgumentException("Unknown animation type " + animation.type);
+            }
+
             if (helpers.isMapLocationOnScreen(animation.from) || helpers.isMapLocationOnScreen(animation.to)) {
-                if (animation.type == PendingTroopAnimationType.MOVE) {
-                    runningAnimators.add(new MoveAnimator(helpers, animation));
-                } else if (animation.type == PendingTroopAnimationType.ATTACK) {
-                    TroopAnimation ta = screen.getScenario().getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ATTACK.getId());
-                    int frameCount = ta.getFrameCount() * ta.getIdleFrame();
-                    runningAnimators.add(new AttackAnimator(helpers, animation, frameCount));
-                }
+                runningTroops.add(animation.troop);
+                runningAnimators.add(animator);
+            } else {
+                animator.getAnimation().onTroopAnimationDone.onTroopAnimationDone();
             }
         });
 
