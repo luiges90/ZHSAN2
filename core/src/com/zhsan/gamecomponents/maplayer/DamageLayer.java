@@ -90,14 +90,14 @@ public class DamageLayer implements MapLayer {
         for (int i = 0; i < d10.length; ++i) {
             r[i] = x / d10[i] % 10;
             if (r[i] > 0) {
-                digits++;
+                digits = i + 1;
             }
         }
 
         if (digits == 0) {
             digits = 1;
         }
-        return Utility.reverse(Arrays.copyOfRange(r, 0, digits - 1));
+        return Utility.reverse(Arrays.copyOfRange(r, 0, digits));
     }
 
     private void drawDamage(DamagePack pack, DrawingHelpers helpers, Batch batch, float parentAlpha) {
@@ -122,7 +122,7 @@ public class DamageLayer implements MapLayer {
 
             for (int i = 0; i < digits.length; ++i){
                 TextureRegion n = new TextureRegion(combatNumber, digits[i] * width, row.ordinal() * height, width, height);
-                batch.draw(n, drawAt.x + i * width, drawAt.y);
+                batch.draw(n, drawAt.x + (i + 1) * width, drawAt.y);
             }
         }
     }

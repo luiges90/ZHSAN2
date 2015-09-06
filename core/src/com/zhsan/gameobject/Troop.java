@@ -440,8 +440,8 @@ public class Troop extends GameObject implements HasPointLocation {
 
         int reactDamage;
         reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
-        this.loseQuantity(reactDamage);
-        damagePacks.add(new DamagePack(this, this.getLocation(), -damage, destroy));
+        destroy = this.loseQuantity(reactDamage);
+        damagePacks.add(new DamagePack(this, this.getLocation(), -reactDamage, destroy));
 
         attacked = true;
 
@@ -465,7 +465,7 @@ public class Troop extends GameObject implements HasPointLocation {
         if (target.isLocationInAttackRange(this.getLocation())) {
             reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
             destroy = this.loseQuantity(reactDamage);
-            damagePacks.add(new DamagePack(this, this.getLocation(), -damage, destroy));
+            damagePacks.add(new DamagePack(this, this.getLocation(), -reactDamage, destroy));
         }
 
         attacked = true;
