@@ -331,6 +331,7 @@ public class GameScreen extends WidgetGroup {
 
                         @Override
                         public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks) {
+                            mapLayer.showDamage(damagePacks);
                             damagePacks.parallelStream().filter(d -> d.destroyed).forEach(d -> {
                                 if (d.object instanceof Troop) {
                                     mapLayer.addPendingTroopAnimation(
@@ -339,7 +340,6 @@ public class GameScreen extends WidgetGroup {
                                     );
                                 }
                             });
-                            // TODO add a new number display and troop destroy maplayer
                         }
                     });
                     while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue

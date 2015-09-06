@@ -60,6 +60,9 @@ public final class GlobalVariables {
 
     public static float personMovingSpeed = 8.0f;
 
+    public static int damageShowTime = 60;
+
+
     public static void load() {
         FileHandle f = Gdx.files.external(Paths.DATA + "GlobalVariables.xml");
 
@@ -104,6 +107,7 @@ public final class GlobalVariables {
             baseDamage = Float.parseFloat(XmlHelper.loadAttribute(node, "baseDamage"));
             reactDamageFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "reactDamageFactor"));
             personMovingSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "personMovingSpeed"));
+            damageShowTime = Integer.parseInt(XmlHelper.loadAttribute(node, "damageShowTime"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

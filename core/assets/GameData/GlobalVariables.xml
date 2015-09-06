@@ -31,4 +31,5 @@
         baseDamage="500"
         reactDamageFactor="0.5"
         personMovingSpeed="8.0"
+        damageShowTime="60"
         />

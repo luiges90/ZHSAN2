@@ -17,4 +17,27 @@ public class DamagePack {
         this.quantity = quantity;
         this.destroyed = destroyed;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DamagePack that = (DamagePack) o;
+
+        if (quantity != that.quantity) return false;
+        if (destroyed != that.destroyed) return false;
+        if (object != null ? !object.equals(that.object) : that.object != null) return false;
+        return !(location != null ? !location.equals(that.location) : that.location != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = object != null ? object.hashCode() : 0;
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + quantity;
+        result = 31 * result + (destroyed ? 1 : 0);
+        return result;
+    }
 }

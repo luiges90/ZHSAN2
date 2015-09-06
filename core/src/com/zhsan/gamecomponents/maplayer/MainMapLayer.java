@@ -78,6 +78,7 @@ public class MainMapLayer extends WidgetGroup {
 
     private List<MapLayer> mapLayers = new ArrayList<>();
     private TroopAnimationLayer troopAnimationLayer;
+    private DamageLayer damageLayer;
 
     private LocationSelectionListener locationSelectionListener;
 
@@ -133,9 +134,11 @@ public class MainMapLayer extends WidgetGroup {
         this.addListener(new GetKeyFocusWhenEntered(this));
 
         troopAnimationLayer = new TroopAnimationLayer();
+        damageLayer = new DamageLayer();
         mapLayers.add(new ArchitectureLayer(captionSize));
         mapLayers.add(new FacilityLayer());
         mapLayers.add(troopAnimationLayer);
+        mapLayers.add(damageLayer);
         mapLayers.add(new HighlightLayer(screen.getScenario()));
     }
 
@@ -206,6 +209,10 @@ public class MainMapLayer extends WidgetGroup {
 
     public void addPendingTroopAnimation(TroopAnimationLayer.PendingTroopAnimation animation) {
         troopAnimationLayer.addPendingTroopAnimation(animation);
+    }
+
+    public void showDamage(List<DamagePack> pack) {
+        damageLayer.addDamagePack(pack);
     }
 
     public boolean isNoPendingTroopAnimations() {
