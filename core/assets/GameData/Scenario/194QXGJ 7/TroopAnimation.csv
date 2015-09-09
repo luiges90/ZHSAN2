@@ -5,3 +5,4 @@ ID,名称,檔案名稱,帧数,停留帧数,每格大小
 4,BeAttacked,BeAttacked.png,10,4,128
 5,Cast,Cast.png,10,4,128
 6,BeCasted,BeCasted.png,10,4,128
+101,Routed,Routed.png,8,4,100

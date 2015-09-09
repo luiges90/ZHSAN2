@@ -22,7 +22,8 @@ public final class TroopAnimation extends GameObject {
         ATTACK(3),
         BE_ATTACKED(4),
         CAST(5),
-        BE_CASTED(6);
+        BE_CASTED(6),
+        ROUTED(101);
 
         private final int id;
         TroopAnimationKind(int id) {

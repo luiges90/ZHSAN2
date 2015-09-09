@@ -334,10 +334,7 @@ public class GameScreen extends WidgetGroup {
                             mapLayer.showDamage(damagePacks);
                             damagePacks.parallelStream().filter(d -> d.destroyed).forEach(d -> {
                                 if (d.object instanceof Troop) {
-                                    mapLayer.addPendingTroopAnimation(
-                                            new TroopAnimationLayer.PendingTroopAnimation((Troop) d.object, TroopAnimationLayer.PendingTroopAnimationType.DESTROY,
-                                                    t.getLocation(), t.getLocation(), null)
-                                    );
+                                    mapLayer.addTileAnimation(t.getLocation(), scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ROUTED.getId()));
                                 }
                             });
                         }

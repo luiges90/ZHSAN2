@@ -25,7 +25,7 @@ import java.util.concurrent.BlockingQueue;
 public class TroopAnimationLayer implements MapLayer {
 
     public enum PendingTroopAnimationType {
-        MOVE, ATTACK, DESTROY
+        MOVE, ATTACK
     }
 
     public static class PendingTroopAnimation {
@@ -59,12 +59,7 @@ public class TroopAnimationLayer implements MapLayer {
     private Map<Troop, Double> troopDirections = new HashMap<>();
 
     public void addPendingTroopAnimation(TroopAnimationLayer.PendingTroopAnimation animation) {
-        if (animation.type == PendingTroopAnimationType.DESTROY) {
-            // TODO show explosion
-
-        } else {
-            pendingTroopAnimations.add(animation);
-        }
+        pendingTroopAnimations.add(animation);
     }
 
     public boolean isNoPendingTroopAnimations() {
