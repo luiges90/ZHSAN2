@@ -213,7 +213,7 @@
     </InternalTab>
     <MilitaryTab>
         <Background FileName="Military/Background.png" X="0" Y="-64"/>
-        <MilitaryTable X="32" Y="124" Width="200" Height="210">
+        <MilitaryTable X="32" Y="172" Width="300" Height="232">
             <Portrait Width="36" Height="45"
                     BorderColor="4294967040"/>
             <Caption Width="60" Height="22"
@@ -223,32 +223,30 @@
                      FontColor="4294967295"
                      Align="Center"/>
         </MilitaryTable>
-        <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="26" Y="96" Width="39" Height="22"/>
-        <Reorganize FileName="Military/Reorganize.png" Selected="Military/ReorganizeSelected.png" X="68" Y="96" Width="39" Height="22"/>
-        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" X="110" Y="96" Width="39" Height="22"/>
-        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png" X="152" Y="96" Width="39" Height="22"/>
-        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png" X="194" Y="96" Width="39" Height="22"/>
-        <StaticText X="30" Y="76" Text="兵種"
+        <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="32" Y="140" Width="51" Height="29"/>
+        <Reorganize FileName="Military/Reorganize.png" Selected="Military/ReorganizeSelected.png" X="87" Y="140" Width="51" Height="29"/>
+        <Merge FileName="Military/Merge.png" Selected="Military/MergeSelected.png" X="141" Y="140" Width="51" Height="29"/>
+        <Disband FileName="Military/Disband.png" Selected="Military/DisbandSelected.png" X="195" Y="140" Width="51" Height="29"/>
+        <Upgrade FileName="Military/Upgrade.png" Selected="Military/UpgradeSelected.png" X="250" Y="140" Width="51" Height="29"/>
+        <StaticText X="32" Y="116" Text="兵種"
                     FontName="方正隶变_GBK"
-                    FontSize="16"
+                    FontSize="18"
                     FontStyle="Bold"
                     FontColor="4294934528"
-                    Align="Center" Width="39"/>
-        <StaticText X="70" Y="76" Text="兵數"
+                    Align="Center" Width="70"/>
+        <StaticText X="106" Y="116" Text="兵數"
                     FontName="方正隶变_GBK"
-                    FontSize="16"
+                    FontSize="18"
                     FontStyle="Bold"
                     FontColor="4294934528"
                     Align="Center" Width="80"/>
-        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" X="150" Y="72" Width="39"
-                 Height="22"/>
-        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="190" Y="72" Width="39"
-                  Height="22"/>
-        <MilitaryList X="30" Y="0" Width="200" Height="68"
-                      NameWidth="58" QuantityWidth="66" RecruitWidth="38" TrainWidth="38"
+        <Recruit FileName="Military/Recruit.png" Selected="Military/RecruitSelected.png" X="195" Y="108" Width="51" Height="29"/>
+        <Training FileName="Military/Training.png" Selected="Military/TrainingSelected.png" X="250" Y="108" Width="51" Height="29"/>
+        <MilitaryList X="30" Y="-24" Width="300" Height="132"
+                      NameWidth="70" QuantityWidth="80" RecruitWidth="51" TrainWidth="51"
                       RowHeight="20"
                       FontName="方正隶变_GBK"
-                      FontSize="14"
+                      FontSize="18"
                       FontStyle="Regular"
                       FontColor="4294967295"
                       Align="Center"/>
