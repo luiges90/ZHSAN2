@@ -182,7 +182,9 @@ public class TroopTitleWidget extends WidgetGroup {
     }
 
     public static void disposeAll() {
-        setting.dispose();
+        if (setting != null) {
+            setting.dispose();
+        }
     }
 
 }

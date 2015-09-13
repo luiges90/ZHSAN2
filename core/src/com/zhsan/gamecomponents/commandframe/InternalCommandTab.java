@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.zhsan.common.GlobalVariables;
+import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
@@ -56,6 +57,7 @@ public class InternalCommandTab implements CommandTab {
     private List<InternalPortraitType> internalPortraits = new ArrayList<>();
 
     private Texture background;
+    private Point backgroundPos;
 
     private boolean mayorSet;
     private Person mayor;
@@ -75,6 +77,7 @@ public class InternalCommandTab implements CommandTab {
                 background = new Texture(Gdx.files.external(
                         ArchitectureCommandFrame.DATA_PATH + XmlHelper.loadAttribute(n, "FileName")
                 ));
+                backgroundPos = Point.fromXml(n);
             } else if (n.getNodeName().equals("MayorPortrait")) {
                 mayorPortraitPos = XmlHelper.loadRectangleFromXml(n);
                 portraitBorder = new Texture(Gdx.files.external
@@ -148,7 +151,7 @@ public class InternalCommandTab implements CommandTab {
     }
 
     public void drawBackground(Batch batch, float parentAlpha) {
-        batch.draw(background, parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight());
+        batch.draw(background, parent.getX() + backgroundPos.x, parent.getY() + backgroundPos.y, parent.getWidth(), parent.getHeight());
     }
 
     @Override
@@ -214,20 +217,6 @@ public class InternalCommandTab implements CommandTab {
                         parent.getX() + internalPortraitType.position.x, parent.getY() + internalPortraitType.position.y,
                         internalPortraitType.position.width, internalPortraitType.position.height);
             }
-
-            batch.end();
-
-            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-
-            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-            shapeRenderer.setColor(internalPortraitType.borderColor);
-            shapeRenderer.rect(parent.getX() + internalPortraitType.position.x, parent.getY() + internalPortraitType.position.y,
-                    internalPortraitType.position.width, internalPortraitType.position.height);
-
-            shapeRenderer.end();
-
-            batch.begin();
         }
     }
 

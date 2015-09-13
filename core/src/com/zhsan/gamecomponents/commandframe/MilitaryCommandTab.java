@@ -7,10 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.ImageWidget;
@@ -35,9 +33,10 @@ import java.util.List;
 public class MilitaryCommandTab implements CommandTab {
 
     private Texture background;
+    private Point backgroundPos;
 
-    private StateTexture campaign, newMilitary, recruit, training, merge, disband, upgrade;
-    private Rectangle campaignPos, newMilitaryPos, recruitPos, trainingPos, mergePos, disbandPos, upgradePos;
+    private StateTexture reorganize, newMilitary, recruit, training, merge, disband, upgrade;
+    private Rectangle reorganizePos, newMilitaryPos, recruitPos, trainingPos, mergePos, disbandPos, upgradePos;
 
     private List<TextWidget<ArchitectureCommandFrame.TextType>> textWidgets = new ArrayList<>();
 
@@ -66,6 +65,7 @@ public class MilitaryCommandTab implements CommandTab {
                 background = new Texture(Gdx.files.external(
                         ArchitectureCommandFrame.DATA_PATH + XmlHelper.loadAttribute(n, "FileName")
                 ));
+                backgroundPos = Point.fromXml(n);
             } else if (n.getNodeName().equals("MilitaryTable")) {
                 militaryTablePos = XmlHelper.loadRectangleFromXml(n);
                 NodeList child = n.getChildNodes();
@@ -81,9 +81,9 @@ public class MilitaryCommandTab implements CommandTab {
                         militaryTableCaptionTemplate = new TextWidget<>(TextWidget.Setting.fromXml(n2));
                     }
                 }
-            } else if (n.getNodeName().equals("Campaign")) {
-                campaign = StateTexture.fromXml(ArchitectureCommandFrame.DATA_PATH, n);
-                campaignPos = XmlHelper.loadRectangleFromXml(n);
+            } else if (n.getNodeName().equals("Reorganize")) {
+                reorganize = StateTexture.fromXml(ArchitectureCommandFrame.DATA_PATH, n);
+                reorganizePos = XmlHelper.loadRectangleFromXml(n);
             } else if (n.getNodeName().equals("New")) {
                 newMilitary = StateTexture.fromXml(ArchitectureCommandFrame.DATA_PATH, n);
                 newMilitaryPos = XmlHelper.loadRectangleFromXml(n);
@@ -118,12 +118,12 @@ public class MilitaryCommandTab implements CommandTab {
 
     @Override
     public void drawBackground(Batch batch, float parentAlpha) {
-        batch.draw(background, parent.getX(), parent.getY(), parent.getWidth(), parent.getHeight());
+        batch.draw(background, parent.getX() + backgroundPos.x, parent.getY() + backgroundPos.y, parent.getWidth(), parent.getHeight());
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(campaign.get(), parent.getX() + campaignPos.x, parent.getY() + campaignPos.y, campaignPos.width, campaignPos.height);
+        batch.draw(reorganize.get(), parent.getX() + reorganizePos.x, parent.getY() + reorganizePos.y, reorganizePos.width, reorganizePos.height);
         batch.draw(newMilitary.get(), parent.getX() + newMilitaryPos.x, parent.getY() + newMilitaryPos.y, newMilitaryPos.width, newMilitaryPos.height);
         batch.draw(recruit.get(), parent.getX() + recruitPos.x, parent.getY() + recruitPos.y, recruitPos.width, recruitPos.height);
         batch.draw(training.get(), parent.getX() + trainingPos.x, parent.getY() + trainingPos.y, trainingPos.width, trainingPos.height);
@@ -275,7 +275,7 @@ public class MilitaryCommandTab implements CommandTab {
     public void dispose() {
         textWidgets.forEach(TextWidget::dispose);
         background.dispose();
-        campaign.dispose();
+        reorganize.dispose();
         newMilitary.dispose();
         recruit.dispose();
         training.dispose();
@@ -293,10 +293,10 @@ public class MilitaryCommandTab implements CommandTab {
 
     @Override
     public void onMouseMove(float x, float y) {
-        if (campaignPos.contains(x, y)) {
-            campaign.setState(StateTexture.State.SELECTED);
+        if (reorganizePos.contains(x, y)) {
+            reorganize.setState(StateTexture.State.SELECTED);
         } else {
-            campaign.setState(StateTexture.State.NORMAL);
+            reorganize.setState(StateTexture.State.NORMAL);
         }
         if (newMilitaryPos.contains(x, y)) {
             newMilitary.setState(StateTexture.State.SELECTED);
@@ -360,7 +360,7 @@ public class MilitaryCommandTab implements CommandTab {
                         }
                         invalidateListPanes();
                     });
-        } else if (campaignPos.contains(x, y) && parent.getCurrentArchitecture().getCampaignableMilitaries().size() > 0
+        } else if (reorganizePos.contains(x, y) && parent.getCurrentArchitecture().getCampaignableMilitaries().size() > 0
                 && parent.getCurrentArchitecture().getCampaignPosition() != null) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.CAMPAIGN), TabListGameFrame.ListKindType.MILITARY,
                     parent.getCurrentArchitecture().getCampaignableMilitaries(), TabListGameFrame.Selection.SINGLE,
