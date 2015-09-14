@@ -318,6 +318,14 @@ public class Architecture extends GameObject implements HasPointLocation {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this);
     }
 
+    public GameObjectList<Military> getMilitariesWithLeader() {
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.getLeader() != null);
+    }
+
+    public GameObjectList<Military> getMilitariesWithoutLeader() {
+        return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.getLeader() == null);
+    }
+
     public GameObjectList<Military> getRecruitableMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.recruitable());
     }
