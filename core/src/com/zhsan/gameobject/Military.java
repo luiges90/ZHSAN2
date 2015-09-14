@@ -237,6 +237,11 @@ public class Military extends GameObject {
                 this.getLocation() instanceof Architecture && ((Architecture) this.getLocation()).getWorkingPersons(Person.DoingWork.TRAINING).size() > 0;
     }
 
+    public boolean isCampaignable() {
+        return getQuantity() > 0 && getMorale() > 0 &&
+                getLeader() != null && getLeader().getBelongedFaction() == getBelongedFaction();
+    }
+
     public Section getBelongedSection() {
         GameObject t = location.get();
         if (t instanceof Architecture) {

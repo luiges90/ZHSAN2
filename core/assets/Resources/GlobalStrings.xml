@@ -41,4 +41,7 @@
         AttackPoint="攻擊(%d,%d)"
         AttackTarget="攻擊%s"
         TroopName="%s隊"
+        MilitaryQuantityShort="兵"
+        MilitaryMoraleShort="士"
+        MilitaryCombativityShort="戰"
         />

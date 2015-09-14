@@ -46,12 +46,12 @@ public class MilitaryCommandTab implements CommandTab {
     private Color selectedBorderColor;
 
     private Rectangle militaryListPos, militaryTablePos;
-    private Point militaryTablePortraitSize, militaryTableCaptionSize;
+    private Point militaryTablePortraitSize, militaryTableCaptionSize, militaryTableDetailSize;
     private int listNameWidth, listRecruitWidth, listTrainWidth, listQuantityWidth, listRowHeight;
 
     private ScrollPane militaryBottomPane, militaryTopPane;
     private Color militaryTablePortraitColor;
-    private TextWidget<Military> militaryListTextTemplate, militaryTableCaptionTemplate;
+    private TextWidget<Military> militaryListTextTemplate, militaryTableCaptionTemplate, militaryTableDetailTemplate;
 
     private List<TextWidget<?>> showingTextWidgets = new ArrayList<>();
 
@@ -87,6 +87,9 @@ public class MilitaryCommandTab implements CommandTab {
                     } else if (n2.getNodeName().equals("Caption")) {
                         militaryTableCaptionSize = Point.fromXmlAsSize(n2);
                         militaryTableCaptionTemplate = new TextWidget<>(TextWidget.Setting.fromXml(n2));
+                    } else if (n2.getNodeName().equals("Detail")) {
+                        militaryTableDetailSize = Point.fromXmlAsSize(n2);
+                        militaryTableDetailTemplate = new TextWidget<>(TextWidget.Setting.fromXml(n2));
                     }
                 }
             } else if (n.getNodeName().equals("Reorganize")) {
@@ -237,11 +240,11 @@ public class MilitaryCommandTab implements CommandTab {
             contentTable.add(train).width(listTrainWidth).height(listRowHeight).center();
             rowWidgets.add(train);
 
-            rowWidgets.forEach(x -> x.addListener(new InputListener(){
+            rowWidgets.forEach(x -> x.addListener(new InputListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     currentMilitary = m;
-                    currentMilitaryPos = new Rectangle(name.getX() + militaryTablePos.getX(), name.getY() - name.getHeight(),
+                    currentMilitaryPos = new Rectangle(name.getX() + militaryListPos.getX(), name.getY() + militaryListPos.getY(),
                             militaryListPos.getWidth(), name.getHeight());
                     return true;
                 }
@@ -279,16 +282,41 @@ public class MilitaryCommandTab implements CommandTab {
             portrait.setExtra(m);
             item.add(portrait).width(militaryTablePortraitSize.x).height(militaryTablePortraitSize.y);
 
+            Table detail = new Table();
+
             TextWidget<Military> caption = new TextWidget<>(militaryTableCaptionTemplate);
             caption.setExtra(m);
             caption.setText(m.getName());
-            item.add(caption).width(militaryTableCaptionSize.x).height(militaryTableCaptionSize.y);
+            detail.add(caption).width(militaryTableCaptionSize.x).height(militaryTableCaptionSize.y).row();
+
+            TextWidget<Military> quantity = new TextWidget<>(militaryTableDetailTemplate);
+            quantity.setExtra(m);
+            quantity.setText(GlobalStrings.getString(GlobalStrings.Keys.MILITARY_QUANTITY_SHORT) + m.getQuantity());
+            detail.add(quantity).width(militaryTableDetailSize.x).height(militaryTableDetailSize.y).row();
+
+            TextWidget<Military> morale = new TextWidget<>(militaryTableDetailTemplate);
+            morale.setExtra(m);
+            morale.setText(GlobalStrings.getString(GlobalStrings.Keys.MILITARY_MORALE_SHORT) + m.getMorale());
+            detail.add(morale).width(militaryTableDetailSize.x).height(militaryTableDetailSize.y).row();
+
+            TextWidget<Military> combativity = new TextWidget<>(militaryTableDetailTemplate);
+            combativity.setExtra(m);
+            combativity.setText(GlobalStrings.getString(GlobalStrings.Keys.MILITARY_COMBATIVITY_SHORT) + m.getCombativity());
+            detail.add(combativity).width(militaryTableDetailSize.x).height(militaryTableDetailSize.y).row();
+
+            detail.top();
+            item.add(detail);
 
             item.addListener(new InputListener(){
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    m.startCampaign(parent.getCurrentArchitecture().getCampaignPosition());
-                    invalidateListPanes();
+                    currentMilitary = m;
+                    currentMilitaryPos = new Rectangle(item.getX() + militaryTablePos.getX(), item.getY() + militaryTablePos.getY(),
+                            item.getWidth(), item.getHeight());
+                    if (m.isCampaignable()) {
+                        // m.startCampaign(parent.getCurrentArchitecture().getCampaignPosition());
+                        invalidateListPanes();
+                    }
                     return true;
                 }
             });

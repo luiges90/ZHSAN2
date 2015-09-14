@@ -217,12 +217,18 @@
         <MilitaryTable X="32" Y="172" Width="300" Height="232">
             <Portrait Width="50" Height="62"
                     BorderColor="4294967040"/>
-            <Caption Width="100" Height="24"
+            <Caption Width="80" Height="24"
                      FontName="方正隶变_GBK"
                      FontSize="18"
                      FontStyle="Regular"
                      FontColor="4294934528"
                      Align="Left"/>
+            <Detail Width="80" Height="22"
+                    FontName="方正隶变_GBK"
+                    FontSize="14"
+                    FontStyle="Regular"
+                    FontColor="4294967295"
+                    Align="Left"/>
         </MilitaryTable>
         <New FileName="Military/New.png" Selected="Military/NewSelected.png" X="32" Y="140" Width="51" Height="29"/>
         <Reorganize FileName="Military/Reorganize.png" Selected="Military/ReorganizeSelected.png" X="87" Y="140" Width="51" Height="29"/>

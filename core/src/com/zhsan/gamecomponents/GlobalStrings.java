@@ -60,7 +60,10 @@ public class GlobalStrings {
         MOVE_TO("MoveTo"),
         ATTACK_POINT("AttackPoint"),
         ATTACK_TARGET("AttackTarget"),
-        TROOP_NAME("TroopName");
+        TROOP_NAME("TroopName"),
+        MILITARY_QUANTITY_SHORT("MilitaryQuantityShort"),
+        MILITARY_MORALE_SHORT("MilitaryMoraleShort"),
+        MILITARY_COMBATIVITY_SHORT("MilitaryCombativityShort");
 
         private final String xmlName;
         Keys(String name) {
