@@ -347,7 +347,7 @@ public class GameScenario {
                 } else {
                     Point newLoc = t.getLocation();
                     onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
-                        if (t.tryEnter()) {
+                        if (t.tryEnter(newLoc)) {
                             return;
                         }
                         if (target != null) {

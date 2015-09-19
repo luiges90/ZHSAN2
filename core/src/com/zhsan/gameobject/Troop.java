@@ -417,10 +417,10 @@ public class Troop extends GameObject implements HasPointLocation {
         }
     }
 
-    public boolean tryEnter() {
+    public boolean tryEnter(Point p) {
         if (order.kind == OrderKind.MOVE_ENTER) {
             Architecture a = scenario.getArchitectures().get(order.targetId);
-            if (canEnter(a)) {
+            if (canEnter(p, a)) {
                 enter(a);
                 return true;
             }
@@ -508,8 +508,8 @@ public class Troop extends GameObject implements HasPointLocation {
         return false;
     }
 
-    public boolean canEnter(Architecture a) {
-        Iterator<Point> points = location.spiralOutIterator(1);
+    public boolean canEnter(Point from, Architecture a) {
+        Iterator<Point> points = from.spiralOutIterator(1);
         while (points.hasNext()) {
             Point p = points.next();
             Architecture arch = scenario.getArchitectureAt(p);
