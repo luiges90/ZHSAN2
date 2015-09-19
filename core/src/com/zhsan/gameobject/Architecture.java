@@ -371,6 +371,18 @@ public class Architecture extends GameObject implements HasPointLocation {
         return null;
     }
 
+    public List<Point> getCampaignablePositions() {
+        List<Point> result = new ArrayList<>();
+        Iterator<Point> it = this.getLocation().spiralOutIterator(1);
+        while (it.hasNext()) {
+            Point p = it.next();
+            if (scenario.getTroopAt(p) == null) {
+                result.add(p);
+            }
+        }
+        return result;
+    }
+
     public double distanceTo(Architecture a) {
         return getLocation().distanceTo(a.getLocation());
     }

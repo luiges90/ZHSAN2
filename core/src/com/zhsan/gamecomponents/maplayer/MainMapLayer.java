@@ -202,6 +202,11 @@ public class MainMapLayer extends WidgetGroup {
         }
     }
 
+    public void startSelectingLocation(List<Point> candidates, LocationSelectionListener listener) {
+        locationSelectionListener = listener;
+        mapLayers.forEach(l -> l.onStartSelectingLocation(candidates));
+    }
+
     public void startSelectingLocation(Troop troop, LocationSelectionListener listener) {
         if (locationSelectionListener != null) {
             throw new IllegalStateException("Location selection has been started.");

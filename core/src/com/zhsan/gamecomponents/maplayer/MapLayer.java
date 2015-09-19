@@ -5,6 +5,8 @@ import com.zhsan.common.Point;
 import com.zhsan.gameobject.Troop;
 import com.zhsan.screen.GameScreen;
 
+import java.util.List;
+
 /**
  * Created by Peter on 4/8/2015.
  */
@@ -21,6 +23,10 @@ public interface MapLayer {
     public void dispose();
 
     public default void onStartSelectingLocation(Troop troop) {
+        // no-op
+    }
+
+    public default void onStartSelectingLocation(List<Point> candidates) {
         // no-op
     }
 

@@ -314,8 +314,11 @@ public class MilitaryCommandTab implements CommandTab {
                     currentMilitaryPos = new Rectangle(item.getX() + militaryTablePos.getX(), item.getY() + militaryTablePos.getY(),
                             item.getWidth(), item.getHeight());
                     if (m.isCampaignable()) {
-                        // m.startCampaign(parent.getCurrentArchitecture().getCampaignPosition());
-                        invalidateListPanes();
+                        parent.getScreen().getMapLayer()
+                                .startSelectingLocation(parent.getCurrentArchitecture().getCampaignablePositions(), p -> {
+                                    m.startCampaign(p);
+                                    invalidateListPanes();
+                                });
                     }
                     return true;
                 }

@@ -47,6 +47,11 @@ public class HighlightLayer implements MapLayer {
     }
 
     @Override
+    public void onStartSelectingLocation(List<Point> candidates) {
+        moveToHighlight = candidates;
+    }
+
+    @Override
     public void onEndSelectingLocation() {
         moveToHighlight.clear();
     }
