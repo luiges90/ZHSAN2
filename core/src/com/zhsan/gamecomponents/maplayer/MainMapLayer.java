@@ -82,6 +82,7 @@ public class MainMapLayer extends WidgetGroup {
     private DamageLayer damageLayer;
 
     private LocationSelectionListener locationSelectionListener;
+    private List<Point> locationSelectionCandidates;
 
     private void loadXml() {
         FileHandle f = Gdx.files.external(MAP_ROOT_PATH + "MapLayerData.xml");
@@ -204,14 +205,13 @@ public class MainMapLayer extends WidgetGroup {
 
     public void startSelectingLocation(List<Point> candidates, LocationSelectionListener listener) {
         locationSelectionListener = listener;
+        locationSelectionCandidates = candidates;
         mapLayers.forEach(l -> l.onStartSelectingLocation(candidates));
     }
 
     public void startSelectingLocation(Troop troop, LocationSelectionListener listener) {
-        if (locationSelectionListener != null) {
-            throw new IllegalStateException("Location selection has been started.");
-        }
         locationSelectionListener = listener;
+        locationSelectionCandidates = null;
         mapLayers.forEach(l -> l.onStartSelectingLocation(troop));
     }
 
@@ -406,9 +406,11 @@ public class MainMapLayer extends WidgetGroup {
             }
 
             if (locationSelectionListener != null) {
-                locationSelectionListener.onLocationSelected(button == Input.Buttons.LEFT ? pos : null);
-                locationSelectionListener = null;
-                mapLayers.forEach(MapLayer::onEndSelectingLocation);
+                if (locationSelectionCandidates == null || locationSelectionCandidates.contains(pos)) {
+                    locationSelectionListener.onLocationSelected(button == Input.Buttons.LEFT ? pos : null);
+                    locationSelectionListener = null;
+                    mapLayers.forEach(MapLayer::onEndSelectingLocation);
+                }
             }
 
             return false;

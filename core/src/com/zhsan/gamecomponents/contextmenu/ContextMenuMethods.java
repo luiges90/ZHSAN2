@@ -1,6 +1,7 @@
 package com.zhsan.gamecomponents.contextmenu;
 
 import com.badlogic.gdx.Gdx;
+import com.zhsan.common.Point;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
@@ -10,7 +11,10 @@ import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gameobject.Troop;
 import com.zhsan.screen.GameScreen;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Methods called from ContextMenu left click callbacks. All these methods are called by reflection.
@@ -139,7 +143,11 @@ public final class ContextMenuMethods {
         if (troop.canEnter()) {
             troop.enter();
         } else {
-            screen.getMapLayer().startSelectingLocation(troop, p -> {
+            List<Point> candidates = troop.getBelongedFaction().getArchitectures().getAll().stream()
+                    .flatMap(a -> a.getLocations().stream())
+                    .collect(Collectors.toList());
+
+            screen.getMapLayer().startSelectingLocation(candidates, p -> {
                 if (p != null) {
                     Architecture a = screen.getScenario().getArchitectureAt(p);
                     troop.giveMoveToEnterOrder(a);
