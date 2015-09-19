@@ -177,6 +177,7 @@ public class Military extends GameObject {
 
     public void setLocation(Architecture location) {
         this.location = new LocationType(location);
+        this.leader.moveToArchitectureInstantly(location);
     }
 
     public GameObject getLocation() {

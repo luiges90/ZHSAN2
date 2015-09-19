@@ -288,7 +288,10 @@ public class Troop extends GameObject implements HasPointLocation {
     public boolean loseQuantity(int quantity) {
         getMilitary().decreaseQuantity(quantity);
         boolean destroy = checkDestroy();
-        if (destroy) destroy();
+        if (destroy) {
+            this.getMilitary().getLeader().moveToArchitecture(this.getLocation(), this.startArchitecture);
+            destroy(true);
+        }
         return destroy;
     }
 
@@ -296,10 +299,9 @@ public class Troop extends GameObject implements HasPointLocation {
         return this.getQuantity() <= 0;
     }
 
-    private void destroy() {
+    private void destroy(boolean removeMilitary) {
         destroyed = true;
-        this.getMilitary().getLeader().moveToArchitecture(this.getLocation(), this.startArchitecture);
-        scenario.removeTroop(this);
+        scenario.removeTroop(this, removeMilitary);
     }
 
     public boolean isDestroyed() {
@@ -473,5 +475,29 @@ public class Troop extends GameObject implements HasPointLocation {
         return damagePacks;
     }
 
+    public boolean canEnter() {
+        Iterator<Point> points = location.spiralOutIterator(1);
+        while (points.hasNext()) {
+            Point p = points.next();
+            Architecture a = scenario.getArchitectureAt(p);
+            if (a != null && a.getBelongedFaction() == this.getBelongedFaction()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void enter() {
+        Iterator<Point> points = location.spiralOutIterator(1);
+        while (points.hasNext()) {
+            Point p = points.next();
+            Architecture a = scenario.getArchitectureAt(p);
+            if (a != null && a.getBelongedFaction() == this.getBelongedFaction()) {
+                this.getMilitary().setLocation(a);
+                this.destroy(false);
+                return;
+            }
+        }
+    }
 
 }

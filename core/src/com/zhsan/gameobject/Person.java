@@ -426,6 +426,10 @@ public class Person extends GameObject {
         this.location = new LocationType(a);
     }
 
+    public void moveToArchitectureInstantly(Architecture a) {
+        this.location = new LocationType(a);
+    }
+
     public String getDoingWorkString() {
         return getDoingWorkType().toDisplay();
     }

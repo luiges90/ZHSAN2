@@ -278,8 +278,10 @@ public class GameScenario {
         return new GameObjectList<>(troops, true);
     }
 
-    public void removeTroop(Troop t) {
-        militaries.remove(t.getMilitary());
+    public void removeTroop(Troop t, boolean removeMilitary) {
+        if (removeMilitary) {
+            militaries.remove(t.getMilitary());
+        }
         troops.remove(t);
     }
 

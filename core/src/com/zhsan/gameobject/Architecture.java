@@ -360,17 +360,6 @@ public class Architecture extends GameObject implements HasPointLocation {
         return kinds;
     }
 
-    public Point getCampaignPosition() {
-        Iterator<Point> it = this.getLocation().spiralOutIterator(1);
-        while (it.hasNext()) {
-            Point p = it.next();
-            if (scenario.getTroopAt(p) == null) {
-                return p;
-            }
-        }
-        return null;
-    }
-
     public List<Point> getCampaignablePositions() {
         List<Point> result = new ArrayList<>();
         Iterator<Point> it = this.getLocation().spiralOutIterator(1);

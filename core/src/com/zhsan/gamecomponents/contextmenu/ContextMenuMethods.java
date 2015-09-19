@@ -134,6 +134,11 @@ public final class ContextMenuMethods {
         });
     }
 
+    public static void TroopLeftClick_Enter(GameScreen screen, Object object) {
+        Troop troop = (Troop) object;
+        troop.enter();
+    }
+
     public static void TroopRightClick_TroopDetail(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.TROOP, GameObjectList.singleton((Troop) object));
     }
