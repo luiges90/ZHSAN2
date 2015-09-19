@@ -63,7 +63,8 @@ public class GlobalStrings {
         TROOP_NAME("TroopName"),
         MILITARY_QUANTITY_SHORT("MilitaryQuantityShort"),
         MILITARY_MORALE_SHORT("MilitaryMoraleShort"),
-        MILITARY_COMBATIVITY_SHORT("MilitaryCombativityShort");
+        MILITARY_COMBATIVITY_SHORT("MilitaryCombativityShort"),
+        MOVE_TO_ENTER("MoveToEnter");
 
         private final String xmlName;
         Keys(String name) {

@@ -136,7 +136,16 @@ public final class ContextMenuMethods {
 
     public static void TroopLeftClick_Enter(GameScreen screen, Object object) {
         Troop troop = (Troop) object;
-        troop.enter();
+        if (troop.canEnter()) {
+            troop.enter();
+        } else {
+            screen.getMapLayer().startSelectingLocation(troop, p -> {
+                if (p != null) {
+                    Architecture a = screen.getScenario().getArchitectureAt(p);
+                    troop.giveMoveToEnterOrder(a);
+                }
+            });
+        }
     }
 
     public static void TroopRightClick_TroopDetail(GameScreen screen, Object object) {

@@ -347,6 +347,9 @@ public class GameScenario {
                 } else {
                     Point newLoc = t.getLocation();
                     onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
+                        if (t.tryEnter()) {
+                            return;
+                        }
                         if (target != null) {
                             List<DamagePack> damagePacks = t.attack();
                             onTroopDone.onAttackDone(t, target, damagePacks);

@@ -38,6 +38,7 @@
         AssignLeader="設置隊長"
         Campaign="出征"
         MoveTo="移動至(%d,%d)"
+        MoveToEnter="進入%s"
         AttackPoint="攻擊(%d,%d)"
         AttackTarget="攻擊%s"
         TroopName="%s隊"

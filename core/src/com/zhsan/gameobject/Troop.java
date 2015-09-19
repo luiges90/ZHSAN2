@@ -23,12 +23,13 @@ public class Troop extends GameObject implements HasPointLocation {
     public static final String SAVE_FILE = "Troop.csv";
 
     private enum OrderKind {
-        IDLE, MOVE, ATTACK_LOCATION, ATTACK_TROOP, ATTACK_ARCH;
+        IDLE, MOVE, MOVE_ENTER, ATTACK_LOCATION, ATTACK_TROOP, ATTACK_ARCH;
 
         static OrderKind fromCSV(String s) {
             switch (s) {
                 case "idle": return IDLE;
                 case "move": return MOVE;
+                case "moveEnter": return MOVE_ENTER;
                 case "attackLocation": return ATTACK_LOCATION;
                 case "attackTroop": return ATTACK_TROOP;
                 case "attackArch": return ATTACK_ARCH;
@@ -40,6 +41,7 @@ public class Troop extends GameObject implements HasPointLocation {
             switch (this) {
                 case IDLE: return "idle";
                 case MOVE: return "move";
+                case MOVE_ENTER: return "moveEnter";
                 case ATTACK_LOCATION: return "attackLocation";
                 case ATTACK_TROOP: return "attackTroop";
                 case ATTACK_ARCH: return "attackArch";
@@ -80,6 +82,7 @@ public class Troop extends GameObject implements HasPointLocation {
                         return new Order(scenario, orderKind, Point.fromCSV(target));
                     case ATTACK_TROOP:
                     case ATTACK_ARCH:
+                    case MOVE_ENTER:
                         return new Order(scenario, orderKind, Integer.parseInt(target));
                 }
             }
@@ -97,6 +100,7 @@ public class Troop extends GameObject implements HasPointLocation {
                     return new Pair<>(orderKind, targetLocation.toCSV());
                 case ATTACK_TROOP:
                 case ATTACK_ARCH:
+                case MOVE_ENTER:
                     return new Pair<>(orderKind, String.valueOf(targetId));
             }
             assert false;
@@ -204,6 +208,8 @@ public class Troop extends GameObject implements HasPointLocation {
                 return null;
             case MOVE:
                 return String.format(GlobalStrings.getString(GlobalStrings.Keys.MOVE_TO), this.order.targetLocation.x, this.order.targetLocation.y);
+            case MOVE_ENTER:
+                return String.format(GlobalStrings.getString(GlobalStrings.Keys.MOVE_TO_ENTER), scenario.getArchitectures().get(this.order.targetId));
             case ATTACK_LOCATION:
                 return String.format(GlobalStrings.getString(GlobalStrings.Keys.ATTACK_POINT), this.order.targetLocation.x, this.order.targetLocation.y);
             case ATTACK_TROOP:
@@ -328,6 +334,10 @@ public class Troop extends GameObject implements HasPointLocation {
         this.order = new Order(scenario, OrderKind.MOVE, location);
     }
 
+    public void giveMoveToEnterOrder(Architecture a) {
+        this.order = new Order(scenario, OrderKind.MOVE_ENTER, a.getId());
+    }
+
     public void giveAttackOrder(Point location) {
         this.order = new Order(scenario, OrderKind.ATTACK_LOCATION, location);
     }
@@ -349,7 +359,7 @@ public class Troop extends GameObject implements HasPointLocation {
         Point targetLocation;
         if (this.order.targetLocation != null) {
             targetLocation = this.order.targetLocation;
-        } else if (this.order.kind == OrderKind.ATTACK_ARCH) {
+        } else if (this.order.kind == OrderKind.ATTACK_ARCH || this.order.kind == OrderKind.MOVE_ENTER) {
             targetLocation = scenario.getArchitectures().get(this.order.targetId).getLocation();
         } else if (this.order.kind == OrderKind.ATTACK_TROOP) {
             targetLocation = scenario.getTroops().get(this.order.targetId).getLocation();
@@ -405,6 +415,17 @@ public class Troop extends GameObject implements HasPointLocation {
         } else {
             return null;
         }
+    }
+
+    public boolean tryEnter() {
+        if (order.kind == OrderKind.MOVE_ENTER) {
+            Architecture a = scenario.getArchitectures().get(order.targetId);
+            if (canEnter(a)) {
+                enter(a);
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<DamagePack> attack() {
@@ -487,17 +508,33 @@ public class Troop extends GameObject implements HasPointLocation {
         return false;
     }
 
+    public boolean canEnter(Architecture a) {
+        Iterator<Point> points = location.spiralOutIterator(1);
+        while (points.hasNext()) {
+            Point p = points.next();
+            Architecture arch = scenario.getArchitectureAt(p);
+            if (a == arch) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void enter() {
         Iterator<Point> points = location.spiralOutIterator(1);
         while (points.hasNext()) {
             Point p = points.next();
             Architecture a = scenario.getArchitectureAt(p);
             if (a != null && a.getBelongedFaction() == this.getBelongedFaction()) {
-                this.getMilitary().setLocation(a);
-                this.destroy(false);
+                enter(a);
                 return;
             }
         }
+    }
+
+    public void enter(Architecture a) {
+        this.getMilitary().setLocation(a);
+        this.destroy(false);
     }
 
 }

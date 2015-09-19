@@ -55,7 +55,7 @@
         </MenuKind>
         <MenuKind ID="4" Name="TroopLeftClick" IsLeft="true" Width="100" Height="25">
             <MenuItem ID="1" Name="Move" DisplayName="移動"/>
-            <MenuItem ID="2" Name="Enter" DisplayName="入城" DisplayIfTrue="CanEnter"/>
+            <MenuItem ID="2" Name="Enter" DisplayName="入城"/>
             <MenuItem ID="3" Name="Attack" DisplayName="攻擊"/>
         </MenuKind>
         <MenuKind ID="" Name="TroopRightClick" IsLeft="false" Width="120" Height="25">

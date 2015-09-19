@@ -15,9 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -361,15 +359,17 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     public List<Point> getCampaignablePositions() {
-        List<Point> result = new ArrayList<>();
-        Iterator<Point> it = this.getLocation().spiralOutIterator(1);
-        while (it.hasNext()) {
-            Point p = it.next();
-            if (scenario.getTroopAt(p) == null) {
-                result.add(p);
+        Set<Point> result = new HashSet<>();
+        for (Point p : this.getLocations()) {
+            Iterator<Point> it = p.spiralOutIterator(1);
+            while (it.hasNext()) {
+                Point q = it.next();
+                if (scenario.getTroopAt(q) == null) {
+                    result.add(q);
+                }
             }
         }
-        return result;
+        return new ArrayList<>(result);
     }
 
     public double distanceTo(Architecture a) {
