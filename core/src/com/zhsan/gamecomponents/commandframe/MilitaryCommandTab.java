@@ -429,8 +429,10 @@ public class MilitaryCommandTab implements CommandTab {
                         invalidateListPanes();
                     });
         } else if (reorganizePos.contains(x, y) && currentMilitary != null) {
+            GameObjectList<Person> leaderCandidates = new GameObjectList<>(parent.getCurrentArchitecture().getPersonsNotInMilitary());
+            leaderCandidates.add(currentMilitary.getLeader());
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_LEADER), TabListGameFrame.ListKindType.PERSON,
-                    parent.getCurrentArchitecture().getPersonsNotInMilitary(), TabListGameFrame.Selection.SINGLE,
+                    leaderCandidates, TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
                         currentMilitary.setLeader((Person) selectedItems.get(0));
                         parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_MILITARY_PERSON), TabListGameFrame.ListKindType.PERSON,
