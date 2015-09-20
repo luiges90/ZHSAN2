@@ -257,6 +257,11 @@ public class Troop extends GameObject implements HasPointLocation {
         return getMilitary().getCombativity();
     }
 
+    public Troop setStartArchitecture(Architecture startArchitecture) {
+        this.startArchitecture = startArchitecture;
+        return this;
+    }
+
     public int getCommand() {
         return (int) (getLeader().getCommand() +
                 Math.max(getMilitary().getPersons().stream()
