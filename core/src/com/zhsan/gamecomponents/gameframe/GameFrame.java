@@ -36,6 +36,7 @@ public abstract class GameFrame extends WidgetGroup {
 
     public interface OnClick {
         public void onOkClicked();
+        public default void onPostOkClicked(){}
         public void onCancelClicked();
     }
 
@@ -303,8 +304,10 @@ public abstract class GameFrame extends WidgetGroup {
             okTexture.setState(StateTexture.State.NORMAL);
             buttonListener.onOkClicked();
             dismiss(true);
+            buttonListener.onPostOkClicked();
         }
         if (cancel != null && ((cancel.contains(x, y) || button == Input.Buttons.RIGHT) && isCancelEnabled())) {
+            cancelTexture.setState(StateTexture.State.NORMAL);
             buttonListener.onCancelClicked();
             dismiss(false);
         }

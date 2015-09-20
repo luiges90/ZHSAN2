@@ -444,9 +444,10 @@ public class TabListGameFrame extends GameFrame {
 
     private class ButtonListener implements OnClick {
 
+        List<GameObject> selected = null;
+
         @Override
         public void onOkClicked() {
-            List<GameObject> selected = null;
             if (selection == Selection.SINGLE) {
                 selected = showingRadioButtons.parallelStream().filter(RadioButtonWidget::isChecked)
                         .map(RadioButtonWidget::getExtra).collect(Collectors.toList());
@@ -454,6 +455,10 @@ public class TabListGameFrame extends GameFrame {
                 selected = showingCheckboxes.parallelStream().filter(CheckboxWidget::isChecked)
                         .map(CheckboxWidget::getExtra).collect(Collectors.toList());
             }
+        }
+
+        @Override
+        public void onPostOkClicked() {
             if (selected != null) {
                 onItemSelected.onItemSelected(selected);
             }

@@ -104,7 +104,7 @@ public class Military extends GameObject {
     private int morale, combativity;
 
     private Person leader;
-    private List<Person> persons;
+    private List<Person> persons = new ArrayList<>();
 
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
@@ -184,7 +184,10 @@ public class Military extends GameObject {
 
     public void setLocation(Architecture location) {
         this.location = new LocationType(location);
-        this.leader.moveToArchitectureInstantly(location);
+        if (this.leader != null) {
+            this.leader.moveToArchitectureInstantly(location);
+        }
+        this.persons.forEach(p -> p.moveToArchitectureInstantly(location));
     }
 
     public GameObject getLocation() {
