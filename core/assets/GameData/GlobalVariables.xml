@@ -32,4 +32,7 @@
         reactDamageFactor="0.5"
         personMovingSpeed="8.0"
         damageShowTime="60"
+        troopCommandPersonFactor="0.2"
+        troopStrengthPersonFactor="0.5"
+        troopIntelligencePersonFactor="1.0"
         />

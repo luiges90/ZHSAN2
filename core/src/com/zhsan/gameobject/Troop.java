@@ -258,15 +258,27 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     public int getCommand() {
-        return getLeader().getCommand();
+        return (int) (getLeader().getCommand() +
+                Math.max(getMilitary().getPersons().stream()
+                                .max((p, q) -> p.getCommand() - q.getCommand())
+                                .map(Person::getCommand)
+                                .orElse(0) - getLeader().getCommand(), 0) * GlobalVariables.troopCommandPersonFactor);
     }
 
     public int getStrength() {
-        return getLeader().getStrength();
+        return (int) (getLeader().getStrength() +
+                Math.max(getMilitary().getPersons().stream()
+                        .max((p, q) -> p.getStrength() - q.getStrength())
+                        .map(Person::getStrength)
+                        .orElse(0) - getLeader().getStrength(), 0) * GlobalVariables.troopStrengthPersonFactor);
     }
 
     public int getIntelligence() {
-        return getLeader().getIntelligence();
+        return (int) (getLeader().getIntelligence() +
+                Math.max(getMilitary().getPersons().stream()
+                        .max((p, q) -> p.getIntelligence() - q.getIntelligence())
+                        .map(Person::getIntelligence)
+                        .orElse(0) - getLeader().getIntelligence(), 0) * GlobalVariables.troopIntelligencePersonFactor);
     }
 
     public float getOffense() {
@@ -295,7 +307,7 @@ public class Troop extends GameObject implements HasPointLocation {
         getMilitary().decreaseQuantity(quantity);
         boolean destroy = checkDestroy();
         if (destroy) {
-            this.getMilitary().getLeader().moveToArchitecture(this.getLocation(), this.startArchitecture);
+            this.getMilitary().getAllPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), this.startArchitecture));
             destroy(true);
         }
         return destroy;

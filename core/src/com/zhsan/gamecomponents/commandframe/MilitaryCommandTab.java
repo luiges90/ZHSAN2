@@ -27,6 +27,7 @@ import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 15/7/2015.
@@ -432,10 +433,15 @@ public class MilitaryCommandTab implements CommandTab {
                     });
         } else if (reorganizePos.contains(x, y) && currentMilitary != null) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_LEADER), TabListGameFrame.ListKindType.PERSON,
-                    parent.getCurrentArchitecture().getPersonsWithoutLeadingMilitary(), TabListGameFrame.Selection.SINGLE,
+                    parent.getCurrentArchitecture().getPersonsNotInMilitary(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
                         currentMilitary.setLeader((Person) selectedItems.get(0));
-                        invalidateListPanes();
+                        parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_MILITARY_PERSON), TabListGameFrame.ListKindType.PERSON,
+                                parent.getCurrentArchitecture().getPersonsNotInMilitary(), TabListGameFrame.Selection.MULTIPLE,
+                                selectedItems1 -> {
+                                    currentMilitary.setPersons(selectedItems1.stream().map(o -> (Person) o).collect(Collectors.toList()));
+                                    invalidateListPanes();
+                                });
                     });
         }
     }

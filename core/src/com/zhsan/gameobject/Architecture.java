@@ -155,6 +155,11 @@ public class Architecture extends GameObject implements HasPointLocation {
                 getMilitaries().filter(m -> m.getLeader() == p).size() == 0);
     }
 
+    public GameObjectList<Person> getPersonsNotInMilitary() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
+                getMilitaries().filter(m -> m.getAllPersons().contains(p)).size() == 0);
+    }
+
     public boolean hasFaction() {
         return getBelongedFaction() != null;
     }

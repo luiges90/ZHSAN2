@@ -54,6 +54,7 @@ public class GlobalStrings {
         MILITARY_RECRUIT("MilitaryRecruit"),
         MILITARY_TRAINING("MilitaryTraining"),
         ASSIGN_LEADER("AssignLeader"),
+        ASSIGN_MILITARY_PERSON("AssignMilitaryPerson"),
         TROOP_ANIMATION_SAVE_HEADER("troopAnimationSaveHeader"),
         TROOP_SAVE_HEADER("troopSaveHeader"),
         CAMPAIGN("Campaign"),
