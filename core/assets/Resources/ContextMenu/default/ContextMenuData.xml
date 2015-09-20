@@ -61,6 +61,7 @@
         <MenuKind ID="" Name="TroopRightClick" IsLeft="false" Width="120" Height="25">
             <MenuItem ID="1" Name="TroopDetail" DisplayName="部队信息"/>
             <MenuItem ID="2" Name="TroopMilitary" DisplayName="部队編隊"/>
+            <MenuItem ID="3" Name="TroopPerson" DisplayName="部队武將"/>
         </MenuKind>
     </MenuKindList>
 </Root>

@@ -18,10 +18,7 @@ import com.zhsan.gamecomponents.common.WidgetUtility;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
-import com.zhsan.gameobject.GameObject;
-import com.zhsan.gameobject.Military;
-import com.zhsan.gameobject.MilitaryKind;
-import com.zhsan.gameobject.Person;
+import com.zhsan.gameobject.*;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -439,7 +436,7 @@ public class MilitaryCommandTab implements CommandTab {
                         parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_MILITARY_PERSON), TabListGameFrame.ListKindType.PERSON,
                                 parent.getCurrentArchitecture().getPersonsNotInMilitary(), TabListGameFrame.Selection.MULTIPLE,
                                 selectedItems1 -> {
-                                    currentMilitary.setPersons(selectedItems1.stream().map(o -> (Person) o).collect(Collectors.toList()));
+                                    currentMilitary.setPersons(selectedItems1.stream().map(o -> (Person) o).collect(new GameObjectList.ToGameObjectList<>()));
                                     invalidateListPanes();
                                 });
                     });

@@ -104,7 +104,7 @@ public class Military extends GameObject {
     private int morale, combativity;
 
     private Person leader;
-    private List<Person> persons = new ArrayList<>();
+    private GameObjectList<Person> persons = new GameObjectList<>();
 
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
@@ -125,7 +125,7 @@ public class Military extends GameObject {
                 data.morale = Integer.parseInt(line[6]);
                 data.combativity = Integer.parseInt(line[7]);
                 data.leader = scen.getPerson(Integer.parseInt(line[8]));
-                data.persons = XmlHelper.loadIntegerListFromXml(line[9]).stream().map(scen::getPerson).collect(Collectors.toList());
+                data.persons = scen.getPersons().getItemsFromCSV(line[9]);
 
                 result.add(data);
             }
@@ -152,7 +152,7 @@ public class Military extends GameObject {
                         String.valueOf(detail.morale),
                         String.valueOf(detail.combativity),
                         String.valueOf(detail.leader == null ? -1 : detail.leader.getId()),
-                        detail.persons.stream().map(p -> String.valueOf(p.getId())).collect(Collectors.joining(" "))
+                        detail.persons.toCSV()
                 });
             }
         } catch (IOException e) {
@@ -218,17 +218,17 @@ public class Military extends GameObject {
         this.leader = leader;
     }
 
-    public List<Person> getPersons() {
-        return new ArrayList<>(persons);
+    public GameObjectList<Person> getPersons() {
+        return new GameObjectList<>(persons);
     }
 
-    public Military setPersons(List<Person> persons) {
-        this.persons = new ArrayList<>(persons);
+    public Military setPersons(GameObjectList<Person> persons) {
+        this.persons = new GameObjectList<>(persons);
         return this;
     }
 
-    public List<Person> getAllPersons() {
-        List<Person> p = new ArrayList<>(persons);
+    public GameObjectList<Person> getAllPersons() {
+        GameObjectList<Person> p = new GameObjectList<>(persons);
         p.add(leader);
         return p;
     }
@@ -316,14 +316,14 @@ public class Military extends GameObject {
         if (this.leader.getLocation() != getLocation()) {
             throw new IllegalStateException("Leader must be in the same location as this military in order to leave");
         }
-        if (this.persons.stream().anyMatch(p -> p.getLocation() != this.getLocation())) {
+        if (this.persons.getAll().stream().anyMatch(p -> p.getLocation() != this.getLocation())) {
             throw new IllegalStateException("All persons must be in the same location as this military in order to leave");
         }
         Architecture a = (Architecture) getLocation();
         if (a.getBelongedFaction() != this.leader.getBelongedFaction()) {
             throw new IllegalStateException("Leader must be of same faction to the architecture in order to leave");
         }
-        if (this.persons.stream().anyMatch(p -> a.getBelongedFaction() != p.getBelongedFaction())) {
+        if (this.persons.getAll().stream().anyMatch(p -> a.getBelongedFaction() != p.getBelongedFaction())) {
             throw new IllegalStateException("All persons must be of same faction to the architecture in order to leave");
         }
 

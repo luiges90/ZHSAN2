@@ -164,4 +164,8 @@ public final class ContextMenuMethods {
         screen.showTabList(TabListGameFrame.ListKindType.MILITARY, GameObjectList.singleton(((Troop) object).getMilitary()));
     }
 
+    public static void TroopRightClick_TroopPerson(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Troop) object).getMilitary().getAllPersons());
+    }
+
 }

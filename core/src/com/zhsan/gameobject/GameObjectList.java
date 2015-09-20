@@ -17,6 +17,10 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList(){}
 
+    public GameObjectList(GameObjectList<T> old) {
+        this(old, false);
+    }
+
     public GameObjectList(GameObjectList<T> old, boolean unmodifiable) {
         if (unmodifiable) {
             content = Collections.unmodifiableSortedMap(old.content);
@@ -28,7 +32,9 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public void add(T obj) {
         if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
-        content.put(obj.getId(), obj);
+        if (obj != null) {
+            content.put(obj.getId(), obj);
+        }
     }
 
     public void addAll(GameObjectList<T> objs) {
@@ -140,7 +146,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.keySet().parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
-    private class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
+    public static class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
 
         @Override
         public Supplier<GameObjectList<T>> supplier() {

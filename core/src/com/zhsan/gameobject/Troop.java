@@ -264,7 +264,7 @@ public class Troop extends GameObject implements HasPointLocation {
 
     public int getCommand() {
         return (int) (getLeader().getCommand() +
-                Math.max(getMilitary().getPersons().stream()
+                Math.max(getMilitary().getPersons().getAll().stream()
                                 .max((p, q) -> p.getCommand() - q.getCommand())
                                 .map(Person::getCommand)
                                 .orElse(0) - getLeader().getCommand(), 0) * GlobalVariables.troopCommandPersonFactor);
@@ -272,7 +272,7 @@ public class Troop extends GameObject implements HasPointLocation {
 
     public int getStrength() {
         return (int) (getLeader().getStrength() +
-                Math.max(getMilitary().getPersons().stream()
+                Math.max(getMilitary().getPersons().getAll().stream()
                         .max((p, q) -> p.getStrength() - q.getStrength())
                         .map(Person::getStrength)
                         .orElse(0) - getLeader().getStrength(), 0) * GlobalVariables.troopStrengthPersonFactor);
@@ -280,7 +280,7 @@ public class Troop extends GameObject implements HasPointLocation {
 
     public int getIntelligence() {
         return (int) (getLeader().getIntelligence() +
-                Math.max(getMilitary().getPersons().stream()
+                Math.max(getMilitary().getPersons().getAll().stream()
                         .max((p, q) -> p.getIntelligence() - q.getIntelligence())
                         .map(Person::getIntelligence)
                         .orElse(0) - getLeader().getIntelligence(), 0) * GlobalVariables.troopIntelligencePersonFactor);
