@@ -57,6 +57,7 @@
             <MenuItem ID="1" Name="Move" DisplayName="移動"/>
             <MenuItem ID="2" Name="Enter" DisplayName="入城"/>
             <MenuItem ID="3" Name="Attack" DisplayName="攻擊"/>
+            <MenuItem ID="4" Name="Occupy" DisplayName="佔領" DisplayIfTrue="CanOccupy"/>
         </MenuKind>
         <MenuKind ID="" Name="TroopRightClick" IsLeft="false" Width="120" Height="25">
             <MenuItem ID="1" Name="TroopDetail" DisplayName="部队信息"/>

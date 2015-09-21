@@ -156,6 +156,13 @@ public final class ContextMenuMethods {
         }
     }
 
+    public static void TroopLeftClick_Occupy(GameScreen screen, Object object) {
+        Troop troop = (Troop) object;
+        if (troop.canOccupy()) {
+            troop.occupy();
+        }
+    }
+
     public static void TroopRightClick_TroopDetail(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.TROOP, GameObjectList.singleton((Troop) object));
     }
