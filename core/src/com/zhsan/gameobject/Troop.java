@@ -561,7 +561,7 @@ public class Troop extends GameObject implements HasPointLocation {
 
     public void occupy() {
         Architecture a = scenario.getArchitectureAt(getLocation());
-        // TODO occupy
+        a.changeSection(this.getBelongedSection());
     }
 
 }

@@ -137,6 +137,26 @@ public class Architecture extends GameObject implements HasPointLocation {
         return belongedSection == null ? null : belongedSection.getBelongedFaction();
     }
 
+    private void changeFaction() {
+        if (this.getBelongedFaction() != null) {
+            Architecture moveTo = this.getBelongedFaction().getArchitectures().getAll()
+                    .parallelStream()
+                    .filter(x -> x != this)
+                    .min((x, y) -> Double.compare(this.getLocation().distanceTo(x.getLocation()), this.getLocation().distanceTo(y.getLocation())))
+                    .orElse(null);
+            if (moveTo != null) {
+                this.getPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), moveTo));
+            }
+        }
+    }
+
+    public void changeSection(Section n) {
+        if (this.belongedSection.getBelongedFaction() != n.getBelongedFaction()) {
+            changeFaction();
+        }
+        this.belongedSection = n;
+    }
+
     public GameObjectList<Person> getPersons() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL);
     }
