@@ -317,9 +317,11 @@ public class GameScreen extends WidgetGroup {
                     getScenario().advanceDay(new GameScenario.OnTroopDone() {
                         @Override
                         public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
-                            mapLayer.addPendingTroopAnimation(
-                                    new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
-                                            oldLoc, newLoc, onTroopAnimationDone));
+                            if (!oldLoc.equals(newLoc)) {
+                                mapLayer.addPendingTroopAnimation(
+                                        new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
+                                                oldLoc, newLoc, onTroopAnimationDone));
+                            }
                         }
 
                         @Override

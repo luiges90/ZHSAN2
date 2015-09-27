@@ -42,6 +42,17 @@ public class TroopAnimationLayer implements MapLayer {
             this.to = to;
             this.onTroopAnimationDone = onTroopAnimationDone;
         }
+
+        @Override
+        public String toString() {
+            return "PendingTroopAnimation{" +
+                    "troop=" + troop +
+                    ", type=" + type +
+                    ", from=" + from +
+                    ", to=" + to +
+                    ", onTroopAnimationDone=" + onTroopAnimationDone +
+                    '}';
+        }
     }
 
     public static final String TROOP_RES_PATH = Paths.RESOURCES + "Troop" + File.separator;
