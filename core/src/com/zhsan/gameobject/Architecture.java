@@ -641,7 +641,7 @@ public class Architecture extends GameObject implements HasPointLocation {
 
     public float getDefense() {
         return (float) (Math.max(GlobalVariables.architectureMinCommand, getMayor() == null ? 0 : getMayor().getCommand()) / 100.0f
-                        * getMorale()
+                        * getMorale() / 4
                         * Math.pow(getEndurance(), GlobalVariables.architectureDefenseEndurancePower));
     }
 

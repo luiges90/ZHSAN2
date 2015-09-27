@@ -50,7 +50,7 @@ public final class GlobalVariables {
     public static int recruitMorale = 50;
     public static int recruitCombativity = 50;
 
-    public static int architectureMinCommand = 20;
+    public static int architectureMinCommand = 10;
     public static float architectureDefenseEndurancePower = 0.5f;
 
     public static float baseDamage = 500.0f;
