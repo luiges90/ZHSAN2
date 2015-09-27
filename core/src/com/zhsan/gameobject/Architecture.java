@@ -151,7 +151,7 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     public void changeSection(Section n) {
-        if (this.belongedSection.getBelongedFaction() != n.getBelongedFaction()) {
+        if (this.belongedSection != null && this.belongedSection.getBelongedFaction() != n.getBelongedFaction()) {
             changeFaction();
         }
         this.belongedSection = n;
@@ -286,6 +286,10 @@ public class Architecture extends GameObject implements HasPointLocation {
             throw new IllegalStateException("May not set mayor if the leader is in architecture");
         }
         newMayor.setDoingWork(Person.DoingWork.MAYOR);
+    }
+
+    public boolean hasMayor() {
+        return getMayorUnchecked().size() > 0;
     }
 
     public void addMayor() {

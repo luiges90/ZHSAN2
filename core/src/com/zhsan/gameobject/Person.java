@@ -428,6 +428,13 @@ public class Person extends GameObject {
 
     public void moveToArchitectureInstantly(Architecture a) {
         this.location = new LocationType(a);
+        arriveAtArchitecture(a);
+    }
+
+    private void arriveAtArchitecture(Architecture a) {
+        if (!a.hasMayor()) {
+            a.addMayor();
+        }
     }
 
     public String getDoingWorkString() {
@@ -438,7 +445,7 @@ public class Person extends GameObject {
         if (this.movingDays > 0) {
             this.movingDays--;
             if (this.movingDays == 0) {
-                // TODO on arrival
+                arriveAtArchitecture((Architecture) this.getLocation());
             }
         }
     }
