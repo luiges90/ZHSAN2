@@ -129,7 +129,8 @@ public class Troop extends GameObject implements HasPointLocation {
 
     private Architecture startArchitecture;
 
-    private Order order = new Order(null, OrderKind.IDLE, null);
+    public static final Order ORDER_IDLE = new Order(null, OrderKind.IDLE, null);
+    private Order order = ORDER_IDLE;
 
     private volatile boolean destroyed = false;
 
@@ -312,6 +313,9 @@ public class Troop extends GameObject implements HasPointLocation {
         getMilitary().decreaseQuantity(quantity);
         boolean destroy = checkDestroy();
         if (destroy) {
+            scenario.getTroops().getAll().parallelStream()
+                    .filter(x -> x.getTarget() == this)
+                    .forEach(x -> x.order = ORDER_IDLE);
             this.getMilitary().getAllPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), this.startArchitecture));
             destroy(true);
         }
@@ -477,6 +481,11 @@ public class Troop extends GameObject implements HasPointLocation {
         int damage = Math.round(GlobalVariables.baseArchitectureDamage * ratio * this.getKind().getArchitectureOffense());
         boolean destroy = target.loseEndurance(damage);
         damagePacks.add(new DamagePack(target, attackPoint, -damage, destroy));
+        if (destroy) {
+            scenario.getTroops().getAll().parallelStream()
+                    .filter(x -> x.getTarget() == target)
+                    .forEach(x -> x.order = ORDER_IDLE);
+        }
 
         int reactDamage;
         reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
