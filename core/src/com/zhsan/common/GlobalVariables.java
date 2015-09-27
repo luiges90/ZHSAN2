@@ -50,10 +50,12 @@ public final class GlobalVariables {
     public static int recruitMorale = 50;
     public static int recruitCombativity = 50;
 
-    public static int architectureMinCommand = 10;
+    public static int architectureMinCommand = 20;
     public static float architectureDefenseEndurancePower = 0.5f;
+    public static float architectureDefenseMoralePower = 0.5f;
 
     public static float baseDamage = 500.0f;
+    public static float baseArchitectureDamage = 5.0f;
     public static float reactDamageFactor = 0.5f;
 
     public static long aiTimeout = 20;
@@ -107,7 +109,9 @@ public final class GlobalVariables {
             recruitCombativity = Integer.parseInt(XmlHelper.loadAttribute(node, "recruitCombativity"));
             architectureMinCommand = Integer.parseInt(XmlHelper.loadAttribute(node, "architectureMinCommand"));
             architectureDefenseEndurancePower = Float.parseFloat(XmlHelper.loadAttribute(node, "architectureDefenseEndurancePower"));
+            architectureDefenseMoralePower = Float.parseFloat(XmlHelper.loadAttribute(node, "architectureDefenseMoralePower"));
             baseDamage = Float.parseFloat(XmlHelper.loadAttribute(node, "baseDamage"));
+            baseArchitectureDamage = Float.parseFloat(XmlHelper.loadAttribute(node, "baseArchitectureDamage"));
             reactDamageFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "reactDamageFactor"));
             personMovingSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "personMovingSpeed"));
             damageShowTime = Integer.parseInt(XmlHelper.loadAttribute(node, "damageShowTime"));

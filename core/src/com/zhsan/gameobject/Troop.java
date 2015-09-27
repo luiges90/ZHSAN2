@@ -474,7 +474,7 @@ public class Troop extends GameObject implements HasPointLocation {
         float defense = target.getDefense();
         float ratio = offense / defense;
 
-        int damage = Math.round(GlobalVariables.baseDamage * ratio * this.getKind().getArchitectureOffense());
+        int damage = Math.round(GlobalVariables.baseArchitectureDamage * ratio * this.getKind().getArchitectureOffense());
         boolean destroy = target.loseEndurance(damage);
         damagePacks.add(new DamagePack(target, attackPoint, -damage, destroy));
 
