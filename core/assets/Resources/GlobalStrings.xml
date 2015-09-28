@@ -46,4 +46,7 @@
         MilitaryQuantityShort="兵"
         MilitaryMoraleShort="士"
         MilitaryCombativityShort="戰"
+        RecallPerson="召集武將"
+        MovePerson="移動武將"
+        SelectDestination="選擇目的地"
         />

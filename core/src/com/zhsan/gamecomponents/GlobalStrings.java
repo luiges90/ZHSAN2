@@ -65,7 +65,10 @@ public class GlobalStrings {
         MILITARY_QUANTITY_SHORT("MilitaryQuantityShort"),
         MILITARY_MORALE_SHORT("MilitaryMoraleShort"),
         MILITARY_COMBATIVITY_SHORT("MilitaryCombativityShort"),
-        MOVE_TO_ENTER("MoveToEnter");
+        MOVE_TO_ENTER("MoveToEnter"),
+        RECALL_PERSON("RecallPerson"),
+        MOVE_PERSON("MovePerson"),
+        SELECT_DESTINATION("SelectDestination");
 
         private final String xmlName;
         Keys(String name) {

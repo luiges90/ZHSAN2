@@ -649,4 +649,18 @@ public class Architecture extends GameObject implements HasPointLocation {
                         * Math.pow(getEndurance(), GlobalVariables.architectureDefenseEndurancePower));
     }
 
+    public boolean canRecallPerson() {
+        GameObjectList<Architecture> architectures = this.getBelongedFaction().getArchitectures();
+        return architectures.size() > 1 &&
+                architectures.getAll().parallelStream().filter(x -> x != this && x.getPersons().size() > 0).findAny().isPresent();
+    }
+
+    public boolean canMovePerson() {
+        return this.getBelongedFaction().getArchitectures().size() > 1 && this.getPersons().size() > 0;
+    }
+
+    public GameObjectList<Person> getRecallablePersonList() {
+        return getBelongedFaction().getPersons().filter(x -> x.getState() == Person.State.NORMAL && x.getLocation() != this);
+    }
+
 }
