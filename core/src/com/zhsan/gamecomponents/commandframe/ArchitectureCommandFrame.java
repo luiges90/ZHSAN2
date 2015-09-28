@@ -131,6 +131,11 @@ public class ArchitectureCommandFrame extends CommandFrame {
             militaryTab.loadXml(militaryNodes);
             tabs.put(TabType.MILITARY, militaryTab);
 
+            NodeList officerNodes = dom.getElementsByTagName("OfficerTab").item(0).getChildNodes();
+            CommandTab officerTab = new OfficerCommandTab(this);
+            officerTab.loadXml(officerNodes);
+            tabs.put(TabType.OFFICER, officerTab);
+
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ArchitectureCommandFrameData.xml", e);
         }
@@ -235,6 +240,9 @@ public class ArchitectureCommandFrame extends CommandFrame {
             tabs.values().forEach(CommandTab::onUnselect);
             internal.setState(StateTexture.State.NORMAL);
             military.setState(StateTexture.State.NORMAL);
+            officer.setState(StateTexture.State.NORMAL);
+            tactics.setState(StateTexture.State.NORMAL);
+            facility.setState(StateTexture.State.NORMAL);
         }
 
         @Override
@@ -247,6 +255,10 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 currentTab = TabType.MILITARY;
                 unselectAllTabs();
                 military.setState(StateTexture.State.SELECTED);
+            } else if (officerPos.contains(x, y)) {
+                currentTab = TabType.OFFICER;
+                unselectAllTabs();
+                officer.setState(StateTexture.State.SELECTED);
             }
 
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {

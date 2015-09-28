@@ -258,4 +258,9 @@
                       FontColor="4294967295"
                       Align="Center"/>
     </MilitaryTab>
+    <OfficerTab>
+        <Background FileName="Officer/Background.png" X="0" Y="-64"/>
+        <Recall FileName="Officer/Recall.png" Selected="Officer/RecallSelected.png" X="36" Y="224" Width="38" Height="19"/>
+        <Move FileName="Officer/Move.png" Selected="Officer/MoveSelected.png" X="36" Y="199" Width="38" Height="19"/>
+    </OfficerTab>
 </Root>
