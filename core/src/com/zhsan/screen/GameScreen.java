@@ -317,11 +317,9 @@ public class GameScreen extends WidgetGroup {
                     getScenario().advanceDay(new GameScenario.OnTroopDone() {
                         @Override
                         public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
-                            if (!oldLoc.equals(newLoc)) {
-                                mapLayer.addPendingTroopAnimation(
-                                        new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
-                                                oldLoc, newLoc, onTroopAnimationDone));
-                            }
+                            mapLayer.addPendingTroopAnimation(
+                                    new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.MOVE,
+                                            oldLoc, newLoc, onTroopAnimationDone));
                         }
 
                         @Override
@@ -341,7 +339,14 @@ public class GameScreen extends WidgetGroup {
                             });
                         }
                     });
-                    while (!mapLayer.isNoPendingTroopAnimations()); // wait animation thread to clear its queue
+                    while (!mapLayer.isNoPendingTroopAnimations()){
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            // no-op
+                        }
+                        // wait animation thread to clear its queue
+                    }
 
                     runAi();
 

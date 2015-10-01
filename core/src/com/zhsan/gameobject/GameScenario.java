@@ -346,15 +346,20 @@ public class GameScenario {
                     it.remove();
                 } else {
                     Point newLoc = t.getLocation();
-                    onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
-                        if (t.tryEnter(newLoc)) {
-                            return;
-                        }
-                        if (target != null) {
-                            List<DamagePack> damagePacks = t.attack();
-                            onTroopDone.onAttackDone(t, target, damagePacks);
-                        }
-                    });
+                    if (!oldLoc.equals(newLoc)) {
+                        onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
+                            if (t.tryEnter(newLoc)) {
+                                it.remove();
+                                return;
+                            }
+                            if (target != null) {
+                                List<DamagePack> damagePacks = t.attack();
+                                onTroopDone.onAttackDone(t, target, damagePacks);
+                            }
+                        });
+                    } else {
+                        it.remove();
+                    }
                 }
             }
         } while (movingTroops.size() > 0);
