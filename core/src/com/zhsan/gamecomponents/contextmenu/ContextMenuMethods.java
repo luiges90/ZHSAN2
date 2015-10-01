@@ -85,7 +85,7 @@ public final class ContextMenuMethods {
     }
 
     public static void ArchitectureRightClick_Architecture_AllPersons(GameScreen screen, Object object) {
-        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getPersons());
+        screen.showTabList(TabListGameFrame.ListKindType.PERSON, ((Architecture) object).getPersonsIncludingMoving());
     }
 
     public static void ArchitectureRightClick_Architecture_AllUnhiredPersons(GameScreen screen, Object object) {

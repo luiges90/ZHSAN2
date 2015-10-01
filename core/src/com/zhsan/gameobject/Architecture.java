@@ -157,8 +157,12 @@ public class Architecture extends GameObject implements HasPointLocation {
         this.belongedSection = n;
     }
 
-    public GameObjectList<Person> getPersons() {
+    public GameObjectList<Person> getPersonsIncludingMoving() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL);
+    }
+
+    public GameObjectList<Person> getPersons() {
+        return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getMovingDays() == 0);
     }
 
     public GameObjectList<Person> getUnhiredPersons() {
