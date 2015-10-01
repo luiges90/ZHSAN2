@@ -261,7 +261,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
                 officer.setState(StateTexture.State.SELECTED);
             }
 
-            if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
+            if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer() && !screen.getDayRunner().isDayRunning()) {
                 tabs.get(currentTab).onClick(x, y);
             }
 
