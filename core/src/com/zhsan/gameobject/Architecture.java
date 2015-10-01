@@ -654,9 +654,7 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     public boolean canRecallPerson() {
-        GameObjectList<Architecture> architectures = this.getBelongedFaction().getArchitectures();
-        return architectures.size() > 1 &&
-                architectures.getAll().parallelStream().filter(x -> x != this && x.getPersons().size() > 0).findAny().isPresent();
+        return this.getBelongedFaction().getArchitectures().size() > 1 && getRecallablePersonList().size() > 0;
     }
 
     public boolean canMovePerson() {
@@ -664,7 +662,8 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     public GameObjectList<Person> getRecallablePersonList() {
-        return getBelongedFaction().getPersons().filter(x -> x.getState() == Person.State.NORMAL && x.getLocation() != this);
+        return getBelongedFaction().getPersons().filter(x -> x.getState() == Person.State.NORMAL
+                && x.getLocation() != this && x.getLocation() instanceof Architecture);
     }
 
 }
