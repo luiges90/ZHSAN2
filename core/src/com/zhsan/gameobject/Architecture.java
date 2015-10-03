@@ -161,6 +161,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getPersons() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getMovingDays() == 0);
     }

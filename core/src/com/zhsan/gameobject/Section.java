@@ -83,6 +83,7 @@ public class Section extends GameObject {
         return belongedFaction;
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Architecture> getArchitectures() {
         return scenario.getArchitectures().filter(a -> a.getBelongedSection() == this);
     }

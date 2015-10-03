@@ -17,14 +17,6 @@ public final class FactionAI {
 
         LuaAI.processAnnotations(factionTable, Faction.class, f);
 
-        factionTable.set("getSections", new ZeroArgFunction() {
-            @Override
-            public LuaValue call() {
-                return f.getSections().getAll().stream()
-                        .map(SectionAI::createSectionTable).collect(new LuaAI.LuaTableCollector());
-            }
-        });
-
         return factionTable;
     }
 

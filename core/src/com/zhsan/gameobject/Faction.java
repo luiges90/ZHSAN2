@@ -134,6 +134,7 @@ public class Faction extends GameObject {
         return scenario.getPersons().filter(p -> p.getBelongedFaction() == this);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Section> getSections() {
         return scenario.getSections().filter(s -> s.getBelongedFaction() == this);
     }

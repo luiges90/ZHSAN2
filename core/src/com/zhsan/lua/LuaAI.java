@@ -2,6 +2,8 @@ package com.zhsan.lua;
 
 import com.zhsan.common.Paths;
 import com.zhsan.gameobject.Faction;
+import com.zhsan.gameobject.GameObject;
+import com.zhsan.gameobject.GameObjectList;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
@@ -165,6 +167,20 @@ public final class LuaAI {
             return LuaValue.valueOf((String) obj);
         } else if (obj == null) {
             return LuaValue.NIL;
+        } else if (obj instanceof GameObjectList) {
+            GameObjectList<?> list = (GameObjectList) obj;
+            if (list.size() == 0) {
+                return LuaValue.tableOf();
+            }
+            LuaTable table = LuaValue.tableOf();
+            int index = 0;
+            for (GameObject i : list) {
+                LuaTable child = LuaValue.tableOf();
+                LuaAI.processAnnotations(child, i.getClass(), i);
+                table.set(index, child);
+                index++;
+            }
+            return table;
         } else {
             throw new IllegalArgumentException("toLuaValue only accept strings, primitives, or null. " +
                     obj + "(" + obj.getClass().getName() + ") received.");
@@ -188,7 +204,7 @@ public final class LuaAI {
         }
     }
 
-    static <T> void processAnnotations(LuaTable table, Class<T> klass, T obj) {
+    static void processAnnotations(LuaTable table, Class<?> klass, Object obj) {
         for (Method m : klass.getMethods()) {
            if (m.isAnnotationPresent(ExportToLua.class)) {
                table.set(m.getName(), new VarArgFunction() {
