@@ -13,6 +13,7 @@ import java.util.Objects;
 public abstract class GameObject {
 
     private final int id;
+    private String aiTags = "";
 
     protected GameObject(int id) {
         this.id = id;
@@ -23,6 +24,17 @@ public abstract class GameObject {
     @LuaAI.ExportToLua
     public final int getId() {
         return id;
+    }
+
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
     }
 
     public final Object getField(String fname) {

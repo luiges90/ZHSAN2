@@ -51,9 +51,10 @@ public class Faction extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Faction t = new Faction(Integer.parseInt(line[0]), scen);
-                t.name = line[1];
-                t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[2]));
-                t.leaderId = Integer.parseInt(line[3]);
+                t.setAiTags(line[1]);
+                t.name = line[2];
+                t.color = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(line[3]));
+                t.leaderId = Integer.parseInt(line[4]);
 
                 result.add(t);
             }
@@ -76,7 +77,7 @@ public class Faction extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Faction t = new Faction(Integer.parseInt(line[0]), null);
-                t.name = line[1];
+                t.name = line[2];
  
                 result.add(t);
             }
@@ -94,6 +95,7 @@ public class Faction extends GameObject {
             for (Faction d : data) {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
+                        d.getAiTags(),
                         d.getName(),
                         XmlHelper.saveColorToXml(d.color),
                         String.valueOf(d.leader.getId())

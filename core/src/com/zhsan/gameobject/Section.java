@@ -44,8 +44,9 @@ public class Section extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Section data = new Section(Integer.parseInt(line[0]), scen);
-                data.name = line[1];
-                data.belongedFaction = scen.getFactions().get(Integer.parseInt(line[2]));
+                data.setAiTags(line[1]);
+                data.name = line[2];
+                data.belongedFaction = scen.getFactions().get(Integer.parseInt(line[3]));
 
                 result.add(data);
             }
@@ -63,6 +64,7 @@ public class Section extends GameObject {
             for (Section d : data) {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
+                        d.getAiTags(),
                         d.getName(),
                         String.valueOf(d.belongedFaction.getId())
                 });

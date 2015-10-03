@@ -23,8 +23,9 @@ public final class TerrainDetail extends GameObject {
     public final boolean canBeViewedThrough;
     public final float fireDamageRate;
 
-    private TerrainDetail(int id, String name, boolean canBeViewedThrough, float fireDamageRate) {
+    private TerrainDetail(int id, String aitag, String name, boolean canBeViewedThrough, float fireDamageRate) {
         super(id);
+        this.setAiTags(aitag);
         this.name = name;
         this.canBeViewedThrough = canBeViewedThrough;
         this.fireDamageRate = fireDamageRate;
@@ -45,9 +46,10 @@ public final class TerrainDetail extends GameObject {
 
                 TerrainDetailBuilder builder = new TerrainDetailBuilder();
                 builder.setId(Integer.parseInt(line[0]));
-                builder.setName(line[1]);
-                builder.setCanBeViewedThrough(Boolean.parseBoolean(line[2]));
-                builder.setFireDamageRate(Float.parseFloat(line[3]));
+                builder.setAiTag(line[1]);
+                builder.setName(line[2]);
+                builder.setCanBeViewedThrough(Boolean.parseBoolean(line[3]));
+                builder.setFireDamageRate(Float.parseFloat(line[4]));
 
                 result.add(builder.createTerrainDetail());
             }
@@ -64,8 +66,11 @@ public final class TerrainDetail extends GameObject {
             writer.writeNext(GlobalStrings.getString(GlobalStrings.Keys.TERRAIN_DETAIL_SAVE_HEADER).split(","));
             for (TerrainDetail detail : terrainDetails) {
                 writer.writeNext(new String[]{
-                        String.valueOf(detail.getId()), detail.getName(),
-                        String.valueOf(detail.canBeViewedThrough), String.valueOf(detail.fireDamageRate)
+                        String.valueOf(detail.getId()),
+                        detail.getAiTags(),
+                        detail.getName(),
+                        String.valueOf(detail.canBeViewedThrough),
+                        String.valueOf(detail.fireDamageRate)
                 });
             }
         } catch (IOException e) {
@@ -84,6 +89,7 @@ public final class TerrainDetail extends GameObject {
         private String name;
         private boolean canBeViewedThrough;
         private float fireDamageRate;
+        private String aitag;
 
         public TerrainDetailBuilder setId(int id) {
             this.id = id;
@@ -106,7 +112,12 @@ public final class TerrainDetail extends GameObject {
         }
 
         public TerrainDetail createTerrainDetail() {
-            return new TerrainDetail(id, name, canBeViewedThrough, fireDamageRate);
+            return new TerrainDetail(id, aitag, name, canBeViewedThrough, fireDamageRate);
+        }
+
+        public TerrainDetailBuilder setAiTag(String aitag) {
+            this.aitag = aitag;
+            return this;
         }
     }
 }

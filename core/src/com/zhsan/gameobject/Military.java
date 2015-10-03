@@ -118,14 +118,15 @@ public class Military extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Military data = new Military(Integer.parseInt(line[0]), scen);
-                data.name = line[1];
-                data.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[2]));
-                data.location = LocationType.fromCSV(line[3], line[4], scen);
-                data.quantity = Integer.parseInt(line[5]);
-                data.morale = Integer.parseInt(line[6]);
-                data.combativity = Integer.parseInt(line[7]);
-                data.leader = scen.getPerson(Integer.parseInt(line[8]));
-                data.persons = scen.getPersons().getItemsFromCSV(line[9]);
+                data.setAiTags(line[1]);
+                data.name = line[2];
+                data.kind = scen.getMilitaryKinds().get(Integer.parseInt(line[3]));
+                data.location = LocationType.fromCSV(line[4], line[5], scen);
+                data.quantity = Integer.parseInt(line[6]);
+                data.morale = Integer.parseInt(line[7]);
+                data.combativity = Integer.parseInt(line[8]);
+                data.leader = scen.getPerson(Integer.parseInt(line[9]));
+                data.persons = scen.getPersons().getItemsFromCSV(line[10]);
 
                 result.add(data);
             }
@@ -144,6 +145,7 @@ public class Military extends GameObject {
                 Pair<String, String> savedLocation = detail.location.toCSV();
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.getName(),
                         String.valueOf(detail.kind.getId()),
                         savedLocation.x,

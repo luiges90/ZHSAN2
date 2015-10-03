@@ -35,8 +35,9 @@ public final class MilitaryKind extends GameObject {
     private final int rangeLo, rangeHi;
     private final float architectureOffense;
 
-    private MilitaryKind(int id, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense) {
+    private MilitaryKind(int id, String aitag, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense) {
         super(id);
+        this.setAiTags(aitag);
         this.scenario = scenario;
         this.type = type;
         this.name = name;
@@ -68,22 +69,23 @@ public final class MilitaryKind extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 MilitaryKind kind = new MilitaryKindBuilder().setId(Integer.parseInt(line[0]))
-                        .setName(line[1])
-                        .setType(scen.getMilitaryTypes().get(Integer.parseInt(line[2])))
-                        .setDescription(line[3])
-                        .setCanOnlyCreateAtArchitecture(Boolean.parseBoolean(line[4]))
-                        .setCost(Integer.parseInt(line[5]))
-                        .setTransportCost(Float.parseFloat(line[6]))
-                        .setQuantity(Integer.parseInt(line[7]))
-                        .setUnitQuantity(Integer.parseInt(line[8]))
-                        .setMovability(Integer.parseInt(line[9]))
-                        .setOffense(Integer.parseInt(line[10]))
-                        .setDefense(Integer.parseInt(line[11]))
-                        .setOffensePerUnit(Integer.parseInt(line[12]))
-                        .setDefensePerUnit(Integer.parseInt(line[13]))
-                        .setRangeLo(Integer.parseInt(line[14]))
-                        .setRangeHi(Integer.parseInt(line[15]))
-                        .setArchitectureOffense(Float.parseFloat(line[16]))
+                        .setAitag(line[1])
+                        .setName(line[2])
+                        .setType(scen.getMilitaryTypes().get(Integer.parseInt(line[3])))
+                        .setDescription(line[4])
+                        .setCanOnlyCreateAtArchitecture(Boolean.parseBoolean(line[5]))
+                        .setCost(Integer.parseInt(line[6]))
+                        .setTransportCost(Float.parseFloat(line[7]))
+                        .setQuantity(Integer.parseInt(line[8]))
+                        .setUnitQuantity(Integer.parseInt(line[9]))
+                        .setMovability(Integer.parseInt(line[10]))
+                        .setOffense(Integer.parseInt(line[11]))
+                        .setDefense(Integer.parseInt(line[12]))
+                        .setOffensePerUnit(Integer.parseInt(line[13]))
+                        .setDefensePerUnit(Integer.parseInt(line[14]))
+                        .setRangeLo(Integer.parseInt(line[15]))
+                        .setRangeHi(Integer.parseInt(line[16]))
+                        .setArchitectureOffense(Float.parseFloat(line[17]))
                         .setScenario(scen)
                         .createMilitaryKind();
 
@@ -103,6 +105,7 @@ public final class MilitaryKind extends GameObject {
             for (MilitaryKind detail : kinds) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.name,
                         String.valueOf(detail.type.getId()),
                         detail.description,
@@ -201,6 +204,7 @@ public final class MilitaryKind extends GameObject {
 
     public static class MilitaryKindBuilder {
         private int id;
+        private String aitag;
         private GameScenario scenario;
         private MilitaryType type;
         private String name;
@@ -332,7 +336,12 @@ public final class MilitaryKind extends GameObject {
         }
 
         public MilitaryKind createMilitaryKind() {
-            return new MilitaryKind(id, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, offensePerUnit, defensePerUnit, rangeLo, rangeHi, architectureOffense);
+            return new MilitaryKind(id, aitag, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, offensePerUnit, defensePerUnit, rangeLo, rangeHi, architectureOffense);
+        }
+
+        public MilitaryKindBuilder setAitag(String aitag) {
+            this.aitag = aitag;
+            return this;
         }
     }
 }

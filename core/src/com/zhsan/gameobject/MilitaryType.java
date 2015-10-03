@@ -20,8 +20,9 @@ public final class MilitaryType extends GameObject {
 
     private final String name;
 
-    private MilitaryType(int id, String name) {
+    private MilitaryType(int id, String aitag, String name) {
         super(id);
+        this.setAiTags(aitag);
         this.name = name;
     }
 
@@ -37,7 +38,8 @@ public final class MilitaryType extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 MilitaryType type = new MilitaryTypeBuilder().setId(Integer.parseInt(line[0]))
-                        .setName(line[1])
+                        .setAitag(line[1])
+                        .setName(line[2])
                         .createMilitaryType();
 
                 result.add(type);
@@ -56,6 +58,7 @@ public final class MilitaryType extends GameObject {
             for (MilitaryType detail : types) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.getName(),
                 });
             }
@@ -72,6 +75,7 @@ public final class MilitaryType extends GameObject {
     public static class MilitaryTypeBuilder {
         private int id;
         private String name;
+        private String aitag;
 
         public MilitaryTypeBuilder setId(int id) {
             this.id = id;
@@ -84,7 +88,12 @@ public final class MilitaryType extends GameObject {
         }
 
         public MilitaryType createMilitaryType() {
-            return new MilitaryType(id, name);
+            return new MilitaryType(id, aitag, name);
+        }
+
+        public MilitaryTypeBuilder setAitag(String aitag) {
+            this.aitag = aitag;
+            return this;
         }
     }
 }

@@ -27,8 +27,9 @@ public final class FacilityKind extends GameObject {
 
     private final GameObjectList<TerrainDetail> canBuildAtTerrain;
 
-    private FacilityKind(int id, String name, int endurance, boolean indestructible, boolean mustHave, GameObjectList<TerrainDetail> canBuildAtTerrain) {
+    private FacilityKind(int id, String aitag, String name, int endurance, boolean indestructible, boolean mustHave, GameObjectList<TerrainDetail> canBuildAtTerrain) {
         super(id);
+        this.setAiTags(aitag);
         this.name = name;
         this.endurance = endurance;
         this.indestructible = indestructible;
@@ -48,11 +49,12 @@ public final class FacilityKind extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 FacilityKind kind = new FacilityKindBuilder().setId(Integer.parseInt(line[0]))
-                        .setName(line[1])
-                        .setEndurance(Integer.parseInt(line[2]))
-                        .setIndestructible(Boolean.parseBoolean(line[3]))
-                        .setMustHave(Boolean.parseBoolean(line[4]))
-                        .setCanBuildAtTerrain(scen.getTerrainDetails().getItemsFromCSV(line[5]))
+                        .setAiTags(line[1])
+                        .setName(line[2])
+                        .setEndurance(Integer.parseInt(line[3]))
+                        .setIndestructible(Boolean.parseBoolean(line[4]))
+                        .setMustHave(Boolean.parseBoolean(line[5]))
+                        .setCanBuildAtTerrain(scen.getTerrainDetails().getItemsFromCSV(line[6]))
                         .createFacilityKind();
 
                 result.add(kind);
@@ -71,6 +73,7 @@ public final class FacilityKind extends GameObject {
             for (FacilityKind detail : kinds) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.name,
                         String.valueOf(detail.endurance),
                         String.valueOf(detail.indestructible),
@@ -99,6 +102,7 @@ public final class FacilityKind extends GameObject {
 
     public static class FacilityKindBuilder {
         private int id;
+        private String aiTags;
         private String name;
         private int endurance;
         private boolean indestructible;
@@ -136,7 +140,12 @@ public final class FacilityKind extends GameObject {
         }
 
         public FacilityKind createFacilityKind() {
-            return new FacilityKind(id, name, endurance, indestructible, mustHave, canBuildAtTerrain);
+            return new FacilityKind(id, aiTags, name, endurance, indestructible, mustHave, canBuildAtTerrain);
+        }
+
+        public FacilityKindBuilder setAiTags(String aiTags) {
+            this.aiTags = aiTags;
+            return this;
         }
     }
 }

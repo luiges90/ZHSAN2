@@ -146,10 +146,11 @@ public class Troop extends GameObject implements HasPointLocation {
                 if (index == 1) continue; // skip first line.
 
                 Troop data = new Troop(Integer.parseInt(line[0]), scen);
-                data.location = Point.fromCSV(line[1]);
-                data.order = Order.fromCSV(scen, line[2], line[3]);
-                data.belongedSection = scen.getSections().get(Integer.parseInt(line[4]));
-                data.startArchitecture = scen.getArchitectures().get(Integer.parseInt(line[5]));
+                data.setAiTags(line[1]);
+                data.location = Point.fromCSV(line[2]);
+                data.order = Order.fromCSV(scen, line[3], line[4]);
+                data.belongedSection = scen.getSections().get(Integer.parseInt(line[5]));
+                data.startArchitecture = scen.getArchitectures().get(Integer.parseInt(line[6]));
 
                 result.add(data);
             }
@@ -168,6 +169,7 @@ public class Troop extends GameObject implements HasPointLocation {
                 Pair<String, String> orderStr = detail.order.toCSV();
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.location.toCSV(),
                         orderStr.x,
                         orderStr.y,

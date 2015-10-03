@@ -24,9 +24,10 @@ public final class ArchitectureKind extends GameObject {
     private final int agriculture, commerce, technology, endurance, morale, population;
     private final long maxFund, maxFood;
 
-    private ArchitectureKind(int id, String name, float drawOffsetL, float drawOffsetW, int agriculture, int commerce, int technology, int endurance, int morale, int population, long maxFund, long maxFood) {
+    private ArchitectureKind(int id, String aiTag, String name, float drawOffsetL, float drawOffsetW, int agriculture, int commerce, int technology, int endurance, int morale, int population, long maxFund, long maxFood) {
         super(id);
         this.name = name;
+        this.setAiTags(aiTag);
         this.drawOffsetL = drawOffsetL;
         this.drawOffsetW = drawOffsetW;
         this.agriculture = agriculture;
@@ -51,17 +52,18 @@ public final class ArchitectureKind extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 ArchitectureKind kind = new ArchitectureKindBuilder().setId(Integer.parseInt(line[0]))
-                        .setName(line[1])
-                        .setDrawOffsetL(Float.parseFloat(line[2]))
-                        .setDrawOffsetW(Float.parseFloat(line[3]))
-                        .setAgriculture(Integer.parseInt(line[4]))
-                        .setCommerce(Integer.parseInt(line[5]))
-                        .setTechnology(Integer.parseInt(line[6]))
-                        .setMorale(Integer.parseInt(line[7]))
-                        .setEndurance(Integer.parseInt(line[8]))
-                        .setPopulation(Integer.parseInt(line[9]))
-                        .setMaxFund(Long.parseLong(line[10]))
-                        .setMaxFood(Long.parseLong(line[11])).createArchitectureKind();
+                        .setAitag(line[1])
+                        .setName(line[2])
+                        .setDrawOffsetL(Float.parseFloat(line[3]))
+                        .setDrawOffsetW(Float.parseFloat(line[4]))
+                        .setAgriculture(Integer.parseInt(line[5]))
+                        .setCommerce(Integer.parseInt(line[6]))
+                        .setTechnology(Integer.parseInt(line[7]))
+                        .setMorale(Integer.parseInt(line[8]))
+                        .setEndurance(Integer.parseInt(line[9]))
+                        .setPopulation(Integer.parseInt(line[10]))
+                        .setMaxFund(Long.parseLong(line[11]))
+                        .setMaxFood(Long.parseLong(line[12])).createArchitectureKind();
 
                 result.add(kind);
             }
@@ -79,6 +81,7 @@ public final class ArchitectureKind extends GameObject {
             for (ArchitectureKind detail : kinds) {
                 writer.writeNext(new String[]{
                         String.valueOf(detail.getId()),
+                        detail.getAiTags(),
                         detail.getName(),
                         String.valueOf(detail.getDrawOffsetLength()),
                         String.valueOf(detail.getDrawOffsetWidth()),
@@ -145,6 +148,7 @@ public final class ArchitectureKind extends GameObject {
 
     public static class ArchitectureKindBuilder {
         private int id;
+        private String aitag;
         private String name;
         private float drawOffsetL;
         private float drawOffsetW;
@@ -218,7 +222,12 @@ public final class ArchitectureKind extends GameObject {
         }
 
         public ArchitectureKind createArchitectureKind() {
-            return new ArchitectureKind(id, name, drawOffsetL, drawOffsetW, agriculture, commerce, technology, endurance, morale, population, maxFund, maxFood);
+            return new ArchitectureKind(id, aitag, name, drawOffsetL, drawOffsetW, agriculture, commerce, technology, endurance, morale, population, maxFund, maxFood);
+        }
+
+        public ArchitectureKindBuilder setAitag(String aitag) {
+            this.aitag = aitag;
+            return this;
         }
     }
 }

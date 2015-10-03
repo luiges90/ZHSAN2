@@ -214,20 +214,20 @@ public class Person extends GameObject {
                 if (index == 1) continue; // skip first line.
 
                 Person data = new Person(Integer.parseInt(line[0]), scen);
-
-                data.portraitId = Integer.parseInt(line[1]);
-                data.surname = line[2];
-                data.givenName = line[3];
-                data.calledName = line[4];
-                data.state = Person.State.fromCSV(line[5]);
-                data.location = LocationType.fromCSV(line[6], line[7], scen);
-                data.movingDays = Integer.parseInt(line[8]);
-                data.strength = Integer.parseInt(line[9]);
-                data.command = Integer.parseInt(line[10]);
-                data.intelligence = Integer.parseInt(line[11]);
-                data.politics = Integer.parseInt(line[12]);
-                data.glamour = Integer.parseInt(line[13]);
-                data.doingWork = Person.DoingWork.fromCSV(line[14]);
+                data.setAiTags(line[1]);
+                data.portraitId = Integer.parseInt(line[2]);
+                data.surname = line[3];
+                data.givenName = line[4];
+                data.calledName = line[5];
+                data.state = Person.State.fromCSV(line[6]);
+                data.location = LocationType.fromCSV(line[7], line[8], scen);
+                data.movingDays = Integer.parseInt(line[9]);
+                data.strength = Integer.parseInt(line[10]);
+                data.command = Integer.parseInt(line[11]);
+                data.intelligence = Integer.parseInt(line[12]);
+                data.politics = Integer.parseInt(line[13]);
+                data.glamour = Integer.parseInt(line[14]);
+                data.doingWork = Person.DoingWork.fromCSV(line[15]);
 
                 result.add(data);
             }
@@ -246,6 +246,7 @@ public class Person extends GameObject {
                 Pair<String, String> savedLocation = d.location == null ? LocationType.nullToCSV() : d.location.toCSV();
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
+                        d.getAiTags(),
                         String.valueOf(d.portraitId),
                         d.surname,
                         d.givenName,

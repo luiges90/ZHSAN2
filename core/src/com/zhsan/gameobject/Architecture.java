@@ -58,20 +58,21 @@ public class Architecture extends GameObject implements HasPointLocation {
                 if (index == 1) continue; // skip first line.
 
                 Architecture data = new Architecture(Integer.parseInt(line[0]), scen);
-                data.nameImageName = line[1];
-                data.name = line[2];
-                data.architectureKind = scen.getArchitectureKinds().get(Integer.parseInt(line[3]));
-                data.location = Point.fromCSVList(line[4]);
-                data.belongedSection = scen.getSections().get(Integer.parseInt(line[5]));
-                data.population = Integer.parseInt(line[6]);
-                data.fund = Integer.parseInt(line[7]);
-                data.food = Integer.parseInt(line[8]);
-                data.agriculture = Float.parseFloat(line[9]);
-                data.commerce = Float.parseFloat(line[10]);
-                data.technology = Float.parseFloat(line[11]);
-                data.morale = Float.parseFloat(line[12]);
-                data.endurance = Float.parseFloat(line[13]);
-                data.creatableMilitaryKinds = scen.getMilitaryKinds().getItemsFromCSV(line[14]);
+                data.setAiTags(line[1]);
+                data.nameImageName = line[2];
+                data.name = line[3];
+                data.architectureKind = scen.getArchitectureKinds().get(Integer.parseInt(line[4]));
+                data.location = Point.fromCSVList(line[5]);
+                data.belongedSection = scen.getSections().get(Integer.parseInt(line[6]));
+                data.population = Integer.parseInt(line[7]);
+                data.fund = Integer.parseInt(line[8]);
+                data.food = Integer.parseInt(line[9]);
+                data.agriculture = Float.parseFloat(line[10]);
+                data.commerce = Float.parseFloat(line[11]);
+                data.technology = Float.parseFloat(line[12]);
+                data.morale = Float.parseFloat(line[13]);
+                data.endurance = Float.parseFloat(line[14]);
+                data.creatableMilitaryKinds = scen.getMilitaryKinds().getItemsFromCSV(line[15]);
 
                 result.add(data);
             }
@@ -89,6 +90,7 @@ public class Architecture extends GameObject implements HasPointLocation {
             for (Architecture d : data) {
                 writer.writeNext(new String[]{
                         String.valueOf(d.getId()),
+                        d.getAiTags(),
                         d.nameImageName,
                         d.getName(),
                         String.valueOf(d.architectureKind.getId()),
