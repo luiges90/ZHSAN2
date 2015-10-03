@@ -182,7 +182,7 @@ public final class LuaAI {
             }
             return table;
         } else {
-            throw new IllegalArgumentException("toLuaValue only accept strings, primitives, or null. " +
+            throw new IllegalArgumentException("toLuaValue only accept strings, primitives, GameObjectLists or null. " +
                     obj + "(" + obj.getClass().getName() + ") received.");
         }
     }
