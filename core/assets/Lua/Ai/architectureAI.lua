@@ -3,7 +3,7 @@ function architectureAI(architecture)
       print("Internal work assignment for Architecture " .. architecture.getName())
 
       -- assign mayor: the best total internal values
-      if architecture.canChangeMayor() then
+      if architecture.canChangeMayorToOther() then
          local max = 0
          local candidate
          for i, v in pairs(architecture.getPersons()) do
