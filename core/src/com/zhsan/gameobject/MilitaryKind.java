@@ -145,10 +145,6 @@ public final class MilitaryKind extends GameObject {
         return cost;
     }
 
-    public MilitaryKind setCost(int cost) {
-        return new MilitaryKindBuilder().from(this).setCost(cost).createMilitaryKind();
-    }
-
     @LuaAI.ExportToLua
     public int getQuantity() {
         return quantity;
@@ -159,8 +155,18 @@ public final class MilitaryKind extends GameObject {
         return unitQuantity;
     }
 
+    @LuaAI.ExportToLua
+    public int getCost(int architectureId) {
+        return getCost(scenario.getArchitectures().get(architectureId));
+    }
+
     public int getCost(Architecture location) {
-        return cost;
+        Architecture a = this.getArchitecturesCreatable().min(
+                (x, y) -> Double.compare(location.distanceTo(x), location.distanceTo(y)), null);
+        if (a != null) {
+            return (int) Math.round(this.getCost() + this.getTransportCost() * location.distanceTo(a));
+        }
+        return Integer.MAX_VALUE;
     }
 
     public boolean isCanOnlyCreateAtArchitecture() {

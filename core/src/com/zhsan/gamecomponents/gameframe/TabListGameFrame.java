@@ -123,6 +123,8 @@ public class TabListGameFrame extends GameFrame {
 
     private String title;
 
+    private GameObject context;
+
     public static final String RES_PATH = GameFrame.RES_PATH + "TabList" + File.separator;
     public static final String DATA_PATH = RES_PATH  + "Data" + File.separator;
 
@@ -274,6 +276,10 @@ public class TabListGameFrame extends GameFrame {
     }
 
     public void show(String title, ListKindType type, GameObjectList<?> showingData, Selection selection, OnItemSelectedListener onItemSelected) {
+        show(null, type, null, showingData, selection, onItemSelected);
+    }
+
+    public void show(String title, ListKindType type, GameObject context, GameObjectList<?> showingData, Selection selection, OnItemSelectedListener onItemSelected) {
         if (showingData.size() == 0) return;
         if (!type.carryingObj.isAssignableFrom(showingData.getFirst().getClass())) {
             throw new IllegalArgumentException("MenuKindType " + type + " can only accept an object of type "
@@ -282,6 +288,7 @@ public class TabListGameFrame extends GameFrame {
 
         this.title = title;
         this.selection = selection;
+        this.context = context;
         this.showingListKind = listKinds.get(type);
         this.showingData = showingData;
         this.showingTab = this.showingListKind.tabs.get(0);
@@ -331,7 +338,7 @@ public class TabListGameFrame extends GameFrame {
             for (Column c : showingTab.columns) {
                 TextWidget<GameObject> widget = new TextWidget<>(c.contentTemplate);
                 widget.setExtra(o);
-                widget.setText(o.getFieldString(c.name, c.round));
+                widget.setText(o.getFieldString(c.name, c.round, context));
 
                 showingTextWidgets.add(widget);
 

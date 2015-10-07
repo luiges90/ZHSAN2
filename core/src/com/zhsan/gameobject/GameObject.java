@@ -5,6 +5,8 @@ import com.zhsan.lua.LuaAI;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,12 +40,34 @@ public abstract class GameObject {
     }
 
     public final Object getField(String fname) {
+        return getField(fname, null);
+    }
+
+    public final Object getField(String fname, GameObject context) {
         switch (fname) {
             case "Id":
                 return id;
             case "Name":
                 return getName();
             default:
+                if (context != null) {
+                    try {
+                        List<Method> candidates = new ArrayList<>();
+                        for (Method m : this.getClass().getMethods()) {
+                            if (m.getName().equals("get" + fname) &&
+                                    m.getParameterTypes().length == 1 && GameObject.class.isAssignableFrom(m.getParameterTypes()[0])) {
+                                candidates.add(m);
+                            }
+                        }
+                        if (candidates.size() == 1) {
+                            return candidates.get(0).invoke(this, context);
+                        } else {
+                            throw new NoSuchMethodException("There must be exactly one method with one GameObject argument." + candidates);
+                        }
+                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        // fall to next case
+                    }
+                }
                 try {
                     Method m = this.getClass().getMethod("get" + fname);
                     return m.invoke(this);
@@ -58,7 +82,11 @@ public abstract class GameObject {
     }
 
     public final String getFieldString(String name, boolean round) {
-        Object o = getField(name);
+        return getFieldString(name, round, null);
+    }
+
+    public final String getFieldString(String name, boolean round, GameObject context) {
+        Object o = getField(name, context);
         if (o == null) {
             return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
         } else if (o instanceof Float) {

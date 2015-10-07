@@ -377,17 +377,14 @@ public class Architecture extends GameObject implements HasPointLocation {
         return creatableMilitaryKinds;
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<MilitaryKind> getActualCreatableMilitaryKinds() {
-        GameObjectList<MilitaryKind> kinds = new GameObjectList<>(creatableMilitaryKinds, false);
+        GameObjectList<MilitaryKind> kinds = new GameObjectList<>();
         for (MilitaryKind k : scenario.getMilitaryKinds()) {
-            if (!k.isCanOnlyCreateAtArchitecture() && !kinds.contains(k)) {
-                Architecture a = k.getArchitecturesCreatable().min(
-                        (x, y) -> Double.compare(this.distanceTo(x), this.distanceTo(y)), null);
-                if (a != null) {
-                    int cost = (int) Math.round(k.getCost() + k.getTransportCost() * this.distanceTo(a));
-                    if (cost <= this.fund) {
-                        kinds.add(k.setCost(cost));
-                    }
+            if (!k.isCanOnlyCreateAtArchitecture() || creatableMilitaryKinds.contains(k)) {
+                int cost = k.getCost(this);
+                if (cost <= this.fund) {
+                    kinds.add(k);
                 }
             }
         }

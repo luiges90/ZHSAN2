@@ -402,6 +402,7 @@ public class MilitaryCommandTab implements CommandTab {
     public void onClick(float x, float y) {
         if (newMilitaryPos.contains(x, y)) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.NEW_MILITARY), TabListGameFrame.ListKindType.MILITARY_KIND,
+                    parent.getCurrentArchitecture(),
                     parent.getCurrentArchitecture().getActualCreatableMilitaryKinds(), TabListGameFrame.Selection.SINGLE,
                     selectedItems -> {
                         MilitaryKind kind = (MilitaryKind) selectedItems.get(0);
@@ -410,6 +411,7 @@ public class MilitaryCommandTab implements CommandTab {
                     });
         } else if (recruitPos.contains(x, y) && parent.getCurrentArchitecture().getRecruitableMilitaries().size() > 0) {
             parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.RECRUIT_MILITARY), TabListGameFrame.ListKindType.PERSON,
+                    parent.getCurrentArchitecture(),
                     parent.getCurrentArchitecture().getPersonsExcludingMayor(), TabListGameFrame.Selection.MULTIPLE,
                     selectedItems -> {
                         for (GameObject i : selectedItems) {
