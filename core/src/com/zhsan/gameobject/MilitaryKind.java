@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -130,6 +131,7 @@ public final class MilitaryKind extends GameObject {
     }
 
     @Override
+    @LuaAI.ExportToLua
     public String getName() {
         return name;
     }
@@ -138,6 +140,7 @@ public final class MilitaryKind extends GameObject {
         return type.getName();
     }
 
+    @LuaAI.ExportToLua
     public int getCost() {
         return cost;
     }
@@ -146,10 +149,12 @@ public final class MilitaryKind extends GameObject {
         return new MilitaryKindBuilder().from(this).setCost(cost).createMilitaryKind();
     }
 
+    @LuaAI.ExportToLua
     public int getQuantity() {
         return quantity;
     }
 
+    @LuaAI.ExportToLua
     public int getUnitQuantity() {
         return unitQuantity;
     }
@@ -166,34 +171,42 @@ public final class MilitaryKind extends GameObject {
         return transportCost;
     }
 
+    @LuaAI.ExportToLua
     public int getOffense() {
         return offense;
     }
 
+    @LuaAI.ExportToLua
     public int getDefense() {
         return defense;
     }
 
+    @LuaAI.ExportToLua
     public int getOffensePerUnit() {
         return offensePerUnit;
     }
 
+    @LuaAI.ExportToLua
     public int getDefensePerUnit() {
         return defensePerUnit;
     }
 
+    @LuaAI.ExportToLua
     public int getRangeLo() {
         return rangeLo;
     }
 
+    @LuaAI.ExportToLua
     public int getRangeHi() {
         return rangeHi;
     }
 
+    @LuaAI.ExportToLua
     public float getArchitectureOffense() {
         return architectureOffense;
     }
 
+    @LuaAI.ExportToLua
     public int getMovability() {
         return movability;
     }

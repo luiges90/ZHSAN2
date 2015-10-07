@@ -5,6 +5,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.gameobject.pathfinding.ZhPathFinder;
+import com.zhsan.lua.LuaAI;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -181,6 +182,7 @@ public class GameScenario {
         return new GameObjectList<>(militaryTypes, true);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<MilitaryKind> getMilitaryKinds() {
         return new GameObjectList<>(militaryKinds, true);
     }

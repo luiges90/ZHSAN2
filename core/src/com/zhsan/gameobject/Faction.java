@@ -169,7 +169,7 @@ public class Faction extends GameObject {
     }
 
     public void ai() {
-        LuaAI.runFactionAi(this);
+        LuaAI.runFactionAi(scenario, this);
     }
 
 }

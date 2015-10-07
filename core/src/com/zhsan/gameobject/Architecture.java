@@ -515,13 +515,11 @@ public class Architecture extends GameObject implements HasPointLocation {
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
     }
 
-    @LuaAI.ExportToLua
-    public double fundGainedNextMonth() {
+    private double fundGainedNextMonth() {
         return GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation);
     }
 
-    @LuaAI.ExportToLua
-    public double foodGainedNextMonth() {
+    private double foodGainedNextMonth() {
         return GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation);
     }
 

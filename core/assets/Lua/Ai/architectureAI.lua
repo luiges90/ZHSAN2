@@ -8,6 +8,10 @@ function architectureAI(architecture)
 
 end
 
+function createMilitaries(architecture)
+
+end
+
 function assignMayor(architecture)
    -- assign mayor: the best total internal values
    if architecture.canChangeMayorToOther() then

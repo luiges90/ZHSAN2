@@ -1,5 +1,6 @@
 -- entry point of ZHSan2 AI
--- `faction` is passed into this script and can be used to access everything the faction knows
+-- `faction` contains current faciton information
+-- `scenario` contains various scenario information
 -- All output will be written to Lua/AI/Logs/Faction<ID>.log files
 
 -- Additionally, you can use dump(var) function to print the content of the variable, for debugging and inspection
@@ -7,6 +8,7 @@
 
 dofile(PATH .. "sectionAI.lua")
 
+dump(scenario)
 dump(faction)
 
 for i, item in pairs(faction.getSections()) do

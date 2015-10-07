@@ -4,6 +4,7 @@ import com.zhsan.common.Paths;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameObjectList;
+import com.zhsan.gameobject.GameScenario;
 import org.luaj.vm2.*;
 import org.luaj.vm2.lib.OneArgFunction;
 import org.luaj.vm2.lib.VarArgFunction;
@@ -38,7 +39,7 @@ public final class LuaAI {
 
     private LuaAI(){}
 
-    public static void runFactionAi(Faction f) {
+    public static void runFactionAi(GameScenario scen, Faction f) {
         try (PrintWriter logger = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true)) {
             Globals globals = JsePlatform.standardGlobals();
 
@@ -93,7 +94,13 @@ public final class LuaAI {
                 }
             });
 
-            globals.set("faction", FactionAI.createFactionTable(f));
+            LuaTable factionTable = LuaValue.tableOf();
+            LuaAI.processAnnotations(factionTable, Faction.class, f);
+            globals.set("faction", factionTable);
+
+            LuaTable scenarioTable = LuaValue.tableOf();
+            LuaAI.processAnnotations(scenarioTable, GameScenario.class, scen);
+            globals.set("scenario", scenarioTable);
 
             LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
 
