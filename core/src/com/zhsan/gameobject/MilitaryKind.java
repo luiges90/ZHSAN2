@@ -156,7 +156,7 @@ public final class MilitaryKind extends GameObject {
     }
 
     @LuaAI.ExportToLua
-    public int getCost(int architectureId) {
+    public int getCostOfArchitecture(int architectureId) {
         return getCost(scenario.getArchitectures().get(architectureId));
     }
 

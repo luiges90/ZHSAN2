@@ -18,6 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
@@ -61,12 +62,17 @@ public final class LuaAI {
                                 dump(indent + 4, value);
                             } else if (value.isfunction()) {
                                 if (key.tojstring().startsWith("get")) {
-                                    LuaValue result = value.call();
-                                    if (result.istable()) {
-                                        logger.println(ns(indent, " ") + key + " = ");
-                                        dump(indent + 4, result);
-                                    } else {
-                                        logger.println(ns(indent, " ") + key + " = " + result);
+                                    LuaValue result;
+                                    try {
+                                        result = value.call();
+                                        if (result.istable()) {
+                                            logger.println(ns(indent, " ") + key + " = ");
+                                            dump(indent + 4, result);
+                                        } else {
+                                            logger.println(ns(indent, " ") + key + " = " + result);
+                                        }
+                                    } catch (IllegalArgumentException e) {
+                                        logger.println(ns(indent, " ") + key + " = " + value);
                                     }
                                 } else {
                                     logger.println(ns(indent, " ") + key + " = " + value);
@@ -229,7 +235,7 @@ public final class LuaAI {
                        try {
                            result = m.invoke(obj, objArgs);
                        } catch (IllegalAccessException | InvocationTargetException e) {
-                           throw new RuntimeException("Exception occurred invoking java method " + m, e);
+                           throw new RuntimeException("Exception occurred invoking java method " + m + " with args " + Arrays.toString(objArgs), e);
                        }
                        return toLuaValue(result);
                    }
