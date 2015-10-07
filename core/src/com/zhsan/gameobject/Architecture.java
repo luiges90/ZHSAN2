@@ -515,13 +515,19 @@ public class Architecture extends GameObject implements HasPointLocation {
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
     }
 
+    @LuaAI.ExportToLua
+    public double fundGainedNextMonth() {
+        return GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation);
+    }
+
+    @LuaAI.ExportToLua
+    public double foodGainedNextMonth() {
+        return GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation);
+    }
+
     private void gainResources() {
-        this.fund = (int) MathUtils.clamp(this.fund +
-                        GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation),
-                0, this.getKind().getMaxFund());
-        this.food = (int) MathUtils.clamp(this.food +
-                        GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation),
-                0, this.getKind().getMaxFood());
+        this.fund = (int) MathUtils.clamp(this.fund + fundGainedNextMonth(), 0, this.getKind().getMaxFund());
+        this.food = (int) MathUtils.clamp(this.food + foodGainedNextMonth(), 0, this.getKind().getMaxFood());
     }
 
     private void recruitMilitaries() {
