@@ -685,7 +685,7 @@ public class Architecture extends GameObject implements HasPointLocation {
                 if (a == this) continue;
                 if (this.getLocation().taxiDistanceTo(a.getLocation()) <= GlobalVariables.maxPathLengthAsConnected) {
                     List<Point> path = pathFinder.findPath(this.getLocation(), a.getLocation());
-                    if (path.size() <= GlobalVariables.maxPathLengthAsConnected) {
+                    if (path != null && path.size() <= GlobalVariables.maxPathLengthAsConnected) {
                         boolean nearAnyArch = false;
                         for (Point p : path) {
                             Architecture closestArch = scenario.getArchitectures().getAll().parallelStream()
