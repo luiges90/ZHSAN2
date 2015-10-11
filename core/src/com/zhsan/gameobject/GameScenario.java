@@ -2,6 +2,7 @@ package com.zhsan.gameobject;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.zhsan.common.GlobalVariables;
 import com.zhsan.common.Paths;
 import com.zhsan.common.Point;
 import com.zhsan.gameobject.pathfinding.ZhPathFinder;
@@ -123,8 +124,39 @@ public class GameScenario {
         setupFacilities();
     }
 
+    private final void populateConnections(Architecture b, int distance) {
+        ZhPathFinder pathFinder = new ZhPathFinder(this, this.getGameMap(), null);
+        for (Architecture a : this.getArchitectures()) {
+            if (a == b) continue;
+            if (b.getLocation().taxiDistanceTo(a.getLocation()) <= distance) {
+                List<Point> path = pathFinder.findPath(b.getLocation(), a.getLocation());
+                if (path != null && path.size() <=distance) {
+                    boolean nearAnyArch = false;
+                    for (Point p : path) {
+                        Architecture closestArch = this.getArchitectures().getAll().parallelStream()
+                                .filter(x -> x.getLocation().taxiDistanceTo(p) < distance)
+                                .min((x, y) -> x.getLocation().taxiDistanceTo(p) - y.getLocation().taxiDistanceTo(p)).orElse(null);
+                        if (closestArch != null && closestArch != a && closestArch != b) {
+                            nearAnyArch = true;
+                            break;
+                        }
+                    }
+                    if (!nearAnyArch) {
+                        b.addConnectedArchitectures(a);
+                        a.addConnectedArchitectures(b);
+                    }
+                }
+            }
+        }
+    }
+
     private final void setupArchitectureLinks() {
-        architectures.forEach(Architecture::getConnectedArchitectures);
+        for (Architecture b : this.getArchitectures()) {
+            populateConnections(b, GlobalVariables.maxPathLengthAsConnected);
+            if (b.getConnectedArchitectures().size() == 0) {
+                populateConnections(b, GlobalVariables.maxPathLengthAsConnected2);
+            }
+        }
     }
 
     private final void setupLeaders() {

@@ -37,6 +37,7 @@
         troopCommandPersonFactor="0.2"
         troopStrengthPersonFactor="0.5"
         troopIntelligencePersonFactor="1.0"
-        maxPathLengthAsConnected="80"
+        maxPathLengthAsConnected="60"
+        maxPathLengthAsConnected2="120"
         leastDistanceFromArchitecturesAsConnected="6"
         />

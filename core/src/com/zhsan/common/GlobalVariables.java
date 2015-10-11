@@ -68,7 +68,8 @@ public final class GlobalVariables {
     public static float troopStrengthPersonFactor = 0.5f;
     public static float troopIntelligencePersonFactor = 1.0f;
 
-    public static int maxPathLengthAsConnected = 120;
+    public static int maxPathLengthAsConnected = 60;
+    public static int maxPathLengthAsConnected2 = 120;
     public static int leastDistanceFromArchitecturesAsConnected = 8;
 
     public static void load() {
@@ -122,6 +123,7 @@ public final class GlobalVariables {
             troopStrengthPersonFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "troopStrengthPersonFactor"));
             troopIntelligencePersonFactor = Float.parseFloat(XmlHelper.loadAttribute(node, "troopIntelligencePersonFactor"));
             maxPathLengthAsConnected = Integer.parseInt(XmlHelper.loadAttribute(node, "maxPathLengthAsConnected"));
+            maxPathLengthAsConnected2 = Integer.parseInt(XmlHelper.loadAttribute(node, "maxPathLengthAsConnected2"));
             leastDistanceFromArchitecturesAsConnected = Integer.parseInt(XmlHelper.loadAttribute(node, "leastDistanceFromArchitecturesAsConnected"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);

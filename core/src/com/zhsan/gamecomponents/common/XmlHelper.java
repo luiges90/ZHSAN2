@@ -7,6 +7,7 @@ import com.zhsan.common.exception.FileReadException;
 import org.w3c.dom.Node;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,7 +54,7 @@ public class XmlHelper {
         return result;
     }
 
-    public static String saveIntegerListToXml(List<Integer> list) {
+    public static String saveIntegerListToXml(Collection<Integer> list) {
         return list.parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 

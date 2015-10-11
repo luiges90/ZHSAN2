@@ -44,8 +44,7 @@ public class Architecture extends GameObject implements HasPointLocation {
 
     private GameObjectList<MilitaryKind> creatableMilitaryKinds;
 
-    private List<Integer> connectedArchitectures = new ArrayList<>();
-    private boolean attemptedFindingConnection;
+    private Set<Integer> connectedArchitectures = new HashSet<>();
 
     private Architecture(int id, GameScenario scen) {
         super(id);
@@ -79,7 +78,7 @@ public class Architecture extends GameObject implements HasPointLocation {
                 data.morale = Float.parseFloat(line[13]);
                 data.endurance = Float.parseFloat(line[14]);
                 data.creatableMilitaryKinds = scen.getMilitaryKinds().getItemsFromCSV(line[15]);
-                data.connectedArchitectures = XmlHelper.loadIntegerListFromXml(line[16]);
+                data.connectedArchitectures = new HashSet<>(XmlHelper.loadIntegerListFromXml(line[16]));
 
                 result.add(data);
             }
@@ -678,33 +677,11 @@ public class Architecture extends GameObject implements HasPointLocation {
                 && x.getLocation() != this && x.getLocation() instanceof Architecture);
     }
 
+    void addConnectedArchitectures(Architecture a) {
+        connectedArchitectures.add(a.getId());
+    }
+
     public GameObjectList<Architecture> getConnectedArchitectures() {
-        if (connectedArchitectures.size() == 0 && !attemptedFindingConnection) {
-            ZhPathFinder pathFinder = new ZhPathFinder(scenario, scenario.getGameMap(), null);
-            for (Architecture a : scenario.getArchitectures()) {
-                if (a == this) continue;
-                if (this.getLocation().taxiDistanceTo(a.getLocation()) <= GlobalVariables.maxPathLengthAsConnected) {
-                    List<Point> path = pathFinder.findPath(this.getLocation(), a.getLocation());
-                    if (path != null && path.size() <= GlobalVariables.maxPathLengthAsConnected) {
-                        boolean nearAnyArch = false;
-                        for (Point p : path) {
-                            Architecture closestArch = scenario.getArchitectures().getAll().parallelStream()
-                                    .filter(x -> x.getLocation().taxiDistanceTo(p) < GlobalVariables.leastDistanceFromArchitecturesAsConnected)
-                                    .min((x, y) -> x.getLocation().taxiDistanceTo(p) - y.getLocation().taxiDistanceTo(p)).orElse(null);
-                            if (closestArch != null && closestArch != a && closestArch != this) {
-                                nearAnyArch = true;
-                                break;
-                            }
-                        }
-                        System.out.println(a + "-" + path.size() + "-" + nearAnyArch);
-                        if (!nearAnyArch) {
-                            connectedArchitectures.add(a.getId());
-                        }
-                    }
-                }
-            }
-        }
-        attemptedFindingConnection = true;
         return scenario.getArchitectures().getItemsFromIds(connectedArchitectures);
     }
 
