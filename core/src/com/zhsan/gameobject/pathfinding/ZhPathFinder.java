@@ -35,6 +35,9 @@ public class ZhPathFinder {
         @Override
         public float getCost() {
             Point toPoint = new Point(to.x, to.y);
+            if (troop == null) {
+                return map.getTerrainAt(toPoint).isPassableByAnyMilitaryKind(scen) ? 1 : VERY_LARGE_COST;
+            }
             if (!troop.canMoveInto(toPoint)) {
                 return VERY_LARGE_COST;
             }

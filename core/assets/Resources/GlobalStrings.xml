@@ -9,7 +9,7 @@
         terrainDetailSaveHeader="地形编号,AiTag,地形名称,视线可穿透,火焰伤害率"
         mapSaveHeader="格宽缩放,宽度,高度,文件名,地图张数,每张图含方格数"
         architectureKindSaveHeader="ID,AiTag,名称,绘图延展(长度),绘图延展(阔度),农业基础,商业基础,技术基础,民心基础,耐久基础,人口基础,最大资金,最大粮草"
-        architectureSaveHeader="ID,AiTag,名称编号,名称,种类,位置,所屬軍區,人口,资金,粮草,农业,商业,技术,民心,耐久,可新編兵裝"
+        architectureSaveHeader="ID,AiTag,名称编号,名称,种类,位置,所屬軍區,人口,资金,粮草,农业,商业,技术,民心,耐久,可新編兵裝,連接建築"
         sectionSaveHeader="ID,AiTag,名稱,所屬勢力"
         factionSaveHeader="ID,AiTag,名稱,顏色"
         personSaveHeader="ID,AiTag,头像序号,姓,名,字,狀態,位置類,位置,正移動日數,统率,武勇,智谋,政治,魅力,內政工作"

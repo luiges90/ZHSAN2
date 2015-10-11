@@ -117,9 +117,14 @@ public class GameScenario {
             }
         }
 
+        setupArchitectureLinks();
         setupLeaders();
         setupMayors();
         setupFacilities();
+    }
+
+    private final void setupArchitectureLinks() {
+        architectures.forEach(Architecture::getConnectedArchitectures);
     }
 
     private final void setupLeaders() {
@@ -285,6 +290,10 @@ public class GameScenario {
             militaries.remove(t.getMilitary());
         }
         troops.remove(t);
+    }
+
+    public GameObjectList<MilitaryTerrain> getMilitaryTerrains() {
+        return militaryTerrains;
     }
 
     public MilitaryTerrain getMilitaryTerrain(MilitaryKind kind, TerrainDetail terrain) {

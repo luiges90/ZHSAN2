@@ -8,6 +8,7 @@ import org.w3c.dom.Node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 31/3/2015.
@@ -50,6 +51,10 @@ public class XmlHelper {
             result.add(Integer.parseInt(i));
         }
         return result;
+    }
+
+    public static String saveIntegerListToXml(List<Integer> list) {
+        return list.parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
     public static BitmapFont.HAlignment loadHAlignmentFromXml(Node node, BitmapFont.HAlignment def) {

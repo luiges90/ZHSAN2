@@ -79,6 +79,10 @@ public final class TerrainDetail extends GameObject {
 
     }
 
+    public boolean isPassableByAnyMilitaryKind(GameScenario scen) {
+        return scen.getMilitaryTerrains().getAll().parallelStream().anyMatch(mt -> mt.getTerrain() == this);
+    }
+
     @Override
     public String getName() {
         return name;

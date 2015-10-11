@@ -142,6 +142,10 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.values().parallelStream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
     }
 
+    public GameObjectList<T> getItemsFromIds(Collection<Integer> list) {
+        return list.parallelStream().map(content::get).collect(new ToGameObjectList<>());
+    }
+
     public String toCSV() {
         return content.keySet().parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
     }
