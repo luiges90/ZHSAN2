@@ -137,8 +137,13 @@ public class GameScenario {
                                 .filter(x -> x.getLocation().taxiDistanceTo(p) < distance)
                                 .min((x, y) -> x.getLocation().taxiDistanceTo(p) - y.getLocation().taxiDistanceTo(p)).orElse(null);
                         if (closestArch != null && closestArch != a && closestArch != b) {
-                            nearAnyArch = true;
-                            break;
+                            int d1 = a.getLocation().taxiDistanceTo(p);
+                            int d2 = b.getLocation().taxiDistanceTo(p);
+                            int dc = closestArch.getLocation().taxiDistanceTo(p);
+                            if (dc < d1 && dc < d2) {
+                                nearAnyArch = true;
+                                break;
+                            }
                         }
                     }
                     if (!nearAnyArch) {
@@ -151,10 +156,12 @@ public class GameScenario {
     }
 
     private final void setupArchitectureLinks() {
-        for (Architecture b : this.getArchitectures()) {
-            populateConnections(b, GlobalVariables.maxPathLengthAsConnected);
-            if (b.getConnectedArchitectures().size() == 0) {
-                populateConnections(b, GlobalVariables.maxPathLengthAsConnected2);
+        if (this.getArchitectures().filter(p -> p.getConnectedArchitectures().size() == 0).size() > 0) {
+            for (Architecture b : this.getArchitectures()) {
+                populateConnections(b, GlobalVariables.maxPathLengthAsConnected);
+                if (b.getConnectedArchitectures().size() == 0) {
+                    populateConnections(b, GlobalVariables.maxPathLengthAsConnected2);
+                }
             }
         }
     }
