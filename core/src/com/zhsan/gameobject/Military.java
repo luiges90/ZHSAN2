@@ -10,6 +10,7 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.XmlHelper;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -168,6 +169,7 @@ public class Military extends GameObject {
     }
 
     @Override
+    @LuaAI.ExportToLua
     public String getName() {
         return name;
     }
@@ -176,6 +178,7 @@ public class Military extends GameObject {
         this.name = name;
     }
 
+    @LuaAI.ExportToLua
     public MilitaryKind getKind() {
         return kind;
     }
@@ -196,18 +199,22 @@ public class Military extends GameObject {
         return location.get();
     }
 
+    @LuaAI.ExportToLua
     public int getQuantity() {
         return quantity;
     }
 
+    @LuaAI.ExportToLua
     public float getUnitCount() {
         return (float) quantity / getKind().getUnitQuantity();
     }
 
+    @LuaAI.ExportToLua
     public int getMorale() {
         return morale;
     }
 
+    @LuaAI.ExportToLua
     public int getCombativity() {
         return combativity;
     }

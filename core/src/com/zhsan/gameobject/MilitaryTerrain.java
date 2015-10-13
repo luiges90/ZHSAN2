@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -83,18 +84,22 @@ public class MilitaryTerrain extends GameObject {
 
     }
 
+    @LuaAI.ExportToLua
     public MilitaryKind getKind() {
         return kind;
     }
 
+    @LuaAI.ExportToLua
     public TerrainDetail getTerrain() {
         return terrain;
     }
 
+    @LuaAI.ExportToLua
     public float getAdaptability() {
         return adaptability;
     }
 
+    @LuaAI.ExportToLua
     public float getMultiple() {
         return multiple;
     }

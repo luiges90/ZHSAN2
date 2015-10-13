@@ -1,6 +1,12 @@
+-- AI at architecture level
+
+dofile(PATH .. "militaryKindAI.lua")
+
 function architectureAI(architecture)
    if #architecture.getPersons() > 0 then
       print("Internal work assignment for Architecture " .. architecture.getName())
+
+      createMilitaries(architecture)
 
       assignMayor(architecture)
       assignInternal(architecture)
@@ -9,6 +15,18 @@ function architectureAI(architecture)
 end
 
 function createMilitaries(architecture)
+   local militaries = architecture.getMilitaries()
+
+   local militaryKinds = architecture.getActualCreatableMilitaryKinds()
+
+   local kindScores = {}
+   for i, mk in pairs(militaryKinds) do
+      kindScores[mk.getId()] = militaryKindFunc.score(architecture, mk) / (countIf(militaries, function(k) return k.getId() == mk.getId() end) + 1)
+   end
+
+   local toRecruit, score = max(kindScores)
+   print("creating military of kind id " .. toRecruit)
+   architecture.createMilitary(toRecruit)
 
 end
 

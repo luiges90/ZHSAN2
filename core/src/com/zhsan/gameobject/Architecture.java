@@ -11,7 +11,6 @@ import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.gamecomponents.common.XmlHelper;
-import com.zhsan.gameobject.pathfinding.ZhPathFinder;
 import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 24/5/2015.
@@ -355,6 +353,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         return scenario.getMilitaries().getAll().stream().mapToInt(m -> (int) m.getUnitCount()).sum();
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Military> getMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this);
     }
@@ -418,6 +417,11 @@ public class Architecture extends GameObject implements HasPointLocation {
 
     public Point getLocation() {
         return Point.getCentroid(location);
+    }
+
+    @LuaAI.ExportToLua
+    public boolean createMilitary(int kindId) {
+        return createMilitary(scenario.getMilitaryKinds().get(kindId));
     }
 
     public boolean createMilitary(MilitaryKind kind) {
@@ -519,17 +523,19 @@ public class Architecture extends GameObject implements HasPointLocation {
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
     }
 
-    private double fundGainedNextMonth() {
+    @LuaAI.ExportToLua
+    public double getFundGainedNextMonth() {
         return GlobalVariables.gainFund * (this.commerce + this.population * GlobalVariables.gainFundPerPopulation);
     }
 
-    private double foodGainedNextMonth() {
+    @LuaAI.ExportToLua
+    public double getFoodGainedNextMonth() {
         return GlobalVariables.gainFood * (this.agriculture + this.population * GlobalVariables.gainFoodPerPopulation);
     }
 
     private void gainResources() {
-        this.fund = (int) MathUtils.clamp(this.fund + fundGainedNextMonth(), 0, this.getKind().getMaxFund());
-        this.food = (int) MathUtils.clamp(this.food + foodGainedNextMonth(), 0, this.getKind().getMaxFood());
+        this.fund = (int) MathUtils.clamp(this.fund + getFundGainedNextMonth(), 0, this.getKind().getMaxFund());
+        this.food = (int) MathUtils.clamp(this.food + getFoodGainedNextMonth(), 0, this.getKind().getMaxFood());
     }
 
     private void recruitMilitaries() {

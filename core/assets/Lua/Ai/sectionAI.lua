@@ -1,3 +1,5 @@
+-- AI at section level
+
 dofile(PATH .. "architectureAI.lua")
 
 function sectionAI(section)

@@ -335,6 +335,12 @@ public class GameScenario {
         return militaryTerrains;
     }
 
+    @LuaAI.ExportToLua
+    public GameObjectList<MilitaryTerrain> getMilitaryTerrains(int militaryKindId) {
+        MilitaryKind kind = militaryKinds.get(militaryKindId);
+        return militaryTerrains.filter(p -> p.getKind() == kind);
+    }
+
     public MilitaryTerrain getMilitaryTerrain(MilitaryKind kind, TerrainDetail terrain) {
         MilitaryTerrain mt = militaryTerrains.get(MilitaryTerrain.getId(kind.getId(), terrain.getId()));
         if (mt == null) {
