@@ -143,7 +143,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> getItemsFromIds(Collection<Integer> list) {
-        return list.parallelStream().map(content::get).collect(new ToGameObjectList<>());
+        return list.stream().map(content::get).collect(new ToGameObjectList<>());
     }
 
     public String toCSV() {
