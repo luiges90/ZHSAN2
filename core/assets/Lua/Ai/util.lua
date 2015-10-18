@@ -10,11 +10,17 @@ function countIf(table, cond)
     return count
 end
 
-function max(table)
-    local k
-    local m = -9e99
+function elem(table)
     for i, v in pairs(table) do
-        if (v > m) then
+        return i, v
+    end
+end
+
+function max(table, comparator)
+    comparator = comparator or function(x, y) return x > y end
+    local k, m = elem(table)
+    for i, v in pairs(table) do
+        if (comparator(v, m)) then
             k = i
             m = v
         end

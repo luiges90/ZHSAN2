@@ -9,6 +9,7 @@ function architectureAI(architecture)
       createMilitaries(architecture)
 
       assignMayor(architecture)
+      assignMilitary(architecture)
       assignInternal(architecture)
    end
 
@@ -25,14 +26,14 @@ function createMilitaries(architecture)
       kindScores[mk.getId()] = militaryKindFunc.score(architecture, mk) / (countIf(militaries, function(k) return k.getId() == mk.getId() end) + 1)
    end
 
-   local toRecruit, score = max(kindScores)
+   local toRecruit, _ = max(kindScores)
    print("creating military of kind id " .. toRecruit)
    local createdMilitary = architecture.createMilitary(toRecruit)
 
    -- Assign main officer
    local toAssign, value
    value = 0
-   for i, p in pairs(architecture.getPersons()) do
+   for _, p in pairs(architecture.getPersons()) do
       local x = militaryKindFunc.personScore(p)
       if x > value then
          value = x
@@ -40,7 +41,7 @@ function createMilitaries(architecture)
       end
    end
 
-   if not assign == nil then
+   if toAssign ~= nil then
       createdMilitary.setLeader(toAssign.getId())
       print("assigning " .. toAssign.getName() .. " to the newly created troop")
    end
@@ -52,7 +53,7 @@ function assignMayor(architecture)
    if architecture.canChangeMayorToOther() then
       local max = 0
       local candidate
-      for i, v in pairs(architecture.getPersons()) do
+      for _, v in pairs(architecture.getPersons()) do
          local ability = v.getAgricultureAbility() + v.getCommerceAbility() + v.getTechnologyAbility()
                  + v.getEnduranceAbility() + v.getMoraleAbility()
          if ability > max then
@@ -65,18 +66,57 @@ function assignMayor(architecture)
    end
 end
 
+function assignMilitary(architecture)
+   -- assign recruit/training jobs to main officers
+   local hasNoLeaderTrainingTroop = false
+   for _, m in pairs(architecture.getTrainableMilitaries()) do
+      if m.getLeader() ~= nil then
+         m.getLeader().setDoingWork("training")
+         print("assigning " .. m.getLeader().getName() .. " to training")
+      else
+         hasNoLeaderTrainingTroop = true
+      end
+   end
+   if hasNoLeaderTrainingTroop then
+      local _, p = max(architecture.getPersons(), function(x, y) return x.getTrainingAbility() > y.getTrainingAbility() end)
+      p.setDoingWork("training")
+      print("assigning " .. p.getName() .. " to training")
+   end
+
+   local hasNoLeaderRecruitTroop = false
+   for _, m in pairs(architecture.getRecruitableMilitaries()) do
+      if m.getLeader() ~= nil then
+         m.getLeader().setDoingWork("recruit")
+         print("assigning " .. m.getLeader().getName() .. " to recruit")
+      else
+         hasNoLeaderRecruitTroop = true
+      end
+   end
+   if hasNoLeaderRecruitTroop then
+      local _, p = max(architecture.getPersons(), function(x, y) return x.getRecruitAbility() > y.getRecruitAbility() end)
+      p.setDoingWork("recruit")
+      print("assigning " .. p.getName() .. " to recruit")
+   end
+end
+
 function assignInternal(architecture)
    -- assign jobs using a greedy algorithm: assign the best person to the lowest-valued task and continue
    for i, v in pairs(architecture.getPersons()) do
-      if v.getDoingWork() ~= "mayor" then
+      if v.getDoingWork() ~= "mayor" and v.getDoingWork() ~= "recruit" and v.getDoingWork() ~= "training" then
          v.setDoingWork("none")
       end
    end
 
+   local availablePersons = {}
+   for i, p in pairs(architecture.getPersons()) do
+      if p.getDoingWork() == "none" then
+         table.insert(availablePersons, p)
+      end
+   end
+
    local getSortedPersons = function(func)
-      local persons = architecture.getPersons()
-      table.sort(persons, function(p, q) return func(p) > func(q) end)
-      return persons
+      table.sort(availablePersons, function(p, q) return func(p) > func(q) end)
+      return availablePersons
    end
 
    local taskValues = {

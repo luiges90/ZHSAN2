@@ -366,15 +366,18 @@ public class Architecture extends GameObject implements HasPointLocation {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.getLeader() == null);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Military> getRecruitableMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.recruitable());
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Military> getSelectTrainableMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this && (x.getQuantity() > 0 || this.getRecruitableMilitaries().size() > 0) &&
                 (x.getMorale() < GlobalVariables.maxMorale || x.getCombativity() < GlobalVariables.maxCombativity));
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Military> getTrainableMilitaries() {
         return scenario.getMilitaries().filter(x -> x.getLocation() == this && x.trainable());
     }
