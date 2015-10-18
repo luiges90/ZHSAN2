@@ -156,6 +156,11 @@ public final class MilitaryKind extends GameObject {
     }
 
     @LuaAI.ExportToLua
+    public int getMaxUnitCount() {
+        return quantity / unitQuantity;
+    }
+
+    @LuaAI.ExportToLua
     public int getCostOfArchitecture(int architectureId) {
         return getCost(scenario.getArchitectures().get(architectureId));
     }

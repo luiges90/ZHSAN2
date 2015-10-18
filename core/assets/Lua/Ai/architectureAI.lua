@@ -2,11 +2,22 @@
 
 dofile(PATH .. "militaryKindAI.lua")
 
+function getMilitaryThreat(architecture)
+   local connecting = architecture.getHostileConnectedArchitectures()
+   local total = 0
+   for _, v in pairs(connecting) do
+      total = total + v.getMilitaryUnitCount()
+   end
+   return total * 1.5 + 50
+end
+
 function architectureAI(architecture)
    if #architecture.getPersons() > 0 then
       print("Internal work assignment for Architecture " .. architecture.getName())
 
-      createMilitaries(architecture)
+      if getMilitaryThreat > architecture.getMilitaryUnitCountInFullRecruit() then
+         createMilitaries(architecture)
+      end
 
       assignMayor(architecture)
       assignMilitary(architecture)
@@ -22,7 +33,7 @@ function createMilitaries(architecture)
    local militaryKinds = architecture.getActualCreatableMilitaryKinds()
 
    local kindScores = {}
-   for i, mk in pairs(militaryKinds) do
+   for _, mk in pairs(militaryKinds) do
       kindScores[mk.getId()] = militaryKindFunc.score(architecture, mk) / (countIf(militaries, function(k) return k.getId() == mk.getId() end) + 1)
    end
 

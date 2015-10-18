@@ -205,8 +205,8 @@ public class Military extends GameObject {
     }
 
     @LuaAI.ExportToLua
-    public float getUnitCount() {
-        return (float) quantity / getKind().getUnitQuantity();
+    public int getUnitCount() {
+        return quantity / getKind().getUnitQuantity();
     }
 
     @LuaAI.ExportToLua

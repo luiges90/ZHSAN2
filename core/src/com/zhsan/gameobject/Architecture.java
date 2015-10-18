@@ -345,12 +345,19 @@ public class Architecture extends GameObject implements HasPointLocation {
         return getWorkingPersons(Person.DoingWork.MORALE);
     }
 
+    @LuaAI.ExportToLua
     public int getMilitaryCount() {
         return scenario.getMilitaries().size();
     }
 
-    public int getMilitaryUnitCount() {
-        return scenario.getMilitaries().getAll().stream().mapToInt(m -> (int) m.getUnitCount()).sum();
+    @LuaAI.ExportToLua
+    public double getMilitaryUnitCount() {
+        return scenario.getMilitaries().getAll().stream().mapToDouble(Military::getUnitCount).sum();
+    }
+
+    @LuaAI.ExportToLua
+    public double getMilitaryUnitCountInFullRecruit() {
+        return scenario.getMilitaries().getAll().stream().mapToDouble(m -> m.getKind().getMaxUnitCount()).sum();
     }
 
     @LuaAI.ExportToLua
@@ -690,8 +697,14 @@ public class Architecture extends GameObject implements HasPointLocation {
         connectedArchitectures.add(a.getId());
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Architecture> getConnectedArchitectures() {
         return scenario.getArchitectures().getItemsFromIds(connectedArchitectures);
+    }
+
+    @LuaAI.ExportToLua
+    public GameObjectList<Architecture> getHostileConnectedArchitectures() {
+        return scenario.getArchitectures().filter(a -> a.getBelongedFaction() != this.getBelongedFaction()).getItemsFromIds(connectedArchitectures);
     }
 
 }
