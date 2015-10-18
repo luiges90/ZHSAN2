@@ -420,11 +420,11 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     @LuaAI.ExportToLua
-    public boolean createMilitary(int kindId) {
+    public Military createMilitary(int kindId) {
         return createMilitary(scenario.getMilitaryKinds().get(kindId));
     }
 
-    public boolean createMilitary(MilitaryKind kind) {
+    public Military createMilitary(MilitaryKind kind) {
         return scenario.createMilitary(this, kind);
     }
 

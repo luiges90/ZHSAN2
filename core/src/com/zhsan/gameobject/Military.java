@@ -219,11 +219,20 @@ public class Military extends GameObject {
         return combativity;
     }
 
+    @LuaAI.ExportToLua
     public Person getLeader() {
         return leader;
     }
 
+    @LuaAI.ExportToLua
+    public void setLeader(int id) {
+        setLeader(scenario.getPerson(id));
+    }
+
     public void setLeader(Person leader) {
+        if (leader.getLocation() != this.getLocation()) {
+            throw new IllegalArgumentException("Leader of military must be in the same location.");
+        }
         this.leader = leader;
     }
 

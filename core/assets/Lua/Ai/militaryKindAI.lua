@@ -20,3 +20,8 @@ militaryKindFunc.score =
         -- TODO consider terrains
         return ((power + antiArch * 0.5) * (range + speed)) / mk.getCostOfArchitecture(architecture.getId())
     end
+
+militaryKindFunc.personScore =
+    function(person)
+        return person.getCommand() * 0.85 + person.getStrength() * 0.15 - 30
+    end

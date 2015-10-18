@@ -180,6 +180,11 @@ public final class LuaAI {
             return LuaValue.valueOf((String) obj);
         } else if (obj == null) {
             return LuaValue.NIL;
+        } else if (obj instanceof GameObject) {
+            LuaTable child = LuaValue.tableOf();
+            LuaAI.processAnnotations(child, obj.getClass(), obj);
+
+            return child;
         } else if (obj instanceof GameObjectList) {
             GameObjectList<?> list = (GameObjectList) obj;
             if (list.size() == 0) {
@@ -195,7 +200,7 @@ public final class LuaAI {
             }
             return table;
         } else {
-            throw new IllegalArgumentException("toLuaValue only accept strings, primitives, GameObjectLists or null. " +
+            throw new IllegalArgumentException("toLuaValue only accept strings, primitives, GameObjects, GameObjectLists or null. " +
                     obj + "(" + obj.getClass().getName() + ") received.");
         }
     }

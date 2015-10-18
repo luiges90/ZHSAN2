@@ -15,6 +15,7 @@ function architectureAI(architecture)
 end
 
 function createMilitaries(architecture)
+   -- create military
    local militaries = architecture.getMilitaries()
 
    local militaryKinds = architecture.getActualCreatableMilitaryKinds()
@@ -26,7 +27,23 @@ function createMilitaries(architecture)
 
    local toRecruit, score = max(kindScores)
    print("creating military of kind id " .. toRecruit)
-   architecture.createMilitary(toRecruit)
+   local createdMilitary = architecture.createMilitary(toRecruit)
+
+   -- Assign main officer
+   local toAssign, value
+   value = 0
+   for i, p in pairs(architecture.getPersons()) do
+      local x = militaryKindFunc.personScore(p)
+      if x > value then
+         value = x
+         toAssign = p
+      end
+   end
+
+   if not assign == nil then
+      createdMilitary.setLeader(toAssign.getId())
+      print("assigning " .. toAssign.getName() .. " to the newly created troop")
+   end
 
 end
 

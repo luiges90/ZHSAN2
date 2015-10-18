@@ -362,9 +362,9 @@ public class GameScenario {
         return pathFinders.get(kind);
     }
 
-    public boolean createMilitary(Architecture location, MilitaryKind kind) {
+    public Military createMilitary(Architecture location, MilitaryKind kind) {
         int cost = kind.getCost(location);
-        if (cost > location.getFund()) return false;
+        if (cost > location.getFund()) return null;
         location.loseFund(cost);
 
         Military m = new Military(militaries.getFreeId(), this);
@@ -374,7 +374,7 @@ public class GameScenario {
 
         militaries.add(m);
 
-        return true;
+        return m;
     }
 
     public void advanceDay(OnTroopDone onTroopDone) {
