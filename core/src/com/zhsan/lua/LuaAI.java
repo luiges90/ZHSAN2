@@ -52,6 +52,7 @@ public final class LuaAI {
                 }
 
                 private void dump(int indent, LuaValue arg) {
+                    if (indent >= 8) return;
                     if (arg.istable()) {
                         LuaTable table = arg.checktable();
                         for (int i = 0; i < table.keyCount(); ++i) {
