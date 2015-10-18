@@ -81,7 +81,7 @@ function assignMilitary(architecture)
    -- assign recruit/training jobs to main officers
    local hasNoLeaderTrainingTroop = false
    for _, m in pairs(architecture.getTrainableMilitaries()) do
-      if m.getLeader() ~= nil then
+      if m.getLeader() ~= nil and m.getLeader().getDoingWork() ~= "mayor" then
          m.getLeader().setDoingWork("training")
          print("assigning " .. m.getLeader().getName() .. " to training")
       else
@@ -96,7 +96,7 @@ function assignMilitary(architecture)
 
    local hasNoLeaderRecruitTroop = false
    for _, m in pairs(architecture.getRecruitableMilitaries()) do
-      if m.getLeader() ~= nil then
+      if m.getLeader() ~= nil and m.getLeader().getDoingWork() ~= "mayor" then
          m.getLeader().setDoingWork("recruit")
          print("assigning " .. m.getLeader().getName() .. " to recruit")
       else
