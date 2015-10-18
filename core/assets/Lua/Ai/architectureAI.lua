@@ -15,7 +15,7 @@ function architectureAI(architecture)
    if #architecture.getPersons() > 0 then
       print("Internal work assignment for Architecture " .. architecture.getName())
 
-      if getMilitaryThreat > architecture.getMilitaryUnitCountInFullRecruit() then
+      if getMilitaryThreat(architecture) > architecture.getMilitaryUnitCountInFullRecruit() then
          createMilitaries(architecture)
       end
 
