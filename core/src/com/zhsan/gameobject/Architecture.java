@@ -148,7 +148,7 @@ public class Architecture extends GameObject implements HasPointLocation {
     private void changeFaction() {
         if (this.getBelongedFaction() != null) {
             Architecture moveTo = this.getBelongedFaction().getArchitectures().getAll()
-                    .parallelStream()
+                    .stream()
                     .filter(x -> x != this)
                     .min((x, y) -> Double.compare(this.getLocation().distanceTo(x.getLocation()), this.getLocation().distanceTo(y.getLocation())))
                     .orElse(null);
@@ -514,31 +514,31 @@ public class Architecture extends GameObject implements HasPointLocation {
         loseFund(totalCost);
 
         float agricultureAbility = (mayor == null ? 0 : mayor.getAgricultureAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                agricultureWorkingPersons.getAll().parallelStream()
+                agricultureWorkingPersons.getAll().stream()
                         .map(p -> (float) p.getAgricultureAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.agriculture = Utility.diminishingGrowth(
                 this.agriculture, agricultureAbility * GlobalVariables.internalGrowthFactor, this.getKind().getAgriculture());
 
         float commerceAbility = (mayor == null ? 0 : mayor.getCommerceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                commerceWorkingPersons.getAll().parallelStream()
+                commerceWorkingPersons.getAll().stream()
                         .map(p -> (float) p.getCommerceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.commerce = Utility.diminishingGrowth(
                 this.commerce, commerceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getCommerce());
 
         float technologyAbility = (mayor == null ? 0 : mayor.getTechnologyAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                technologyWorkingPersons.getAll().parallelStream()
+                technologyWorkingPersons.getAll().stream()
                         .map(p -> (float) p.getTechnologyAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.technology = Utility.diminishingGrowth(
                 this.technology, technologyAbility * GlobalVariables.internalGrowthFactor, this.getKind().getTechnology());
 
         float moraleAbility = (mayor == null ? 0 : mayor.getMoraleAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                moraleWorkingPersons.getAll().parallelStream()
+                moraleWorkingPersons.getAll().stream()
                         .map(p -> (float) p.getMoraleAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.morale = Utility.diminishingGrowth(
                 this.morale, moraleAbility * GlobalVariables.internalGrowthFactor, this.getKind().getMorale());
 
         float enduranceAbility = (mayor == null ? 0 : mayor.getEnduranceAbility()) * GlobalVariables.mayorInternalWorkEfficiency +
-                enduranceWorkingPersons.getAll().parallelStream()
+                enduranceWorkingPersons.getAll().stream()
                         .map(p -> (float) p.getEnduranceAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
         this.endurance = Utility.diminishingGrowth(
                 this.endurance, enduranceAbility * GlobalVariables.internalGrowthFactor, this.getKind().getEndurance());
@@ -633,7 +633,7 @@ public class Architecture extends GameObject implements HasPointLocation {
             return;
         }
 
-        float recruitAbility = recruitWorkingPersons.getAll().parallelStream()
+        float recruitAbility = recruitWorkingPersons.getAll().stream()
                 .map(p -> (float) p.getRecruitAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor))
                 + getMayor().getRecruitAbility() * GlobalVariables.mayorInternalWorkEfficiency;
         float recruited = recruitAbility * GlobalVariables.recruitEfficiency;
@@ -676,7 +676,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         trainWorkingPersons.remove(trainedPersons::contains);
         toTrain.remove(m -> !m.trainable() || m.getLeader() != null);
 
-        float trainAbility = trainWorkingPersons.getAll().parallelStream()
+        float trainAbility = trainWorkingPersons.getAll().stream()
                 .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor))
                 + getMayor().getTrainingAbility() * GlobalVariables.mayorInternalWorkEfficiency;;
         float trained = trainAbility * GlobalVariables.trainEfficiency;

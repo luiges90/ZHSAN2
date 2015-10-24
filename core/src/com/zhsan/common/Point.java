@@ -58,10 +58,10 @@ public final class Point {
     }
 
     public static Point getCenter(List<Point> shape) {
-        int cx = (shape.parallelStream().mapToInt(p -> p.x).min().getAsInt() +
-                shape.parallelStream().mapToInt(p -> p.x).max().getAsInt()) / 2;
-        int cy = (shape.parallelStream().mapToInt(p -> p.y).min().getAsInt() +
-                shape.parallelStream().mapToInt(p -> p.y).max().getAsInt()) / 2;
+        int cx = (shape.stream().mapToInt(p -> p.x).min().getAsInt() +
+                shape.stream().mapToInt(p -> p.x).max().getAsInt()) / 2;
+        int cy = (shape.stream().mapToInt(p -> p.y).min().getAsInt() +
+                shape.stream().mapToInt(p -> p.y).max().getAsInt()) / 2;
 
         return new Point(cx, cy);
     }

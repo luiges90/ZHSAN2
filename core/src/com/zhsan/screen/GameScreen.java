@@ -338,7 +338,7 @@ public class GameScreen extends WidgetGroup {
                         @Override
                         public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks) {
                             mapLayer.showDamage(damagePacks);
-                            damagePacks.parallelStream().filter(d -> d.destroyed).forEach(d -> {
+                            damagePacks.stream().filter(d -> d.destroyed).forEach(d -> {
                                 if (d.object instanceof Troop) {
                                     mapLayer.addTileAnimation(t.getLocation(), scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ROUTED.getId()));
                                 }

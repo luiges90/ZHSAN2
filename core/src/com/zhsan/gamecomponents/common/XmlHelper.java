@@ -55,7 +55,7 @@ public class XmlHelper {
     }
 
     public static String saveIntegerListToXml(Collection<Integer> list) {
-        return list.parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
+        return list.stream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
     public static BitmapFont.HAlignment loadHAlignmentFromXml(Node node, BitmapFont.HAlignment def) {

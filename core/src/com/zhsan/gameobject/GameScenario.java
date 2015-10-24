@@ -133,7 +133,7 @@ public class GameScenario {
                 if (path != null && path.size() <=distance) {
                     boolean nearAnyArch = false;
                     for (Point p : path) {
-                        Architecture closestArch = this.getArchitectures().getAll().parallelStream()
+                        Architecture closestArch = this.getArchitectures().getAll().stream()
                                 .filter(x -> x.getLocation().taxiDistanceTo(p) < distance)
                                 .min((x, y) -> x.getLocation().taxiDistanceTo(p) - y.getLocation().taxiDistanceTo(p)).orElse(null);
                         if (closestArch != null && closestArch != a && closestArch != b) {
@@ -379,10 +379,10 @@ public class GameScenario {
 
     public void advanceDay(OnTroopDone onTroopDone) {
         gameData.advanceDay();
-        architectures.getAll().parallelStream().forEach(Architecture::advanceDay);
-        persons.getAll().parallelStream().forEach(Person::advanceDay);
+        architectures.getAll().stream().forEach(Architecture::advanceDay);
+        persons.getAll().stream().forEach(Person::advanceDay);
 
-        troops.getAll().parallelStream().forEach(Troop::initExecuteOrder);
+        troops.getAll().stream().forEach(Troop::initExecuteOrder);
         List<Troop> movingTroops = new ArrayList<>(troops.getAll());
         do {
             // TODO move all troops in parallel

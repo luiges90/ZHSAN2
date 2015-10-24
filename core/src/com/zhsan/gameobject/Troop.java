@@ -315,7 +315,7 @@ public class Troop extends GameObject implements HasPointLocation {
         getMilitary().decreaseQuantity(quantity);
         boolean destroy = checkDestroy();
         if (destroy) {
-            scenario.getTroops().getAll().parallelStream()
+            scenario.getTroops().getAll().stream()
                     .filter(x -> x.getTarget() == this)
                     .forEach(x -> x.order = ORDER_IDLE);
             this.getMilitary().getAllPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), this.startArchitecture));
@@ -470,7 +470,7 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     private List<DamagePack> attackArchitecture(Architecture target) {
-        Optional<Point> attackOptPoint = target.getLocations().parallelStream().filter(this::isLocationInAttackRange).findFirst();
+        Optional<Point> attackOptPoint = target.getLocations().stream().filter(this::isLocationInAttackRange).findFirst();
         if (!attackOptPoint.isPresent()) return Collections.emptyList();
         Point attackPoint = attackOptPoint.get();
 
@@ -484,7 +484,7 @@ public class Troop extends GameObject implements HasPointLocation {
         boolean destroy = target.loseEndurance(damage);
         damagePacks.add(new DamagePack(target, attackPoint, -damage, destroy));
         if (destroy) {
-            scenario.getTroops().getAll().parallelStream()
+            scenario.getTroops().getAll().stream()
                     .filter(x -> x.getTarget() == target)
                     .forEach(x -> x.order = ORDER_IDLE);
         }
