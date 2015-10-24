@@ -173,20 +173,24 @@ public class Architecture extends GameObject implements HasPointLocation {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL && p.getMovingDays() == 0);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getUnhiredPersons() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.UNEMPLOYED);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getPersonsExcludingMayor() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
                 p.getDoingWorkType() != Person.DoingWork.MAYOR);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getPersonsWithoutLeadingMilitary() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
                 getMilitaries().filter(m -> m.getLeader() == p).size() == 0);
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getPersonsNotInMilitary() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL &&
                 getMilitaries().filter(m -> m.getAllPersons().contains(p)).size() == 0);
@@ -347,17 +351,17 @@ public class Architecture extends GameObject implements HasPointLocation {
 
     @LuaAI.ExportToLua
     public int getMilitaryCount() {
-        return scenario.getMilitaries().size();
+        return this.getMilitaries().size();
     }
 
     @LuaAI.ExportToLua
     public double getMilitaryUnitCount() {
-        return scenario.getMilitaries().getAll().stream().mapToDouble(Military::getUnitCount).sum();
+        return this.getMilitaries().getAll().stream().mapToDouble(Military::getUnitCount).sum();
     }
 
     @LuaAI.ExportToLua
     public double getMilitaryUnitCountInFullRecruit() {
-        return scenario.getMilitaries().getAll().stream().mapToDouble(m -> m.getKind().getMaxUnitCount()).sum();
+        return this.getMilitaries().getAll().stream().mapToDouble(m -> m.getKind().getMaxUnitCount()).sum();
     }
 
     @LuaAI.ExportToLua
@@ -623,7 +627,8 @@ public class Architecture extends GameObject implements HasPointLocation {
         }
 
         float recruitAbility = recruitWorkingPersons.getAll().parallelStream()
-                .map(p -> (float) p.getRecruitAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+                .map(p -> (float) p.getRecruitAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor))
+                + getMayor().getRecruitAbility() * GlobalVariables.mayorInternalWorkEfficiency;
         float recruited = recruitAbility * GlobalVariables.recruitEfficiency;
         for (Military m : actualToRecruit) {
             int thisRecruited = Math.round(recruited / actualToRecruit.size() * m.getKind().getUnitQuantity());
@@ -665,7 +670,8 @@ public class Architecture extends GameObject implements HasPointLocation {
         toTrain.remove(m -> !m.trainable() || m.getLeader() != null);
 
         float trainAbility = trainWorkingPersons.getAll().parallelStream()
-                .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor));
+                .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor))
+                + getMayor().getTrainingAbility() * GlobalVariables.mayorInternalWorkEfficiency;;
         float trained = trainAbility * GlobalVariables.trainEfficiency;
         for (Military m : toTrain) {
             int thisTrained = Math.round(trained / m.getUnitCount() / toTrain.size());
