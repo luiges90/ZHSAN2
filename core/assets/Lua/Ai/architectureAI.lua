@@ -15,7 +15,10 @@ function architectureAI(architecture)
    if #architecture.getPersons() > 0 then
       print("Internal work assignment for Architecture " .. architecture.getName())
 
-      if getMilitaryThreat(architecture) > architecture.getMilitaryUnitCountInFullRecruit() then
+      local militaryThreat = getMilitaryThreat(architecture)
+      local fullRecruit = architecture.getMilitaryUnitCountInFullRecruit()
+      print("Military Threat = " .. militaryThreat .. " and unitCountFullRecruit = " .. fullRecruit)
+      if militaryThreat >= fullRecruit then
          createMilitaries(architecture)
       end
 
@@ -44,7 +47,7 @@ function createMilitaries(architecture)
    -- Assign main officer
    local toAssign, value
    value = 0
-   for _, p in pairs(architecture.getPersons()) do
+   for _, p in pairs(architecture.getPersonsWithoutLeadingMilitary()) do
       local x = militaryKindFunc.personScore(p)
       if x > value then
          value = x
@@ -104,7 +107,7 @@ function assignMilitary(architecture)
       end
    end
    if hasNoLeaderRecruitTroop then
-      local _, p = max(architecture.getPersons(), function(x, y) return x.getRecruitAbility() > y.getRecruitAbility() end)
+      local _, p = max(architecture.getPersonsExcludingMayor(), function(x, y) return x.getRecruitAbility() > y.getRecruitAbility() end)
       p.setDoingWork("recruit")
       print("assigning " .. p.getName() .. " to recruit")
    end
