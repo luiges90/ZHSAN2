@@ -33,6 +33,7 @@
         baseArchitectureDamage="5.0"
         reactDamageFactor="0.5"
         personMovingSpeed="8.0"
+        militaryMovingSpeed="0.2"
         damageShowTime="60"
         troopCommandPersonFactor="0.2"
         troopStrengthPersonFactor="0.5"

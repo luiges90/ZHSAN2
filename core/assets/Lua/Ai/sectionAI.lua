@@ -2,8 +2,16 @@
 
 dofile(PATH .. "architectureAI.lua")
 
+function allocatePersons(section)
+    local personNeeded = {}
+    for _, item in pairs(section.getArchitectures()) do
+
+    end
+end
+
 function sectionAI(section)
-    for i, item in pairs(section.getArchitectures()) do
+    allocatePersons(section)
+    for _, item in pairs(section.getArchitectures()) do
         architectureAI(item)
     end
 end

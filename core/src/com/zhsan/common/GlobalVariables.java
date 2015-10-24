@@ -61,6 +61,7 @@ public final class GlobalVariables {
     public static long aiTimeout = 20;
 
     public static float personMovingSpeed = 8.0f;
+    public static float militaryMovingSpeed = 0.2f;
 
     public static int damageShowTime = 60;
 
@@ -125,6 +126,7 @@ public final class GlobalVariables {
             maxPathLengthAsConnected = Integer.parseInt(XmlHelper.loadAttribute(node, "maxPathLengthAsConnected"));
             maxPathLengthAsConnected2 = Integer.parseInt(XmlHelper.loadAttribute(node, "maxPathLengthAsConnected2"));
             leastDistanceFromArchitecturesAsConnected = Integer.parseInt(XmlHelper.loadAttribute(node, "leastDistanceFromArchitecturesAsConnected"));
+            militaryMovingSpeed = Float.parseFloat(XmlHelper.loadAttribute(node, "militaryMovingSpeed"));
         } catch (Exception e) {
             throw new FileReadException(Paths.DATA + "GlobalVariables.xml", e);
         }

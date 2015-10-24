@@ -152,7 +152,7 @@ public class Architecture extends GameObject implements HasPointLocation {
                     .min((x, y) -> Double.compare(this.getLocation().distanceTo(x.getLocation()), this.getLocation().distanceTo(y.getLocation())))
                     .orElse(null);
             if (moveTo != null) {
-                this.getPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), moveTo));
+                this.getPersons().forEach(p -> p.moveToArchitecture(moveTo));
             }
         }
     }

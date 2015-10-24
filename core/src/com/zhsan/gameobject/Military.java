@@ -104,6 +104,8 @@ public class Military extends GameObject {
     private int quantity;
     private int morale, combativity;
 
+    private int movingDays;
+
     private Person leader;
     private GameObjectList<Person> persons = new GameObjectList<>();
 
@@ -128,6 +130,7 @@ public class Military extends GameObject {
                 data.combativity = Integer.parseInt(line[8]);
                 data.leader = scen.getPerson(Integer.parseInt(line[9]));
                 data.persons = scen.getPersons().getItemsFromCSV(line[10]);
+                data.movingDays = Integer.parseInt(line[11]);
 
                 result.add(data);
             }
@@ -155,7 +158,8 @@ public class Military extends GameObject {
                         String.valueOf(detail.morale),
                         String.valueOf(detail.combativity),
                         String.valueOf(detail.leader == null ? -1 : detail.leader.getId()),
-                        detail.persons.toCSV()
+                        detail.persons.toCSV(),
+                        String.valueOf(detail.movingDays)
                 });
             }
         } catch (IOException e) {
@@ -358,4 +362,16 @@ public class Military extends GameObject {
         return t;
     }
 
+    public int getMovingDays() {
+        return movingDays;
+    }
+
+    public void moveToArchitecture(Architecture a) {
+        if (!(this.getLocation() instanceof Architecture)) {
+            throw new IllegalStateException("The military must be in an architecture in order to be moved to another");
+        }
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(((Architecture) this.getLocation()).getLocation(), a.getLocation())
+                / GlobalVariables.militaryMovingSpeed * this.getKind().getMovability()));
+        this.location = new LocationType(a);
+    }
 }

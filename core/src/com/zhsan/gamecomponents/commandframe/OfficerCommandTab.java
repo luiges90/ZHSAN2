@@ -89,7 +89,7 @@ public class OfficerCommandTab implements CommandTab {
                     selectedItems -> {
                         selectedItems.forEach(o -> {
                             Person p = (Person) o;
-                            p.moveToArchitecture(((Architecture) p.getLocation()).getLocation(), parent.getCurrentArchitecture());
+                            p.moveToArchitecture(parent.getCurrentArchitecture());
                         });
                     });
             recall.setState(StateTexture.State.NORMAL);
@@ -104,7 +104,7 @@ public class OfficerCommandTab implements CommandTab {
                                 selectedItems1 -> {
                                     selectedItems.forEach(o -> {
                                         Person p = (Person) o;
-                                        p.moveToArchitecture(parent.getCurrentArchitecture().getLocation(), (Architecture) selectedItems1.get(0));
+                                        p.moveToArchitecture((Architecture) selectedItems1.get(0));
                                     });
                                 });
                     });

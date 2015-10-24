@@ -443,9 +443,15 @@
                         FontStyle="Regular"
                         FontColor="4294967295"
                         Align="Right" />
+                <Column ID="14" Name="MovingDays" DisplayName="途中" MinWidth="60"
+                        FontName="方正隶变_GBK"
+                        FontSize="14"
+                        FontStyle="Regular"
+                        FontColor="4294967295"
+                        Align="Right" />
             </Columns>
             <Tabs Margin="5">
-                <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 6 2 3 4 5">
+                <Tab ID="1" Name="Basic" DisplayName="基本" Columns="1 6 2 3 4 5 14">
                 </Tab>
                 <Tab ID="2" Name="Strength" DisplayName="戰力" Columns="1 6 10 11 12 13">
                 </Tab>

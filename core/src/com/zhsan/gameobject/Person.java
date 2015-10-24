@@ -422,6 +422,16 @@ public class Person extends GameObject {
         }
     }
 
+    public void moveToArchitecture(Architecture a) {
+        if (!(this.getLocation() instanceof Architecture)) {
+            throw new IllegalStateException("Must be in an architecture in order to move to another");
+        }
+        Architecture from = (Architecture) this.getLocation();
+        from.getMilitaries().filter(x -> x.getLeader() == this).forEach(x -> x.moveToArchitecture(a));
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from.getLocation(), a.getLocation()) / GlobalVariables.personMovingSpeed));
+        this.location = new LocationType(a);
+    }
+
     public void moveToArchitecture(Point from, Architecture a) {
         this.movingDays = (int) Math.max(1, Math.round(Point.distance(from, a.getLocation()) / GlobalVariables.personMovingSpeed));
         this.location = new LocationType(a);
