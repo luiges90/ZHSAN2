@@ -422,12 +422,20 @@ public class Person extends GameObject {
         }
     }
 
+    @LuaAI.ExportToLua
+    public void moveToArchitecture(int toId) {
+        moveToArchitecture(scenario.getArchitectures().get(toId));
+    }
+
     public void moveToArchitecture(Architecture a) {
         if (!(this.getLocation() instanceof Architecture)) {
             throw new IllegalStateException("Must be in an architecture in order to move to another");
         }
         Architecture from = (Architecture) this.getLocation();
         from.getMilitaries().filter(x -> x.getLeader() == this).forEach(x -> x.moveToArchitecture(a));
+        if (this.getDoingWorkType() == DoingWork.MAYOR) {
+            this.handoverMayor(from.pickMayor(this), new LocationType(a));
+        }
         this.movingDays = (int) Math.max(1, Math.round(Point.distance(from.getLocation(), a.getLocation()) / GlobalVariables.personMovingSpeed));
         this.location = new LocationType(a);
     }

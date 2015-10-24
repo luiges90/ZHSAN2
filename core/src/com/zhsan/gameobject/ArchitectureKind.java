@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -114,34 +115,42 @@ public final class ArchitectureKind extends GameObject {
         return drawOffsetW;
     }
 
+    @LuaAI.ExportToLua
     public int getAgriculture() {
         return agriculture;
     }
 
+    @LuaAI.ExportToLua
     public int getCommerce() {
         return commerce;
     }
 
+    @LuaAI.ExportToLua
     public int getTechnology() {
         return technology;
     }
 
+    @LuaAI.ExportToLua
     public int getEndurance() {
         return endurance;
     }
 
+    @LuaAI.ExportToLua
     public int getMorale() {
         return morale;
     }
 
+    @LuaAI.ExportToLua
     public int getPopulation() {
         return population;
     }
 
+    @LuaAI.ExportToLua
     public long getMaxFund() {
         return maxFund;
     }
 
+    @LuaAI.ExportToLua
     public long getMaxFood() {
         return maxFood;
     }

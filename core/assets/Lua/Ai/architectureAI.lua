@@ -1,6 +1,7 @@
 -- AI at architecture level
 
 dofile(PATH .. "militaryKindAI.lua")
+dofile(PATH .. "personFuncAI.lua")
 
 function getMilitaryThreat(architecture)
    local connecting = architecture.getHostileConnectedArchitectures()
@@ -68,8 +69,7 @@ function assignMayor(architecture)
       local max = 0
       local candidate
       for _, v in pairs(architecture.getPersons()) do
-         local ability = v.getAgricultureAbility() + v.getCommerceAbility() + v.getTechnologyAbility()
-                 + v.getEnduranceAbility() + v.getMoraleAbility()
+         local ability = personFunc.totalInternalAbility(v)
          if ability > max then
             max = ability
             candidate = v

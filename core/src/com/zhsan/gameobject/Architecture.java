@@ -132,6 +132,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         return new ArrayList<>(location);
     }
 
+    @LuaAI.ExportToLua
     public ArchitectureKind getKind() {
         return architectureKind;
     }
@@ -164,6 +165,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         this.belongedSection = n;
     }
 
+    @LuaAI.ExportToLua
     public GameObjectList<Person> getPersonsIncludingMoving() {
         return scenario.getPersons().filter(p -> p.getLocation() == this && p.getState() == Person.State.NORMAL);
     }
@@ -423,6 +425,11 @@ public class Architecture extends GameObject implements HasPointLocation {
             }
         }
         return new ArrayList<>(result);
+    }
+
+    @LuaAI.ExportToLua
+    public double distanceTo(int architectureId) {
+        return distanceTo(scenario.getArchitectures().get(architectureId));
     }
 
     public double distanceTo(Architecture a) {
@@ -711,6 +718,11 @@ public class Architecture extends GameObject implements HasPointLocation {
     @LuaAI.ExportToLua
     public GameObjectList<Architecture> getHostileConnectedArchitectures() {
         return scenario.getArchitectures().filter(a -> a.getBelongedFaction() != this.getBelongedFaction()).getItemsFromIds(connectedArchitectures);
+    }
+
+    @LuaAI.ExportToLua
+    public boolean isFrontline() {
+        return scenario.getArchitectures().getAll().stream().anyMatch(a -> a.getBelongedFaction() != this.getBelongedFaction());
     }
 
 }

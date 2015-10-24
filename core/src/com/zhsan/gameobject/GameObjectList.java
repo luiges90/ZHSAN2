@@ -96,7 +96,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> filter(Predicate<T> predicate) {
-        return content.values().parallelStream().filter(predicate).collect(new ToGameObjectList<>());
+        return content.values().stream().filter(predicate).collect(new ToGameObjectList<>());
     }
 
     public boolean remove(Predicate<T> predicate) {
@@ -104,23 +104,23 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public List<T> sort(Comparator<T> comparator) {
-        return content.values().parallelStream().sorted(comparator).collect(Collectors.toList());
+        return content.values().stream().sorted(comparator).collect(Collectors.toList());
     }
 
     public T max(Comparator<T> comparator) {
-        return content.values().parallelStream().max(comparator).get();
+        return content.values().stream().max(comparator).get();
     }
 
     public T max(Comparator<T> comparator, T def) {
-        return content.values().parallelStream().max(comparator).orElse(def);
+        return content.values().stream().max(comparator).orElse(def);
     }
 
     public T min(Comparator<T> comparator) {
-        return content.values().parallelStream().min(comparator).get();
+        return content.values().stream().min(comparator).get();
     }
 
     public T min(Comparator<T> comparator, T def) {
-        return content.values().parallelStream().min(comparator).orElse(def);
+        return content.values().stream().min(comparator).orElse(def);
     }
 
     public int size() {
@@ -139,7 +139,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList<T> getItemsFromCSV(String s) {
         List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
-        return content.values().parallelStream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
+        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
     }
 
     public GameObjectList<T> getItemsFromIds(Collection<Integer> list) {
@@ -147,7 +147,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public String toCSV() {
-        return content.keySet().parallelStream().map(String::valueOf).collect(Collectors.joining(" "));
+        return content.keySet().stream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
     public static class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
