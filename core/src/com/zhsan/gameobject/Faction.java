@@ -123,7 +123,7 @@ public class Faction extends GameObject {
 
     public void setLeader(Person p) {
         if (!this.getPersons().contains(p) || (p.getState() != Person.State.NORMAL && p.getState() != Person.State.CAPTIVE)) {
-            throw new IllegalArgumentException("The leader must be in this faction");
+            throw new IllegalArgumentException("The leader must be in this faction " + this + ", attempting to assign person " + p);
         }
         this.leader = p;
     }
