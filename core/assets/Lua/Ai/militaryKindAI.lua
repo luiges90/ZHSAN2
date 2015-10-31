@@ -17,8 +17,12 @@ militaryKindFunc.score =
         local antiArch = mk.getArchitectureOffense()
         local range = mk.getRangeHi()^1.5 - (mk.getRangeLo() - 1)^1.5
         local speed = mk.getMovability()^1.5
+        local cost = 1
+        if architecture ~= nil then
+            cost = mk.getCostOfArchitecture(architecture.getId())
+        end
         -- TODO consider terrains
-        return ((power + antiArch * 0.5) * (range + speed)) / mk.getCostOfArchitecture(architecture.getId())
+        return ((power + antiArch * 0.5) * (range + speed)) / cost
     end
 
 militaryKindFunc.personScore =

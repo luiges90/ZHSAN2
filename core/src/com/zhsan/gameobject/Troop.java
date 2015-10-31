@@ -9,6 +9,7 @@ import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -240,6 +241,7 @@ public class Troop extends GameObject implements HasPointLocation {
         return getBelongedSection().getBelongedFaction();
     }
 
+    @LuaAI.ExportToLua
     public MilitaryKind getKind() {
         return getMilitary().getKind();
     }
@@ -265,6 +267,7 @@ public class Troop extends GameObject implements HasPointLocation {
         return this;
     }
 
+    @LuaAI.ExportToLua
     public int getCommand() {
         return (int) (getLeader().getCommand() +
                 Math.max(getMilitary().getPersons().getAll().stream()
@@ -273,6 +276,7 @@ public class Troop extends GameObject implements HasPointLocation {
                                 .orElse(0) - getLeader().getCommand(), 0) * GlobalVariables.troopCommandPersonFactor);
     }
 
+    @LuaAI.ExportToLua
     public int getStrength() {
         return (int) (getLeader().getStrength() +
                 Math.max(getMilitary().getPersons().getAll().stream()
@@ -281,6 +285,7 @@ public class Troop extends GameObject implements HasPointLocation {
                         .orElse(0) - getLeader().getStrength(), 0) * GlobalVariables.troopStrengthPersonFactor);
     }
 
+    @LuaAI.ExportToLua
     public int getIntelligence() {
         return (int) (getLeader().getIntelligence() +
                 Math.max(getMilitary().getPersons().getAll().stream()
@@ -289,6 +294,7 @@ public class Troop extends GameObject implements HasPointLocation {
                         .orElse(0) - getLeader().getIntelligence(), 0) * GlobalVariables.troopIntelligencePersonFactor);
     }
 
+    @LuaAI.ExportToLua
     public float getOffense() {
         return (getCommand() * 0.7f + getStrength() * 0.3f) / 100.0f *
                 getMorale() / 100.0f *
@@ -296,6 +302,7 @@ public class Troop extends GameObject implements HasPointLocation {
                 (getKind().getOffense() + getKind().getOffensePerUnit() * getMilitary().getUnitCount());
     }
 
+    @LuaAI.ExportToLua
     public float getDefense() {
         return getCommand() / 100.0f *
                 getMorale() / 100.0f *
@@ -303,6 +310,7 @@ public class Troop extends GameObject implements HasPointLocation {
                 (getKind().getDefense() + getKind().getDefensePerUnit() * getMilitary().getUnitCount());
     }
 
+    @LuaAI.ExportToLua
     public int getQuantity() {
         return getMilitary().getQuantity();
     }

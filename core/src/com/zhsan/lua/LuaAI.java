@@ -1,6 +1,7 @@
 package com.zhsan.lua;
 
 import com.zhsan.common.Paths;
+import com.zhsan.common.Point;
 import com.zhsan.gameobject.Faction;
 import com.zhsan.gameobject.GameObject;
 import com.zhsan.gameobject.GameObjectList;
@@ -18,10 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -194,6 +192,26 @@ public final class LuaAI {
             LuaTable table = LuaValue.tableOf();
             int index = 0;
             for (GameObject i : list) {
+                LuaTable child = LuaValue.tableOf();
+                LuaAI.processAnnotations(child, i.getClass(), i);
+                table.set(index, child);
+                index++;
+            }
+            return table;
+        } else if (obj instanceof Point) {
+            Point p = (Point) obj;
+            LuaTable table = LuaValue.tableOf();
+            table.set("x", p.x);
+            table.set("y", p.y);
+            return table;
+        } else if (obj instanceof Collection) {
+            Collection<?> list = (Collection) obj;
+            if (list.size() == 0) {
+                return LuaValue.tableOf();
+            }
+            LuaTable table = LuaValue.tableOf();
+            int index = 0;
+            for (Object i : list) {
                 LuaTable child = LuaValue.tableOf();
                 LuaAI.processAnnotations(child, i.getClass(), i);
                 table.set(index, child);

@@ -328,6 +328,11 @@ public class Military extends GameObject {
         this.quantity = Math.max(0, this.quantity - quantity);
     }
 
+    @LuaAI.ExportToLua
+    public Troop startCampaign(int x, int y) {
+        return startCampaign(new Point(x, y));
+    }
+
     public Troop startCampaign(Point start) {
         if (!(getLocation() instanceof Architecture)) {
             throw new IllegalStateException("The troop must be in an architecture in order to leave");

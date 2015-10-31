@@ -1,4 +1,4 @@
--- various functions related to architecture
+-- various functions related to person
 
 dofile(PATH .. "util.lua")
 

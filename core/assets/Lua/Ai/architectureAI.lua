@@ -2,6 +2,8 @@
 
 dofile(PATH .. "militaryKindAI.lua")
 dofile(PATH .. "personFuncAI.lua")
+dofile(PATH .. "troopFuncAI.lua")
+dofile(PATH .. "util.lua")
 
 function getMilitaryThreat(architecture)
    local connecting = architecture.getHostileConnectedArchitectures()
@@ -16,6 +18,8 @@ function architectureAI(architecture)
    if #architecture.getPersons() > 0 then
       print("Internal work assignment for Architecture " .. architecture.getName())
 
+      defend(architecture)
+
       local militaryThreat = getMilitaryThreat(architecture)
       local fullRecruit = architecture.getMilitaryUnitCountInFullRecruit()
       print("Military Threat = " .. militaryThreat .. " and unitCountFullRecruit = " .. fullRecruit)
@@ -28,6 +32,23 @@ function architectureAI(architecture)
       assignInternal(architecture)
    end
 
+end
+
+function defend(architecture)
+   local hostileTroops = getHostileTroopsInView(architecture)
+   local hostileValue = sum(hostileTroops, troopFunc.merit)
+   if #hostileTroops > 0 then
+      local friendlyTroops = getFriendlyTroopsInView(architecture)
+      local friendlyValue = sum(friendlyTroops, troopFunc.merit)
+      while friendlyValue * 3 < hostileValue do
+         local position = randomPick(architecture.getCampaignablePositions())
+         if position ~= nil then
+            local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
+            local troop = m.startCampaign(position.x, position.y)
+            friendlyValue = friendlyValue + troopFunc.merit(troop)
+         end
+      end
+   end
 end
 
 function createMilitaries(architecture)

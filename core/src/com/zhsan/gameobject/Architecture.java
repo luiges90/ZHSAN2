@@ -413,6 +413,7 @@ public class Architecture extends GameObject implements HasPointLocation {
         return kinds;
     }
 
+    @LuaAI.ExportToLua
     public List<Point> getCampaignablePositions() {
         Set<Point> result = new HashSet<>();
         for (Point p : this.getLocations()) {
@@ -723,6 +724,16 @@ public class Architecture extends GameObject implements HasPointLocation {
     @LuaAI.ExportToLua
     public boolean isFrontline() {
         return scenario.getArchitectures().getAll().stream().anyMatch(a -> a.getBelongedFaction() != this.getBelongedFaction());
+    }
+
+    @LuaAI.ExportToLua
+    public GameObjectList<Troop> getFriendlyTroopsInView() {
+        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
+    }
+
+    @LuaAI.ExportToLua
+    public GameObjectList<Troop> getHostileTroopsInView() {
+        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
     }
 
 }

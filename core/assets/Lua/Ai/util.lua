@@ -2,7 +2,7 @@
 
 function countIf(table, cond)
     local count = 0
-    for i, v in pairs(table) do
+    for _, v in pairs(table) do
         if cond(v) then
             count = count + 1
         end
@@ -26,4 +26,18 @@ function max(table, comparator)
         end
     end
     return k, m
+end
+
+function sum(table, func)
+    func = func or function(x) return x end
+    local n = 0
+    for _, v in pairs(table) do
+        n = n + func(v)
+    end
+    return n;
+end
+
+function randomPick(table)
+    if #table == 0 then return nil end
+    return table[math.random(1, #table)]
 end
