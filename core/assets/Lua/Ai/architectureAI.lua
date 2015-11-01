@@ -56,6 +56,7 @@ function createMilitaries(architecture)
    local militaries = architecture.getMilitaries()
 
    local militaryKinds = architecture.getActualCreatableMilitaryKinds()
+   if (#militaryKinds <= 0) then return end
 
    local kindScores = {}
    for _, mk in pairs(militaryKinds) do
