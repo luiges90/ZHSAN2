@@ -35,10 +35,10 @@ function architectureAI(architecture)
 end
 
 function defend(architecture)
-   local hostileTroops = getHostileTroopsInView(architecture)
+   local hostileTroops = architecture.getHostileTroopsInView()
    local hostileValue = sum(hostileTroops, troopFunc.merit)
    if #hostileTroops > 0 then
-      local friendlyTroops = getFriendlyTroopsInView(architecture)
+      local friendlyTroops = architecture.getFriendlyTroopsInView()
       local friendlyValue = sum(friendlyTroops, troopFunc.merit)
       while friendlyValue * 3 < hostileValue do
          local position = randomPick(architecture.getCampaignablePositions())
