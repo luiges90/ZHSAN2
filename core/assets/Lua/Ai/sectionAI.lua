@@ -46,7 +46,30 @@ function allocatePersons(section)
     end
 end
 
+function chooseNextTarget(section)
+    local candidates = {}
+    for _, i in pairs(section.getArchitectures()) do
+        for _, j in pairs(i.getHostileConnectedArchitectures()) do
+            candidates[j.getId()] = j
+        end
+    end
+    local scores = {}
+    for _, i in pairs(candidates) do
+        local v = i.getPopulation() / (getMilitaryThreat(i) + 10) / (#i.getHostileConnectedArchitectures() + 1)
+        scores[i] = v
+    end
+    local target, _ = max(scores)
+
+    print("Setting target to " .. target.getName())
+    if string.find(section.getAiTags(), "targetArch%d+") ~= nil then
+        section.setAiTags(string.gsub(section.getAiTags(), "targetArch%d-", "targetArch" .. target.getId()))
+    else
+        section.setAiTags(section.getAiTags() .. "targetArch" .. target.getId() .. " ")
+    end
+end
+
 function sectionAI(section)
+    chooseNextTarget(section)
     allocatePersons(section)
     for _, item in pairs(section.getArchitectures()) do
         architectureAI(item)

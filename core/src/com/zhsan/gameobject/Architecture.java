@@ -215,14 +215,17 @@ public class Architecture extends GameObject implements HasPointLocation {
         return this.getKind().getName();
     }
 
+    @LuaAI.ExportToLua
     public int getPopulation() {
         return population;
     }
 
+    @LuaAI.ExportToLua
     public int getFund() {
         return fund;
     }
 
+    @LuaAI.ExportToLua
     public int getFood() {
         return food;
     }

@@ -41,3 +41,7 @@ function randomPick(table)
     if #table == 0 then return nil end
     return table[math.random(1, #table)]
 end
+
+function addTag(tag)
+
+end
