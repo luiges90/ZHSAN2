@@ -5,6 +5,10 @@ dofile(PATH .. "personFuncAI.lua")
 dofile(PATH .. "troopFuncAI.lua")
 dofile(PATH .. "util.lua")
 
+function getTargetFactionId(architecture)
+   return string.match(architecture.getBelongedSection().getAiTags(), "targetArch(%d+)")
+end
+
 function getMilitaryThreat(architecture)
    local connecting = architecture.getHostileConnectedArchitectures()
    local total = 0

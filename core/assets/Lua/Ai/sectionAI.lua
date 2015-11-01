@@ -62,7 +62,7 @@ function chooseNextTarget(section)
 
     print("Setting target to " .. target.getName())
     if string.find(section.getAiTags(), "targetArch%d+") ~= nil then
-        section.setAiTags(string.gsub(section.getAiTags(), "targetArch%d-", "targetArch" .. target.getId()))
+        section.setAiTags(string.gsub(section.getAiTags(), "targetArch%d+", "targetArch" .. target.getId()))
     else
         section.setAiTags(section.getAiTags() .. "targetArch" .. target.getId() .. " ")
     end
