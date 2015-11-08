@@ -50,6 +50,7 @@ function defend(architecture)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
+            -- TODO set troop AI
             friendlyValue = friendlyValue + troopFunc.merit(troop)
          end
       end
@@ -61,10 +62,19 @@ function attack(architecture)
    local target = scenario.getArchitecture(targetId)
 
    local reserve = getMilitaryThreat(architecture)
-   local targetPower = target.getMilitaryUnitCount()
+   local targetPower = target.getMilitaryUnitCount() * 1.5
 
    if architecture.getMilitaryUnitCount() > (reserve + targetPower) * 1.1 then
-
+      local powerSent = 0
+      while powerSent < targetPower do
+         local position = randomPick(architecture.getCampaignablePositions())
+         if position ~= nil then
+            local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
+            local troop = m.startCampaign(position.x, position.y)
+            -- TODO set troop AI
+            powerSent = friendlyValue + troopFunc.merit(troop)
+         end
+      end
    end
 end
 
