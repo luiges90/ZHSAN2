@@ -247,6 +247,11 @@ public class GameScenario {
         return gameSurvey;
     }
 
+    @LuaAI.ExportToLua
+    public Architecture getArchitecture(int id) {
+        return getArchitectures().get(id);
+    }
+
     public GameObjectList<Architecture> getArchitectures() {
         return new GameObjectList<>(architectures, true);
     }

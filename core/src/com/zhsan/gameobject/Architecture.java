@@ -137,10 +137,12 @@ public class Architecture extends GameObject implements HasPointLocation {
         return architectureKind;
     }
 
+    @LuaAI.ExportToLua
     public Section getBelongedSection() {
         return belongedSection;
     }
 
+    @LuaAI.ExportToLua
     public Faction getBelongedFaction() {
         return belongedSection == null ? null : belongedSection.getBelongedFaction();
     }

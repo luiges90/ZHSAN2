@@ -5,7 +5,7 @@ dofile(PATH .. "personFuncAI.lua")
 dofile(PATH .. "troopFuncAI.lua")
 dofile(PATH .. "util.lua")
 
-function getTargetFactionId(architecture)
+function getTargetArchitectureId(architecture)
    return string.match(architecture.getBelongedSection().getAiTags(), "targetArch(%d+)")
 end
 
@@ -23,6 +23,7 @@ function architectureAI(architecture)
       print("Internal work assignment for Architecture " .. architecture.getName())
 
       defend(architecture)
+      attack(architecture)
 
       local militaryThreat = getMilitaryThreat(architecture)
       local fullRecruit = architecture.getMilitaryUnitCountInFullRecruit()
@@ -52,6 +53,18 @@ function defend(architecture)
             friendlyValue = friendlyValue + troopFunc.merit(troop)
          end
       end
+   end
+end
+
+function attack(architecture)
+   local targetId = getTargetArchitectureId(architecture)
+   local target = scenario.getArchitecture(targetId)
+
+   local reserve = getMilitaryThreat(architecture)
+   local targetPower = target.getMilitaryUnitCount()
+
+   if architecture.getMilitaryUnitCount() > (reserve + targetPower) * 1.1 then
+
    end
 end
 
