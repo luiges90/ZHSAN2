@@ -6,7 +6,7 @@ dofile(PATH .. "troopFuncAI.lua")
 dofile(PATH .. "util.lua")
 
 function getTargetArchitectureId(architecture)
-   return string.match(architecture.getBelongedSection().getAiTags(), "targetArch(%d+)")
+   return getTag(architecture.getBelongedSection(), "targetArch")
 end
 
 function getMilitaryThreat(architecture)
@@ -50,7 +50,7 @@ function defend(architecture)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
-            -- TODO set troop AI
+            addTag(troop, "defendArch", architecture.getId())
             friendlyValue = friendlyValue + troopFunc.merit(troop)
          end
       end
@@ -71,7 +71,7 @@ function attack(architecture)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
-            -- TODO set troop AI
+            addTag(troop, "attackArch", targetId)
             powerSent = friendlyValue + troopFunc.merit(troop)
          end
       end

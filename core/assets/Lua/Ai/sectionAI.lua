@@ -1,6 +1,7 @@
 -- AI at section level
 
 dofile(PATH .. "architectureAI.lua")
+dofile(PATH .. "troopAI.lua")
 dofile(PATH .. "architectureFuncAI.lua")
 dofile(PATH .. "personFuncAI.lua")
 
@@ -61,11 +62,7 @@ function chooseNextTarget(section)
     local target, _ = max(scores)
 
     print("Setting target to " .. target.getName())
-    if string.find(section.getAiTags(), "targetArch%d+") ~= nil then
-        section.setAiTags(string.gsub(section.getAiTags(), "targetArch%d+", "targetArch" .. target.getId()))
-    else
-        section.setAiTags(section.getAiTags() .. "targetArch" .. target.getId() .. " ")
-    end
+    addTag(section, "targetArch", target.getId())
 end
 
 function sectionAI(section)
@@ -73,5 +70,8 @@ function sectionAI(section)
     allocatePersons(section)
     for _, item in pairs(section.getArchitectures()) do
         architectureAI(item)
+    end
+    for _, item in pairs(section.getTroops()) do
+        troopAI(item)
     end
 end

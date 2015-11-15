@@ -42,6 +42,14 @@ function randomPick(table)
     return table[math.random(1, #table)]
 end
 
-function addTag(tag)
+function addTag(obj, tag, val)
+    if string.find(obj.getAiTags(), tag .. "%d+") ~= nil then
+        obj.setAiTags(string.gsub(obj.getAiTags(), tag .. "%d+", tag .. val))
+    else
+        obj.setAiTags(obj.getAiTags() .. tag .. val .. " ")
+    end
+end
 
+function getTag(obj, tag)
+    return string.match(obj.getAiTags(), tag .. "(%d+)")
 end
