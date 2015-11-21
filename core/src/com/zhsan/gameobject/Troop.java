@@ -361,6 +361,26 @@ public class Troop extends GameObject implements HasPointLocation {
         return true;
     }
 
+    @LuaAI.ExportToLua
+    public void giveMoveToEnterOrder(int archId) {
+        giveMoveToEnterOrder(scenario.getArchitecture(archId));
+    }
+
+    @LuaAI.ExportToLua
+    public void giveMoveToArchitectureOrder(int archId) {
+        giveMoveToOrder(scenario.getArchitecture(archId).getLocation());
+    }
+
+    @LuaAI.ExportToLua
+    public void giveAttackArchitectureOrder(int archId) {
+        giveAttackOrder(scenario.getArchitecture(archId));
+    }
+
+    @LuaAI.ExportToLua
+    public void giveAttackTroopOrder(int troopId) {
+        giveAttackOrder(scenario.getTroops().get(troopId));
+    }
+
     public void giveMoveToOrder(Point location) {
         this.order = new Order(scenario, OrderKind.MOVE, location);
     }
@@ -379,6 +399,21 @@ public class Troop extends GameObject implements HasPointLocation {
 
     public void giveAttackOrder(Architecture architecture) {
         this.order = new Order(scenario, OrderKind.ATTACK_ARCH, architecture.getId());
+    }
+
+    @LuaAI.ExportToLua
+    public GameObjectList<Troop> getFriendlyTroopsInView() {
+        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
+    }
+
+    @LuaAI.ExportToLua
+    public GameObjectList<Troop> getHostileTroopsInView() {
+        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
+    }
+
+    @LuaAI.ExportToLua
+    public boolean isArchitectureInView(int archId) {
+        return this.getLocation().taxiDistanceTo(scenario.getArchitecture(archId).getLocation()) <= 5;
     }
 
     private Queue<Point> currentPath;

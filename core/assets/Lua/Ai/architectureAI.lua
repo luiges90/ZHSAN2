@@ -50,7 +50,9 @@ function defend(architecture)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
+            addTag(troop, "attackArch", architecture.getId())
             addTag(troop, "defendArch", architecture.getId())
+            addTag(troop, "state", TROOP_STATE_COMBAT)
             friendlyValue = friendlyValue + troopFunc.merit(troop)
          end
       end
@@ -72,6 +74,8 @@ function attack(architecture)
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
             addTag(troop, "attackArch", targetId)
+            addTag(troop, "defendArch", architecture.getId())
+            addTag(troop, "state", TROOP_STATE_ADVANCE)
             powerSent = friendlyValue + troopFunc.merit(troop)
          end
       end
