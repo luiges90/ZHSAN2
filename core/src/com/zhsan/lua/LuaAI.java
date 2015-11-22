@@ -258,7 +258,7 @@ public final class LuaAI {
                        Object result;
                        try {
                            result = m.invoke(obj, objArgs);
-                       } catch (IllegalAccessException | InvocationTargetException e) {
+                       } catch (Exception e) {
                            throw new RuntimeException("Exception occurred invoking java method " + m + " with args " + Arrays.toString(objArgs), e);
                        }
                        return toLuaValue(result);

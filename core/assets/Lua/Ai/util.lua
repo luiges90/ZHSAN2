@@ -44,7 +44,8 @@ end
 
 function addTag(obj, tag, val)
     if string.find(obj.getAiTags(), tag .. "%d+") ~= nil then
-        obj.setAiTags(string.gsub(obj.getAiTags(), tag .. "%d+", tag .. val))
+        local s, _ = string.gsub(obj.getAiTags(), tag .. "%d+", tag .. val)
+        obj.setAiTags(s)
     else
         obj.setAiTags(obj.getAiTags() .. tag .. val .. " ")
     end

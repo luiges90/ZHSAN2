@@ -43,17 +43,21 @@ function defend(architecture)
    local hostileTroops = architecture.getHostileTroopsInView()
    local hostileValue = sum(hostileTroops, troopFunc.merit)
    if #hostileTroops > 0 then
+      print("Defending " .. architecture.getName())
       local friendlyTroops = architecture.getFriendlyTroopsInView()
       local friendlyValue = sum(friendlyTroops, troopFunc.merit)
       while friendlyValue * 3 < hostileValue do
          local position = randomPick(architecture.getCampaignablePositions())
+         print("chosen troop start position " .. position)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
             addTag(troop, "attackArch", architecture.getId())
             addTag(troop, "defendArch", architecture.getId())
             addTag(troop, "state", TROOP_STATE_COMBAT)
-            friendlyValue = friendlyValue + troopFunc.merit(troop)
+            local newValue = troopFunc.merit(troop)
+            friendlyValue = friendlyValue + newValue
+            print("Sending " .. troop.getName() .. " out, with its value " .. newValue)
          end
       end
    end
@@ -64,19 +68,25 @@ function attack(architecture)
    local target = scenario.getArchitecture(targetId)
 
    local reserve = getMilitaryThreat(architecture)
-   local targetPower = target.getMilitaryUnitCount() * 1.5
+   local targetPower = math.max(target.getMilitaryUnitCount() * 1.5, 50)
 
-   if architecture.getMilitaryUnitCount() > (reserve + targetPower) * 1.1 then
+   local threshold = (reserve + targetPower) * 1.1
+   print("Considering attacking " .. target.getName() .. ". need reserve " .. threshold .. " and we now have " .. architecture.getMilitaryUnitCount())
+   if architecture.getMilitaryUnitCount() > threshold then
       local powerSent = 0
+      print("target attacking power " .. targetPower)
       while powerSent < targetPower do
          local position = randomPick(architecture.getCampaignablePositions())
+         print("chosen troop start position " .. position)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
             addTag(troop, "attackArch", targetId)
             addTag(troop, "defendArch", architecture.getId())
             addTag(troop, "state", TROOP_STATE_ADVANCE)
-            powerSent = friendlyValue + troopFunc.merit(troop)
+            local newValue = troopFunc.merit(troop)
+            powerSent = powerSent + troopFunc.merit(troop)
+            print("Sending " .. troop.getName() .. " out, with its value " .. newValue)
          end
       end
    end
