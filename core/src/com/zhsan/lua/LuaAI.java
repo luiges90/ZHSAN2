@@ -47,7 +47,7 @@ public final class LuaAI {
     public static void runFactionAi(GameScenario scen, Faction f) {
         if (loggers.get(f) == null) {
             try {
-                loggers.put(f, new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true));
+                loggers.put(f, new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log", true), "UTF-8"), true));
             } catch (UnsupportedEncodingException | FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -202,7 +202,7 @@ public final class LuaAI {
                 return LuaValue.tableOf();
             }
             LuaTable table = LuaValue.tableOf();
-            int index = 0;
+            int index = 1;
             for (GameObject i : list) {
                 LuaTable child = LuaValue.tableOf();
                 LuaAI.processAnnotations(child, i.getClass(), i);
@@ -222,11 +222,9 @@ public final class LuaAI {
                 return LuaValue.tableOf();
             }
             LuaTable table = LuaValue.tableOf();
-            int index = 0;
+            int index = 1;
             for (Object i : list) {
-                LuaTable child = LuaValue.tableOf();
-                LuaAI.processAnnotations(child, i.getClass(), i);
-                table.set(index, child);
+                table.set(index, LuaAI.toLuaValue(i));
                 index++;
             }
             return table;
@@ -261,10 +259,10 @@ public final class LuaAI {
                    public Varargs invoke(Varargs args) {
                        Object[] objArgs = new Object[args.narg()];
                        if (args.narg() == 1) {
-                            objArgs[0] = fromLuaValue(args.arg1());
+                           objArgs[0] = fromLuaValue(args.arg1());
                        } else {
                            for (int i = 0; i < args.narg(); ++i) {
-                               objArgs[i] = fromLuaValue(args.arg(i));
+                               objArgs[i] = fromLuaValue(args.arg(i + 1));
                            }
                        }
                        Object result;

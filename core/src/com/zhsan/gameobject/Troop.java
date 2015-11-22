@@ -189,6 +189,7 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     @Override
+    @LuaAI.ExportToLua
     public String getName() {
         return String.format(GlobalStrings.getString(GlobalStrings.Keys.TROOP_NAME), getLeaderName());
     }

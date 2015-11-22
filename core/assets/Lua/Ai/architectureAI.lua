@@ -25,7 +25,14 @@ function architectureAI(architecture)
       defend(architecture)
       attack(architecture)
 
-      local militaryThreat = getMilitaryThreat(architecture)
+      local targetId = getTargetArchitectureId(architecture)
+      local target = scenario.getArchitecture(targetId)
+
+      local reserve = getMilitaryThreat(architecture)
+      local targetPower = math.max(target.getMilitaryUnitCount() * 1.5, 50)
+
+      local militaryThreat = (reserve + targetPower) * 1.1
+
       local fullRecruit = architecture.getMilitaryUnitCountInFullRecruit()
       print("Military Threat = " .. militaryThreat .. " and unitCountFullRecruit = " .. fullRecruit)
       if militaryThreat >= fullRecruit then
@@ -77,7 +84,6 @@ function attack(architecture)
       print("target attacking power " .. targetPower)
       while powerSent < targetPower do
          local position = randomPick(architecture.getCampaignablePositions())
-         print("chosen troop start position " .. position)
          if position ~= nil then
             local _, m = max(architecture.getMilitaries(), troopFunc.militaryMerit)
             local troop = m.startCampaign(position.x, position.y)
