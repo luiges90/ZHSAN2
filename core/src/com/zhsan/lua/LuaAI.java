@@ -36,86 +36,98 @@ public final class LuaAI {
 
     public static final String FACTION_AI = "ZHSanFactionAI.lua";
 
+    private static Map<Faction, PrintWriter> loggers = new HashMap<>();
+
     private LuaAI(){}
 
+    public static void dispose() {
+        loggers.forEach((f, w) -> w.close());
+    }
+
     public static void runFactionAi(GameScenario scen, Faction f) {
-        try (PrintWriter logger = new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true)) {
-            Globals globals = JsePlatform.standardGlobals();
+        if (loggers.get(f) == null) {
+            try {
+                loggers.put(f, new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8"), true));
+            } catch (UnsupportedEncodingException | FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
-            globals.set("PATH", PATH);
-            globals.set("dump", new OneArgFunction() {
+        PrintWriter logger = loggers.get(f);
 
-                private String ns(int n, String s) {
-                    return new String(new char[n]).replace("\0", s);
-                }
+        Globals globals = JsePlatform.standardGlobals();
 
-                private void dump(int indent, LuaValue arg) {
-                    if (indent > 8) return;
-                    if (arg.istable()) {
-                        LuaTable table = arg.checktable();
-                        for (int i = 0; i < table.keyCount(); ++i) {
-                            LuaValue key = table.keys()[i];
-                            LuaValue value = table.get(key);
-                            if (value.istable()) {
-                                logger.println(ns(indent, " ") + key + " = ");
-                                dump(indent + 4, value);
-                            } else if (value.isfunction()) {
-                                if (key.tojstring().startsWith("get")) {
-                                    LuaValue result;
-                                    try {
-                                        result = value.call();
-                                        if (result.istable()) {
-                                            logger.println(ns(indent, " ") + key + " = ");
-                                            dump(indent + 4, result);
-                                        } else {
-                                            logger.println(ns(indent, " ") + key + " = " + result);
-                                        }
-                                    } catch (IllegalArgumentException e) {
-                                        logger.println(ns(indent, " ") + key + " = " + value);
+        globals.set("PATH", PATH);
+        globals.set("dump", new OneArgFunction() {
+
+            private String ns(int n, String s) {
+                return new String(new char[n]).replace("\0", s);
+            }
+
+            private void dump(int indent, LuaValue arg) {
+                if (indent > 8) return;
+                if (arg.istable()) {
+                    LuaTable table = arg.checktable();
+                    for (int i = 0; i < table.keyCount(); ++i) {
+                        LuaValue key = table.keys()[i];
+                        LuaValue value = table.get(key);
+                        if (value.istable()) {
+                            logger.println(ns(indent, " ") + key + " = ");
+                            dump(indent + 4, value);
+                        } else if (value.isfunction()) {
+                            if (key.tojstring().startsWith("get")) {
+                                LuaValue result;
+                                try {
+                                    result = value.call();
+                                    if (result.istable()) {
+                                        logger.println(ns(indent, " ") + key + " = ");
+                                        dump(indent + 4, result);
+                                    } else {
+                                        logger.println(ns(indent, " ") + key + " = " + result);
                                     }
-                                } else {
+                                } catch (IllegalArgumentException e) {
                                     logger.println(ns(indent, " ") + key + " = " + value);
                                 }
                             } else {
                                 logger.println(ns(indent, " ") + key + " = " + value);
                             }
+                        } else {
+                            logger.println(ns(indent, " ") + key + " = " + value);
                         }
-                    } else {
-                        logger.println(arg);
                     }
-                }
-
-                @Override
-                public LuaValue call(LuaValue arg) {
-                    dump(0, arg);
-                    return NIL;
-                }
-            });
-            globals.set("print", new OneArgFunction() {
-                @Override
-                public LuaValue call(LuaValue arg) {
+                } else {
                     logger.println(arg);
-                    return NIL;
                 }
-            });
-
-            LuaTable factionTable = LuaValue.tableOf();
-            LuaAI.processAnnotations(factionTable, Faction.class, f);
-            globals.set("faction", factionTable);
-
-            LuaTable scenarioTable = LuaValue.tableOf();
-            LuaAI.processAnnotations(scenarioTable, GameScenario.class, scen);
-            globals.set("scenario", scenarioTable);
-
-            LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
-
-            try {
-                chunk.call();
-            } catch (LuaError e) {
-                e.printStackTrace(logger);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            @Override
+            public LuaValue call(LuaValue arg) {
+                dump(0, arg);
+                return NIL;
+            }
+        });
+        globals.set("print", new OneArgFunction() {
+            @Override
+            public LuaValue call(LuaValue arg) {
+                logger.println(arg);
+                return NIL;
+            }
+        });
+
+        LuaTable factionTable = LuaValue.tableOf();
+        LuaAI.processAnnotations(factionTable, Faction.class, f);
+        globals.set("faction", factionTable);
+
+        LuaTable scenarioTable = LuaValue.tableOf();
+        LuaAI.processAnnotations(scenarioTable, GameScenario.class, scen);
+        globals.set("scenario", scenarioTable);
+
+        LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+
+        try {
+            chunk.call();
+        } catch (LuaError e) {
+            e.printStackTrace(logger);
         }
     }
 

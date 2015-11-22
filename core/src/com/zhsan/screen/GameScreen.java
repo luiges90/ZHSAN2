@@ -20,6 +20,7 @@ import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.*;
+import com.zhsan.lua.LuaAI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -437,6 +438,7 @@ public class GameScreen extends WidgetGroup {
         if (loadGameFrame != null) {
             loadGameFrame.dispose();
         }
+        LuaAI.dispose();
     }
 
 }

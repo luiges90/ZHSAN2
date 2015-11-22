@@ -8,6 +8,8 @@
 
 dofile(PATH .. "sectionAI.lua")
 
+print(scenario.getGameDateYear() .. "年" .. scenario.getGameDateMonth() .. "月" .. scenario.getGameDateDay() .. "日")
+
 for i, item in pairs(faction.getSections()) do
     sectionAI(item)
 end

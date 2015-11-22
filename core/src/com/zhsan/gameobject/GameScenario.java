@@ -309,6 +309,21 @@ public class GameScenario {
         return gameData.getCurrentPlayer();
     }
 
+    @LuaAI.ExportToLua
+    public int getGameDateYear() {
+        return getGameDate().getYear();
+    }
+
+    @LuaAI.ExportToLua
+    public int getGameDateMonth() {
+        return getGameDate().getMonthValue();
+    }
+
+    @LuaAI.ExportToLua
+    public int getGameDateDay() {
+        return getGameDate().getDayOfMonth();
+    }
+
     public LocalDate getGameDate() {
         return gameSurvey.getStartDate().plusDays(gameData.getDayPassed());
     }
