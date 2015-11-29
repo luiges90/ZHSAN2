@@ -139,7 +139,7 @@ public class TroopAnimationLayer implements MapLayer {
 
             if (t.isDestroyed()) {
                 troopDirections.remove(t);
-                animatorIterator.remove();
+                animatorIterator.remove(); 
                 continue;
             }
 

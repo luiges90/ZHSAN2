@@ -98,6 +98,7 @@ public final class LuaAI {
                 } else {
                     logger.println(arg);
                 }
+                logger.flush();
             }
 
             @Override
@@ -110,6 +111,7 @@ public final class LuaAI {
             @Override
             public LuaValue call(LuaValue arg) {
                 logger.println(arg);
+                logger.flush();
                 return NIL;
             }
         });

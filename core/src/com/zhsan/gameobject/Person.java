@@ -397,8 +397,6 @@ public class Person extends GameObject {
             } else {
                 if (this.doingWork != DoingWork.MAYOR) {
                     this.doingWork = work;
-                } else if (((Architecture) this.location.get()).getPersons().size() <= 1) {
-                    this.doingWork = work;
                 } else {
                     throw new IllegalStateException("You must not unassign a mayor by setDoingWork, change mayor by setting any other person to mayor first, " +
                             "unless there is no one in it");
