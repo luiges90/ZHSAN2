@@ -47,7 +47,7 @@ public final class LuaAI {
     public static void runFactionAi(GameScenario scen, Faction f) {
         if (loggers.get(f) == null) {
             try {
-                loggers.put(f, new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log", true), "UTF-8"), true));
+                loggers.put(f, new PrintWriter(new OutputStreamWriter(new FileOutputStream(LOGS + "Faction" + f.getId() + ".log"), "UTF-8")));
             } catch (UnsupportedEncodingException | FileNotFoundException e) {
                 e.printStackTrace();
             }
