@@ -24,10 +24,11 @@ function troopAI(troop)
             state = TROOP_STATE_RETREAT
         end
     elseif #hostileTroops <= 0 and troop.isArchitectureInView(attackArch) then
-        if attackArch.getBelongedFaction().getId() == troop.getBelongedFaction().getId() then
-            state = TROOP_STATE_RETREAT
+        local a = scenario.getArchitecture(attackArch)
+        if a.getBelongedFaction() == nil or a.getBelongedFaction().getId() ~= troop.getBelongedFaction().getId() then
+            state = TRROP_STATE_SIEGE
         else
-            state = TROOP_STATE_SIEGE
+            state = TROOP_STATE_RETREAT
         end
     end
 
@@ -39,7 +40,7 @@ function troopAI(troop)
         troop.giveMoveToArchitectureOrder(attackArch)
     elseif state == TROOP_STATE_RETREAT then
         troop.giveMoveToEnterOrder(defendArch)
-    elseif state == TROOP_STATE_SIEGE then
+    elseif state == TRROP_STATE_SIEGE then
         troop.giveAttackArchitectureOrder(attackArch)
     elseif state == TROOP_STATE_COMBAT then
         local target, _ = max(hostileTroops, function(x, y) return x.getOffense() / x.getDefense() > y.getOffense() / y.getDefense() end)
