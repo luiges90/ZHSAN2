@@ -161,9 +161,11 @@ function assignMilitary(architecture)
       end
    end
    if hasNoLeaderTrainingTroop then
-      local _, p = max(architecture.getPersons(), function(x, y) return x.getTrainingAbility() > y.getTrainingAbility() end)
-      p.setDoingWork("training")
-      print("assigning " .. p.getName() .. " to training")
+      local _, p = max(architecture.getPersonsExcludingMayor(), function(x, y) return x.getTrainingAbility() > y.getTrainingAbility() end)
+      if p ~= nil then
+         p.setDoingWork("training")
+         print("assigning " .. p.getName() .. " to training")
+      end
    end
 
    local hasNoLeaderRecruitTroop = false
@@ -177,8 +179,10 @@ function assignMilitary(architecture)
    end
    if hasNoLeaderRecruitTroop then
       local _, p = max(architecture.getPersonsExcludingMayor(), function(x, y) return x.getRecruitAbility() > y.getRecruitAbility() end)
-      p.setDoingWork("recruit")
-      print("assigning " .. p.getName() .. " to recruit")
+      if p ~= nil then
+         p.setDoingWork("recruit")
+         print("assigning " .. p.getName() .. " to recruit")
+      end
    end
 end
 
