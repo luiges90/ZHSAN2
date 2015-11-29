@@ -609,11 +609,13 @@ public class Troop extends GameObject implements HasPointLocation {
         this.destroy(false);
     }
 
+    @LuaAI.ExportToLua
     public boolean canOccupy() {
         Architecture a = scenario.getArchitectureAt(getLocation());
         return a != null && a.getBelongedFaction() != this.getBelongedFaction();
     }
 
+    @LuaAI.ExportToLua
     public void occupy() {
         Architecture a = scenario.getArchitectureAt(getLocation());
         a.changeSection(this.getBelongedSection());
