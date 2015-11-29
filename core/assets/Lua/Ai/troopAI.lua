@@ -6,6 +6,7 @@ TRROP_STATE_SIEGE = 4
 function troopAI(troop)
     if troop.canOccupy() then
         troop.occupy()
+        troop.enter()
     else
         local defendArch = getTag(troop, "defendArch")
         local attackArch = getTag(troop, "attackArch")

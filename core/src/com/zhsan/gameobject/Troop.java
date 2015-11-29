@@ -592,6 +592,7 @@ public class Troop extends GameObject implements HasPointLocation {
         return false;
     }
 
+    @LuaAI.ExportToLua
     public void enter() {
         Iterator<Point> points = location.spiralOutIterator(1);
         while (points.hasNext()) {
