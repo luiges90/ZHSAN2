@@ -96,7 +96,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> filter(Predicate<T> predicate) {
-        return content.values().stream().filter(predicate).collect(new ToGameObjectList<>());
+        return content.values().stream().filter(predicate).collect(toGameObjectList);
     }
 
     public boolean remove(Predicate<T> predicate) {
@@ -139,18 +139,20 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList<T> getItemsFromCSV(String s) {
         List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
-        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(new ToGameObjectList<>());
+        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(toGameObjectList);
     }
 
     public GameObjectList<T> getItemsFromIds(Collection<Integer> list) {
-        return list.stream().map(content::get).collect(new ToGameObjectList<>());
+        return list.stream().map(content::get).collect(toGameObjectList);
     }
 
     public String toCSV() {
         return content.keySet().stream().map(String::valueOf).collect(Collectors.joining(" "));
     }
 
-    public static class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
+    public ToGameObjectList<T> toGameObjectList = new ToGameObjectList<>();
+
+    private static class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
 
         @Override
         public Supplier<GameObjectList<T>> supplier() {
@@ -175,11 +177,12 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
             return x -> x;
         }
 
+        private final Set<Characteristics> characteristics = Collections.unmodifiableSet(EnumSet.of(
+                                                            Characteristics.IDENTITY_FINISH,
+                                                            Characteristics.CONCURRENT));
         @Override
         public Set<Characteristics> characteristics() {
-            return Collections.unmodifiableSet(EnumSet.of(
-                    Characteristics.IDENTITY_FINISH,
-                    Characteristics.CONCURRENT));
+            return characteristics;
         }
     }
 
