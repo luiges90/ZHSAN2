@@ -35,9 +35,11 @@ public final class MilitaryKind extends GameObject {
     private final int offensePerUnit, defensePerUnit;
     private final int rangeLo, rangeHi;
     private final float architectureOffense;
+    private final boolean ship;
 
-    private MilitaryKind(int id, String aitag, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense) {
+    private MilitaryKind(int id, String aitag, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense, boolean ship) {
         super(id);
+        this.ship = ship;
         this.setAiTags(aitag);
         this.scenario = scenario;
         this.type = type;
@@ -87,6 +89,7 @@ public final class MilitaryKind extends GameObject {
                         .setRangeLo(Integer.parseInt(line[15]))
                         .setRangeHi(Integer.parseInt(line[16]))
                         .setArchitectureOffense(Float.parseFloat(line[17]))
+                        .setShip(Boolean.parseBoolean(line[18]))
                         .setScenario(scen)
                         .createMilitaryKind();
 
@@ -122,7 +125,8 @@ public final class MilitaryKind extends GameObject {
                         String.valueOf(detail.defensePerUnit),
                         String.valueOf(detail.rangeLo),
                         String.valueOf(detail.rangeHi),
-                        String.valueOf(detail.architectureOffense)
+                        String.valueOf(detail.architectureOffense),
+                        String.valueOf(detail.ship)
                 });
             }
         } catch (IOException e) {
@@ -243,6 +247,7 @@ public final class MilitaryKind extends GameObject {
         private int offensePerUnit, defensePerUnit;
         private int rangeLo, rangeHi;
         private float architectureOffense;
+        private boolean ship;
 
         public MilitaryKindBuilder() {
         }
@@ -266,6 +271,7 @@ public final class MilitaryKind extends GameObject {
             this.rangeLo = old.rangeLo;
             this.rangeHi = old.rangeHi;
             this.architectureOffense = old.architectureOffense;
+            this.ship = old.ship;
             return this;
         }
 
@@ -360,11 +366,16 @@ public final class MilitaryKind extends GameObject {
         }
 
         public MilitaryKind createMilitaryKind() {
-            return new MilitaryKind(id, aitag, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, offensePerUnit, defensePerUnit, rangeLo, rangeHi, architectureOffense);
+            return new MilitaryKind(id, aitag, scenario, type, name, description, canOnlyCreateAtArchitecture, cost, transportCost, quantity, unitQuantity, movability, offense, defense, offensePerUnit, defensePerUnit, rangeLo, rangeHi, architectureOffense, ship);
         }
 
         public MilitaryKindBuilder setAitag(String aitag) {
             this.aitag = aitag;
+            return this;
+        }
+
+        public MilitaryKindBuilder setShip(boolean ship) {
+            this.ship = ship;
             return this;
         }
     }
