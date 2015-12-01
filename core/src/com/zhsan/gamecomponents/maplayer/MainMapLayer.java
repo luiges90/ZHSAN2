@@ -312,7 +312,14 @@ public class MainMapLayer extends WidgetGroup {
                 if (GlobalVariables.showGrid) {
                     for (int i = 0; i < map.getTileInEachImage(); ++i) {
                         for (int j = 0; j < map.getTileInEachImage(); ++j) {
-                            batch.draw(grid, px + j * zoom, py + i * zoom, zoom, zoom);
+                            int mx = x * map.getTileInEachImage() + j;
+                            int my = map.getHeight() - 1 - (y * map.getTileInEachImage() + i);
+
+                            if (mx >= 0 && mx < map.getWidth() && my >= 0 && my < map.getHeight()) {
+                                if (map.getTerrainAt(mx, my).isPassableByAnyMilitaryKind(screen.getScenario())) {
+                                    batch.draw(grid, px + j * zoom, py + i * zoom, zoom, zoom);
+                                }
+                            }
                         }
                     }
                 }

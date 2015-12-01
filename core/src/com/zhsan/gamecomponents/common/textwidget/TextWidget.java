@@ -50,6 +50,10 @@ public class TextWidget<ExtraType> extends Widget implements Disposable {
         public static Setting empty() {
             return new Setting(Fonts.getDefaultFontName(), 1, Fonts.Style.REGULAR, 0, BitmapFont.HAlignment.LEFT);
         }
+
+        public static Setting debug() {
+            return new Setting(Fonts.getDefaultFontName(), 16, Fonts.Style.REGULAR, 0xFFFFFFFF, BitmapFont.HAlignment.LEFT);
+        }
     }
 
     private Setting setting;
