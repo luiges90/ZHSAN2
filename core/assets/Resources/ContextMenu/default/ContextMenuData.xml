@@ -40,8 +40,10 @@
                 <MenuItem ID="5" Name="30Days" DisplayName="进行一月"/>
             </MenuItem>
             <MenuItem ID="4" Name="Information" DisplayName="信息">
-                <MenuItem ID="1" Name="AllArchitectures" DisplayName="所有建筑"/>
-                <MenuItem ID="2" Name="AllPersons" DisplayName="所有武將"/>
+                <MenuItem ID="1" Name="AllFactions" DisplayName="所有勢力"/>
+                <MenuItem ID="2" Name="AllArchitectures" DisplayName="所有建筑"/>
+                <MenuItem ID="3" Name="AllPersons" DisplayName="所有武將"/>
+                <MenuItem ID="4" Name="AllTroops" DisplayName="所有部隊"/>
             </MenuItem>
             <MenuItem ID="5" Name="Save" DisplayName="存储进度"/>
             <MenuItem ID="6" Name="Load" DisplayName="读取进度"/>

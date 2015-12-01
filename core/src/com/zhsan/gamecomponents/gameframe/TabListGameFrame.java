@@ -46,7 +46,8 @@ public class TabListGameFrame extends GameFrame {
         PERSON("Person", Person.class),
         MILITARY_KIND("MilitaryKind", MilitaryKind.class),
         MILITARY("Military", Military.class),
-        TROOP("Troop", Troop.class)
+        TROOP("Troop", Troop.class),
+        FACTION("Faction", Faction.class)
         ;
 
         public final String xmlName;

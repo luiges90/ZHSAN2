@@ -64,12 +64,20 @@ public final class ContextMenuMethods {
         screen.getDayRunner().runDays(30);
     }
 
+    public static void MapRightClick_Information_AllFactions(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.FACTION, screen.getScenario().getFactions());
+    }
+
     public static void MapRightClick_Information_AllArchitectures(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.ARCHITECTURE, screen.getScenario().getArchitectures());
     }
 
     public static void MapRightClick_Information_AllPersons(GameScreen screen, Object object) {
         screen.showTabList(TabListGameFrame.ListKindType.PERSON, screen.getScenario().getAvailablePersons());
+    }
+
+    public static void MapRightClick_Information_AllTroops(GameScreen screen, Object object) {
+        screen.showTabList(TabListGameFrame.ListKindType.TROOP, screen.getScenario().getTroops());
     }
 
     public static void MapRightClick_System(GameScreen screen, Object object) {

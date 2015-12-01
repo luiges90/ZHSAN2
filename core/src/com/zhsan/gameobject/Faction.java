@@ -168,6 +168,30 @@ public class Faction extends GameObject {
         return leader;
     }
 
+    public String getLeaderName() {
+        return getLeader().getName();
+    }
+
+    public int getArchitectureCount() {
+        return getArchitectures().size();
+    }
+
+    public int getPersonCount() {
+        return getPersons().size();
+    }
+
+    public long getFund() {
+        return getArchitectures().getAll().stream().mapToLong(Architecture::getFund).sum();
+    }
+
+    public long getFood() {
+        return getArchitectures().getAll().stream().mapToLong(Architecture::getFood).sum();
+    }
+
+    public int getTroopQuantity() {
+        return getMilitaries().getAll().stream().mapToInt(Military::getQuantity).sum();
+    }
+
     public void ai() {
         LuaAI.runFactionAi(scenario, this);
     }
