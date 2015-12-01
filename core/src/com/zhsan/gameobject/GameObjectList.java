@@ -1,6 +1,7 @@
 package com.zhsan.gameobject;
 
 import com.zhsan.gamecomponents.common.XmlHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.*;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Peter on 17/3/2015.
  */
-public class GameObjectList<T extends GameObject> implements Iterable<T> {
+public class GameObjectList<T extends GameObject> extends AbstractCollection<T> {
 
     private SortedMap<Integer, T> content = new TreeMap<>();
     private boolean unmodifiable = false;
@@ -30,16 +31,14 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         this.unmodifiable = unmodifiable;
     }
 
-    public void add(T obj) {
+    public boolean add(T obj) {
         if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
         if (obj != null) {
             content.put(obj.getId(), obj);
+            return true;
+        } else {
+            return false;
         }
-    }
-
-    public void addAll(GameObjectList<T> objs) {
-        if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
-        content.putAll(objs.content);
     }
 
     public T get(int id) {
@@ -58,7 +57,14 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return content.containsValue(t);
     }
 
+    @Override
+    public boolean remove(Object o) {
+        if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
+        return super.remove(o);
+    }
+
     public T remove(T t) {
+        if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
         return content.remove(t.getId());
     }
 
@@ -68,6 +74,7 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
         return result;
     }
 
+    @NotNull
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
@@ -85,7 +92,8 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
             @Override
             public void remove() {
-                throw new UnsupportedOperationException("This list has been made unmodifiable");
+                if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
+                parent.remove();
             }
 
             @Override
@@ -96,10 +104,11 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
     }
 
     public GameObjectList<T> filter(Predicate<T> predicate) {
-        return content.values().stream().filter(predicate).collect(toGameObjectList);
+        return content.values().stream().filter(predicate).collect(Collectors.toCollection(GameObjectList<T>::new));
     }
 
     public boolean remove(Predicate<T> predicate) {
+        if (unmodifiable) throw new IllegalStateException("This list has been made unmodifiable");
         return content.values().removeIf(predicate);
     }
 
@@ -139,51 +148,15 @@ public class GameObjectList<T extends GameObject> implements Iterable<T> {
 
     public GameObjectList<T> getItemsFromCSV(String s) {
         List<Integer> ids = XmlHelper.loadIntegerListFromXml(s);
-        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(toGameObjectList);
+        return content.values().stream().filter(x -> ids.contains(x.getId())).collect(Collectors.toCollection(GameObjectList<T>::new));
     }
 
     public GameObjectList<T> getItemsFromIds(Collection<Integer> list) {
-        return list.stream().map(content::get).collect(toGameObjectList);
+        return list.stream().map(content::get).collect(Collectors.toCollection(GameObjectList<T>::new));
     }
 
     public String toCSV() {
         return content.keySet().stream().map(String::valueOf).collect(Collectors.joining(" "));
-    }
-
-    public ToGameObjectList<T> toGameObjectList = new ToGameObjectList<>();
-
-    private static class ToGameObjectList<T extends GameObject> implements Collector<T, GameObjectList<T>, GameObjectList<T>> {
-
-        @Override
-        public Supplier<GameObjectList<T>> supplier() {
-            return GameObjectList<T>::new;
-        }
-
-        @Override
-        public BiConsumer<GameObjectList<T>, T> accumulator() {
-            return GameObjectList::add;
-        }
-
-        @Override
-        public BinaryOperator<GameObjectList<T>> combiner() {
-            return (x, y) -> {
-                x.addAll(y);
-                return x;
-            };
-        }
-
-        @Override
-        public Function<GameObjectList<T>, GameObjectList<T>> finisher() {
-            return x -> x;
-        }
-
-        private final Set<Characteristics> characteristics = Collections.unmodifiableSet(EnumSet.of(
-                                                            Characteristics.IDENTITY_FINISH,
-                                                            Characteristics.CONCURRENT));
-        @Override
-        public Set<Characteristics> characteristics() {
-            return characteristics;
-        }
     }
 
     @Override

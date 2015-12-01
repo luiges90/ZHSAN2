@@ -278,7 +278,7 @@ public class GameScenario {
     }
 
     public Architecture getArchitectureAt(Point p) {
-        return architectures.filter(a -> a.getLocations().contains(p)).getFirst();
+        return Caches.get(Caches.architectureAtPoint, p, () -> architectures.filter(a -> a.getLocations().contains(p)).getFirst());
     }
 
     public Facility getFacilityAt(Point p) {

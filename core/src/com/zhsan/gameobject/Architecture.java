@@ -129,7 +129,7 @@ public class Architecture extends GameObject implements HasPointLocation {
     }
 
     public List<Point> getLocations() {
-        return new ArrayList<>(location);
+        return location;
     }
 
     @LuaAI.ExportToLua

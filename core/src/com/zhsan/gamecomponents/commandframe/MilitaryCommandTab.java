@@ -440,7 +440,7 @@ public class MilitaryCommandTab implements CommandTab {
                         parent.getScreen().showTabList(GlobalStrings.getString(GlobalStrings.Keys.ASSIGN_MILITARY_PERSON), TabListGameFrame.ListKindType.PERSON,
                                 parent.getCurrentArchitecture().getPersonsNotInMilitary(), TabListGameFrame.Selection.MULTIPLE,
                                 selectedItems1 -> {
-                                    currentMilitary.setPersons(selectedItems1.stream().map(o -> (Person) o).collect(new GameObjectList<Person>().toGameObjectList));
+                                    currentMilitary.setPersons(selectedItems1.stream().map(o -> (Person) o).collect(Collectors.toCollection(GameObjectList<Person>::new)));
                                     invalidateListPanes();
                                 });
                     });
