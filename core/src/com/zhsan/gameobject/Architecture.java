@@ -585,7 +585,8 @@ public class Architecture extends GameObject implements HasPointLocation {
             int runningCost = 0;
             List<Military> actualToRecruit = new ArrayList<>();
             for (Military m : costMilitary) {
-                if (m.getLeader().getDoingWorkType() != Person.DoingWork.RECRUIT) continue;
+                if (m.getLeader().getDoingWorkType() != Person.DoingWork.RECRUIT &&
+                        m.getLeader().getDoingWorkType() != Person.DoingWork.MAYOR) continue;
                 int newCost = Math.round(m.getKind().getCost(this) * GlobalVariables.recruitCostFactor);
                 if (runningCost + newCost > fund) {
                     break;
@@ -684,7 +685,7 @@ public class Architecture extends GameObject implements HasPointLocation {
 
         float trainAbility = trainWorkingPersons.getAll().stream()
                 .map(p -> (float) p.getTrainingAbility()).collect(Utility.diminishingSum(GlobalVariables.internalPersonDiminishingFactor))
-                + getMayor().getTrainingAbility() * GlobalVariables.mayorInternalWorkEfficiency;;
+                + getMayor().getTrainingAbility() * GlobalVariables.mayorInternalWorkEfficiency;
         float trained = trainAbility * GlobalVariables.trainEfficiency;
         for (Military m : toTrain) {
             int thisTrained = Math.round(trained / m.getUnitCount() / toTrain.size());
