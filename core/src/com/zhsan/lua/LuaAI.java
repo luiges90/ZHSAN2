@@ -36,6 +36,7 @@ public final class LuaAI {
 
     public static final String FACTION_AI = "ZHSanFactionAI.lua";
 
+    private static Map<Faction, LuaValue> factionAIs = new HashMap<>();
     private static Map<Faction, PrintWriter> loggers = new HashMap<>();
 
     private LuaAI(){}
@@ -55,79 +56,83 @@ public final class LuaAI {
 
         PrintWriter logger = loggers.get(f);
 
-        Globals globals = JsePlatform.standardGlobals();
+        if (factionAIs.get(f) == null) {
+            Globals globals = JsePlatform.standardGlobals();
 
-        globals.set("PATH", PATH);
-        globals.set("dump", new OneArgFunction() {
+            globals.set("PATH", PATH);
+            globals.set("dump", new OneArgFunction() {
 
-            private String ns(int n, String s) {
-                return new String(new char[n]).replace("\0", s);
-            }
+                private String ns(int n, String s) {
+                    return new String(new char[n]).replace("\0", s);
+                }
 
-            private void dump(int indent, LuaValue arg) {
-                if (indent > 8) return;
-                if (arg.istable()) {
-                    LuaTable table = arg.checktable();
-                    for (int i = 0; i < table.keyCount(); ++i) {
-                        LuaValue key = table.keys()[i];
-                        LuaValue value = table.get(key);
-                        if (value.istable()) {
-                            logger.println(ns(indent, " ") + key + " = ");
-                            dump(indent + 4, value);
-                        } else if (value.isfunction()) {
-                            if (key.tojstring().startsWith("get")) {
-                                LuaValue result;
-                                try {
-                                    result = value.call();
-                                    if (result.istable()) {
-                                        logger.println(ns(indent, " ") + key + " = ");
-                                        dump(indent + 4, result);
-                                    } else {
-                                        logger.println(ns(indent, " ") + key + " = " + result);
+                private void dump(int indent, LuaValue arg) {
+                    if (indent > 8) return;
+                    if (arg.istable()) {
+                        LuaTable table = arg.checktable();
+                        for (int i = 0; i < table.keyCount(); ++i) {
+                            LuaValue key = table.keys()[i];
+                            LuaValue value = table.get(key);
+                            if (value.istable()) {
+                                logger.println(ns(indent, " ") + key + " = ");
+                                dump(indent + 4, value);
+                            } else if (value.isfunction()) {
+                                if (key.tojstring().startsWith("get")) {
+                                    LuaValue result;
+                                    try {
+                                        result = value.call();
+                                        if (result.istable()) {
+                                            logger.println(ns(indent, " ") + key + " = ");
+                                            dump(indent + 4, result);
+                                        } else {
+                                            logger.println(ns(indent, " ") + key + " = " + result);
+                                        }
+                                    } catch (IllegalArgumentException e) {
+                                        logger.println(ns(indent, " ") + key + " = " + value);
                                     }
-                                } catch (IllegalArgumentException e) {
+                                } else {
                                     logger.println(ns(indent, " ") + key + " = " + value);
                                 }
                             } else {
                                 logger.println(ns(indent, " ") + key + " = " + value);
                             }
-                        } else {
-                            logger.println(ns(indent, " ") + key + " = " + value);
                         }
+                    } else {
+                        logger.println(arg);
                     }
-                } else {
-                    logger.println(arg);
+                    logger.flush();
                 }
-                logger.flush();
-            }
 
-            @Override
-            public LuaValue call(LuaValue arg) {
-                dump(0, arg);
-                return NIL;
-            }
-        });
-        globals.set("print", new OneArgFunction() {
-            @Override
-            public LuaValue call(LuaValue arg) {
-                logger.println(arg);
-                logger.flush();
-                return NIL;
-            }
-        });
+                @Override
+                public LuaValue call(LuaValue arg) {
+                    dump(0, arg);
+                    return NIL;
+                }
+            });
+            globals.set("print", new OneArgFunction() {
+                @Override
+                public LuaValue call(LuaValue arg) {
+                    logger.println(arg);
+                    logger.flush();
+                    return NIL;
+                }
+            });
 
-        LuaTable factionTable = LuaValue.tableOf();
-        LuaAI.processAnnotations(factionTable, Faction.class, f);
-        globals.set("faction", factionTable);
+            LuaTable factionTable = LuaValue.tableOf();
+            LuaAI.processAnnotations(factionTable, Faction.class, f);
+            globals.set("faction", factionTable);
 
-        LuaTable scenarioTable = LuaValue.tableOf();
-        LuaAI.processAnnotations(scenarioTable, GameScenario.class, scen);
-        globals.set("scenario", scenarioTable);
+            LuaTable scenarioTable = LuaValue.tableOf();
+            LuaAI.processAnnotations(scenarioTable, GameScenario.class, scen);
+            globals.set("scenario", scenarioTable);
 
-        LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+            LuaValue chunk = globals.loadfile(PATH + FACTION_AI);
+
+            factionAIs.put(f, chunk);
+        }
 
         try {
-            chunk.call();
+            factionAIs.get(f).call();
         } catch (LuaError e) {
             e.printStackTrace(logger);
         }
