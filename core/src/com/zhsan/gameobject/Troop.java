@@ -238,6 +238,7 @@ public class Troop extends GameObject implements HasPointLocation {
         belongedSection = s;
     }
 
+    @LuaAI.ExportToLua
     public Faction getBelongedFaction() {
         return getBelongedSection().getBelongedFaction();
     }
