@@ -425,7 +425,8 @@ public class Architecture extends GameObject implements HasPointLocation {
             Iterator<Point> it = p.spiralOutIterator(1);
             while (it.hasNext()) {
                 Point q = it.next();
-                if (scenario.getTroopAt(q) == null) {
+                // TODO consider military kind
+                if (scenario.getTroopAt(q) == null && scenario.getTerrainAt(q).isPassableByAnyMilitaryKind(scenario)) {
                     result.add(q);
                 }
             }
