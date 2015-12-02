@@ -32,6 +32,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class GameScreen extends WidgetGroup {
 
+    private static final boolean MULTITHREADED_AI = false;
+
     public interface RunningDaysListener {
         public void started(int daysLeft);
 
@@ -266,15 +268,20 @@ public class GameScreen extends WidgetGroup {
     private void runAi() {
         GameObjectList<Faction> factions = scen.getFactions();
         List<Callable<Void>> runnables = new ArrayList<>();
-        factions.filter(f -> f != scen.getCurrentPlayer()).forEach(f -> runnables.add(() -> {
-            f.ai();
-            return null;
-        }));
+        if (MULTITHREADED_AI) {
+            factions.filter(f -> f != scen.getCurrentPlayer()).forEach(f -> runnables.add(() -> {
+                f.ai();
+                return null;
+            }));
 
-        try {
-            pool.invokeAll(runnables, GlobalVariables.aiTimeout, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            try {
+                pool.invokeAll(runnables, GlobalVariables.aiTimeout, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            factions.forEach(Faction::ai);
+
         }
     }
 

@@ -195,7 +195,7 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     public Military getMilitary() {
-        return scenario.getMilitaries().filter(m -> m.getLocation() == this).getFirst();
+        return Caches.get(Caches.troopMilitaries, this, () -> scenario.getMilitaries().filter(m -> m.getLocation() == this).getFirst());
     }
 
     public Point getLocation() {

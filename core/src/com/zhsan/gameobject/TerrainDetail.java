@@ -81,7 +81,8 @@ public final class TerrainDetail extends GameObject {
     }
 
     public boolean isPassableByAnyMilitaryKind(GameScenario scen) {
-        return scen.getMilitaryTerrains().getAll().stream().anyMatch(mt -> mt.getTerrain() == this);
+        return Caches.get(Caches.isTerrainPassableByAnyMilitaryKind, this,
+                () -> scen.getMilitaryTerrains().getAll().stream().anyMatch(mt -> mt.getTerrain() == this));
     }
 
     @Override
