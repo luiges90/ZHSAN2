@@ -29,16 +29,18 @@ function allocatePersons(section)
                 for _, b in pairs(moveFrom) do
                     if a ~= b and #b.getPersons() > personMin[b.getId()] then
                         local candidates = b.getPersons()
-                        if a.isFrontline() and not b.isFrontline() then
-                            table.sort(candidates, function(p, q) return personFunc.militaryAbility(p) > personFunc.militaryAbility(q) end)
-                        else
-                            table.sort(candidates, function(p, q) return personFunc.totalInternalAbility(p) > personFunc.totalInternalAbility(q) end)
-                        end
-                        local index = 0;
-                        while #b.getPersons() > personMin[b.getId()] and #a.getPersonsIncludingMoving() < personMin[a.getId()] do
-                            print("Moving¡@" .. candidates[index].getName() .. " from " .. b.getName() .. " to " .. a.getName())
-                            candidates[index].moveToArchitecture(a.getId())
-                            index = index + 1
+                        if #candidates > 0 then
+                            if a.isFrontline() and not b.isFrontline() then
+                                table.sort(candidates, function(p, q) return personFunc.militaryAbility(p) > personFunc.militaryAbility(q) end)
+                            else
+                                table.sort(candidates, function(p, q) return personFunc.totalInternalAbility(p) > personFunc.totalInternalAbility(q) end)
+                            end
+                            local index = 1;
+                            while #b.getPersons() > personMin[b.getId()] and #a.getPersonsIncludingMoving() < personMin[a.getId()] do
+                                print("Moving " .. candidates[index].getName() .. " from " .. b.getName() .. " to " .. a.getName())
+                                candidates[index].moveToArchitecture(a.getId())
+                                index = index + 1
+                            end
                         end
                     end
                 end
