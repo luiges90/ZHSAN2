@@ -47,7 +47,7 @@ public class MilitaryCommandTab implements CommandTab {
     private Point militaryTablePortraitSize, militaryTableCaptionSize, militaryTableDetailSize;
     private int listNameWidth, listRecruitWidth, listTrainWidth, listQuantityWidth, listRowHeight;
 
-    private ScrollPane militaryBottomPane, militaryTopPane;
+    private Table militaryBottomPane, militaryTopPane;
     private Color militaryTablePortraitColor;
     private TextWidget<Military> militaryListTextTemplate, militaryTableCaptionTemplate, militaryTableDetailTemplate;
 
@@ -255,11 +255,11 @@ public class MilitaryCommandTab implements CommandTab {
 
         contentTable.top().left();
 
-        militaryBottomPane = new ScrollPane(contentTable);
-        Table contentPaneContainer = WidgetUtility.setupScrollpane(militaryListPos.getX(), militaryListPos.getY(),
-                militaryListPos.getWidth(), militaryListPos.getHeight(), militaryBottomPane, parent.getScrollbar());
+        ScrollPane data = new ScrollPane(contentTable);
+        militaryBottomPane = WidgetUtility.setupScrollpane(militaryListPos.getX(), militaryListPos.getY(),
+                militaryListPos.getWidth(), militaryListPos.getHeight(), data, parent.getScrollbar());
 
-        parent.addActor(contentPaneContainer);
+        parent.addActor(militaryBottomPane);
     }
 
     private void initMilitaryTopPane() {
@@ -332,11 +332,11 @@ public class MilitaryCommandTab implements CommandTab {
 
         contentTable.top().left();
 
-        militaryTopPane = new ScrollPane(contentTable);
-        Table contentPaneContainer = WidgetUtility.setupScrollpane(militaryTablePos.getX(), militaryTablePos.getY(),
-                militaryTablePos.getWidth(), militaryTablePos.getHeight(), militaryTopPane, parent.getScrollbar());
+        ScrollPane data = new ScrollPane(contentTable);
+        militaryTopPane = WidgetUtility.setupScrollpane(militaryTablePos.getX(), militaryTablePos.getY(),
+                militaryTablePos.getWidth(), militaryTablePos.getHeight(), data, parent.getScrollbar());
 
-        parent.addActor(contentPaneContainer);
+        parent.addActor(militaryTopPane);
     }
 
     @Override

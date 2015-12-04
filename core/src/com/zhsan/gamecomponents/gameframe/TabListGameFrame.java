@@ -114,7 +114,7 @@ public class TabListGameFrame extends GameFrame {
 
     private Tab showingTab;
 
-    private ScrollPane contentPane;
+    private Table contentPane;
     private List<TextWidget<GameObject>> showingTextWidgets = new ArrayList<>();
 
     private List<CheckboxWidget<GameObject>> showingCheckboxes = new ArrayList<>();
@@ -362,11 +362,11 @@ public class TabListGameFrame extends GameFrame {
 
         contentTable.top().left();
 
-        contentPane = new ScrollPane(contentTable);
-        Table contentPaneContainer = WidgetUtility.setupScrollpane(getLeftBound(), getBottomActiveBound(),
-                getRightBound() - getLeftBound(), getTopActiveBound() - offset - getBottomActiveBound(), contentPane, scrollButton);
+        ScrollPane data = new ScrollPane(contentTable);
+        contentPane = WidgetUtility.setupScrollpane(getLeftBound(), getBottomActiveBound(),
+                getRightBound() - getLeftBound(), getTopActiveBound() - offset - getBottomActiveBound(), data, scrollButton);
 
-        addActor(contentPaneContainer);
+        addActor(contentPane);
     }
 
     @Override
