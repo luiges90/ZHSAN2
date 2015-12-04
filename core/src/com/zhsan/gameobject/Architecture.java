@@ -174,7 +174,7 @@ public class Architecture implements HasPointLocationGameObject {
             Architecture moveTo = this.getBelongedFaction().getArchitectures().getAll()
                     .stream()
                     .filter(x -> x != this)
-                    .min((x, y) -> Double.compare(this.getLocation().distanceTo(x.getLocation()), this.getLocation().distanceTo(y.getLocation())))
+                    .min((x, y) -> Double.compare(this.getPosition().distanceTo(x.getPosition()), this.getPosition().distanceTo(y.getPosition())))
                     .orElse(null);
             if (moveTo != null) {
                 this.getPersons().forEach(p -> p.moveToArchitecture(moveTo));
@@ -462,10 +462,10 @@ public class Architecture implements HasPointLocationGameObject {
     }
 
     public double distanceTo(Architecture a) {
-        return getLocation().distanceTo(a.getLocation());
+        return getPosition().distanceTo(a.getPosition());
     }
 
-    public Point getLocation() {
+    public Point getPosition() {
         return Point.getCentroid(location);
     }
 
@@ -757,12 +757,12 @@ public class Architecture implements HasPointLocationGameObject {
 
     @LuaAI.ExportToLua
     public GameObjectList<Troop> getFriendlyTroopsInView() {
-        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
+        return scenario.getTroops().filter(t -> t.getPosition().taxiDistanceTo(this.getPosition()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
     }
 
     @LuaAI.ExportToLua
     public GameObjectList<Troop> getHostileTroopsInView() {
-        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
+        return scenario.getTroops().filter(t -> t.getPosition().taxiDistanceTo(this.getPosition()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
     }
 
 }

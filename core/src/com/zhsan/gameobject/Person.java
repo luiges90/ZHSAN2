@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Person implements GameObject {
+public class Person implements HasPointLocationGameObject {
 
     public static final String SAVE_FILE = "Person.csv";
 
@@ -73,7 +73,7 @@ public class Person implements GameObject {
             this.troop = troop;
         }
 
-        public GameObject get() {
+        public HasPointLocationGameObject get() {
             if (architecture != null) {
                 return architecture;
             }
@@ -326,8 +326,13 @@ public class Person implements GameObject {
         return null;
     }
 
-    public GameObject getLocation() {
+    public HasPointLocationGameObject getLocation() {
         return location == null ? null : location.get();
+    }
+
+    @Override
+    public Point getPosition() {
+        return location == null ? null : location.get().getPosition();
     }
 
     public int getMovingDays() {
@@ -456,12 +461,12 @@ public class Person implements GameObject {
         if (this.getDoingWorkType() == DoingWork.MAYOR) {
             this.handoverMayor(from.pickMayor(this), new LocationType(a));
         }
-        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from.getLocation(), a.getLocation()) / GlobalVariables.personMovingSpeed));
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from.getPosition(), a.getPosition()) / GlobalVariables.personMovingSpeed));
         this.location = new LocationType(a);
     }
 
     public void moveToArchitecture(Point from, Architecture a) {
-        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from, a.getLocation()) / GlobalVariables.personMovingSpeed));
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(from, a.getPosition()) / GlobalVariables.personMovingSpeed));
         this.location = new LocationType(a);
     }
 

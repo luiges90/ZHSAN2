@@ -7,6 +7,6 @@ import com.zhsan.common.Point;
  */
 public interface HasPointLocationGameObject extends GameObject {
 
-    public Point getLocation();
+    public Point getPosition();
 
 }

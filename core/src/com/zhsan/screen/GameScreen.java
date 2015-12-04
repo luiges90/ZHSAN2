@@ -339,7 +339,7 @@ public class GameScreen extends WidgetGroup {
                         public void onStartAttackStep(Troop t, HasPointLocationGameObject target, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
                             mapLayer.addPendingTroopAnimation(
                                     new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.ATTACK,
-                                            t.getLocation(), target.getLocation(), onTroopAnimationDone));
+                                            t.getPosition(), target.getPosition(), onTroopAnimationDone));
                         }
 
                         @Override
@@ -347,7 +347,7 @@ public class GameScreen extends WidgetGroup {
                             mapLayer.showDamage(damagePacks);
                             damagePacks.stream().filter(d -> d.destroyed).forEach(d -> {
                                 if (d.object instanceof Troop) {
-                                    mapLayer.addTileAnimation(t.getLocation(), scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ROUTED.getId()));
+                                    mapLayer.addTileAnimation(t.getPosition(), scen.getTroopAnimations().get(TroopAnimation.TroopAnimationKind.ROUTED.getId()));
                                 }
                             });
                         }

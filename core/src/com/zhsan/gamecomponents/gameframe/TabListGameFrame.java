@@ -9,10 +9,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.WidgetUtility;
@@ -545,11 +545,26 @@ public class TabListGameFrame extends GameFrame {
         switch (this.showingListKindType) {
             case ARCHITECTURE:
                 Architecture a = (Architecture) o;
-                screen.getMapLayer().setMapCameraPosition(a.getLocation());
+                screen.getMapLayer().setMapCameraPosition(a.getPosition());
+                return true;
+            case FACTION:
+                Faction f = (Faction) o;
+                screen.getMapLayer().setMapCameraPosition(f.getLeader().getLocation().getPosition());
                 return true;
             case TROOP:
                 Troop t = (Troop) o;
-                screen.getMapLayer().setMapCameraPosition(t.getLocation());
+                screen.getMapLayer().setMapCameraPosition(t.getPosition());
+                return true;
+            case MILITARY:
+                Military m = (Military) o;
+                screen.getMapLayer().setMapCameraPosition(m.getPosition());
+                return true;
+            case PERSON:
+                Person p = (Person) o;
+                Point loc = p.getPosition();
+                if (loc != null) {
+                    screen.getMapLayer().setMapCameraPosition(loc);
+                }
                 return true;
         }
         return false;

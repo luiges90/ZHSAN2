@@ -128,18 +128,18 @@ public class GameScenario {
         ZhPathFinder pathFinder = new ZhPathFinder(this, this.getGameMap(), null);
         for (Architecture a : this.getArchitectures()) {
             if (a == b) continue;
-            if (b.getLocation().taxiDistanceTo(a.getLocation()) <= distance) {
-                List<Point> path = pathFinder.findPath(b.getLocation(), a.getLocation());
+            if (b.getPosition().taxiDistanceTo(a.getPosition()) <= distance) {
+                List<Point> path = pathFinder.findPath(b.getPosition(), a.getPosition());
                 if (path != null && path.size() <=distance) {
                     boolean nearAnyArch = false;
                     for (Point p : path) {
                         Architecture closestArch = this.getArchitectures().getAll().stream()
-                                .filter(x -> x.getLocation().taxiDistanceTo(p) < distance)
-                                .min((x, y) -> x.getLocation().taxiDistanceTo(p) - y.getLocation().taxiDistanceTo(p)).orElse(null);
+                                .filter(x -> x.getPosition().taxiDistanceTo(p) < distance)
+                                .min((x, y) -> x.getPosition().taxiDistanceTo(p) - y.getPosition().taxiDistanceTo(p)).orElse(null);
                         if (closestArch != null && closestArch != a && closestArch != b) {
-                            int d1 = a.getLocation().taxiDistanceTo(p);
-                            int d2 = b.getLocation().taxiDistanceTo(p);
-                            int dc = closestArch.getLocation().taxiDistanceTo(p);
+                            int d1 = a.getPosition().taxiDistanceTo(p);
+                            int d2 = b.getPosition().taxiDistanceTo(p);
+                            int dc = closestArch.getPosition().taxiDistanceTo(p);
                             if (dc < d1 && dc < d2) {
                                 nearAnyArch = true;
                                 break;
@@ -290,7 +290,7 @@ public class GameScenario {
     }
 
     public Troop getTroopAt(Point p) {
-        return troops.filter(f -> f.getLocation().equals(p)).getFirst();
+        return troops.filter(f -> f.getPosition().equals(p)).getFirst();
     }
 
     public GameObjectList<ArchitectureKind> getArchitectureKinds() {
@@ -413,7 +413,7 @@ public class GameScenario {
             Iterator<Troop> it = movingTroops.iterator();
             while (it.hasNext()) {
                 Troop t = it.next();
-                Point oldLoc = t.getLocation();
+                Point oldLoc = t.getPosition();
 
                 HasPointLocationGameObject target = t.canAttackTarget();
                 if (!t.stepForward()) {
@@ -425,7 +425,7 @@ public class GameScenario {
                     }
                     it.remove();
                 } else {
-                    Point newLoc = t.getLocation();
+                    Point newLoc = t.getPosition();
                     if (!oldLoc.equals(newLoc)) {
                         onTroopDone.onStartTroopStep(t, oldLoc, newLoc, () -> {
                             if (t.tryEnter(newLoc)) {

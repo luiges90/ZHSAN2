@@ -167,7 +167,7 @@ public class TroopAnimationLayer implements MapLayer {
             if (t.isDestroyed()) {
                 troopDirections.remove(t);
             }
-            if (helpers.isMapLocationOnScreen(t.getLocation())) {
+            if (helpers.isMapLocationOnScreen(t.getPosition())) {
                 double direction;
                 if (troopDirections.containsKey(t)) {
                     direction = troopDirections.get(t);
@@ -176,7 +176,7 @@ public class TroopAnimationLayer implements MapLayer {
                 }
 
                 TextureRegion image = getTroopImage(resPack, t, TroopAnimation.TroopAnimationKind.IDLE, idleFrame, direction, screen.getScenario());
-                Point px = helpers.getPixelFromMapLocation(t.getLocation());
+                Point px = helpers.getPixelFromMapLocation(t.getPosition());
                 batch.draw(image, px.x, px.y, zoom, zoom);
 
                 drawnTroops.put(t, px);

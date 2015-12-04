@@ -220,7 +220,7 @@ public class Troop implements HasPointLocationGameObject {
         return Caches.get(Caches.troopMilitaries, this, () -> scenario.getMilitaries().filter(m -> m.getLocation() == this).getFirst());
     }
 
-    public Point getLocation() {
+    public Point getPosition() {
         return location;
     }
 
@@ -267,7 +267,7 @@ public class Troop implements HasPointLocationGameObject {
 
     @LuaAI.ExportToLua
     public MilitaryKind getKind() {
-        if (scenario.getTerrainAt(getLocation()).isWater()) {
+        if (scenario.getTerrainAt(getPosition()).isWater()) {
             return scenario.getDefaultShipKind();
         } else {
             return getMilitary().getKind();
@@ -326,7 +326,7 @@ public class Troop implements HasPointLocationGameObject {
     public float getOffense() {
         return (getCommand() * 0.7f + getStrength() * 0.3f) / 100.0f *
                 getMorale() / 100.0f *
-                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
+                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getPosition())).getMultiple() *
                 (getKind().getOffense() + getKind().getOffensePerUnit() * getMilitary().getUnitCount());
     }
 
@@ -334,7 +334,7 @@ public class Troop implements HasPointLocationGameObject {
     public float getDefense() {
         return getCommand() / 100.0f *
                 getMorale() / 100.0f *
-                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getLocation())).getMultiple() *
+                scenario.getMilitaryTerrain(getKind(), scenario.getTerrainAt(getPosition())).getMultiple() *
                 (getKind().getDefense() + getKind().getDefensePerUnit() * getMilitary().getUnitCount());
     }
 
@@ -354,7 +354,7 @@ public class Troop implements HasPointLocationGameObject {
             scenario.getTroops().getAll().stream()
                     .filter(x -> x.getTarget() == this)
                     .forEach(x -> x.order = ORDER_IDLE);
-            this.getMilitary().getAllPersons().forEach(p -> p.moveToArchitecture(this.getLocation(), this.startArchitecture));
+            this.getMilitary().getAllPersons().forEach(p -> p.moveToArchitecture(this.getPosition(), this.startArchitecture));
             destroy(true);
         }
         return destroy;
@@ -396,7 +396,7 @@ public class Troop implements HasPointLocationGameObject {
 
     @LuaAI.ExportToLua
     public void giveMoveToArchitectureOrder(int archId) {
-        giveMoveToOrder(scenario.getArchitecture(archId).getLocation());
+        giveMoveToOrder(scenario.getArchitecture(archId).getPosition());
     }
 
     @LuaAI.ExportToLua
@@ -431,17 +431,17 @@ public class Troop implements HasPointLocationGameObject {
 
     @LuaAI.ExportToLua
     public GameObjectList<Troop> getFriendlyTroopsInView() {
-        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
+        return scenario.getTroops().filter(t -> t.getPosition().taxiDistanceTo(this.getPosition()) <= 5 && t.getBelongedFaction() == this.getBelongedFaction());
     }
 
     @LuaAI.ExportToLua
     public GameObjectList<Troop> getHostileTroopsInView() {
-        return scenario.getTroops().filter(t -> t.getLocation().taxiDistanceTo(this.getLocation()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
+        return scenario.getTroops().filter(t -> t.getPosition().taxiDistanceTo(this.getPosition()) <= 5 && t.getBelongedFaction() != this.getBelongedFaction());
     }
 
     @LuaAI.ExportToLua
     public boolean isArchitectureInView(int archId) {
-        return this.getLocation().taxiDistanceTo(scenario.getArchitecture(archId).getLocation()) <= 5;
+        return this.getPosition().taxiDistanceTo(scenario.getArchitecture(archId).getPosition()) <= 5;
     }
 
     private Queue<Point> currentPath;
@@ -454,9 +454,9 @@ public class Troop implements HasPointLocationGameObject {
         if (this.order.targetLocation != null) {
             targetLocation = this.order.targetLocation;
         } else if (this.order.kind == OrderKind.ATTACK_ARCH || this.order.kind == OrderKind.MOVE_ENTER) {
-            targetLocation = scenario.getArchitectures().get(this.order.targetId).getLocation();
+            targetLocation = scenario.getArchitectures().get(this.order.targetId).getPosition();
         } else if (this.order.kind == OrderKind.ATTACK_TROOP) {
-            targetLocation = scenario.getTroops().get(this.order.targetId).getLocation();
+            targetLocation = scenario.getTroops().get(this.order.targetId).getPosition();
         } else {
             targetLocation = null;
         }
@@ -504,7 +504,7 @@ public class Troop implements HasPointLocationGameObject {
         if (attacked) return null;
 
         HasPointLocationGameObject target = order.target();
-        if ((target instanceof Architecture || target instanceof Troop) && isLocationInAttackRange(target.getLocation())) {
+        if ((target instanceof Architecture || target instanceof Troop) && isLocationInAttackRange(target.getPosition())) {
             return target;
         } else {
             return null;
@@ -536,7 +536,7 @@ public class Troop implements HasPointLocationGameObject {
     }
 
     private boolean isLocationInAttackRange(Point p) {
-        int dist = getLocation().taxiDistanceTo(p);
+        int dist = getPosition().taxiDistanceTo(p);
         return getKind().getRangeLo() <= dist && dist <= getKind().getRangeHi();
     }
 
@@ -563,7 +563,7 @@ public class Troop implements HasPointLocationGameObject {
         int reactDamage;
         reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
         destroy = this.loseQuantity(reactDamage);
-        damagePacks.add(new DamagePack(this, this.getLocation(), -reactDamage, destroy));
+        damagePacks.add(new DamagePack(this, this.getPosition(), -reactDamage, destroy));
 
         attacked = true;
 
@@ -571,7 +571,7 @@ public class Troop implements HasPointLocationGameObject {
     }
 
     private List<DamagePack> attackTroop(Troop target) {
-        if (!isLocationInAttackRange(target.getLocation())) return Collections.emptyList();
+        if (!isLocationInAttackRange(target.getPosition())) return Collections.emptyList();
 
         List<DamagePack> damagePacks = new ArrayList<>();
 
@@ -581,13 +581,13 @@ public class Troop implements HasPointLocationGameObject {
 
         int damage = Math.round(GlobalVariables.baseDamage * ratio);
         boolean destroy = target.loseQuantity(damage);
-        damagePacks.add(new DamagePack(target, target.getLocation(), -damage, destroy));
+        damagePacks.add(new DamagePack(target, target.getPosition(), -damage, destroy));
 
         int reactDamage;
-        if (target.isLocationInAttackRange(this.getLocation())) {
+        if (target.isLocationInAttackRange(this.getPosition())) {
             reactDamage = Math.round(GlobalVariables.baseDamage * (1 / ratio) * GlobalVariables.reactDamageFactor);
             destroy = this.loseQuantity(reactDamage);
-            damagePacks.add(new DamagePack(this, this.getLocation(), -reactDamage, destroy));
+            damagePacks.add(new DamagePack(this, this.getPosition(), -reactDamage, destroy));
         }
 
         attacked = true;
@@ -639,13 +639,13 @@ public class Troop implements HasPointLocationGameObject {
 
     @LuaAI.ExportToLua
     public boolean canOccupy() {
-        Architecture a = scenario.getArchitectureAt(getLocation());
+        Architecture a = scenario.getArchitectureAt(getPosition());
         return a != null && a.getBelongedFaction() != this.getBelongedFaction();
     }
 
     @LuaAI.ExportToLua
     public void occupy() {
-        Architecture a = scenario.getArchitectureAt(getLocation());
+        Architecture a = scenario.getArchitectureAt(getPosition());
         a.changeSection(this.getBelongedSection());
     }
 

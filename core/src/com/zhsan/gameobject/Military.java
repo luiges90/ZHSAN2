@@ -9,20 +9,16 @@ import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
-import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Peter on 19/7/2015.
  */
-public class Military implements GameObject {
+public class Military implements HasPointLocationGameObject {
 
     public static final String SAVE_FILE = "Military.csv";
 
@@ -44,7 +40,7 @@ public class Military implements GameObject {
             this.troop = troop;
         }
 
-        public GameObject get() {
+        public HasPointLocationGameObject get() {
             if (architecture != null) {
                 return architecture;
             }
@@ -221,8 +217,13 @@ public class Military implements GameObject {
         this.persons.forEach(p -> p.moveToArchitectureInstantly(location));
     }
 
-    public GameObject getLocation() {
+    public HasPointLocationGameObject getLocation() {
         return location.get();
+    }
+
+    @Override
+    public Point getPosition() {
+        return location.get().getPosition();
     }
 
     @LuaAI.ExportToLua
@@ -397,7 +398,7 @@ public class Military implements GameObject {
         if (!(this.getLocation() instanceof Architecture)) {
             throw new IllegalStateException("The military must be in an architecture in order to be moved to another");
         }
-        this.movingDays = (int) Math.max(1, Math.round(Point.distance(((Architecture) this.getLocation()).getLocation(), a.getLocation())
+        this.movingDays = (int) Math.max(1, Math.round(Point.distance(((Architecture) this.getLocation()).getPosition(), a.getPosition())
                 / GlobalVariables.militaryMovingSpeed * this.getKind().getMovability()));
         this.location = new LocationType(a);
     }
