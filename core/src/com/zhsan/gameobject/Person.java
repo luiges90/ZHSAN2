@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Person implements HasPointLocationGameObject {
+public class Person implements HasPointBelongsFactionGameObject {
 
     public static final String SAVE_FILE = "Person.csv";
 
@@ -73,7 +73,7 @@ public class Person implements HasPointLocationGameObject {
             this.troop = troop;
         }
 
-        public HasPointLocationGameObject get() {
+        public HasPointBelongsFactionGameObject get() {
             if (architecture != null) {
                 return architecture;
             }
@@ -304,24 +304,14 @@ public class Person implements HasPointLocationGameObject {
 
     public Section getBelongedSection() {
         if (state == State.NORMAL) {
-            GameObject t = location.get();
-            if (t instanceof Architecture) {
-                return ((Architecture) t).getBelongedSection();
-            } else if (t instanceof Troop) {
-                return ((Troop) t).getBelongedSection();
-            }
+            return location.get().getBelongedSection();
         }
         return null;
     }
 
     public Faction getBelongedFaction() {
         if (state == State.NORMAL) {
-            GameObject t = location.get();
-            if (t instanceof Architecture) {
-                return ((Architecture) t).getBelongedFaction();
-            } else if (t instanceof Troop) {
-                return ((Troop) t).getBelongedFaction();
-            }
+            return location.get().getBelongedFaction();
         }
         return null;
     }

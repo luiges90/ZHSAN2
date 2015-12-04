@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by Peter on 8/8/2015.
  */
-public class Troop implements HasPointLocationGameObject {
+public class Troop implements HasPointBelongsFactionGameObject {
 
     public static final String SAVE_FILE = "Troop.csv";
 

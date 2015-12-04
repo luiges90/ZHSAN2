@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Architecture implements HasPointLocationGameObject {
+public class Architecture implements HasPointBelongsFactionGameObject {
 
     public static final String SAVE_FILE = "Architecture.csv";
 
