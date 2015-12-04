@@ -18,7 +18,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Person extends GameObject {
+public class Person implements GameObject {
 
     public static final String SAVE_FILE = "Person.csv";
 
@@ -197,8 +197,30 @@ public class Person extends GameObject {
 
     private int movingDays = 0;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private Person(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

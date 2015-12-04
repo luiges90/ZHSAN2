@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 19/7/2015.
  */
-public final class MilitaryKind extends GameObject {
+public final class MilitaryKind implements GameObject {
 
     public static final String SAVE_FILE = "MilitaryKind.csv";
 
@@ -37,8 +37,30 @@ public final class MilitaryKind extends GameObject {
     private final float architectureOffense;
     private final boolean ship;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private MilitaryKind(int id, String aitag, GameScenario scenario, MilitaryType type, String name, String description, boolean canOnlyCreateAtArchitecture, int cost, float transportCost, int quantity, int unitQuantity, int movability, int offense, int defense, int offensePerUnit, int defensePerUnit, int rangeLo, int rangeHi, float architectureOffense, boolean ship) {
-        super(id);
+        this.id = id;
         this.ship = ship;
         this.setAiTags(aitag);
         this.scenario = scenario;

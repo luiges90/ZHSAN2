@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,14 +15,36 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 19/7/2015.
  */
-public final class MilitaryType extends GameObject {
+public final class MilitaryType implements GameObject {
 
     public static final String SAVE_FILE = "MilitaryType.csv";
 
     private final String name;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private MilitaryType(int id, String aitag, String name) {
-        super(id);
+        this.id = id;
         this.setAiTags(aitag);
         this.name = name;
     }

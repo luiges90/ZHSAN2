@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Peter on 19/7/2015.
  */
-public class Military extends GameObject {
+public class Military implements GameObject {
 
     public static final String SAVE_FILE = "Military.csv";
 
@@ -109,6 +109,28 @@ public class Military extends GameObject {
     private Person leader;
     private GameObjectList<Person> persons = new GameObjectList<>();
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     public static final GameObjectList<Military> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Military> result = new GameObjectList<>();
 
@@ -168,7 +190,7 @@ public class Military extends GameObject {
     }
 
     public Military(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

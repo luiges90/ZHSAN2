@@ -22,7 +22,7 @@ import java.util.function.Predicate;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Architecture extends GameObject implements HasPointLocation {
+public class Architecture implements HasPointLocationGameObject {
 
     public static final String SAVE_FILE = "Architecture.csv";
 
@@ -44,8 +44,30 @@ public class Architecture extends GameObject implements HasPointLocation {
 
     private Set<Integer> connectedArchitectures = new HashSet<>();
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private Architecture(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

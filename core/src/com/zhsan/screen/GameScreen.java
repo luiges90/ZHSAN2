@@ -336,14 +336,14 @@ public class GameScreen extends WidgetGroup {
                         }
 
                         @Override
-                        public void onStartAttackStep(Troop t, HasPointLocation target, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
+                        public void onStartAttackStep(Troop t, HasPointLocationGameObject target, GameScenario.OnTroopAnimationDone onTroopAnimationDone) {
                             mapLayer.addPendingTroopAnimation(
                                     new TroopAnimationLayer.PendingTroopAnimation(t, TroopAnimationLayer.PendingTroopAnimationType.ATTACK,
                                             t.getLocation(), target.getLocation(), onTroopAnimationDone));
                         }
 
                         @Override
-                        public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks) {
+                        public void onAttackDone(Troop t, HasPointLocationGameObject target, List<DamagePack> damagePacks) {
                             mapLayer.showDamage(damagePacks);
                             damagePacks.stream().filter(d -> d.destroyed).forEach(d -> {
                                 if (d.object instanceof Troop) {

@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 17/3/2015.
  */
-public final class TerrainDetail extends GameObject {
+public final class TerrainDetail implements GameObject {
 
     public static final String SAVE_FILE = "TerrainDetail.csv";
 
@@ -26,8 +26,30 @@ public final class TerrainDetail extends GameObject {
 
     public final boolean water;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private TerrainDetail(int id, String aitag, String name, boolean canBeViewedThrough, float fireDamageRate, boolean water) {
-        super(id);
+        this.id = id;
         this.setAiTags(aitag);
         this.name = name;
         this.canBeViewedThrough = canBeViewedThrough;

@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 7/4/2015.
  */
-public final class ArchitectureKind extends GameObject {
+public final class ArchitectureKind implements GameObject {
 
     public static final String SAVE_FILE = "ArchitectureKind.csv";
 
@@ -25,8 +25,30 @@ public final class ArchitectureKind extends GameObject {
     private final int agriculture, commerce, technology, endurance, morale, population;
     private final long maxFund, maxFood;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private ArchitectureKind(int id, String aiTag, String name, float drawOffsetL, float drawOffsetW, int agriculture, int commerce, int technology, int endurance, int morale, int population, long maxFund, long maxFood) {
-        super(id);
+        this.id = id;
         this.name = name;
         this.setAiTags(aiTag);
         this.drawOffsetL = drawOffsetL;

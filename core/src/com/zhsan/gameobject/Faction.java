@@ -21,7 +21,7 @@ import java.util.concurrent.RecursiveAction;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Faction extends GameObject {
+public class Faction implements GameObject {
 
     public static final String SAVE_FILE = "Faction.csv";
 
@@ -34,8 +34,30 @@ public class Faction extends GameObject {
 
     private Color color;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private Faction(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

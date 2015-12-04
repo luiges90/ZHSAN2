@@ -12,41 +12,24 @@ import java.util.Objects;
 /**
  * Created by Peter on 17/3/2015.
  */
-public abstract class GameObject {
+public interface GameObject {
 
-    private final int id;
-    private String aiTags = "";
+    public String getName();
 
-    protected GameObject(int id) {
-        this.id = id;
-    }
+    public int getId();
 
-    public abstract String getName();
+    public String getAiTags();
 
-    @LuaAI.ExportToLua
-    public final int getId() {
-        return id;
-    }
+    public GameObject setAiTags(String aiTags);
 
-    @LuaAI.ExportToLua
-    public String getAiTags() {
-        return aiTags;
-    }
-
-    @LuaAI.ExportToLua
-    public GameObject setAiTags(String aiTags) {
-        this.aiTags = aiTags;
-        return this;
-    }
-
-    public final Object getField(String fname) {
+    public default Object getField(String fname) {
         return getField(fname, null);
     }
 
-    public final Object getField(String fname, GameObject context) {
+    public default Object getField(String fname, GameObject context) {
         switch (fname) {
             case "Id":
-                return id;
+                return getId();
             case "Name":
                 return getName();
             default:
@@ -77,15 +60,15 @@ public abstract class GameObject {
         }
     }
 
-    public final String getFieldString(String name) {
+    public default String getFieldString(String name) {
         return getFieldString(name, true);
     }
 
-    public final String getFieldString(String name, boolean round) {
+    public default String getFieldString(String name, boolean round) {
         return getFieldString(name, round, null);
     }
 
-    public final String getFieldString(String name, boolean round, GameObject context) {
+    public default String getFieldString(String name, boolean round, GameObject context) {
         Object o = getField(name, context);
         if (o == null) {
             return GlobalStrings.getString(GlobalStrings.Keys.NO_CONTENT);
@@ -98,7 +81,7 @@ public abstract class GameObject {
         }
     }
 
-    public final boolean satisfyMethod(String fname) {
+    public default boolean satisfyMethod(String fname) {
         try {
             String actualName = fname.substring(0, 1).toLowerCase() + fname.substring(1);
             Method m = this.getClass().getMethod(actualName);
@@ -108,10 +91,4 @@ public abstract class GameObject {
         }
     }
 
-    @Override
-    public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-                "id=" + id +
-                '}';
-    }
 }

@@ -17,7 +17,7 @@ import java.util.HashSet;
 /**
  * Created by Peter on 24/5/2015.
  */
-public class Section extends GameObject {
+public class Section implements GameObject {
 
     public static final String SAVE_FILE = "Section.csv";
 
@@ -27,8 +27,30 @@ public class Section extends GameObject {
 
     private Faction belongedFaction;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private Section(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

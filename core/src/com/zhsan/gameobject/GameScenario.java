@@ -26,9 +26,9 @@ public class GameScenario {
     public interface OnTroopDone {
         public void onStartTroopStep(Troop t, Point oldLoc, Point newLoc, OnTroopAnimationDone onTroopAnimationDone);
 
-        public void onStartAttackStep(Troop t, HasPointLocation target, OnTroopAnimationDone onTroopAnimationDone);
+        public void onStartAttackStep(Troop t, HasPointLocationGameObject target, OnTroopAnimationDone onTroopAnimationDone);
 
-        public void onAttackDone(Troop t, HasPointLocation target, List<DamagePack> damagePacks);
+        public void onAttackDone(Troop t, HasPointLocationGameObject target, List<DamagePack> damagePacks);
     }
 
     public static final int SAVE_VERSION = 2;
@@ -415,7 +415,7 @@ public class GameScenario {
                 Troop t = it.next();
                 Point oldLoc = t.getLocation();
 
-                HasPointLocation target = t.canAttackTarget();
+                HasPointLocationGameObject target = t.canAttackTarget();
                 if (!t.stepForward()) {
                     if (target != null) {
                         onTroopDone.onStartAttackStep(t, target, () -> {

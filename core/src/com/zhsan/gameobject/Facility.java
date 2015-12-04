@@ -7,6 +7,7 @@ import com.zhsan.common.Point;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 25/5/2015.
  */
-public class Facility extends GameObject {
+public class Facility implements GameObject {
 
     public static final String SAVE_FILE = "Facility.csv";
 
@@ -27,8 +28,30 @@ public class Facility extends GameObject {
 
     private Architecture belongedArchitecture;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     public Facility(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 

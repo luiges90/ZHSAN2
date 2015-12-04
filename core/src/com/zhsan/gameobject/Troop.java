@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Created by Peter on 8/8/2015.
  */
-public class Troop extends GameObject implements HasPointLocation {
+public class Troop implements HasPointLocationGameObject {
 
     public static final String SAVE_FILE = "Troop.csv";
 
@@ -108,7 +108,7 @@ public class Troop extends GameObject implements HasPointLocation {
             return null;
         }
 
-        HasPointLocation target() {
+        HasPointLocationGameObject target() {
             switch (kind) {
                 case ATTACK_ARCH:
                     return scenario.getArchitectures().get(targetId);
@@ -134,6 +134,28 @@ public class Troop extends GameObject implements HasPointLocation {
     private Order order = ORDER_IDLE;
 
     private volatile boolean destroyed = false;
+
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
 
     public static final GameObjectList<Troop> fromCSV(FileHandle root, @NotNull GameScenario scen) {
         GameObjectList<Troop> result = new GameObjectList<>();
@@ -184,7 +206,7 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     public Troop(int id, GameScenario scen) {
-        super(id);
+        this.id = id;
         this.scenario = scen;
     }
 
@@ -474,14 +496,14 @@ public class Troop extends GameObject implements HasPointLocation {
         return true;
     }
 
-    public HasPointLocation getTarget() {
+    public HasPointLocationGameObject getTarget() {
         return order.target();
     }
 
-    public HasPointLocation canAttackTarget() {
+    public HasPointLocationGameObject canAttackTarget() {
         if (attacked) return null;
 
-        HasPointLocation target = order.target();
+        HasPointLocationGameObject target = order.target();
         if ((target instanceof Architecture || target instanceof Troop) && isLocationInAttackRange(target.getLocation())) {
             return target;
         } else {
@@ -503,7 +525,7 @@ public class Troop extends GameObject implements HasPointLocation {
     public List<DamagePack> attack() {
         if (attacked) return Collections.emptyList();
 
-        HasPointLocation target = order.target();
+        HasPointLocationGameObject target = order.target();
         if (target instanceof Architecture) {
             return attackArchitecture((Architecture) target);
         } else if (target instanceof Troop) {

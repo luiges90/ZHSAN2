@@ -6,6 +6,7 @@ import com.opencsv.CSVWriter;
 import com.zhsan.common.exception.FileReadException;
 import com.zhsan.common.exception.FileWriteException;
 import com.zhsan.gamecomponents.GlobalStrings;
+import com.zhsan.lua.LuaAI;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 4/8/2015.
  */
-public final class TroopAnimation extends GameObject {
+public final class TroopAnimation implements GameObject {
 
     public enum TroopAnimationKind {
         IDLE(1),
@@ -41,8 +42,30 @@ public final class TroopAnimation extends GameObject {
     private final String fileName;
     private final int frameCount, idleFrame, spriteSize;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private TroopAnimation(int id, String name, String fileName, int frameCount, int idleFrame, int spriteSize) {
-        super(id);
+        this.id = id;
         this.name = name;
         this.fileName = fileName;
         this.frameCount = frameCount;

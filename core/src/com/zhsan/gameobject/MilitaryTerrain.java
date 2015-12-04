@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 /**
  * Created by Peter on 11/8/2015.
  */
-public class MilitaryTerrain extends GameObject {
+public class MilitaryTerrain implements GameObject {
 
     public static final String SAVE_FILE = "MilitaryTerrain.csv";
 
@@ -24,8 +24,30 @@ public class MilitaryTerrain extends GameObject {
 
     private float adaptability, multiple;
 
+    private final int id;
+    private String aiTags;
+
+    @Override
+    @LuaAI.ExportToLua
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public String getAiTags() {
+        return aiTags;
+    }
+
+    @Override
+    @LuaAI.ExportToLua
+    public GameObject setAiTags(String aiTags) {
+        this.aiTags = aiTags;
+        return this;
+    }
+
     private MilitaryTerrain(int id, MilitaryKind kind, TerrainDetail terrain, float adaptability, float multiple) {
-        super(id);
+        this.id = id;
         this.kind = kind;
         this.terrain = terrain;
         this.adaptability = adaptability;
