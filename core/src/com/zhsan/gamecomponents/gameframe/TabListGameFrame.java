@@ -7,8 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -114,7 +115,8 @@ public class TabListGameFrame extends GameFrame {
 
     private Tab showingTab;
 
-    private Table contentPane;
+    private Table contentContainer, content;
+    private ScrollPane contentScrollPane;
     private List<TextWidget<GameObject>> showingTextWidgets = new ArrayList<>();
 
     private List<CheckboxWidget<GameObject>> showingCheckboxes = new ArrayList<>();
@@ -124,8 +126,11 @@ public class TabListGameFrame extends GameFrame {
     private OnItemSelectedListener onItemSelected;
 
     private Color highlightRowColor;
+    private Actor selectedText;
 
     private String title;
+
+    private ShapeRenderer shapeRenderer = new ShapeRenderer();
 
     private GameObject context;
 
@@ -309,7 +314,7 @@ public class TabListGameFrame extends GameFrame {
     }
 
     private void initContentPane(int offset) {
-        Table contentTable = new Table();
+        content = new Table();
 
         // header
         if (selection != Selection.NONE) {
@@ -319,12 +324,12 @@ public class TabListGameFrame extends GameFrame {
                 case RIGHT: align = Align.right; break;
                 case CENTER:default: align = Align.center; break;
             }
-            contentTable.add(selectTextWidget).width(selectWidth).height(columnHeaderHeight).align(align);
+            content.add(selectTextWidget).width(selectWidth).height(columnHeaderHeight).align(align);
         }
         for (Column c : showingTab.columns) {
-            contentTable.add(c.columnText).width(c.width).height(columnHeaderHeight);
+            content.add(c.columnText).width(c.width).height(columnHeaderHeight);
         }
-        contentTable.row();
+        content.row();
 
         // content
 
@@ -334,24 +339,36 @@ public class TabListGameFrame extends GameFrame {
                 widget.setExtra(o);
 
                 showingRadioButtons.add(widget);
-                contentTable.add(widget).width(selectWidth).height(columnHeaderHeight);
+                content.add(widget).width(selectWidth).height(columnHeaderHeight);
             } else if (selection == Selection.MULTIPLE) {
                 CheckboxWidget<GameObject> widget = new CheckboxWidget<>(TextWidget.Setting.empty(), "", checkboxSelected, checkbox);
                 widget.setExtra(o);
 
                 showingCheckboxes.add(widget);
-                contentTable.add(widget).width(selectWidth).height(columnHeaderHeight);
+                content.add(widget).width(selectWidth).height(columnHeaderHeight);
             }
             for (Column c : showingTab.columns) {
                 TextWidget<GameObject> widget = new TextWidget<>(c.contentTemplate);
                 widget.setExtra(o);
                 widget.setText(o.getFieldString(c.name, c.round, context));
 
+                widget.addListener(new InputListener(){
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                        selectedText = widget;
+                    }
+
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                        selectedText = null;
+                    }
+                });
+
                 showingTextWidgets.add(widget);
 
-                contentTable.add(widget).width(c.width).height(columnHeaderHeight);
+                content.add(widget).width(c.width).height(columnHeaderHeight);
             }
-            contentTable.row().height(rowHeight);
+            content.row().height(rowHeight);
         }
 
         if (selection == Selection.SINGLE) {
@@ -360,13 +377,13 @@ public class TabListGameFrame extends GameFrame {
             }
         }
 
-        contentTable.top().left();
+        content.top().left();
 
-        ScrollPane data = new ScrollPane(contentTable);
-        contentPane = WidgetUtility.setupScrollpane(getLeftBound(), getBottomActiveBound(),
-                getRightBound() - getLeftBound(), getTopActiveBound() - offset - getBottomActiveBound(), data, scrollButton);
+        contentScrollPane = new ScrollPane(content);
+        contentContainer = WidgetUtility.setupScrollpane(getLeftBound(), getBottomActiveBound(),
+                getRightBound() - getLeftBound(), getTopActiveBound() - offset - getBottomActiveBound(), contentScrollPane, scrollButton);
 
-        addActor(contentPane);
+        addActor(contentContainer);
     }
 
     @Override
@@ -377,8 +394,25 @@ public class TabListGameFrame extends GameFrame {
 
         int offset = drawTabs(batch, parentAlpha);
 
-        if (contentPane == null) {
+        if (contentContainer == null) {
             initContentPane(offset);
+        }
+
+        if (selectedText != null) {
+            batch.end();
+
+            shapeRenderer.setAutoShapeType(true);
+            shapeRenderer.begin();
+
+            shapeRenderer.set(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
+            shapeRenderer.rect(getLeftBound(), getBottomActiveBound() + selectedText.getY() - (contentScrollPane.getMaxY() - contentScrollPane.getVisualScrollY()),
+                    content.getWidth(), selectedText.getHeight());
+
+            shapeRenderer.end();
+
+            batch.begin();
         }
     }
 
@@ -407,9 +441,9 @@ public class TabListGameFrame extends GameFrame {
     }
 
     private void resetContentPane() {
-        if (contentPane != null) {
-            contentPane.clear();
-            contentPane = null;
+        if (contentContainer != null) {
+            contentContainer.clear();
+            contentContainer = null;
         }
         showingTextWidgets.forEach(TextWidget::dispose);
         showingTextWidgets.clear();
@@ -425,7 +459,7 @@ public class TabListGameFrame extends GameFrame {
 
         resetContentPane();
 
-        removeActor(contentPane);
+        removeActor(contentContainer);
         showingListKind.tabs.forEach(tab -> {
             removeActor(tab.tabButton);
         });
