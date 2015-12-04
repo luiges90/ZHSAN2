@@ -18,6 +18,7 @@
                 FontColor="4294967295"
                 Align="Middle">
     </ColumnText>
+    <HighlightRow Color="4294967295" />
     <SoundFile Select="Select.wav"/>
     <TabList RowHeight="25">
         <ListKind ID="1" Name="Person" DisplayName="武將列表">

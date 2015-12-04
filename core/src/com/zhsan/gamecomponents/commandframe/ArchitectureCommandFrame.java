@@ -200,7 +200,7 @@ public class ArchitectureCommandFrame extends CommandFrame {
         tabs.values().forEach(CommandTab::dispose);
     }
 
-    public class Listener extends InputListener {
+    private class Listener extends InputListener {
         @Override
         public boolean mouseMoved(InputEvent event, float x, float y) {
             if (currentArchitecture.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {

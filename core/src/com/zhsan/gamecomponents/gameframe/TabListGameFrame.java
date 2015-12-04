@@ -3,6 +3,7 @@ package com.zhsan.gamecomponents.gameframe;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -122,6 +123,8 @@ public class TabListGameFrame extends GameFrame {
     private Selection selection;
     private OnItemSelectedListener onItemSelected;
 
+    private Color highlightRowColor;
+
     private String title;
 
     private GameObject context;
@@ -175,6 +178,9 @@ public class TabListGameFrame extends GameFrame {
 
             Node tabListNode = dom.getElementsByTagName("TabList").item(0);
             rowHeight = Integer.parseInt(XmlHelper.loadAttribute(tabListNode, "RowHeight"));
+
+            Node highlightNode = dom.getElementsByTagName("HighlightRow").item(0);
+            highlightRowColor = XmlHelper.loadColorFromXml(Integer.parseUnsignedInt(XmlHelper.loadAttribute(highlightNode, "Color")));
 
             listKinds = new EnumMap<>(ListKindType.class);
             for (int i = 0; i < tabListNode.getChildNodes().getLength(); ++i) {
