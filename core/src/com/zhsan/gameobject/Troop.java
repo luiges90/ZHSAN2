@@ -227,7 +227,7 @@ public class Troop extends GameObject implements HasPointLocation {
     }
 
     public String getKindString() {
-        return this.getMilitary().getKind().getName();
+        return this.getKind().getName();
     }
 
     public Section getBelongedSection() {
