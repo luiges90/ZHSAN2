@@ -43,7 +43,7 @@ public class HighlightLayer implements MapLayer {
     @Override
     public void onStartSelectingLocation(Troop troop) {
         moveToHighlight = scenario.getPathFinder(troop).getPointsWithinCost(
-                troop.getLocation(), troop.getMilitary().getKind().getMovability());
+                troop.getLocation(), troop.getKind().getMovability());
     }
 
     @Override

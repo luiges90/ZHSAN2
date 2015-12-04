@@ -231,6 +231,10 @@ public class GameScenario {
         return new GameObjectList<>(militaryKinds, true);
     }
 
+    public MilitaryKind getDefaultShipKind() {
+        return militaryKinds.filter(MilitaryKind::isShip).min((k, l) -> Integer.compare(k.getId(), l.getId()));
+    }
+
     public GameObjectList<TerrainDetail> getTerrainDetails() {
         return new GameObjectList<>(terrainDetails, true);
     }

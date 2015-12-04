@@ -226,6 +226,10 @@ public final class MilitaryKind extends GameObject {
         return movability;
     }
 
+    public boolean isShip() {
+        return ship;
+    }
+
     public GameObjectList<Architecture> getArchitecturesCreatable() {
         return scenario.getArchitectures().filter(a -> a.getCreatableMilitaryKinds().contains(this));
     }

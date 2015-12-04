@@ -24,12 +24,15 @@ public final class TerrainDetail extends GameObject {
     public final boolean canBeViewedThrough;
     public final float fireDamageRate;
 
-    private TerrainDetail(int id, String aitag, String name, boolean canBeViewedThrough, float fireDamageRate) {
+    public final boolean water;
+
+    private TerrainDetail(int id, String aitag, String name, boolean canBeViewedThrough, float fireDamageRate, boolean water) {
         super(id);
         this.setAiTags(aitag);
         this.name = name;
         this.canBeViewedThrough = canBeViewedThrough;
         this.fireDamageRate = fireDamageRate;
+        this.water = water;
     }
 
     public static final GameObjectList<TerrainDetail> fromCSV(FileHandle root, @NotNull GameScenario scen) {
@@ -51,6 +54,7 @@ public final class TerrainDetail extends GameObject {
                 builder.setName(line[2]);
                 builder.setCanBeViewedThrough(Boolean.parseBoolean(line[3]));
                 builder.setFireDamageRate(Float.parseFloat(line[4]));
+                builder.setWater(Boolean.parseBoolean(line[5]));
 
                 result.add(builder.createTerrainDetail());
             }
@@ -71,7 +75,8 @@ public final class TerrainDetail extends GameObject {
                         detail.getAiTags(),
                         detail.getName(),
                         String.valueOf(detail.canBeViewedThrough),
-                        String.valueOf(detail.fireDamageRate)
+                        String.valueOf(detail.fireDamageRate),
+                        String.valueOf(detail.water)
                 });
             }
         } catch (IOException e) {
@@ -85,6 +90,10 @@ public final class TerrainDetail extends GameObject {
                 () -> scen.getMilitaryTerrains().getAll().stream().anyMatch(mt -> mt.getTerrain() == this));
     }
 
+    public boolean isWater() {
+        return water;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -96,6 +105,7 @@ public final class TerrainDetail extends GameObject {
         private boolean canBeViewedThrough;
         private float fireDamageRate;
         private String aitag;
+        private boolean water;
 
         public TerrainDetailBuilder setId(int id) {
             this.id = id;
@@ -118,11 +128,16 @@ public final class TerrainDetail extends GameObject {
         }
 
         public TerrainDetail createTerrainDetail() {
-            return new TerrainDetail(id, aitag, name, canBeViewedThrough, fireDamageRate);
+            return new TerrainDetail(id, aitag, name, canBeViewedThrough, fireDamageRate, water);
         }
 
         public TerrainDetailBuilder setAiTag(String aitag) {
             this.aitag = aitag;
+            return this;
+        }
+
+        public TerrainDetailBuilder setWater(boolean water) {
+            this.water = water;
             return this;
         }
     }

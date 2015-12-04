@@ -78,7 +78,7 @@ public class TroopAnimationLayer implements MapLayer {
     }
 
     private TextureRegion getTroopImage(String resSet, Troop t, TroopAnimation.TroopAnimationKind animationKind, int frame, double dir, GameScenario scen) {
-        MilitaryKind kind = t.getMilitary().getKind();
+        MilitaryKind kind = t.getKind();
         TroopAnimation animation = scen.getTroopAnimations().get(animationKind.getId());
 
         Pair<MilitaryKind, TroopAnimation> pair = new Pair<>(kind, animation);

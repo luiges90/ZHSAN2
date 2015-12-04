@@ -245,7 +245,11 @@ public class Troop extends GameObject implements HasPointLocation {
 
     @LuaAI.ExportToLua
     public MilitaryKind getKind() {
-        return getMilitary().getKind();
+        if (scenario.getTerrainAt(getLocation()).isWater()) {
+            return scenario.getDefaultShipKind();
+        } else {
+            return getMilitary().getKind();
+        }
     }
 
     public Person getLeader() {

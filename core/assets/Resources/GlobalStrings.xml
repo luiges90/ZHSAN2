@@ -6,7 +6,7 @@
         tick="○"
         upArrow="↑"
         gameSurveySaveHeader="标题,年,月,日,保存时间,存档信息,地图位置,描述,资源包名称,存档版本"
-        terrainDetailSaveHeader="地形编号,AiTag,地形名称,视线可穿透,火焰伤害率"
+        terrainDetailSaveHeader="地形编号,AiTag,地形名称,视线可穿透,火焰伤害率,水域"
         mapSaveHeader="格宽缩放,宽度,高度,文件名,地图张数,每张图含方格数"
         architectureKindSaveHeader="ID,AiTag,名称,绘图延展(长度),绘图延展(阔度),农业基础,商业基础,技术基础,民心基础,耐久基础,人口基础,最大资金,最大粮草"
         architectureSaveHeader="ID,AiTag,名称编号,名称,种类,位置,所屬軍區,人口,资金,粮草,农业,商业,技术,民心,耐久,可新編兵裝,連接建築"
