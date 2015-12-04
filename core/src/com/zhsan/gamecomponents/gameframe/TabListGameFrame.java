@@ -111,6 +111,7 @@ public class TabListGameFrame extends GameFrame {
     private GameScreen screen;
 
     private ListKind showingListKind;
+    private ListKindType showingListKindType;
     private GameObjectList<?> showingData;
 
     private Tab showingTab;
@@ -302,6 +303,7 @@ public class TabListGameFrame extends GameFrame {
         this.selection = selection;
         this.context = context;
         this.showingListKind = listKinds.get(type);
+        this.showingListKindType = type;
         this.showingData = showingData;
         this.showingTab = this.showingListKind.tabs.get(0);
         this.onItemSelected = onItemSelected;
@@ -361,6 +363,11 @@ public class TabListGameFrame extends GameFrame {
                     @Override
                     public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                         selectedText = null;
+                    }
+
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        return handleItemTouchdown(o);
                     }
                 });
 
@@ -532,5 +539,19 @@ public class TabListGameFrame extends GameFrame {
             resetContentPane();
             return true;
         }
+    }
+
+    private boolean handleItemTouchdown(GameObject o) {
+        switch (this.showingListKindType) {
+            case ARCHITECTURE:
+                Architecture a = (Architecture) o;
+                screen.getMapLayer().setMapCameraPosition(a.getLocation());
+                return true;
+            case TROOP:
+                Troop t = (Troop) o;
+                screen.getMapLayer().setMapCameraPosition(t.getLocation());
+                return true;
+        }
+        return false;
     }
 }
