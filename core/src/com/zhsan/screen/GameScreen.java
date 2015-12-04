@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class GameScreen extends WidgetGroup {
 
-    private static final boolean MULTITHREADED_AI = false;
+    private static final boolean MULTITHREADED_AI = true;
 
     public interface RunningDaysListener {
         public void started(int daysLeft);
@@ -280,8 +280,7 @@ public class GameScreen extends WidgetGroup {
                 throw new RuntimeException(e);
             }
         } else {
-            factions.forEach(Faction::ai);
-
+            factions.filter(f -> f != scen.getCurrentPlayer()).forEach(Faction::ai);
         }
     }
 
