@@ -5,25 +5,46 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.zhsan.common.exception.FileReadException;
-import com.zhsan.gamecomponents.common.StateTexture;
 import com.zhsan.gamecomponents.common.XmlHelper;
 import com.zhsan.gamecomponents.common.textwidget.TextWidget;
 import com.zhsan.screen.GameScreen;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Peter on 6/12/2015.
  */
 public class GameRecord extends WidgetGroup {
+
+    public enum StringKeys {
+        OCCUPY_ARCHITECTURE("OccupyArchitecture"),
+        OCCUPY_ARCHITECTURE_WITH_FACTION("OccupyArchitectureWithFaction");
+
+        private final String xmlName;
+        StringKeys(String name) {
+            this.xmlName = name;
+        }
+    }
+
+    private static StringKeys getKeyFromXml(String s) {
+        for (StringKeys k : StringKeys.values()) {
+            if (k.xmlName.equals(s)) {
+                return k;
+            }
+        }
+        throw new IllegalArgumentException("Key " + s + " not found.");
+    }
 
     public static final String RES_PATH = ToolBar.RES_PATH + "GameRecord" + File.separator;
     public static final String DATA_PATH = RES_PATH + "Data" + File.separator;
@@ -36,6 +57,8 @@ public class GameRecord extends WidgetGroup {
 
     private Texture background;
     private int width, height;
+
+    private EnumMap<StringKeys, String> strings = new EnumMap<>(StringKeys.class);
 
     private TextWidget.Setting textSetting;
 
@@ -51,11 +74,17 @@ public class GameRecord extends WidgetGroup {
             dom = db.parse(f.read());
 
             Node node = dom.getElementsByTagName("Record").item(0);
-            background =  new Texture(Gdx.files.external(DATA_PATH +
+            background = new Texture(Gdx.files.external(DATA_PATH +
                     XmlHelper.loadAttribute(node, "Background")));
             width = Integer.parseInt(XmlHelper.loadAttribute(node, "Width"));
             height = Integer.parseInt(XmlHelper.loadAttribute(node, "Height"));
             textSetting = TextWidget.Setting.fromXml(node);
+
+            Node stringNode = dom.getElementsByTagName("String").item(0);
+            NamedNodeMap map = stringNode.getAttributes();
+            for (int i = 0; i < map.getLength(); ++i) {
+                strings.put(getKeyFromXml(map.item(i).getNodeName()), map.item(i).getNodeValue());
+            }
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + FILE_NAME, e);
         }
@@ -75,9 +104,9 @@ public class GameRecord extends WidgetGroup {
         setPositionSize(toolbarSize);
     }
 
-    public void addRecord(String msg) {
+    public void addRecord(StringKeys msgName, String... objects) {
         TextWidget<Void> widget = new TextWidget<>(textSetting);
-        widget.setText(msg);
+        widget.setText(String.format(strings.get(msgName), objects));
 
         records.addActor(widget);
     }

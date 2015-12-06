@@ -5,4 +5,8 @@
           FontSize="10"
           FontStyle="Regular"
           FontColor="4294967295" />
+  <String
+      OccupyArchitecture="%s佔領了%s"
+      OccupyArchitectureWithFaction="%s佔領了%s的%s"
+      />
 </Root>

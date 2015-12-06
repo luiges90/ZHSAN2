@@ -18,6 +18,7 @@ import com.zhsan.gamecomponents.gameframe.TabListGameFrame;
 import com.zhsan.gamecomponents.maplayer.TroopAnimationLayer;
 import com.zhsan.gamecomponents.textdialog.ConfirmationDialog;
 import com.zhsan.gamecomponents.textdialog.TextDialog;
+import com.zhsan.gamecomponents.toolbar.GameRecord;
 import com.zhsan.gamecomponents.toolbar.ToolBar;
 import com.zhsan.gameobject.*;
 import com.zhsan.lua.LuaAI;
@@ -264,8 +265,8 @@ public class GameScreen extends WidgetGroup {
         return personPortrait.getSmallPortrait(id);
     }
 
-    public void addMessage(String s) {
-        toolBar.addRecord(s);
+    public void addMessage(GameRecord.StringKeys msgName, String... objects) {
+        toolBar.addRecord(msgName, objects);
     }
 
     private ExecutorService pool = Executors.newCachedThreadPool();

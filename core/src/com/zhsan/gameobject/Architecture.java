@@ -169,7 +169,7 @@ public class Architecture implements HasPointBelongsFactionGameObject {
         return belongedSection == null ? null : belongedSection.getBelongedFaction();
     }
 
-    private void changeFaction() {
+    private void changeFaction(Faction newFaction) {
         if (this.getBelongedFaction() != null) {
             Architecture moveTo = this.getBelongedFaction().getArchitectures().getAll()
                     .stream()
@@ -182,11 +182,11 @@ public class Architecture implements HasPointBelongsFactionGameObject {
         }
     }
 
-    public void changeSection(Section n) {
-        if (this.belongedSection != null && this.belongedSection.getBelongedFaction() != n.getBelongedFaction()) {
-            changeFaction();
+    public void changeSection(Section newSection) {
+        if (this.belongedSection != null && this.belongedSection.getBelongedFaction() != newSection.getBelongedFaction()) {
+            changeFaction(newSection.getBelongedFaction());
         }
-        this.belongedSection = n;
+        this.belongedSection = newSection;
     }
 
     @LuaAI.ExportToLua
