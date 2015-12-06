@@ -188,6 +188,10 @@ public class ToolBar extends WidgetGroup {
         return dateRunner.getDaysToGo();
     }
 
+    public void addRecord(String msg) {
+        gameRecord.addRecord(msg);
+    }
+
     private class Listener extends InputListener {
 
         @Override

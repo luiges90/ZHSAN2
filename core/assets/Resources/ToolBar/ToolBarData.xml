@@ -5,5 +5,5 @@
     <SmallMap Align="Right" X="116" Y="10" Width="64" Height="33" FileName="SmallMap.png"
               Selected="SmallMapSelected.png"/>
     <DateRunner Align="Left" X="0" Y="0" Width="180" Height="43" />
-    <GameRecord Align="Left" X="184" Y="10" Width="33" Height="33" FileName="Record.png" Selected="RecordSelected.png"/>
+    <GameRecord Align="Left" X="188" Y="10" Width="33" Height="33" FileName="Record.png" Selected="RecordSelected.png"/>
 </Root>

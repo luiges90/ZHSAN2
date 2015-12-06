@@ -264,6 +264,10 @@ public class GameScreen extends WidgetGroup {
         return personPortrait.getSmallPortrait(id);
     }
 
+    public void addMessage(String s) {
+        toolBar.addRecord(s);
+    }
+
     private ExecutorService pool = Executors.newCachedThreadPool();
     private void runAi() {
         GameObjectList<Faction> factions = scen.getFactions();
