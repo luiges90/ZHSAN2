@@ -13,6 +13,7 @@ import com.zhsan.gamecomponents.gameframe.NewGameFrame;
 import com.zhsan.gameobject.GameScenario;
 import com.zhsan.gamecomponents.GlobalStrings;
 import com.zhsan.screen.GameScreen;
+import com.zhsan.screen.ScreenScenarioEventsListener;
 import com.zhsan.screen.StartScreen;
 
 public class ZHSan2 extends ApplicationAdapter {
@@ -56,6 +57,7 @@ public class ZHSan2 extends ApplicationAdapter {
             GameScenario scen = new GameScenario(file, true, factionId);
 
             gameScreen = new GameScreen(scen);
+            scen.setGameScenarioEventsListener(new ScreenScenarioEventsListener(gameScreen));
 
             Viewport viewport = new ScreenViewport();
             gameStage = new Stage(viewport);

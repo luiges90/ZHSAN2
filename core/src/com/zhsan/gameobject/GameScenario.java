@@ -36,6 +36,8 @@ public class GameScenario {
     public static final String SCENARIO_PATH = Paths.DATA + "Scenario" + File.separator;
     public static final String SAVE_PATH = Paths.DATA + "Save" + File.separator;
 
+    private GameScenarioEventsListener gameScenarioEventsListener;
+
     private final GameSurvey gameSurvey;
     private final GameObjectList<TerrainDetail> terrainDetails;
     private final GameMap gameMap;
@@ -220,6 +222,11 @@ public class GameScenario {
             }
         }
 
+    }
+
+    public GameScenario setGameScenarioEventsListener(GameScenarioEventsListener gameScenarioEventsListener) {
+        this.gameScenarioEventsListener = gameScenarioEventsListener;
+        return this;
     }
 
     public GameObjectList<MilitaryType> getMilitaryTypes() {

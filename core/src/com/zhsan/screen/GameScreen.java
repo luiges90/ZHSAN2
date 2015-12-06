@@ -198,7 +198,10 @@ public class GameScreen extends WidgetGroup {
     public void showLoadGameFrame() {
         dayRunner.pauseRunDays();
         if (loadGameFrame == null) {
-            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> scen = new GameScenario(file, false, -1));
+            loadGameFrame = new FileGameFrame(FileGameFrame.Usage.LOAD, file -> {
+                scen = new GameScenario(file, false, -1);
+                scen.setGameScenarioEventsListener(new ScreenScenarioEventsListener(this));
+            });
             this.addActor(loadGameFrame);
         } else {
             loadGameFrame.show();
@@ -265,7 +268,7 @@ public class GameScreen extends WidgetGroup {
         return personPortrait.getSmallPortrait(id);
     }
 
-    public void addMessage(GameRecord.StringKeys msgName, String... objects) {
+    public void addGameRecordsMessage(GameRecord.StringKeys msgName, String... objects) {
         toolBar.addRecord(msgName, objects);
     }
 
