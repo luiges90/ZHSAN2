@@ -82,6 +82,14 @@ public class SmallMap extends WidgetGroup {
         GameMap gameMap = screen.getScenario().getGameMap();
         this.map = new Texture(Gdx.files.external(MainMapLayer.MAP_ROOT_PATH + "_" + gameMap.getFileName() + ".jpg"));
 
+        setPositionSize(toolbarSize);
+
+        this.addListener(new Listener());
+    }
+
+    private final void setPositionSize(int toolbarSize) {
+        GameMap gameMap = screen.getScenario().getGameMap();
+
         this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
         int mapWidth = this.tileSize * gameMap.getWidth();
         int mapHeight = this.tileSize * gameMap.getHeight();
@@ -102,8 +110,6 @@ public class SmallMap extends WidgetGroup {
 
         this.setPosition(dx, dy);
         this.setSize(mapWidth, mapHeight);
-
-        this.addListener(new Listener());
     }
 
     @Override
@@ -130,27 +136,7 @@ public class SmallMap extends WidgetGroup {
     }
 
     public final void resize(int width, int height) {
-        GameMap gameMap = screen.getScenario().getGameMap();
-        this.tileSize = Math.min(maxTileSize, Math.min(maxMapWidth / gameMap.getWidth(), maxMapHeight / gameMap.getHeight()));
-        int mapWidth = this.tileSize * gameMap.getWidth();
-        int mapHeight = this.tileSize * gameMap.getHeight();
-
-        float dx = 0;
-        switch (hAlignment) {
-            case LEFT:
-                dx = 0;
-                break;
-            case CENTER:
-                dx = width / 2 - mapWidth / 2;
-                break;
-            case RIGHT:
-                dx = width - mapWidth;
-                break;
-        }
-        float dy = screen.getToolBarHeight();
-
-        this.setPosition(dx, dy);
-        this.setSize(mapWidth, mapHeight);
+        setPositionSize(screen.getToolBarHeight());
     }
 
     public void dispose() {

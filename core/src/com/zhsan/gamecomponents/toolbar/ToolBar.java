@@ -44,10 +44,16 @@ public class ToolBar extends WidgetGroup {
     private Rectangle smallMapPos, actualSmallMapPos;
     private BitmapFont.HAlignment smallMapAlign;
 
+    private DateRunner dateRunner;
+
     private Rectangle dateRunnerPos, actualDateRunnerPos;
     private BitmapFont.HAlignment dateRunnerAlign;
 
-    private DateRunner dateRunner;
+    private GameRecord gameRecord;
+
+    private StateTexture gameRecordButton;
+    private Rectangle gameRecordPos, actualGameRecordPos;
+    private BitmapFont.HAlignment gameRecordAlign;
 
     private GameScreen screen;
 
@@ -79,6 +85,11 @@ public class ToolBar extends WidgetGroup {
             Node dateRunnerNode = dom.getElementsByTagName("DateRunner").item(0);
             dateRunnerPos = XmlHelper.loadRectangleFromXml(dateRunnerNode);
             dateRunnerAlign = XmlHelper.loadHAlignmentFromXml(dateRunnerNode);
+
+            Node gameRecordNode = dom.getElementsByTagName("GameRecord").item(0);
+            gameRecordPos = XmlHelper.loadRectangleFromXml(gameRecordNode);
+            gameRecordAlign = XmlHelper.loadHAlignmentFromXml(gameRecordNode);
+            gameRecordButton = StateTexture.fromXml(DATA_PATH, gameRecordNode);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ToolBarData.xml", e);
         }
@@ -112,6 +123,11 @@ public class ToolBar extends WidgetGroup {
 
         this.addActor(dateRunner);
 
+        gameRecord = new GameRecord(screen, gameRecordAlign, backgroundHeight);
+        gameRecord.setVisible(false);
+
+        this.addActor(gameRecord);
+
         this.addListener(new Listener());
     }
 
@@ -130,6 +146,9 @@ public class ToolBar extends WidgetGroup {
         if (actualDateRunnerPos == null) {
             actualDateRunnerPos = Utility.adjustRectangleByHAlignment(dateRunnerPos, dateRunnerAlign, getWidth());
         }
+        if (actualGameRecordPos == null) {
+            actualGameRecordPos = Utility.adjustRectangleByHAlignment(gameRecordPos, gameRecordAlign, getWidth());
+        }
 
         batch.draw(background, 0, 0, getWidth(), backgroundHeight);
 
@@ -137,8 +156,10 @@ public class ToolBar extends WidgetGroup {
                 actualGameSystemPos.getWidth(), actualGameSystemPos.getHeight());
         batch.draw(smallMapButton.get(), actualSmallMapPos.getX(), actualSmallMapPos.getY(),
                 actualSmallMapPos.getWidth(), actualSmallMapPos.getHeight());
-        dateRunner.setBounds(actualDateRunnerPos.x, actualDateRunnerPos.y,
-                actualDateRunnerPos.width, actualDateRunnerPos.height);
+        dateRunner.setBounds(actualDateRunnerPos.getX(), actualDateRunnerPos.getY(),
+                actualDateRunnerPos.getWidth(), actualDateRunnerPos.getHeight());
+        batch.draw(gameRecordButton.get(), actualGameRecordPos.getX(), actualGameRecordPos.getY(),
+                actualGameRecordPos.getWidth(), actualGameRecordPos.getHeight());
 
         super.draw(batch, parentAlpha);
     }
@@ -146,8 +167,11 @@ public class ToolBar extends WidgetGroup {
     public void resize(int width, int height) {
         actualGameSystemPos = Utility.adjustRectangleByHAlignment(gameSystemPos, gameSystemAlign, getWidth());
         actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, getWidth());
+        actualDateRunnerPos = Utility.adjustRectangleByHAlignment(dateRunnerPos, dateRunnerAlign, getWidth());
+        actualGameRecordPos = Utility.adjustRectangleByHAlignment(gameRecordPos, gameRecordAlign, getWidth());
 
         smallMap.resize(width, height);
+        gameRecord.resize(width, height);
     }
 
     public void dispose() {
@@ -156,6 +180,8 @@ public class ToolBar extends WidgetGroup {
         smallMapButton.dispose();
         smallMap.dispose();
         dateRunner.dispose();
+        gameRecordButton.dispose();
+        gameRecord.dispose();
     }
 
     public int getDaysToGo() {
@@ -185,6 +211,15 @@ public class ToolBar extends WidgetGroup {
                 } else {
                     smallMapButton.setState(StateTexture.State.NORMAL);
                     smallMap.setVisible(false);
+                }
+            }
+            if (actualGameRecordPos.contains(x, y)) {
+                if (gameRecordButton.getState() == StateTexture.State.NORMAL) {
+                    gameRecordButton.setState(StateTexture.State.SELECTED);
+                    gameRecord.setVisible(true);
+                } else {
+                    gameRecordButton.setState(StateTexture.State.NORMAL);
+                    gameRecord.setVisible(false);
                 }
             }
             return true;
