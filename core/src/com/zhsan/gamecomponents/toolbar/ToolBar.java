@@ -44,6 +44,9 @@ public class ToolBar extends WidgetGroup {
     private Rectangle smallMapPos, actualSmallMapPos;
     private BitmapFont.HAlignment smallMapAlign;
 
+    private Rectangle dateRunnerPos, actualDateRunnerPos;
+    private BitmapFont.HAlignment dateRunnerAlign;
+
     private DateRunner dateRunner;
 
     private GameScreen screen;
@@ -72,6 +75,10 @@ public class ToolBar extends WidgetGroup {
             smallMapPos = XmlHelper.loadRectangleFromXml(smallMapNode);
             smallMapAlign = XmlHelper.loadHAlignmentFromXml(smallMapNode);
             smallMapButton = StateTexture.fromXml(DATA_PATH, smallMapNode);
+
+            Node dateRunnerNode = dom.getElementsByTagName("DateRunner").item(0);
+            dateRunnerPos = XmlHelper.loadRectangleFromXml(dateRunnerNode);
+            dateRunnerAlign = XmlHelper.loadHAlignmentFromXml(dateRunnerNode);
         } catch (Exception e) {
             throw new FileReadException(RES_PATH + "ToolBarData.xml", e);
         }
@@ -120,6 +127,9 @@ public class ToolBar extends WidgetGroup {
         if (actualSmallMapPos == null) {
             actualSmallMapPos = Utility.adjustRectangleByHAlignment(smallMapPos, smallMapAlign, getWidth());
         }
+        if (actualDateRunnerPos == null) {
+            actualDateRunnerPos = Utility.adjustRectangleByHAlignment(dateRunnerPos, dateRunnerAlign, getWidth());
+        }
 
         batch.draw(background, 0, 0, getWidth(), backgroundHeight);
 
@@ -127,6 +137,8 @@ public class ToolBar extends WidgetGroup {
                 actualGameSystemPos.getWidth(), actualGameSystemPos.getHeight());
         batch.draw(smallMapButton.get(), actualSmallMapPos.getX(), actualSmallMapPos.getY(),
                 actualSmallMapPos.getWidth(), actualSmallMapPos.getHeight());
+        dateRunner.setBounds(actualDateRunnerPos.x, actualDateRunnerPos.y,
+                actualDateRunnerPos.width, actualDateRunnerPos.height);
 
         super.draw(batch, parentAlpha);
     }

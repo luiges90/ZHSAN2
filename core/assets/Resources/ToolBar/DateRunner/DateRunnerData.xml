@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Root>
-    <Position X="0" Y="0"/>
     <UpperArrowTexture FileName="UpperArrow.png" Selected="UpperArrowSelected.png"/>
     <LowerArrowTexture FileName="LowerArrow.png" Selected="LowerArrowSelected.png"/>
     <PlayTexture FileName="Play.png" Selected="PlaySelected.png"/>

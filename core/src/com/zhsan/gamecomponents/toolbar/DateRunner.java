@@ -39,7 +39,6 @@ public class DateRunner extends WidgetGroup {
 
     private Rectangle d1Up, d1Down, d1Num, d2Up, d2Down, d2Num;
     private Rectangle playPos, stopPos, daysLeftPos;
-    private Point position;
 
     private TextWidget<Void> daysToGoText1, daysToGoText2, daysLeftText;
 
@@ -53,8 +52,6 @@ public class DateRunner extends WidgetGroup {
         try {
             DocumentBuilder db = dbf.newDocumentBuilder();
             dom = db.parse(f.read());
-
-            position = Point.fromXml(dom.getElementsByTagName("Position").item(0));
 
             upArrow1 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("UpperArrowTexture").item(0));
             downArrow1 = StateTexture.fromXml(DATA_PATH, dom.getElementsByTagName("LowerArrowTexture").item(0));
@@ -109,7 +106,6 @@ public class DateRunner extends WidgetGroup {
 
         loadXml();
 
-        this.setPosition(position.x, position.y);
         setSizeToWrapWidget();
 
         this.addListener(new Listener());

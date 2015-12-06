@@ -4,4 +4,5 @@
     <GameSystem Align="Right" X="2" Y="10" Width="112" Height="33" FileName="System.png" Selected="SystemSelected.png"/>
     <SmallMap Align="Right" X="116" Y="10" Width="64" Height="33" FileName="SmallMap.png"
               Selected="SmallMapSelected.png"/>
+    <DateRunner Align="Left" X="0" Y="0" Width="180" Height="43" />
 </Root>
