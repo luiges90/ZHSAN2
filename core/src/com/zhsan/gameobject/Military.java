@@ -106,7 +106,7 @@ public class Military implements HasPointBelongsFactionGameObject {
     private GameObjectList<Person> persons = new GameObjectList<>();
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

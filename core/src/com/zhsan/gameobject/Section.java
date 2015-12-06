@@ -28,7 +28,7 @@ public class Section implements GameObject {
     private Faction belongedFaction;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

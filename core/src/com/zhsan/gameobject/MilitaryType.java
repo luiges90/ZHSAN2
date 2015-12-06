@@ -22,7 +22,7 @@ public final class MilitaryType implements GameObject {
     private final String name;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

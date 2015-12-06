@@ -45,7 +45,7 @@ public class Architecture implements HasPointBelongsFactionGameObject {
     private Set<Integer> connectedArchitectures = new HashSet<>();
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

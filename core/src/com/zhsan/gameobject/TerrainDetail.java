@@ -27,7 +27,7 @@ public final class TerrainDetail implements GameObject {
     public final boolean water;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

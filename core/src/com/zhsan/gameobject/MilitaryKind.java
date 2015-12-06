@@ -38,7 +38,7 @@ public final class MilitaryKind implements GameObject {
     private final boolean ship;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

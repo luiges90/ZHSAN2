@@ -43,7 +43,7 @@ public final class TroopAnimation implements GameObject {
     private final int frameCount, idleFrame, spriteSize;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

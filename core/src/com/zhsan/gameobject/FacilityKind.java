@@ -29,7 +29,7 @@ public final class FacilityKind implements GameObject {
     private final GameObjectList<TerrainDetail> canBuildAtTerrain;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua
@@ -125,7 +125,7 @@ public final class FacilityKind implements GameObject {
 
     public static class FacilityKindBuilder {
         private int id;
-        private String aiTags;
+        private String aiTags = "";
         private String name;
         private int endurance;
         private boolean indestructible;

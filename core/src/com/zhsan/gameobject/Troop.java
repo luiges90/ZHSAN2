@@ -136,7 +136,7 @@ public class Troop implements HasPointBelongsFactionGameObject {
     private volatile boolean destroyed = false;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

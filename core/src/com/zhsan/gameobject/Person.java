@@ -198,7 +198,7 @@ public class Person implements HasPointBelongsFactionGameObject {
     private int movingDays = 0;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

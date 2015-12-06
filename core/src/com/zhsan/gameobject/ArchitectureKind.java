@@ -26,7 +26,7 @@ public final class ArchitectureKind implements GameObject {
     private final long maxFund, maxFood;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

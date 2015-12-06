@@ -25,7 +25,7 @@ public class MilitaryTerrain implements GameObject {
     private float adaptability, multiple;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua

@@ -29,7 +29,7 @@ public class Facility implements GameObject {
     private Architecture belongedArchitecture;
 
     private final int id;
-    private String aiTags;
+    private String aiTags = "";
 
     @Override
     @LuaAI.ExportToLua
