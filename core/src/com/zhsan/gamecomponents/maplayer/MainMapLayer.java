@@ -394,7 +394,7 @@ public class MainMapLayer extends WidgetGroup {
 
              if (t != null) {
                 if (button == Input.Buttons.LEFT) {
-                    if (!screen.getDayRunner().isDayRunning()) {
+                    if (!screen.getDayRunner().isDayRunning() && t.getBelongedFaction() == screen.getScenario().getCurrentPlayer()) {
                         screen.showContextMenu(ContextMenu.MenuKindType.TROOP_LEFT_MENU, t, new Point(mousePosition));
                     }
                 } else if (button == Input.Buttons.RIGHT) {
