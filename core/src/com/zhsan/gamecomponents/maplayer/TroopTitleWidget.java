@@ -2,6 +2,7 @@ package com.zhsan.gamecomponents.maplayer;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -158,10 +159,13 @@ public class TroopTitleWidget extends WidgetGroup {
             return;
         }
 
+        Color factionColor = new Color(troop.getBelongedFaction() == null ? Color.WHITE : troop.getBelongedFaction().getColor());
         batch.draw(setting.background, setting.backgroundPos.x + getX(), setting.backgroundPos.y + getY(),
                 setting.backgroundPos.width, setting.backgroundPos.height);
+        batch.setColor(factionColor);
         batch.draw(setting.faction, setting.factionPos.x + getX(), setting.factionPos.y + getY(),
                 setting.factionPos.width, setting.factionPos.height);
+        batch.setColor(new Color(Color.WHITE));
 
         nameText.setPosition(setting.namePos.x, setting.namePos.y);
         nameText.setSize(setting.namePos.width, setting.namePos.height);
