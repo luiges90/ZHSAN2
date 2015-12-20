@@ -5,9 +5,9 @@
     <TopEdge Width="48" FileName="TopEdge.png"/>
     <BottomEdge Width="30" FileName="BottomEdge.png"/>
     <BackGround FileName="BackGround.png"/>
-    <OKButton Width="95" Height="32" MarginRight="16" MarginBottom="16" FileName="OKButton.png"
+    <OKButton Width="95" Height="32" MarginRight="127" MarginBottom="16" FileName="OKButton.png"
               Selected="OKButtonSelected.png" Pressed="OKButtonPressed.png" Disabled="OKButtonDisabled.png"/>
-    <CancelButton Width="95" Height="32" MarginRight="127" MarginBottom="16" FileName="CancelButton.png"
+    <CancelButton Width="95" Height="32" MarginRight="16" MarginBottom="16" FileName="CancelButton.png"
                   Selected="CancelButtonSelected.png" Pressed="CancelButtonPressed.png"
                   Disabled="CancelButtonDisabled.png"/>
     <Title FontName="方正隶变_GBK"
