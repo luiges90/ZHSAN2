@@ -68,7 +68,8 @@ public class GlobalStrings {
         MOVE_TO_ENTER("MoveToEnter"),
         RECALL_PERSON("RecallPerson"),
         MOVE_PERSON("MovePerson"),
-        SELECT_DESTINATION("SelectDestination");
+        SELECT_DESTINATION("SelectDestination"),
+    	FAMILY_SAVE_HEADER("FamilySaveHeader");
 
         private final String xmlName;
         Keys(String name) {
